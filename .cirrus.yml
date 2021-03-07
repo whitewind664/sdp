@@ -4,8 +4,7 @@ check_android_task:
     API_LEVEL: 30
     TARGET: google_apis
     ARCH: x86
-    # TODO change id
-    CC_TEST_REPORTER_ID: ENCRYPTED[abcdefg]
+    CC_TEST_REPORTER_ID: ENCRYPTED[bb53e0a57b9ba99fdad45d4fd39e8405a558650fe9bda03cb2989eb4c4d16489b5dac4cfddeb292e9419bb50e512be8e]
   container:
     image: reactivecircus/android-emulator-$API_LEVEL:latest
     kvm: true
