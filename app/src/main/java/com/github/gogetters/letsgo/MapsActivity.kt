@@ -37,7 +37,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
 
         // Add a marker at EPFL and move the camera
         val epfl = LatLng(46.51899505106699, 6.563449219980816)
-        mMap.addMarker(MarkerOptions().position(epfl).title("Marker in Sydney"))
+        mMap.addMarker(MarkerOptions().position(epfl).title("Marker at EPFL"))
         mMap.moveCamera(CameraUpdateFactory.newLatLng(epfl))
     }
 }

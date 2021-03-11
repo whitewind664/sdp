@@ -33,3 +33,8 @@ We use the local cache to store the standing of a current (offline) game. It may
 
 Offline play against bots, cached puzzles/joseki (learn theory) plus store cached history of games to review. Can use offline puzzles stored in cache.
 
+
+# Guides
+## Use secret that works locally and on Cirrus CI
+1. Follow the guide on https://developers.google.com/maps/documentation/android-sdk/get-api-key under "Adding the API key to your app"
+2.
