@@ -42,7 +42,7 @@ abstract class GyroActivity : AppCompatActivity(), SensorEventListener {
     }
 
     override fun onAccuracyChanged(p0: Sensor?, p1: Int) {
-        Log.d("GYRO", "accuracy changed")
+        Log.d("GYRO", "accuracy has changed")
 
     }
 
