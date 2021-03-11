@@ -42,7 +42,8 @@ abstract class GyroActivity : AppCompatActivity(), SensorEventListener {
     }
 
     override fun onAccuracyChanged(p0: Sensor?, p1: Int) {
-        print("accuracy changed")
+        Log.d("GYRO", "accuracy changed")
+
     }
 
     fun setThreshold(threshold: Int){
@@ -52,7 +53,7 @@ abstract class GyroActivity : AppCompatActivity(), SensorEventListener {
     override fun onSensorChanged(event: SensorEvent?) {
 
         if(event == null)
-            return;
+            return
 
         if (event.sensor.type == Sensor.TYPE_GYROSCOPE) {
             // 3
