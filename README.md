@@ -37,4 +37,4 @@ Offline play against bots, cached puzzles/joseki (learn theory) plus store cache
 # Guides
 ## Use secret that works locally and on Cirrus CI
 1. Follow the guide on https://developers.google.com/maps/documentation/android-sdk/get-api-key under "Adding the API key to your app"
-2.
+2. TODO
