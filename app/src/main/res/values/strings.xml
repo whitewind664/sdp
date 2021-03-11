@@ -1,3 +1,10 @@
 <resources>
     <string name="app_name">Let\'s Go</string>
+    <string name="my_profile">My Profile</string>
+    <string name="user_name">User Name</string>
+    <string name="upload_your_profile_picture">Upload Your Profile Picture</string>
+    <string name="my_name">My Name</string>
+    <string name="city_country">City, Country</string>
+    <string name="profile_picture">Profile Picture</string>
+    <string name="save_picture">Save Picture</string>
 </resources>
