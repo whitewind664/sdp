@@ -3,6 +3,7 @@ package com.github.gogetters.letsgo
 import android.content.Intent
 import android.os.Bundle
 import android.provider.AlarmClock
+import android.widget.Button
 import androidx.appcompat.app.AppCompatActivity
 
 class MainActivity : AppCompatActivity() {
@@ -10,11 +11,22 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        val intent = Intent(this, GameActivity::class.java).apply {
-            putExtra(GameActivity.EXTRA_GAME_SIZE, 9)
-            putExtra(GameActivity.EXTRA_KOMI, 5.5)
+        val gameButton = findViewById<Button>(R.id.startGameButton)
+        gameButton.setOnClickListener {
+            val intent = Intent(this, GameActivity::class.java).apply {
+                putExtra(GameActivity.EXTRA_GAME_SIZE, 9)
+                putExtra(GameActivity.EXTRA_KOMI, 5.5)
+            }
+
+            startActivity(intent)
         }
 
-        startActivity(intent)
-    }
+        val mapButton = findViewById<Button>(R.id.openMapButton)
+        mapButton.setOnClickListener {
+            val intent = Intent(this, MapsActivity::class.java).apply {
+
+            }
+
+            startActivity(intent)
+        }    }
 }

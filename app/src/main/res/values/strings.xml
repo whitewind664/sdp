@@ -2,6 +2,11 @@
     <string name="app_name">Let\'s Go</string>
     <string name="passButtonText">Pass</string>
 
+    <string name="startGameButtonText">Start Game</string>
+    <string name="openMapButtonText">Open Map</string>
+    <string name="scoreTitleText">Score</string>
+    <string name="scoreDefaultText">0</string>
+
     <string name="title_activity_maps">Map</string>
     <string name="title_activity_game">Game</string>
 
