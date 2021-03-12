@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">Let\'s Go</string>
+
+    <string name="server_client_id">638700440895-77ui4ds1g2qls6kvqj2ef73nrh37phfe.apps.googleusercontent.com</string>
 </resources>
