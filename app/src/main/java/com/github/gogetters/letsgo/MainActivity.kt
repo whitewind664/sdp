@@ -4,6 +4,11 @@ import android.content.Intent
 import android.os.Bundle
 import android.provider.AlarmClock
 import android.widget.Button
+import android.view.KeyEvent
+import android.view.View
+import android.view.inputmethod.EditorInfo
+import android.widget.EditText
+import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 
 class MainActivity : AppCompatActivity() {
@@ -28,5 +33,24 @@ class MainActivity : AppCompatActivity() {
             }
 
             startActivity(intent)
-        }    }
+        }
+
+        // Get a reference to the UI components
+        val mGoButton = findViewById<Button>(R.id.profileButton)
+
+        // Set the behaviour of the button
+        mGoButton.setOnClickListener {
+            getProfile()
+        }
+
+    }
+
+    /**
+     * Opens the [Profile] activity to show the user's profile
+     *
+     */
+    private fun getProfile() {
+        val intent = Intent(this, Profile::class.java)
+        startActivity(intent)
+    }
 }

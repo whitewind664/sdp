@@ -17,6 +17,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.LetsGo">
         <activity android:name=".GameActivity" android:label="@string/title_activity_game" />
+        <activity android:name=".Profile" />
 
         <!--
              The API key for Google Maps-based APIs is defined as a string resource.
@@ -41,6 +42,10 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <meta-data
+            android:name="preloaded_fonts"
+            android:resource="@array/preloaded_fonts" />
     </application>
 
 </manifest>
