@@ -35,7 +35,7 @@ class Board(private val boardSize: Size) {
      *  - Stone X is its own group of size 1
      * Then Ko will occur if we play where stone Y was
      *
-     * Only one of these positions can exist each turn (I think??)
+     * Only one of these positions can exist each turn
      * We keep track of this position in the koPoint variable
      */
     private var koMove: Move? = null
@@ -59,6 +59,14 @@ class Board(private val boardSize: Size) {
         return temp == Stone.EMPTY
     }
 
+
+    /**
+     * Retrieves the neighbors of a point. Points diagonally away do not count as neighbors.
+     * The neighbors are restricted to points on the board.
+     *
+     * @param c point to get the neighbors of
+     * @return list of neighboring points
+     */
     private fun getNeighbors(c: Point): List<Point> {
         if (!insideBoard(c)) throw OutOfBoardException()
 
@@ -74,6 +82,16 @@ class Board(private val boardSize: Size) {
         return neighbors
     }
 
+
+    /**
+     * Retrieves the "group" connected to a point. A group is defined as a set of connected points
+     * that are of the same type (e.g. all white stones). Connected empty points can also form a
+     * group.
+     *
+     * @param c Point that should be one of the members of the group
+     * @return Set of points corresponding to the group
+     * @throws OutOfBoardException if the point given is outside of the board
+     */
     private fun getGroup(c: Point): Set<Point> {
         if (!insideBoard(c)) throw OutOfBoardException()
         val groupColor = board[c]
@@ -96,6 +114,15 @@ class Board(private val boardSize: Size) {
         return connected
     }
 
+
+    /**
+     * Counts the number of liberties of a given group. A liberty is defined as an empty point that
+     * is connected to the group. This function therefore returns the number of empty points that
+     * are connected to any member of a group of points
+     *
+     * @param group iterable representing the group of points
+     * @return the number of liberties of "group"
+     */
     private fun countLiberties(group: Iterable<Point>): Int {
         val liberties = HashSet<Point>()
         for (stone in group) {
@@ -107,6 +134,17 @@ class Board(private val boardSize: Size) {
         return liberties.size
     }
 
+
+    /**
+     * Checks if playing a move would result in suicide (illegal move). Suicide happens if a player
+     * reduces the number of liberties of a group to zero (*after* capture).
+     *
+     * @param m move that could potentially result in suicide
+     * @returns true if move would be suicide, false otherwise
+     * @throws OutOfBoardException if the point given is outside the board
+     * @throws NotEmptyException if the point given is already occupied by a stone
+     *
+     */
     private fun isSuicide(m: Move): Boolean {
         if (!insideBoard(m.coord)) throw OutOfBoardException()
         if (!isEmpty(m.coord)) throw NotEmptyException()
@@ -137,13 +175,35 @@ class Board(private val boardSize: Size) {
 
     }
 
+    /**
+     * Checks if a move would break the Ko rule. There can only be at most one of these moves per
+     * turn.
+     *
+     * @param m move that might break the Ko rule
+     * @return true if playing m would break the Ko rule, false otherwise
+     */
     private fun isKo(m: Move): Boolean = m == koMove
 
 
+    /**
+     * Returns a data object that represents the current board state
+     */
     fun getView(whiteScore: Int, blackScore: Int): BoardView =
             BoardView(HashMap(board), koMove = koMove,
                     whiteScore = whiteScore, blackScore = blackScore)
 
+
+    /**
+     * Executes a given move, throwing an exception if the move is illegal. Returns the number of
+     * stones captured by the move.
+     *
+     * @param m move to play
+     * @return number of stones captured by playing m
+     * @throws OutOfBoardException if the move places a stone outside the board
+     * @throws NotEmptyException if the move places a stone on top of another stone
+     * @throws SuicideException if the move would result in suicide
+     * @throws KoException if the move would break the Ko rule
+     */
     fun playMove(m: Move): Int {
         val capturedStones = HashSet<Point>()
 
