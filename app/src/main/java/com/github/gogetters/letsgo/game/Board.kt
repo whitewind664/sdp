@@ -140,8 +140,8 @@ class Board(private val boardSize: Size) {
     private fun isKo(m: Move): Boolean = m == koMove
 
 
-    fun getView(lastMove: Move?, whiteScore: Int, blackScore: Int): BoardView =
-            BoardView(HashMap(board), lastMove = lastMove, koMove = koMove,
+    fun getView(whiteScore: Int, blackScore: Int): BoardView =
+            BoardView(HashMap(board), koMove = koMove,
                     whiteScore = whiteScore, blackScore = blackScore)
 
     fun playMove(m: Move): Int {

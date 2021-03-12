@@ -16,24 +16,24 @@ internal class Game(size: Board.Size, val komi: Double,
 
     fun start() {
         val nextPlayer = playersIt.next()
-        nextPlayer.requestMove(board.getView(null, 0, 0))
+        nextPlayer.requestMove(board.getView(0, 0))
     }
 
 
     fun playTurn(player: Player, move: Move) {
-
         var nextPlayer = playersIt.next()
 
         try {
             val points = board.playMove(move)
             player.givePoints(points)
+            lastMove = move
 
         } catch (e: IllegalMoveException) {
             player.notifyIllegalMove(e)
             nextPlayer = player
         }
 
-        val boardView = board.getView(lastMove, whitePlayer.getPoints(),
+        val boardView = board.getView(whitePlayer.getPoints(),
                 blackPlayer.getPoints())
         nextPlayer.requestMove(boardView)
     }
