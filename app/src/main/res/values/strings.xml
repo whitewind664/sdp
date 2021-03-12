@@ -1,4 +1,8 @@
 <resources>
     <string name="app_name">Let\'s Go</string>
     <string name="passButtonText">Pass</string>
+
+    <string name="title_activity_maps">Map</string>
+    <string name="title_activity_game">Game</string>
+
 </resources>
