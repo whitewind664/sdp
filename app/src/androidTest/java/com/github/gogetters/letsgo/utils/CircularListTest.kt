@@ -69,9 +69,11 @@ class CircularListTest {
     }
 
     @Test
-    fun listIteratorFromLastIndexHasNoNext() {
+    fun listIteratorFromLastIndexHasOnlyOneNext() {
         val circularList = CircularList(listOf(1, 2))
-        assertFalse(circularList.listIterator(1).hasNext())
+        val listIterator = circularList.listIterator(1)
+        listIterator.next()
+        assertFalse(listIterator.hasNext())
     }
 
     @Test
