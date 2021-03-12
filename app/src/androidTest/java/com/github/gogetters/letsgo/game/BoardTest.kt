@@ -54,11 +54,11 @@ class BoardTest {
     fun isSuicideToPlayInMiddleOfEnemyStones() {
         val board = Board(Size.withSize(1))
         board.playMove(Move(Stone.BLACK, Point(3, 2)))
-        board.playMove(Move(Stone.BLACK, Point(2, 3)))
         board.playMove(Move(Stone.BLACK, Point(4, 3)))
         board.playMove(Move(Stone.BLACK, Point(3, 4)))
+        board.playMove(Move(Stone.BLACK, Point(2, 3)))
 
-        board.playMove(Move(Stone.BLACK, Point(3, 3)))
+        board.playMove(Move(Stone.WHITE, Point(3, 3)))
     }
 
     @Test
@@ -106,6 +106,7 @@ class BoardTest {
     fun cantPlayOnExistingStone() {
         val board = Board(Size.withSize(1))
         board.playMove(Stone.BLACK, Point(3, 3))
+        board.playMove(Stone.WHITE, Point(3, 3))
     }
 
     @Test(expected = OutOfBoardException::class)
@@ -148,9 +149,12 @@ class BoardTest {
     fun stoneInCornerHasOnlyTwoLiberties() {
         val board = Board(Size.withSize(1))
         board.playMove(Stone.BLACK, Point(1, 1))
+
         board.playMove(Stone.WHITE, Point(1, 2))
         board.playMove(Stone.WHITE, Point(2, 1))
+
         board.playMove(Stone.EMPTY, Point(0, 0))
+
         board.playMove(Stone.WHITE, Point(1, 1))
     }
 

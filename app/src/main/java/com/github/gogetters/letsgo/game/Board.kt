@@ -112,6 +112,7 @@ class Board(private val boardSize: Size) {
         if (!isEmpty(m.coord)) throw NotEmptyException()
 
         val neighbors = getNeighbors(m.coord)
+        //CHECK IF WE HAVE AIR TO BREATHE, OR IF WE KILLED AN ENEMY GROUP
         for (neighbor in neighbors) {
             if (isEmpty(neighbor)) return false
 
@@ -123,11 +124,12 @@ class Board(private val boardSize: Size) {
             }
         }
 
+        //OTHERWISE CHECK IF WE ARE CONNECTED TO A GROUP WITH MORE THAN ONE LIBERTY
         for (neighbor in neighbors) {
             if (board[neighbor] == m.stone) {
                 val ourGroup = getGroup(neighbor)
-                if (countLiberties(ourGroup) == 1) {
-                    return true
+                if (countLiberties(ourGroup) > 1) {
+                    return false
                 }
             }
         }
