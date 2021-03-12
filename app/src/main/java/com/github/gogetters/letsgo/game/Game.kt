@@ -3,31 +3,26 @@ package com.github.gogetters.letsgo.game
 import com.github.gogetters.letsgo.game.exceptions.IllegalMoveException
 import com.github.gogetters.letsgo.utils.CircularList
 
-internal class Game(private val size: Int, val komi: Double,
+internal class Game(size: Board.Size, val komi: Double,
                     private val whitePlayer: Player, private val blackPlayer: Player) {
 
     private val board = Board(size)
-    private val passMove = Board.Move(Board.Stone.EMPTY, Board.Point(0, 0))
-    private var lastMove: Board.Move? = null
+    private val passMove = Move(Stone.EMPTY, Point(0, 0))
+    private var lastMove: Move? = null
     private val players = CircularList(listOf(whitePlayer, blackPlayer))
+    private val playersIt = players.iterator()
     private var passes = 0
 
-    fun play() {
-        for (player in players) {
-            val move = playTurn(player)
-            lastMove = move
-            if (move == passMove) ++passes
 
-            if (passes == 2) {
-                break
-            }
-        }
+    fun start() {
+        val nextPlayer = playersIt.next()
+        nextPlayer.requestMove(board.getView(null, 0, 0))
     }
 
-    private fun playTurn(player: Player): Board.Move {
-        val boardView = board.getView(lastMove, whitePlayer.getPoints(),
-                blackPlayer.getPoints())
-        val move = player.requestMove(boardView)
+
+    fun playTurn(player: Player, move: Move) {
+
+        var nextPlayer = playersIt.next()
 
         try {
             val points = board.playMove(move)
@@ -35,8 +30,11 @@ internal class Game(private val size: Int, val komi: Double,
 
         } catch (e: IllegalMoveException) {
             player.notifyIllegalMove(e)
-            return playTurn(player)
+            nextPlayer = player
         }
-        return move
+
+        val boardView = board.getView(lastMove, whitePlayer.getPoints(),
+                blackPlayer.getPoints())
+        nextPlayer.requestMove(boardView)
     }
 }

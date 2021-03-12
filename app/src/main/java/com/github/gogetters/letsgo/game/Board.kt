@@ -9,18 +9,22 @@ import kotlin.collections.ArrayList
 import kotlin.collections.HashMap
 import kotlin.collections.HashSet
 
-class Board(private val size: Int) {
+class Board(private val boardSize: Size) {
 
-    class Point(val first: Int, val second: Int)
-    operator fun Point.plus(other: Point) = Point(first + other.first, second + other.second)
+    val size
+    get() = boardSize.size
 
-    class Move(val stone: Stone, val coord: Point)
+    enum class Size(val size: Int) {
+        SMALL(9), MEDIUM(13), LARGE(19);
 
-    enum class Stone {
-        BLACK, WHITE, EMPTY;
-        fun otherColor(): Stone{
-            if (this == EMPTY) return EMPTY
-            return if (this == BLACK) WHITE else BLACK
+        companion object {
+            fun withSize(size: Int): Size {
+                return when (size) {
+                    19 -> LARGE
+                    13 -> MEDIUM
+                    else -> SMALL
+                }
+            }
         }
     }
 
@@ -51,10 +55,13 @@ class Board(private val size: Int) {
 
     private fun isEmpty(c: Point): Boolean {
         if (!insideBoard(c)) throw OutOfBoardException()
-        return board[c] == Stone.EMPTY
+        val temp = board[c]
+        return temp == Stone.EMPTY
     }
 
     private fun getNeighbors(c: Point): List<Point> {
+        if (!insideBoard(c)) throw OutOfBoardException()
+
         val neighbors = ArrayList<Point>()
 
         var d = Point(0, 1)
@@ -68,6 +75,7 @@ class Board(private val size: Int) {
     }
 
     private fun getGroup(c: Point): Set<Point> {
+        if (!insideBoard(c)) throw OutOfBoardException()
         val groupColor = board[c]
         val considering = LinkedList<Point>()
         val connected = HashSet<Point>()
@@ -129,12 +137,10 @@ class Board(private val size: Int) {
 
     private fun isKo(m: Move): Boolean = m == koMove
 
-    private fun isPlayable(m: Move): Boolean {
-        return isEmpty(m.coord) && !isSuicide(m) && !isKo(m) && insideBoard(m.coord)
-    }
 
-    fun getView(lastMove: Move?, whiteScore: Int, blackScore: Int): BoardView = BoardView(HashMap(board), lastMove = lastMove, koMove = koMove,
-                whiteScore = whiteScore, blackScore = blackScore)
+    fun getView(lastMove: Move?, whiteScore: Int, blackScore: Int): BoardView =
+            BoardView(HashMap(board), lastMove = lastMove, koMove = koMove,
+                    whiteScore = whiteScore, blackScore = blackScore)
 
     fun playMove(m: Move): Int {
         val capturedStones = HashSet<Point>()
@@ -173,4 +179,6 @@ class Board(private val size: Int) {
 
         return capturedStones.size
     }
+
+    fun playMove(s: Stone, p: Point) = playMove(Move(s, p))
 }
