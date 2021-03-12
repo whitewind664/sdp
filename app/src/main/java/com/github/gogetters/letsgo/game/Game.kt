@@ -14,12 +14,20 @@ internal class Game(size: Board.Size, val komi: Double,
     private var passes = 0
 
 
+    /**
+     * Initialises the game state and requests the first move from black.
+     */
     fun start() {
         val nextPlayer = playersIt.next()
         nextPlayer.requestMove(board.getView(0, 0))
     }
 
 
+    /**
+     * Called by a Player to advance the game state.
+     * @param player player who is playing the move
+     * @param move move to play
+     */
     fun playTurn(player: Player, move: Move) {
         var nextPlayer = playersIt.next()
 

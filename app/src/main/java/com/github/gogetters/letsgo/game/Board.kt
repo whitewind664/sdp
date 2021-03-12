@@ -118,7 +118,7 @@ class Board(private val boardSize: Size) {
     /**
      * Counts the number of liberties of a given group. A liberty is defined as an empty point that
      * is connected to the group. This function therefore returns the number of empty points that
-     * are connected to any member of a group of points
+     * are connected to any member of a group of points.
      *
      * @param group iterable representing the group of points
      * @return the number of liberties of "group"
