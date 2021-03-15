@@ -14,6 +14,7 @@ class MapsActivityTest {
 
     @Test
     fun testMap() {
+        // TODO actually test something
         val scenario = activityScenarioRule.scenario
     }
 
