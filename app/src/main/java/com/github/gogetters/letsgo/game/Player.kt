@@ -10,10 +10,11 @@ abstract class Player(val color: Stone) {
             throw IllegalArgumentException("Player's color cannot be empty")
     }
 
-    abstract fun requestMove(board: BoardView)
+    abstract fun requestMove(board: BoardView): Move
 
     abstract fun notifyIllegalMove(illegalMove: IllegalMoveException)
 
+    //TODO this is dumb
     fun givePoints(newPoints: Int) {
         points += newPoints
     }

@@ -29,6 +29,9 @@ class GameActivity : AppCompatActivity() {
         val whitePlayer = LocalPlayer(Stone.WHITE)
         val blackPlayer = LocalPlayer(Stone.BLACK)
         game = Game(boardSize, komi, whitePlayer, blackPlayer)
+
+        //TODO(advance the game in a loop in a background thread)
+        //TODO(maybe make a bean that links the GUI board to the game state returned here??)
     }
 
     private fun drawBoard(boardSize: Board.Size) {

@@ -15,34 +15,24 @@ internal class Game(size: Board.Size, val komi: Double,
 
 
     /**
-     * Initialises the game state and requests the first move from black.
+     * Called to advance the game state.
+     * @return state of the board after the move
      */
-    fun start() {
+    fun playTurn(): BoardView {
         val nextPlayer = playersIt.next()
-        nextPlayer.requestMove(board.getView(0, 0))
-    }
-
-
-    /**
-     * Called by a Player to advance the game state.
-     * @param player player who is playing the move
-     * @param move move to play
-     */
-    fun playTurn(player: Player, move: Move) {
-        var nextPlayer = playersIt.next()
+        //TODO(figure out where to track the score)
+        val nextMove = nextPlayer.requestMove(board.getView(0, 0))
 
         try {
-            val points = board.playMove(move)
-            player.givePoints(points)
-            lastMove = move
+            val points = board.playMove(nextMove)
+            nextPlayer.givePoints(points)
+            lastMove = nextMove
 
         } catch (e: IllegalMoveException) {
-            player.notifyIllegalMove(e)
-            nextPlayer = player
+            nextPlayer.notifyIllegalMove(e)
+            //TODO ask the player again for a move... do..while loop?
         }
 
-        val boardView = board.getView(whitePlayer.getPoints(),
-                blackPlayer.getPoints())
-        nextPlayer.requestMove(boardView)
+        return board.getView(0, 0)
     }
 }
