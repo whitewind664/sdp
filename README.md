@@ -3,6 +3,10 @@
 ## Team / App Name
 goGetters / Let’s Go
 
+## Build and test coverage information
+Cirrus CI: [![Build Status](https://api.cirrus-ci.com/github/whitewind664/sdp.svg)](https://cirrus-ci.com/github/whitewind664/sdp)
+Code Climate: [![Code Coverage](https://codeclimate.com/github/whitewind664/sdp.png)](https://codeclimate.com/github/whitewind664/sdp)
+
 ## Description
 
 Standalone client for playing Go online against real players and offline against bots. Some ideas of features are:  
