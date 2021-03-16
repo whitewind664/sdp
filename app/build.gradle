@@ -74,6 +74,17 @@ dependencies {
     androidTestImplementation 'androidx.test.espresso:espresso-intents:3.3.0'
 }
 
+secrets {
+    // Optionally specify a different file name containing your secrets.
+    // The plugin defaults to "local.properties"
+    propertiesFileName = "local.properties"
+    defaultPropertiesFileName = "local.defaults.properties"
+
+    // Add keys that the plugin should ignore from the properties file
+//    ignoreList.add("keyToIgnore")
+//    ignoreList.add("ignore*")
+}
+
 tasks.withType(Test) {
     jacoco.includeNoLocationClasses = true
     jacoco.excludes = ['jdk.internal.*']
