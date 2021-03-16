@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "221790403849",
+    "project_id": "let-s-go-146a0",
+    "storage_bucket": "let-s-go-146a0.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:221790403849:android:88a63dd25088fb695ee7d8",
+        "android_client_info": {
+          "package_name": "com.github.gogetters.letsgo"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "221790403849-m73mvjf4cri3c62glhom1uj07unp3bp0.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.github.gogetters.letsgo",
+            "certificate_hash": "517789c6c453570b72438df65f450da8abd7c46c"
+          }
+        },
+        {
+          "client_id": "221790403849-1l8uod1npi42p5p7pkgh5e4hcba6as0f.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDsLHcpsIBKim5xKguBUYaPEeFSKh4Q4Wo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "221790403849-1l8uod1npi42p5p7pkgh5e4hcba6as0f.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
