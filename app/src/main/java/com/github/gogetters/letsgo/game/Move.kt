@@ -12,4 +12,8 @@ data class Move(val stone: Stone, val coord: Point) {
     override fun hashCode(): Int {
         return stone.hashCode() * coord.hashCode()
     }
+
+    override fun toString(): String {
+        return "play $stone $coord"
+    }
 }
