@@ -8,21 +8,22 @@ import com.firebase.ui.auth.AuthUI
 import com.firebase.ui.auth.IdpResponse
 import com.google.firebase.auth.FirebaseAuth
 
-class FirebaseUIActivity : AppCompatActivity() {
+abstract class FirebaseUIActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_firebase_ui)
-        createSignInIntent()
+        if (FirebaseAuth.getInstance().currentUser == null) {
+            createSignInIntent()
+        }
     }
 
-    private fun createSignInIntent() {
+    fun createSignInIntent() {
         // [START auth_fui_create_intent]
         // Choose authentication providers
         val providers = arrayListOf(
                 AuthUI.IdpConfig.EmailBuilder().build(),
 //                AuthUI.IdpConfig.PhoneBuilder().build(),
-                AuthUI.IdpConfig.GoogleBuilder().build(),
+//                AuthUI.IdpConfig.GoogleBuilder().build(),
 //                AuthUI.IdpConfig.FacebookBuilder().build(),
 //                AuthUI.IdpConfig.TwitterBuilder().build()
         )
@@ -32,6 +33,8 @@ class FirebaseUIActivity : AppCompatActivity() {
                 AuthUI.getInstance()
                         .createSignInIntentBuilder()
                         .setAvailableProviders(providers)
+                        .setIsSmartLockEnabled(false)
+                        .setAlwaysShowSignInMethodScreen(true)
                         .build(),
                 RC_SIGN_IN)
         // [END auth_fui_create_intent]
@@ -40,18 +43,15 @@ class FirebaseUIActivity : AppCompatActivity() {
     // [START auth_fui_result]
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        println("!")
+
 
         if (requestCode == RC_SIGN_IN) {
-            println("?")
             val response = IdpResponse.fromResultIntent(data)
 
             if (resultCode == Activity.RESULT_OK) {
                 // Successfully signed in
-                println("#")
                 val user = FirebaseAuth.getInstance().currentUser
-                println(user)
-                finish()
+                // ...
             } else {
                 // Sign in failed. If response is null the user canceled the
                 // sign-in flow using the back button. Otherwise check
@@ -62,12 +62,13 @@ class FirebaseUIActivity : AppCompatActivity() {
     }
     // [END auth_fui_result]
 
-    private fun signOut() {
+    private fun signOut(onComplete: () -> Unit) {
         // [START auth_fui_signout]
         AuthUI.getInstance()
                 .signOut(this)
                 .addOnCompleteListener {
                     // ...
+                    onComplete()
                 }
         // [END auth_fui_signout]
     }

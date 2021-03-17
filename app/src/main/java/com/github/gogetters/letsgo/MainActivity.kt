@@ -37,15 +37,6 @@ class MainActivity : AppCompatActivity() {
             getProfile()
         }
 
-        val loginButton = findViewById<Button>(R.id.loginButton)
-        loginButton.setOnClickListener {
-            val intent = Intent(this, FirebaseUIActivity::class.java).apply {
-
-            }
-
-            startActivity(intent)
-        }
-
     }
 
     /**
