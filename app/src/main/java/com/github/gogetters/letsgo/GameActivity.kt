@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.widget.ImageView
 import com.github.gogetters.letsgo.game.*
 import com.github.gogetters.letsgo.game.Game
+import kotlinx.coroutines.*
 
 class GameActivity : AppCompatActivity() {
     companion object {
@@ -28,9 +29,11 @@ class GameActivity : AppCompatActivity() {
         game = Game(boardSize, komi, whitePlayer, blackPlayer)
         var boardState = game.playTurn()
 
-        while (!boardState.gameOver) {
-            drawBoard(boardState)
-            boardState = game.playTurn()
+        GlobalScope.launch {
+            while (!boardState.gameOver) {
+                boardState = game.playTurn()
+                drawBoard(boardState)
+            }
         }
     }
 
@@ -46,7 +49,7 @@ class GameActivity : AppCompatActivity() {
 
         boardImageView.setImageResource(boardImage)
 
-
+        //TODO the background is being drawn, now we need to just draw the pieces on top?
     }
 
 }

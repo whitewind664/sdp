@@ -39,15 +39,7 @@ class Board(private val boardSize: Size) {
      * We keep track of this position in the koPoint variable
      */
     private var koMove: Move? = null
-    private val board = HashMap<Point, Stone>()
-
-    init {
-        for (i in 1..size) {
-            for (j in 1..size) {
-                board[Point(i, j)] = Stone.EMPTY
-            }
-        }
-    }
+    private val board = BoardState.emptyBoard(size)
 
     private fun insideBoard(c: Point): Boolean {
         return c.first in 1..size && c.second in 1..size
