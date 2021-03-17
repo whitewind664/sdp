@@ -8,31 +8,31 @@ sealed class GTPCommand {
 
     // SETUP COMMANDS -------------------------
     data class BOARD_SIZE(val size: Board.Size) : GTPCommand(){
-        override fun serialize(): String {
+        override fun toString(): String {
             return String.format("boardsize %d", size)
         }
     }
 
     object CLEAR_BOARD : GTPCommand(){
-        override fun serialize(): String {
+        override fun toString(): String {
             return "clear_board"
         }
     }
 
     data class KOMI(val new_komi: Float): GTPCommand(){
-        override fun serialize(): String{
+        override fun toString(): String{
             return String.format("komi %f", new_komi)
         }
     }
 
     data class FIXED_HANDICAP(val numberOfStones: Int) : GTPCommand(){
-        override fun serialize(): String {
+        override fun toString(): String {
             return String.format("fixed_handicap %d", numberOfStones)
         }
     }
 
     data class PLACE_FREE_HANDICAP(val numberOfStones: Int) : GTPCommand(){
-        override fun serialize(): String{
+        override fun toString(): String{
             return String.format("place_free_handicap %d", numberOfStones)
         }
     }
@@ -40,7 +40,7 @@ sealed class GTPCommand {
     data class SET_FREE_HANDICAP(val vertices: List<Point>) : GTPCommand(){
 
         //TODO: adapt toString for vertices
-        override fun serialize(): String {
+        override fun toString(): String {
             return String.format("place_free_handicap %s", vertices.toString())
         }
     }
@@ -49,7 +49,7 @@ sealed class GTPCommand {
     data class PLAY(val move: Move) : GTPCommand() {
 
         //TODO: proper toString for moves
-        override fun serialize(): String {
+        override fun toString(): String {
             return String.format("play %s", move.toString())
         }
     }
@@ -57,13 +57,13 @@ sealed class GTPCommand {
 
     data class GENMOVE(val color: Stone) : GTPCommand(){
         //TODO: need to properly convert colors to strings, also handle empty case
-        override fun serialize(): String {
+        override fun toString(): String {
             return String.format("move %s", color.toString())
         }
     }
 
     object UNDO : GTPCommand(){
-        override fun serialize(): String {
+        override fun toString(): String {
             return "undo"
         }
     }
@@ -72,14 +72,13 @@ sealed class GTPCommand {
     /**
      * Serializes command with given id
      */
-    fun serialize(id: Int): String{
+    fun toString(id: Int): String{
         //TODO: verify ID
-        return String.format("%d %s", id, serialize())
+        return String.format("%d %s", id, toString())
     }
 
-    abstract fun serialize(): String
 
-    fun deserialize(s: String): GTPCommand {
+    fun toCommand(s: String): GTPCommand {
         val decomposed = s.split(" ")
 
         //TODO: create new exception for this case
