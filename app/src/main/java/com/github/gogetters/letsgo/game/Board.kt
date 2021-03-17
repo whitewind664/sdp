@@ -188,9 +188,9 @@ class Board(private val boardSize: Size) {
     /**
      * Returns a data object that represents the current board state
      */
-    fun getView(whiteScore: Int, blackScore: Int): BoardView =
-            BoardView(HashMap(board), koMove = koMove,
-                    whiteScore = whiteScore, blackScore = blackScore)
+    fun getView(whiteScore: Int, blackScore: Int, gameOver: Boolean=false): BoardState =
+            BoardState(HashMap(board), koMove = koMove,
+                    whiteScore = whiteScore, blackScore = blackScore, gameOver = gameOver)
 
 
     /**
