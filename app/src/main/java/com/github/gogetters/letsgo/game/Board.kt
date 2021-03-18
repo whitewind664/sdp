@@ -49,6 +49,10 @@ class Board(private val boardSize: Size) {
         }
     }
 
+    public fun getBoard(): HashMap<Point, Stone> {
+        return board
+    }
+
     private fun insideBoard(c: Point): Boolean {
         return c.first in 1..size && c.second in 1..size
     }

@@ -22,29 +22,25 @@ class MainActivity : AppCompatActivity() {
 
         val mapButton = findViewById<Button>(R.id.openMapButton)
         mapButton.setOnClickListener {
-            val intent = Intent(this, MapsActivity::class.java).apply {
-
-            }
+            val intent = Intent(this, MapsActivity::class.java).apply {}
 
             startActivity(intent)
         }
 
-        // Get a reference to the UI components
-        val mGoButton = findViewById<Button>(R.id.profileButton)
+        val profileButton = findViewById<Button>(R.id.profileButton)
+        profileButton.setOnClickListener {
+            val intent = Intent(this, Profile::class.java)
 
-        // Set the behaviour of the button
-        mGoButton.setOnClickListener {
-            getProfile()
+            startActivity(intent)
+        }
+
+        val goButton = findViewById<Button>(R.id.goButton)
+        goButton.setOnClickListener {
+            val intent = Intent(this, GoActivity::class.java)
+
+            startActivity(intent)
         }
 
     }
 
-    /**
-     * Opens the [Profile] activity to show the user's profile
-     *
-     */
-    private fun getProfile() {
-        val intent = Intent(this, Profile::class.java)
-        startActivity(intent)
-    }
 }
