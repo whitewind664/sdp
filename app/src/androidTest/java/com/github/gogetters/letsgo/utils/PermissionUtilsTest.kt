@@ -19,7 +19,7 @@ class PermissionUtilsTest {
     }
 
     @Test
-    fun isPermissionGrantedWorksWithoutPermission() {
+    fun isPermissionGrantedRejectsIfNoPermission() {
         // empty case
         var emptyPermissions: Array<String> = emptyArray()
         var emptyPermissionResults: IntArray = IntArray(0)
@@ -33,7 +33,7 @@ class PermissionUtilsTest {
     }
 
     @Test
-    fun isPermissionGrantedWorksWithPermission() {
+    fun isPermissionGrantedAcceptsIfPermission() {
         var permissions: Array<String> = arrayOf(Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION)
         var permissionResults: IntArray = IntArray(2)
         permissionResults.set(0, 0)

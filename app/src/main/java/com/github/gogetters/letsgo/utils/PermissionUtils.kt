@@ -11,12 +11,7 @@ object PermissionUtils {
      */
     @JvmStatic
     fun requestPermission(activity: AppCompatActivity, requestId: Int, permission: String, finishActivity: Boolean) {
-        if (ActivityCompat.shouldShowRequestPermissionRationale(activity, permission)) {
-            // Display a dialog with rationale.
-            // TODO display something
-            //RationaleDialog.newInstance(requestId, finishActivity)
-            //        .show(activity.supportFragmentManager, "dialog")
-        } else {
+        if (!ActivityCompat.shouldShowRequestPermissionRationale(activity, permission)) {
             // Location permission has not been granted yet, request it.
             ActivityCompat.requestPermissions(
                     activity,
