@@ -10,7 +10,7 @@ object PermissionUtils {
      *  Requests the given permission if necessary.
      */
     @JvmStatic
-    fun requestPermission(activity: AppCompatActivity, requestId: Int, permission: String, finishActivity: Boolean) {
+    fun requestPermission(activity: AppCompatActivity, requestId: Int, permission: String) {
         if (!ActivityCompat.shouldShowRequestPermissionRationale(activity, permission)) {
             // Location permission has not been granted yet, request it.
             ActivityCompat.requestPermissions(

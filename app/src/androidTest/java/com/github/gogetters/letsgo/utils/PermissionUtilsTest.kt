@@ -11,13 +11,6 @@ import org.junit.Assert.*
 
 @RunWith(AndroidJUnit4::class)
 class PermissionUtilsTest {
-
-    @Test
-    fun requestPermissionTest() {
-        // TODO implement
-        assertTrue(true)
-    }
-
     @Test
     fun isPermissionGrantedRejectsIfNoPermission() {
         // empty case
@@ -28,7 +21,7 @@ class PermissionUtilsTest {
         // non-empty case
         var permissions: Array<String> = arrayOf(Manifest.permission.ACCESS_FINE_LOCATION)
         var permissionResults: IntArray = IntArray(2)
-        permissionResults.set(0, PackageManager.PERMISSION_GRANTED)
+        permissionResults[0] = PackageManager.PERMISSION_GRANTED
         assertFalse(isPermissionGranted(permissions, permissionResults, Manifest.permission.ACCESS_COARSE_LOCATION))
     }
 
@@ -36,8 +29,8 @@ class PermissionUtilsTest {
     fun isPermissionGrantedAcceptsIfPermission() {
         var permissions: Array<String> = arrayOf(Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION)
         var permissionResults: IntArray = IntArray(2)
-        permissionResults.set(0, 0)
-        permissionResults.set(1, PackageManager.PERMISSION_GRANTED)
+        permissionResults[0] = 0
+        permissionResults[1] = PackageManager.PERMISSION_GRANTED
         assertTrue(isPermissionGranted(permissions, permissionResults, Manifest.permission.ACCESS_COARSE_LOCATION))
     }
 }
