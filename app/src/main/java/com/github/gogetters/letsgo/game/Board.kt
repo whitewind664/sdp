@@ -39,15 +39,7 @@ class Board(private val boardSize: Size) {
      * We keep track of this position in the koPoint variable
      */
     private var koMove: Move? = null
-    private val board = HashMap<Point, Stone>()
-
-    init {
-        for (i in 1..size) {
-            for (j in 1..size) {
-                board[Point(i, j)] = Stone.EMPTY
-            }
-        }
-    }
+    private val board = BoardState.emptyBoard(size)
 
     public fun getBoard(): HashMap<Point, Stone> {
         return board
@@ -192,9 +184,9 @@ class Board(private val boardSize: Size) {
     /**
      * Returns a data object that represents the current board state
      */
-    fun getView(whiteScore: Int, blackScore: Int): BoardView =
-            BoardView(HashMap(board), koMove = koMove,
-                    whiteScore = whiteScore, blackScore = blackScore)
+    fun getView(whiteScore: Int, blackScore: Int, gameOver: Boolean=false): BoardState =
+            BoardState(HashMap(board), koMove = koMove,
+                    whiteScore = whiteScore, blackScore = blackScore, gameOver = gameOver)
 
 
     /**

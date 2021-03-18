@@ -3,10 +3,9 @@ package com.github.gogetters.letsgo
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.ImageView
-import com.github.gogetters.letsgo.game.Board
+import com.github.gogetters.letsgo.game.*
 import com.github.gogetters.letsgo.game.Game
-import com.github.gogetters.letsgo.game.LocalPlayer
-import com.github.gogetters.letsgo.game.Stone
+import kotlinx.coroutines.*
 
 class GameActivity : AppCompatActivity() {
     companion object {
@@ -16,26 +15,31 @@ class GameActivity : AppCompatActivity() {
 
     private lateinit var game: Game
 
+    private val gameSizeInput = intent.getIntExtra(EXTRA_GAME_SIZE, 9)
+    private val komi = intent.getDoubleExtra(EXTRA_KOMI, 5.5)
+    private val boardSize = Board.Size.withSize(gameSizeInput)
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_game)
 
-        val gameSizeInput = intent.getIntExtra(EXTRA_GAME_SIZE, 9)
-        val komi = intent.getDoubleExtra(EXTRA_KOMI, 5.5)
-        val boardSize = Board.Size.withSize(gameSizeInput)
-
-        drawBoard(boardSize)
 
         val whitePlayer = LocalPlayer(Stone.WHITE)
         val blackPlayer = LocalPlayer(Stone.BLACK)
         game = Game(boardSize, komi, whitePlayer, blackPlayer)
+        var boardState = game.playTurn()
 
-        //TODO(advance the game in a loop in a background thread)
-        //TODO(maybe make a bean that links the GUI board to the game state returned here??)
+        GlobalScope.launch {
+            while (!boardState.gameOver) {
+                boardState = game.playTurn()
+                drawBoard(boardState)
+            }
+        }
     }
 
-    private fun drawBoard(boardSize: Board.Size) {
+    private fun drawBoard(boardState: BoardState) {
         val boardImageView = findViewById<ImageView>(R.id.gameBoardImage)
+
 
         val boardImage = when (boardSize) {
             Board.Size.SMALL -> R.drawable.board_9
@@ -44,7 +48,8 @@ class GameActivity : AppCompatActivity() {
         }
 
         boardImageView.setImageResource(boardImage)
-        val gameBoardDimension = boardImageView.width
+
+        //TODO the background is being drawn, now we need to just draw the pieces on top?
     }
 
 }

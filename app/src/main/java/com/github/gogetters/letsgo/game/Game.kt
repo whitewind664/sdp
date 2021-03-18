@@ -8,31 +8,44 @@ internal class Game(size: Board.Size, val komi: Double,
 
     private val board = Board(size)
     private val passMove = Move(Stone.EMPTY, Point(0, 0))
-    private var lastMove: Move? = null
     private val players = CircularList(listOf(whitePlayer, blackPlayer))
     private val playersIt = players.iterator()
     private var passes = 0
-
+    private var whiteScore = 0
+    private var blackScore = 0
 
     /**
      * Called to advance the game state.
      * @return state of the board after the move
      */
-    fun playTurn(): BoardView {
+    fun playTurn(): BoardState {
         val nextPlayer = playersIt.next()
-        //TODO(figure out where to track the score)
-        val nextMove = nextPlayer.requestMove(board.getView(0, 0))
 
-        try {
-            val points = board.playMove(nextMove)
-            nextPlayer.givePoints(points)
-            lastMove = nextMove
+        var validMove = false
+        do {
+            try {
+                val nextMove = nextPlayer.requestMove(board.getView(0, 0))
+                val points = board.playMove(nextMove)
+                addPoints(nextPlayer, points)
 
-        } catch (e: IllegalMoveException) {
-            nextPlayer.notifyIllegalMove(e)
-            //TODO ask the player again for a move... do..while loop?
+                if (nextMove == passMove) ++passes
+                else passes = 0
+
+                validMove = true
+
+            } catch (e: IllegalMoveException) {
+                nextPlayer.notifyIllegalMove(e)
+            }
+        } while (!validMove)
+
+        return board.getView(0, 0, gameOver = passes >= 2)
+    }
+
+    private fun addPoints(player: Player, points: Int) {
+        when (player.color)  {
+            Stone.WHITE -> whiteScore += points
+            Stone.BLACK -> blackScore += points
+            else -> return
         }
-
-        return board.getView(0, 0)
     }
 }
