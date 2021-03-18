@@ -15,7 +15,6 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.LetsGo">
-        <activity android:name=".GoActivity"></activity>
         <activity
             android:name=".GameActivity"
             android:label="@string/title_activity_game" />

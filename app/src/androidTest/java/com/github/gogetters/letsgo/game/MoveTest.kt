@@ -33,4 +33,25 @@ class MoveTest {
             }
         }
     }
+
+    @Test
+    fun moveEquivalentToGTP() {
+        val columns = "abcdefghjklmnopqrst".toList()
+        for (color in listOf(Stone.BLACK, Stone.WHITE)) {
+
+            val colorString = if (color == Stone.BLACK) "black" else "white"
+
+            for (i in 1..19) {
+                for (j in 1..19) {
+                    val point = Point(i, j)
+                    val col = columns[i - 1]
+                    val row = j.toString()
+
+                    val m = Move(color, point)
+
+                    assertEquals("play $colorString $col$row", "$m")
+                }
+            }
+        }
+    }
 }

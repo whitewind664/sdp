@@ -34,13 +34,6 @@ class MainActivity : AppCompatActivity() {
             startActivity(intent)
         }
 
-        val goButton = findViewById<Button>(R.id.goButton)
-        goButton.setOnClickListener {
-            val intent = Intent(this, GoActivity::class.java)
-
-            startActivity(intent)
-        }
-
     }
 
 }
