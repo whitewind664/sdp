@@ -1,15 +1,16 @@
 package com.github.gogetters.letsgo.game
 
+import android.util.Log
 import com.github.gogetters.letsgo.game.exceptions.IllegalMoveException
-import com.github.gogetters.letsgo.utils.CircularList
+import com.github.gogetters.letsgo.util.CircularList
 
 internal class Game(size: Board.Size, val komi: Double,
                     private val whitePlayer: Player, private val blackPlayer: Player) {
 
     private val board = Board(size)
     private val passMove = Move(Stone.EMPTY, Point(0, 0))
-    private val players = CircularList(listOf(whitePlayer, blackPlayer))
-    private val playersIt = players.iterator()
+    private var nextPlayer = blackPlayer
+
     private var passes = 0
     private var whiteScore = 0
     private var blackScore = 0
@@ -19,13 +20,14 @@ internal class Game(size: Board.Size, val komi: Double,
      * @return state of the board after the move
      */
     fun playTurn(): BoardState {
-        val nextPlayer = playersIt.next()
+        Log.d("GAME", "${nextPlayer.color}'s turn")
 
         var validMove = false
         do {
             try {
-                val nextMove = nextPlayer.requestMove(board.getView(0, 0))
+                val nextMove = nextPlayer.requestMove(board.getBoardState(0, 0))
                 val points = board.playMove(nextMove)
+                Log.d("GAME", "PLAYED A ${nextMove.stone} STONE AT ${nextMove.coord}")
                 addPoints(nextPlayer, points)
 
                 if (nextMove == passMove) ++passes
@@ -38,7 +40,9 @@ internal class Game(size: Board.Size, val komi: Double,
             }
         } while (!validMove)
 
-        return board.getView(0, 0, gameOver = passes >= 2)
+        nextPlayer = if (nextPlayer.color == Stone.BLACK) whitePlayer else blackPlayer
+
+        return board.getBoardState(0, 0, gameOver = passes >= 2)
     }
 
     private fun addPoints(player: Player, points: Int) {

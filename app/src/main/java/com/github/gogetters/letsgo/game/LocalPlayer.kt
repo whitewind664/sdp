@@ -1,15 +1,18 @@
 package com.github.gogetters.letsgo.game
 
+import android.util.Log
+import com.github.gogetters.letsgo.InputDelegate
 import com.github.gogetters.letsgo.game.exceptions.IllegalMoveException
 
-class LocalPlayer(color: Stone): Player(color) {
+class LocalPlayer(color: Stone, private val inputDelegate: InputDelegate): Player(color) {
 
     override fun requestMove(board: BoardState): Move {
-        return Move(color, Point(0, 0))
+        Log.d("LOCAL_PLAYER", "GETTING MOVE FROM LATESTINPUT")
+        return Move(color, inputDelegate.latestInput)
     }
 
     override fun notifyIllegalMove(illegalMove: IllegalMoveException) {
-        TODO("Not yet implemented")
+        Log.d("LOCAL_PLAYER", "PLAYER HAS PLAYED ILLEGAL MOVE", illegalMove)
 
     }
 
