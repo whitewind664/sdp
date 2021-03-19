@@ -1,9 +1,13 @@
-# SDP Proposal - Team \#12
-
 ## Team / App Name
 goGetters / Let’s Go
 
+## Build and test coverage information
+Cirrus CI: [![Build Status](https://api.cirrus-ci.com/github/whitewind664/sdp.svg)](https://cirrus-ci.com/github/whitewind664/sdp)
+
+Code Climate: [![Test Coverage](https://api.codeclimate.com/v1/badges/eb499ed5d368f682cb26/test_coverage)](https://codeclimate.com/github/whitewind664/sdp/test_coverage) [![Maintainability](https://api.codeclimate.com/v1/badges/eb499ed5d368f682cb26/maintainability)](https://codeclimate.com/github/whitewind664/sdp/maintainability)
+
 ## Description
+An Android app that is realized as part of the SDP course at EPFL.
 
 Standalone client for playing Go online against real players and offline against bots. Some ideas of features are:  
  - Interfacing with the OGS website for online playing (most popular Go website)
