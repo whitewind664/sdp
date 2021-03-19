@@ -19,12 +19,7 @@ import org.junit.runner.RunWith
 @RunWith(AndroidJUnit4::class)
 class GameActivityTest {
     @get:Rule
-    val startIntent = Intent(ApplicationProvider.getApplicationContext(),
-            GameActivity::class.java).apply {
-        putExtra(GameActivity.EXTRA_GAME_SIZE, 9)
-        putExtra(GameActivity.EXTRA_KOMI, 5.5)
-    }
-    var activityScenarioRule = ActivityScenarioRule<GameActivity>(startIntent)
+    var activityScenarioRule = ActivityScenarioRule<GameActivity>(GameActivity::class.java)
 
     @Test
     fun tappingScreenPlacesStone() {
