@@ -1,4 +1,4 @@
-package com.github.gogetters.letsgo.utils
+package com.github.gogetters.letsgo.util
 
 class CircularList<E>(private val underlyingList: List<E>): List<E> {
     override val size: Int get() = underlyingList.size

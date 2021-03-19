@@ -2,11 +2,12 @@ package com.github.gogetters.letsgo
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
+import android.widget.FrameLayout
 import android.widget.ImageView
-import com.github.gogetters.letsgo.game.Board
+import com.github.gogetters.letsgo.game.*
 import com.github.gogetters.letsgo.game.Game
-import com.github.gogetters.letsgo.game.LocalPlayer
-import com.github.gogetters.letsgo.game.Stone
+import kotlinx.coroutines.*
 
 class GameActivity : AppCompatActivity() {
     companion object {
@@ -15,33 +16,39 @@ class GameActivity : AppCompatActivity() {
     }
 
     private lateinit var game: Game
+    private lateinit var goView: GoView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_game)
 
+
         val gameSizeInput = intent.getIntExtra(EXTRA_GAME_SIZE, 9)
         val komi = intent.getDoubleExtra(EXTRA_KOMI, 5.5)
         val boardSize = Board.Size.withSize(gameSizeInput)
+        goView = GoView(this, boardSize)
+        val inputDelegate = InputDelegate()
+        goView.inputDelegate = inputDelegate
 
-        drawBoard(boardSize)
 
-        val whitePlayer = LocalPlayer(Stone.WHITE)
-        val blackPlayer = LocalPlayer(Stone.BLACK)
+        val boardFrame = findViewById<FrameLayout>(R.id.gameBoardFrame)
+        boardFrame.addView(goView)
+
+        val whitePlayer = LocalPlayer(Stone.WHITE, inputDelegate)
+        val blackPlayer = LocalPlayer(Stone.BLACK, inputDelegate)
         game = Game(boardSize, komi, whitePlayer, blackPlayer)
+
+        GlobalScope.launch {
+            var boardState = game.playTurn()
+            while (!boardState.gameOver) {
+                drawBoard(boardState)
+                boardState = game.playTurn()
+            }
+        }
     }
 
-    private fun drawBoard(boardSize: Board.Size) {
-        val boardImageView = findViewById<ImageView>(R.id.gameBoardImage)
-
-        val boardImage = when (boardSize) {
-            Board.Size.SMALL -> R.drawable.board_9
-            Board.Size.MEDIUM -> R.drawable.board_13
-            Board.Size.LARGE -> R.drawable.board_19
-        }
-
-        boardImageView.setImageResource(boardImage)
-        val gameBoardDimension = boardImageView.width
+    private fun drawBoard(boardState: BoardState) {
+        goView.updateBoardState(boardState)
     }
 
 }

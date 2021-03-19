@@ -1,5 +1,6 @@
-package com.github.gogetters.letsgo.utils
+package com.github.gogetters.letsgo.util
 
+import android.util.Log
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import org.junit.Test
 import org.junit.runner.RunWith

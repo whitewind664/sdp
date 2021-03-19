@@ -98,7 +98,7 @@ class BoardTest {
 
         board.playMove(Move(Stone.WHITE, Point(3, 3)))
 
-        board.getView(0, 0)
+        board.getBoardState(0, 0)
         board.playMove(Move(Stone.BLACK, Point(3, 4)))
     }
 

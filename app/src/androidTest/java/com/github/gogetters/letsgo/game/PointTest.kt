@@ -36,4 +36,18 @@ class PointTest {
             }
         }
     }
+
+    @Test
+    fun toStringEquivalentToGTP() {
+        //i is skipped on purpose due to the GTP protocol
+        val columns = "abcdefghjklmnopqrst".toList()
+        for (i in 1..19) {
+            for (j in 1..19) {
+                val point = Point(i, j)
+                val col = columns[i - 1]
+                val row = j.toString()
+                assertEquals("$col$row", "$point")
+            }
+        }
+    }
 }
