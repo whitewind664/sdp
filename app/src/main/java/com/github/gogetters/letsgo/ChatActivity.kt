@@ -9,7 +9,9 @@ import android.widget.EditText
 import android.widget.ListView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import com.github.gogetters.letsgo.chat.ChatMessage
 import com.github.gogetters.letsgo.chat.MessageAdapter
+import java.util.*
 
 
 class ChatActivity : AppCompatActivity() {
@@ -29,20 +31,19 @@ class ChatActivity : AppCompatActivity() {
     }
 
     fun sendMessage(view: View?) {
-        val message: String = entryText.text.toString()
+        val messageText: String = entryText.text.toString()
 
-
-        if (message.isNotEmpty()) {
+        if (messageText.isNotEmpty()) {
             // TODO send message. For the moment it is just displayed.
 
             entryText.text.clear()
 
             // display the message without sending
+            val message = ChatMessage(messageText, true, Calendar.getInstance().time)
             adapter.addMessage(message)
+            adapter.notifyDataSetChanged()
         }
     }
 
     // TODO interaction with backend
-
-
 }

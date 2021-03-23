@@ -8,11 +8,12 @@ import android.widget.BaseAdapter
 import android.widget.TextView
 import com.github.gogetters.letsgo.R
 
+
 class MessageAdapter(private var context: Context): BaseAdapter() {
     // TODO change to type Message instead of String
-    private var messages: MutableList<String> = mutableListOf()
+    private var messages: MutableList<ChatMessage> = mutableListOf()
 
-    fun addMessage(message: String) {
+    fun addMessage(message: ChatMessage) {
         messages.add(message)
         notifyDataSetChanged()
     }
@@ -33,14 +34,31 @@ class MessageAdapter(private var context: Context): BaseAdapter() {
     override fun getView(i: Int, convertView: View?, viewGroup: ViewGroup?): View {
         val message = messages[i]
         val messageInflater: LayoutInflater = LayoutInflater.from(context)
+        lateinit var newConvertView: View
 
-        // show outgoing message
-        val convertView = messageInflater.inflate(R.layout.my_message, null)
-        val body: TextView = convertView.findViewById(R.id.message_body)
-        convertView.tag = body
-        body.text = message
+        if (message.isBelongingToUser()) {
+            // show outgoing message
+            newConvertView = messageInflater.inflate(R.layout.my_message, null)
+            val body: TextView = newConvertView.findViewById(R.id.message_body)
+            newConvertView.tag = body
+            body.text = message.getText()
+        } else {
+            // show incoming message
+            newConvertView = messageInflater.inflate(R.layout.their_message, null)
 
-        return convertView
+            //val avatar: View = newConvertView.findViewById(...)
+            val name: TextView = newConvertView.findViewById(R.id.name)
+            val body: TextView = newConvertView.findViewById(R.id.message_body)
+
+            name.text = "Default Name" // TODO replace by name of user
+            body.text = message.getText()
+
+            /* TODO add avatar
+            avatar.getBackground()
+                .setColor(Color.parseColor(message.getMemberData().getColor()))*/
+        }
+
+        return newConvertView
     }
 
 
