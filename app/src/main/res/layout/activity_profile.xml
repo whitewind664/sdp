@@ -5,12 +5,12 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainActivity"
+    tools:context=".Profile"
     android:background="@drawable/gradient"
     android:orientation="vertical">
 
     <TextView
-        android:id="@+id/textView0"
+        android:id="@+id/upload_image_text"
         android:layout_width="match_parent"
         android:layout_height="99dp"
         android:layout_marginTop="32dp"
@@ -21,7 +21,7 @@
         android:textSize="22sp" />
 
     <ImageView
-        android:id="@+id/circleImageView"
+        android:id="@+id/profile_image"
         android:layout_width="145dp"
         android:layout_height="145dp"
         android:src="@drawable/user"
@@ -30,7 +30,7 @@
         android:contentDescription="@string/profile_picture" />
 
     <TextView
-        android:id="@+id/textView1"
+        android:id="@+id/name_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="24dp"
@@ -41,26 +41,39 @@
         android:textSize="24sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/circleImageView" />
+        app:layout_constraintTop_toBottomOf="@+id/profile_image" />
 
     <TextView
-        android:id="@+id/textView2"
+        android:id="@+id/email_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:text="@string/city_country"
         android:layout_gravity="center"
+        android:layout_marginTop="10dp"
+        android:text="@string/email"
         android:textColor="#fff"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/circleImageView" />
+        app:layout_constraintTop_toBottomOf="@+id/profile_image" />
+
+    <TextView
+        android:id="@+id/city_country_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="12dp"
+        android:text="@string/city_country"
+        android:textColor="#fff"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/profile_image" />
 
     <ImageButton
-        android:layout_marginTop="110dp"
-        android:background="@drawable/save"
-        android:layout_gravity="center"
+        android:id="@+id/save_button"
         android:layout_width="294dp"
         android:layout_height="45dp"
+        android:layout_gravity="center"
+        android:layout_marginTop="110dp"
+        android:background="@drawable/save"
         android:contentDescription="@string/save_picture" />
 
 </LinearLayout>
