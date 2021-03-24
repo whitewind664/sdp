@@ -50,7 +50,7 @@ class MessageAdapter(private var context: Context): BaseAdapter() {
             val name: TextView = newConvertView.findViewById(R.id.name)
             val body: TextView = newConvertView.findViewById(R.id.message_body)
 
-            name.text = "Default Name" // TODO replace by name of user
+            name.text = message.getUserName()
             body.text = message.getText()
 
             /* TODO add avatar
