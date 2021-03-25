@@ -1,5 +1,9 @@
 package com.github.gogetters.letsgo.game
 
+/**
+ * Serialization/Deserialization class used to communicate with any GTP compatible engine/website.
+ * Contains helper classes that serialize into GTP-compatible commands.
+ */
 sealed class GTPCommand {
 
     //TODO: add ID values
@@ -78,6 +82,9 @@ sealed class GTPCommand {
     }
 
     companion object {
+        /**
+         * Command deserialization helper function.
+         */
         fun toCommand(s: String): GTPCommand {
             val decomposed = s.split(" ")
 
