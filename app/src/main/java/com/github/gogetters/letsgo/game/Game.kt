@@ -9,6 +9,7 @@ internal class Game(size: Board.Size, val komi: Double,
 
     private val board = Board(size)
     private val passMove = Move(Stone.EMPTY, Point(0, 0))
+    private var lastMove: Move? = null
     private var nextPlayer = blackPlayer
 
     private var passes = 0
@@ -25,7 +26,8 @@ internal class Game(size: Board.Size, val komi: Double,
         var validMove = false
         do {
             try {
-                val nextMove = nextPlayer.requestMove(board.getBoardState(0, 0))
+                val boardState = board.getBoardState(0, 0, lastMove)
+                val nextMove = nextPlayer.requestMove(boardState)
                 val points = board.playMove(nextMove)
                 Log.d("GAME", "PLAYED A ${nextMove.stone} STONE AT ${nextMove.coord}")
                 addPoints(nextPlayer, points)
@@ -34,6 +36,7 @@ internal class Game(size: Board.Size, val komi: Double,
                 else passes = 0
 
                 validMove = true
+                lastMove = nextMove
 
             } catch (e: IllegalMoveException) {
                 nextPlayer.notifyIllegalMove(e)
@@ -42,7 +45,8 @@ internal class Game(size: Board.Size, val komi: Double,
 
         nextPlayer = if (nextPlayer.color == Stone.BLACK) whitePlayer else blackPlayer
 
-        return board.getBoardState(0, 0, gameOver = passes >= 2)
+        return board.getBoardState(0, 0,
+            lastMove = lastMove, gameOver = passes >= 2)
     }
 
     private fun addPoints(player: Player, points: Int) {
