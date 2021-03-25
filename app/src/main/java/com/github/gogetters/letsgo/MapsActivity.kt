@@ -1,7 +1,6 @@
 package com.github.gogetters.letsgo
 
 import android.Manifest
-import android.annotation.SuppressLint
 import android.content.pm.PackageManager
 import android.location.Location
 import androidx.appcompat.app.AppCompatActivity
@@ -9,8 +8,8 @@ import android.os.Bundle
 import android.util.Log
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
-import com.github.gogetters.letsgo.utils.PermissionUtils.isPermissionGranted
-import com.github.gogetters.letsgo.utils.PermissionUtils.requestPermission
+import com.github.gogetters.letsgo.util.PermissionUtils.isPermissionGranted
+import com.github.gogetters.letsgo.util.PermissionUtils.requestPermission
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 

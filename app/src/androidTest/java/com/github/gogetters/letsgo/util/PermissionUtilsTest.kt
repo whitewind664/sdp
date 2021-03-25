@@ -1,10 +1,9 @@
-package com.github.gogetters.letsgo.utils
+package com.github.gogetters.letsgo.util
 
 import android.Manifest
 import android.content.pm.PackageManager
 import androidx.test.ext.junit.runners.AndroidJUnit4
-import com.github.gogetters.letsgo.utils.PermissionUtils.requestPermission
-import com.github.gogetters.letsgo.utils.PermissionUtils.isPermissionGranted
+import com.github.gogetters.letsgo.util.PermissionUtils.isPermissionGranted
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.junit.Assert.*
