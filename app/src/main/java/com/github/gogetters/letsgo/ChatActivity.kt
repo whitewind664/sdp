@@ -32,6 +32,7 @@ class ChatActivity : AppCompatActivity() {
         listView.adapter = adapter
     }
 
+
     fun sendMessage(view: View?) {
         val messageText: String = entryText.text.toString()
 
@@ -46,7 +47,7 @@ class ChatActivity : AppCompatActivity() {
                 userName = authInstance.displayName!!
             }
             // display the message without sending
-            val message = ChatMessage(messageText, false, Calendar.getInstance().time, userName)
+            val message = ChatMessage(messageText, true, Calendar.getInstance().time, userName)
             adapter.addMessage(message)
             adapter.notifyDataSetChanged()
         }
