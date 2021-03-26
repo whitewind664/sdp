@@ -24,6 +24,10 @@ class MainActivityTest {
     fun gameButtonOpensGame() {
         val scenario = activityRule.scenario
         scenario.onActivity { activity ->
+            // close system dialogs
+            Thread.sleep(1)
+            activity.sendBroadcast(Intent(Intent.ACTION_CLOSE_SYSTEM_DIALOGS))
+
             Intents.init()
             onView(withId(R.id.main_button_startGame)).perform(click())
             Intents.intended(IntentMatchers.hasComponent(GameActivity::class.java.name))

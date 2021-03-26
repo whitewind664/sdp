@@ -4,9 +4,7 @@ import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
 import org.junit.Test
 
-@RunWith(AndroidJUnit4::class)
 class MoveTest {
-
     @Test
     fun moveEqualsComparesDeep() {
         val a = Move(Stone.BLACK, Point(1, 2))
