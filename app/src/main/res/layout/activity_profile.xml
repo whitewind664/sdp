@@ -10,7 +10,7 @@
     android:orientation="vertical">
 
     <TextView
-        android:id="@+id/upload_image_text"
+        android:id="@+id/profile_textView_upload_image_hint"
         android:layout_width="match_parent"
         android:layout_height="99dp"
         android:layout_marginTop="32dp"
@@ -21,7 +21,7 @@
         android:textSize="22sp" />
 
     <ImageView
-        android:id="@+id/profile_image"
+        android:id="@+id/profile_imageView_image"
         android:layout_width="145dp"
         android:layout_height="145dp"
         android:src="@drawable/user"
@@ -30,7 +30,7 @@
         android:contentDescription="@string/profile_picture" />
 
     <TextView
-        android:id="@+id/name_text"
+        android:id="@+id/profile_textView_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="24dp"
@@ -41,10 +41,10 @@
         android:textSize="24sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/profile_image" />
+        app:layout_constraintTop_toBottomOf="@+id/profile_imageView_image" />
 
     <TextView
-        android:id="@+id/email_text"
+        android:id="@+id/profile_textView_email"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
@@ -53,10 +53,10 @@
         android:textColor="#fff"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/profile_image" />
+        app:layout_constraintTop_toBottomOf="@+id/profile_imageView_image" />
 
     <TextView
-        android:id="@+id/city_country_text"
+        android:id="@+id/profile_textView_cityCountry"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
@@ -65,10 +65,10 @@
         android:textColor="#fff"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/profile_image" />
+        app:layout_constraintTop_toBottomOf="@+id/profile_imageView_image" />
 
     <ImageButton
-        android:id="@+id/save_button"
+        android:id="@+id/profile_imageButton_save"
         android:layout_width="294dp"
         android:layout_height="45dp"
         android:layout_gravity="center"

@@ -21,12 +21,12 @@ class ProfileActivity : FirebaseUIActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_profile)
 
-        uploadImageText = findViewById(R.id.upload_image_text)
-        profileImage = findViewById(R.id.profile_image)
-        nameText = findViewById(R.id.name_text)
-        emailText = findViewById(R.id.email_text)
-        cityCountyText = findViewById(R.id.city_country_text)
-        saveButton = findViewById(R.id.save_button)
+        uploadImageText = findViewById(R.id.profile_textView_upload_image_hint)
+        profileImage = findViewById(R.id.profile_imageView_image)
+        nameText = findViewById(R.id.profile_textView_name)
+        emailText = findViewById(R.id.profile_textView_email)
+        cityCountyText = findViewById(R.id.profile_textView_cityCountry)
+        saveButton = findViewById(R.id.profile_imageButton_save)
 
         updateUI()
     }
