@@ -1,6 +1,5 @@
 package com.github.gogetters.letsgo.game
 
-import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.github.gogetters.letsgo.game.exceptions.KoException
 import com.github.gogetters.letsgo.game.exceptions.NotEmptyException
 import com.github.gogetters.letsgo.game.exceptions.OutOfBoardException
@@ -8,13 +7,10 @@ import com.github.gogetters.letsgo.game.exceptions.SuicideException
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
 import org.junit.Test
-import org.junit.runner.RunWith
 
 import com.github.gogetters.letsgo.game.Board.*
 
-@RunWith(AndroidJUnit4::class)
 class BoardTest {
-
     @Test
     fun sizeIsOneOfAllowedSizes() {
         val board = Board(Size.withSize(2))
