@@ -11,7 +11,7 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        val gameButton = findViewById<Button>(R.id.startGameButton)
+        val gameButton = findViewById<Button>(R.id.main_button_startGame)
         gameButton.setOnClickListener {
             val intent = Intent(this, GameActivity::class.java).apply {
                 putExtra(GameActivity.EXTRA_GAME_SIZE, 9)
@@ -20,19 +20,19 @@ class MainActivity : AppCompatActivity() {
             startActivity(intent)
         }
 
-        val mapButton = findViewById<Button>(R.id.openMapButton)
+        val mapButton = findViewById<Button>(R.id.main_button_map)
         mapButton.setOnClickListener {
             val intent = Intent(this, MapsActivity::class.java).apply {}
             startActivity(intent)
         }
 
-        val profileButton = findViewById<Button>(R.id.profileButton)
+        val profileButton = findViewById<Button>(R.id.main_button_profile)
         profileButton.setOnClickListener {
             val intent = Intent(this, ProfileActivity::class.java)
             startActivity(intent)
         }
 
-        val chatButton = findViewById<Button>(R.id.chatButton)
+        val chatButton = findViewById<Button>(R.id.main_button_chat)
         chatButton.setOnClickListener {
             val intent = Intent(this, ChatActivity::class.java)
             startActivity(intent)
