@@ -14,7 +14,7 @@ import org.junit.runner.RunWith
 @RunWith(AndroidJUnit4::class)
 class ChatActivityTest {
     @get:Rule
-    var activityRule = ActivityScenarioRule<ChatActivity>(ChatActivity::class.java)
+    var activityRule = ActivityScenarioRule(ChatActivity::class.java)
 
     @Test
     fun sentMessageIsAddedToListView() {

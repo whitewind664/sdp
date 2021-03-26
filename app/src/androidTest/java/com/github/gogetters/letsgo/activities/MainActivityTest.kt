@@ -16,7 +16,8 @@ import org.junit.runner.RunWith
 
 @RunWith(AndroidJUnit4::class)
 class MainActivityTest {
-    @Rule val testRule = ActivityScenarioRule(MainActivity::class.java)
+    @Rule
+    var activityRule = ActivityScenarioRule(MainActivity::class.java)
 
     @Test
     fun gameButtonOpensGame() {
