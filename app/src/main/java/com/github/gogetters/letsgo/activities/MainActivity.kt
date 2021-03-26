@@ -1,9 +1,10 @@
-package com.github.gogetters.letsgo
+package com.github.gogetters.letsgo.activities
 
 import android.content.Intent
 import android.os.Bundle
 import android.widget.Button
 import androidx.appcompat.app.AppCompatActivity
+import com.github.gogetters.letsgo.R
 
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -27,7 +28,7 @@ class MainActivity : AppCompatActivity() {
 
         val profileButton = findViewById<Button>(R.id.profileButton)
         profileButton.setOnClickListener {
-            val intent = Intent(this, Profile::class.java)
+            val intent = Intent(this, ProfileActivity::class.java)
             startActivity(intent)
         }
 

@@ -1,4 +1,4 @@
-package com.github.gogetters.letsgo
+package com.github.gogetters.letsgo.activities
 
 import androidx.test.espresso.action.ViewActions
 import androidx.test.espresso.matcher.ViewMatchers
@@ -16,7 +16,7 @@ class ProfileInstrumentedTest {
 
 
     @get:Rule
-    val testRule = ActivityScenarioRule(Profile::class.java)
+    val testRule = ActivityScenarioRule(ProfileActivity::class.java)
 
     @Test
     fun testProfileOpens() {}

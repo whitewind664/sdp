@@ -1,4 +1,4 @@
-package com.github.gogetters.letsgo
+package com.github.gogetters.letsgo.game.util
 
 import com.github.gogetters.letsgo.game.Point
 import java.util.concurrent.ArrayBlockingQueue

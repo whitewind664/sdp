@@ -41,7 +41,7 @@ class MessageAdapter(private var context: Context): BaseAdapter() {
         if (message.isBelongingToUser()) {
             // show outgoing message
             newConvertView = messageInflater.inflate(R.layout.my_message, null)
-            val body: TextView = newConvertView.findViewById(R.id.message_body)
+            val body: TextView = newConvertView.findViewById(R.id.chat_textView_messageBody)
             newConvertView.tag = body
             body.text = message.getText()
         } else {
@@ -49,8 +49,8 @@ class MessageAdapter(private var context: Context): BaseAdapter() {
             newConvertView = messageInflater.inflate(R.layout.their_message, null)
 
             //val avatar: View = newConvertView.findViewById(...)
-            val name: TextView = newConvertView.findViewById(R.id.name)
-            val body: TextView = newConvertView.findViewById(R.id.message_body)
+            val name: TextView = newConvertView.findViewById(R.id.chat_textView_name)
+            val body: TextView = newConvertView.findViewById(R.id.chat_textView_messageBody)
 
             name.text = message.getUserName()
             body.text = message.getText()

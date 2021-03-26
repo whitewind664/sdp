@@ -1,4 +1,4 @@
-package com.github.gogetters.letsgo
+package com.github.gogetters.letsgo.activities
 
 import android.Manifest
 import android.content.pm.PackageManager
@@ -8,6 +8,7 @@ import android.os.Bundle
 import android.util.Log
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import com.github.gogetters.letsgo.R
 import com.github.gogetters.letsgo.util.PermissionUtils.isPermissionGranted
 import com.github.gogetters.letsgo.util.PermissionUtils.requestPermission
 import com.google.android.gms.location.FusedLocationProviderClient

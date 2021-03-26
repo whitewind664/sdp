@@ -1,13 +1,14 @@
-package com.github.gogetters.letsgo
+package com.github.gogetters.letsgo.activities
 
 import android.content.Intent
 import android.os.Bundle
 import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
+import com.github.gogetters.letsgo.R
 import com.google.firebase.auth.FirebaseAuth
 
-class Profile : FirebaseUIActivity() {
+class ProfileActivity : FirebaseUIActivity() {
 
     private var uploadImageText: TextView? = null
     private var profileImage: ImageView? = null

@@ -1,8 +1,6 @@
-package com.github.gogetters.letsgo
+package com.github.gogetters.letsgo.activities
 
-import android.content.Intent
 import android.view.View
-import androidx.test.core.app.ApplicationProvider
 import androidx.test.espresso.Espresso
 import androidx.test.espresso.UiController
 import androidx.test.espresso.ViewAction
@@ -10,6 +8,7 @@ import androidx.test.espresso.action.MotionEvents
 import androidx.test.espresso.matcher.ViewMatchers.*
 import androidx.test.ext.junit.rules.ActivityScenarioRule
 import androidx.test.ext.junit.runners.AndroidJUnit4
+import com.github.gogetters.letsgo.R
 import org.hamcrest.Matcher
 import org.junit.Rule
 import org.junit.Test
