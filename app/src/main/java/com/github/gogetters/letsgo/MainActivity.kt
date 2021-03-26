@@ -16,29 +16,24 @@ class MainActivity : AppCompatActivity() {
                 putExtra(GameActivity.EXTRA_GAME_SIZE, 9)
                 putExtra(GameActivity.EXTRA_KOMI, 5.5)
             }
-
             startActivity(intent)
         }
 
         val mapButton = findViewById<Button>(R.id.openMapButton)
         mapButton.setOnClickListener {
             val intent = Intent(this, MapsActivity::class.java).apply {}
-
             startActivity(intent)
         }
 
         val profileButton = findViewById<Button>(R.id.profileButton)
         profileButton.setOnClickListener {
             val intent = Intent(this, Profile::class.java)
-
             startActivity(intent)
         }
-
 
         val chatButton = findViewById<Button>(R.id.chatButton)
         chatButton.setOnClickListener {
             val intent = Intent(this, ChatActivity::class.java)
-
             startActivity(intent)
         }
 
