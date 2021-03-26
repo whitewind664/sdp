@@ -18,7 +18,6 @@ abstract class FirebaseUIActivity : AppCompatActivity() {
     }
 
     fun createSignInIntent() {
-        // [START auth_fui_create_intent]
         // Choose authentication providers
         val providers = arrayListOf(
                 AuthUI.IdpConfig.EmailBuilder().build(),
@@ -37,10 +36,8 @@ abstract class FirebaseUIActivity : AppCompatActivity() {
                         .setAlwaysShowSignInMethodScreen(true)
                         .build(),
                 RC_SIGN_IN)
-        // [END auth_fui_create_intent]
     }
 
-    // [START auth_fui_result]
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
 
@@ -60,33 +57,27 @@ abstract class FirebaseUIActivity : AppCompatActivity() {
             }
         }
     }
-    // [END auth_fui_result]
 
     private fun signOut(onComplete: () -> Unit) {
-        // [START auth_fui_signout]
         AuthUI.getInstance()
                 .signOut(this)
                 .addOnCompleteListener {
                     // ...
                     onComplete()
                 }
-        // [END auth_fui_signout]
     }
 
     private fun delete() {
-        // [START auth_fui_delete]
         AuthUI.getInstance()
                 .delete(this)
                 .addOnCompleteListener {
                     // ...
                 }
-        // [END auth_fui_delete]
     }
 
     private fun themeAndLogo() {
         val providers = emptyList<AuthUI.IdpConfig>()
 
-        // [START auth_fui_theme_logo]
 //        startActivityForResult(
 //                AuthUI.getInstance()
 //                        .createSignInIntentBuilder()
@@ -95,12 +86,10 @@ abstract class FirebaseUIActivity : AppCompatActivity() {
 //                        .setTheme(R.style.MySuperAppTheme) // Set theme
 //                        .build(),
 //                RC_SIGN_IN)
-        // [END auth_fui_theme_logo]
     }
 
     private fun privacyAndTerms() {
         val providers = emptyList<AuthUI.IdpConfig>()
-        // [START auth_fui_pp_tos]
         startActivityForResult(
                 AuthUI.getInstance()
                         .createSignInIntentBuilder()
@@ -110,7 +99,6 @@ abstract class FirebaseUIActivity : AppCompatActivity() {
                                 "https://example.com/privacy.html")
                         .build(),
                 RC_SIGN_IN)
-        // [END auth_fui_pp_tos]
     }
 
     companion object {
