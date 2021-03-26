@@ -3,7 +3,7 @@ package com.github.gogetters.letsgo.chat
 import java.util.*
 
 class ChatMessage(private val text: String, private val belongsToUser: Boolean, private val sendTime: Date, private val userName: String) {
-    
+
     fun getText(): String {
         return text
     }

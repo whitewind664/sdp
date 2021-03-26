@@ -37,13 +37,13 @@ class MessageAdapter(private var context: Context): BaseAdapter() {
 
         if (message.isBelongingToUser()) {
             // show outgoing message
-            newConvertView = messageInflater.inflate(R.layout.my_message, viewGroup)
+            newConvertView = messageInflater.inflate(R.layout.my_message, null)
             val body: TextView = newConvertView.findViewById(R.id.message_body)
             newConvertView.tag = body
             body.text = message.getText()
         } else {
             // show incoming message
-            newConvertView = messageInflater.inflate(R.layout.their_message, viewGroup)
+            newConvertView = messageInflater.inflate(R.layout.their_message, null)
 
             //val avatar: View = newConvertView.findViewById(...)
             val name: TextView = newConvertView.findViewById(R.id.name)
