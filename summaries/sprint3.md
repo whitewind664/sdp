@@ -23,9 +23,10 @@
 - To improve: Figure out how to cross-compile for other architectures....
 
 ## Roust, Michael Murad
-- Done:
-- Went well:
-- To improve:
+- Done: Profile page now shows user information once user is logged in.
+- Went well: Understanding interactions with Firebase Auth.
+- To improve: The next step is to add the ability for users to save profile pictures on Firebase.
+We'll be able to do this once our database is setup;
 
 ## Wengle, Erik Alessandro
 - Done: Implemented basic bluetooth connectivity between two devices
