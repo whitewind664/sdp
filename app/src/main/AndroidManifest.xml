@@ -7,6 +7,11 @@
          location permissions for the "MyLocation" functionality.
     -->
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.BLUETOOTH" />
+    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-feature android:name="android.hardware.bluetooth" />
+
 
     <application
         android:allowBackup="true"
@@ -15,6 +20,12 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.LetsGo">
+        <activity
+            android:name=".BluetoothActivity"
+            android:exported="true">
+
+        </activity>
+
         <activity
             android:name=".GameActivity"
             android:label="@string/title_activity_game" />
@@ -46,8 +57,6 @@
         <meta-data
             android:name="preloaded_fonts"
             android:resource="@array/preloaded_fonts" />
-
-
-</application>
+    </application>
 
 </manifest>
