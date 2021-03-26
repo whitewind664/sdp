@@ -34,6 +34,14 @@ class MainActivity : AppCompatActivity() {
             startActivity(intent)
         }
 
+
+        val chatButton = findViewById<Button>(R.id.chatButton)
+        chatButton.setOnClickListener {
+            val intent = Intent(this, ChatActivity::class.java)
+
+            startActivity(intent)
+        }
+
     }
 
 }
