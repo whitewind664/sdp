@@ -8,7 +8,10 @@ import android.widget.BaseAdapter
 import android.widget.TextView
 import com.github.gogetters.letsgo.R
 
-
+/**
+ * Adapter that is used to update the ListView with the messages of the chat.
+ * Makes sure that all messages are displayed.
+ */
 class MessageAdapter(private var context: Context): BaseAdapter() {
     private var messages: MutableList<ChatMessage> = mutableListOf()
 
