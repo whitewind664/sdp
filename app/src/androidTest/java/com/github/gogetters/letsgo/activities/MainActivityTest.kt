@@ -1,5 +1,6 @@
 package com.github.gogetters.letsgo.activities
 
+import android.content.Intent
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.action.ViewActions.*
 import androidx.test.espresso.intent.Intents
@@ -16,26 +17,28 @@ import org.junit.runner.RunWith
 
 @RunWith(AndroidJUnit4::class)
 class MainActivityTest {
-    @Rule
+    @get:Rule
     var activityRule = ActivityScenarioRule(MainActivity::class.java)
 
     @Test
     fun gameButtonOpensGame() {
-        Intents.init()
-
-        onView(withId(R.id.main_button_startGame)).perform(click())
-        Intents.intended(IntentMatchers.hasComponent(GameActivity::class.java.name))
-
-        Intents.release()
+        val scenario = activityRule.scenario
+        scenario.onActivity { activity ->
+            Intents.init()
+            onView(withId(R.id.main_button_startGame)).perform(click())
+            Intents.intended(IntentMatchers.hasComponent(GameActivity::class.java.name))
+            Intents.release()
+        }
     }
 
     @Test
     fun profileButtonOpensProfile() {
-        Intents.init()
-
-        onView(withId(R.id.main_button_profile)).perform(click())
-        Intents.intended(IntentMatchers.hasComponent(ProfileActivity::class.java.name))
-
-        Intents.release()
+        val scenario = activityRule.scenario
+        scenario.onActivity { activity ->
+            Intents.init()
+            onView(withId(R.id.main_button_profile)).perform(click())
+            Intents.intended(Matchers.allOf(IntentMatchers.hasComponent(ProfileActivity::class.java.name)))
+            Intents.release()
+        }
     }
 }
