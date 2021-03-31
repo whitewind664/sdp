@@ -24,10 +24,15 @@ class BluetoothActivity : AppCompatActivity() {
     var b3: Button? = null
     var b4: Button? = null
     var b5: Button? = null
+    var b6: Button? = null
 
     private var BA: BluetoothAdapter? = null
     private var pairedDevices: Set<BluetoothDevice>? = null
     var lv: ListView? = null
+    var lv2: ListView? = null
+
+    private var foundDevices: MutableSet<BluetoothDevice>? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_bluetooth)
@@ -36,8 +41,12 @@ class BluetoothActivity : AppCompatActivity() {
         b3 = findViewById<View>(R.id.button3) as Button
         b4 = findViewById<View>(R.id.button4) as Button
         b5 = findViewById<View>(R.id.button5) as Button
+        b6 = findViewById<View>(R.id.button6) as Button
+
         BA = BluetoothAdapter.getDefaultAdapter()
-        lv = findViewById<View>(R.id.listView) as ListView
+        lv2 = findViewById<View>(R.id.listView) as ListView
+
+        foundDevices = mutableSetOf();
 
         // Register for broadcasts when a device is discovered.
         val filter = IntentFilter(BluetoothDevice.ACTION_FOUND)
@@ -63,6 +72,9 @@ class BluetoothActivity : AppCompatActivity() {
                     val deviceHardwareAddress = device.address // MAC address
 
                     Log.i("INFO", "name: $deviceName MAC: $deviceHardwareAddress")
+
+                    if(deviceName != null)
+                        foundDevices!!.add(device)
                 }
             }
         }
@@ -108,5 +120,13 @@ class BluetoothActivity : AppCompatActivity() {
         Toast.makeText(applicationContext, "Showing Paired Devices", Toast.LENGTH_SHORT).show()
         val adapter: ArrayAdapter<*> = ArrayAdapter(this, android.R.layout.simple_list_item_1, list)
         lv!!.adapter = adapter
+    }
+
+    fun listFound(v: View?) {
+        val list: ArrayList<String> = ArrayList<String>()
+        for (bt in foundDevices!!) list.add(bt.name)
+        Toast.makeText(applicationContext, "Showing Found Devices", Toast.LENGTH_SHORT).show()
+        val adapter: ArrayAdapter<*> = ArrayAdapter(this, android.R.layout.simple_list_item_1, list)
+        lv2!!.adapter = adapter
     }
 }

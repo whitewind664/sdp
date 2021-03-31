@@ -10,7 +10,7 @@ Code Climate: [![Test Coverage](https://api.codeclimate.com/v1/badges/eb499ed5d3
 An Android app that is realized as part of the SDP course at EPFL.
 
 Standalone client for playing Go online against real players and offline against bots. Some ideas of features are:  
- - Interfacing with the OGS website for online playing (most popular Go website)
+ - Interfacing with the OGS website foxr online playing (most popular Go website)
  - Puzzles for practicing tactics
  - Offline play against bots
  - Custom matchmaking that takes into account GPS position of players
