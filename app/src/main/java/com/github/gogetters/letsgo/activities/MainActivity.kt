@@ -38,6 +38,10 @@ class MainActivity : AppCompatActivity() {
             startActivity(intent)
         }
 
+        val tutorialButton = findViewById<Button>(R.id.main_button_tutorial)
+        tutorialButton.setOnClickListener {
+            val intent = Intent(this, TutorialActivity::class.java)
+            startActivity(intent)
+        }
     }
-
 }
