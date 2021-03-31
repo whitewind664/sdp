@@ -31,6 +31,7 @@
     <string name="tutorial_KoRule">The "Ko" Rule: \nThere exist situations where the same moves could be repeated over and over again. To prevent this, the Ko rule says that a completely identical board position MUST NOT appear twice in one game. This makes endless recapturing in the same position impossible, as in the following example:</string>
     <string name="tutorial_end">End of game: \nThis is the last rule you have to learn! The end of a Go game is not as clearly defined as in chess or other games. A player at each point in the game can pass if they don\'t see any benefit of placing a stone. The game ends if both players pass consecutively. Then, the points are counted as follows:</string>
     <string name="tutorial_score2">Final score:\n- one point for each yet captured stone\n- one point for every stone in your territory that cannot avoid capturing. Your territory is everything that is entirely surrounded by your stones. This is mostly obvious, and if not, keep on playing until it is. Theses stones are removed from the board.\n- one point for each empty intersection in your territory.\n- some points called komi for the white player, as starting the game is an advantage for black (usually 6.5 points in 19x19 games)</string>
+    <string name="tutorial_outro">Congrats! You reached the end of the tutorial. Have fun!</string>
 
     <!--
     This string is used for square devices and overridden by hello_world in

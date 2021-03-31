@@ -15,12 +15,15 @@ class TutorialActivity : AppCompatActivity() {
         setContentView(R.layout.activity_tutorial)
 
         findViewById<Button>(R.id.tutorial_button_next).setOnClickListener { _ ->
+            val textView = findViewById<TextView>(R.id.tutorial_textView_explanation)
             if (tutorialProgressIndex + 1 < tutorialTextIds.size) {
                 tutorialProgressIndex += 1
-                val textView = findViewById<TextView>(R.id.tutorial_textView_explanation)
                 textView.text = resources.getString(tutorialTextIds[tutorialProgressIndex])
             } else {
                 // handle end of tutorial
+                textView.text = resources.getString(R.string.tutorial_outro)
+                val buttonView = findViewById<Button>(R.id.tutorial_button_next)
+                buttonView.text = "Back to main menu"
             }
         }
     }
