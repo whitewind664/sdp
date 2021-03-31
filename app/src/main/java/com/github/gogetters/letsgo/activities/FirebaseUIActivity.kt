@@ -1,4 +1,4 @@
-package com.github.gogetters.letsgo
+package com.github.gogetters.letsgo.activities
 
 import android.app.Activity
 import android.content.Intent

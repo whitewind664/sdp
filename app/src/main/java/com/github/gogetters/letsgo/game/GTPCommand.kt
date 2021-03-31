@@ -42,7 +42,6 @@ sealed class GTPCommand {
     }
 
     data class SET_FREE_HANDICAP(val vertices: List<Point>) : GTPCommand(){
-
         //TODO: adapt toString for vertices
         override fun toString(): String {
             return String.format("place_free_handicap %s", vertices.toString())
@@ -51,7 +50,6 @@ sealed class GTPCommand {
     // CORE PLAY COMMANDS -------------------------
 
     data class PLAY(val move: Move) : GTPCommand() {
-
         //TODO: proper toString for moves
         override fun toString(): String {
             return String.format("play %s", move.toString())
@@ -102,15 +100,11 @@ sealed class GTPCommand {
                 "fixed_handicap" -> if(args.isEmpty()) throw Error() else return FIXED_HANDICAP(args[0].toInt())
                 "place_free_handicap" -> if(args.isEmpty()) throw Error() else return PLACE_FREE_HANDICAP(args[0].toInt())
                 "set_free_handicap" -> if(args.isEmpty()) throw Error() else TODO("need to convert strings to points")
-
                 "play" -> TODO("need to create moves from Strings")
                 "genmove" -> TODO("need to create moves from Strings")
                 "undo" -> UNDO
-
-
                 else -> throw Error("no valid command detected")
             }
-
-    }
+        }
     }
 }

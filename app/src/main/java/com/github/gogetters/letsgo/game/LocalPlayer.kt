@@ -1,7 +1,7 @@
 package com.github.gogetters.letsgo.game
 
 import android.util.Log
-import com.github.gogetters.letsgo.InputDelegate
+import com.github.gogetters.letsgo.game.util.InputDelegate
 import com.github.gogetters.letsgo.game.exceptions.IllegalMoveException
 
 class LocalPlayer(color: Stone, private val inputDelegate: InputDelegate): Player(color) {

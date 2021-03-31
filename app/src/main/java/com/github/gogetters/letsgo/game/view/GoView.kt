@@ -1,4 +1,4 @@
-package com.github.gogetters.letsgo
+package com.github.gogetters.letsgo.game.view
 
 import android.content.Context
 import android.graphics.*
@@ -6,10 +6,12 @@ import android.util.Log
 import android.view.MotionEvent
 import android.view.View
 import androidx.core.content.ContextCompat
+import com.github.gogetters.letsgo.R
 import com.github.gogetters.letsgo.game.Board
 import com.github.gogetters.letsgo.game.BoardState
 import com.github.gogetters.letsgo.game.Stone
 import com.github.gogetters.letsgo.game.Point
+import com.github.gogetters.letsgo.game.util.InputDelegate
 import kotlin.math.roundToInt
 
 

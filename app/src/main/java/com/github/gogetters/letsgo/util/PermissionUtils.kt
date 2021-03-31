@@ -1,9 +1,12 @@
-package com.github.gogetters.letsgo.utils
+package com.github.gogetters.letsgo.util
 
 import android.content.pm.PackageManager
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 
+/**
+ * Helper methods that can be used to request permissions from the user (e.g., location)
+ */
 object PermissionUtils {
 
     /**

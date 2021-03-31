@@ -1,10 +1,11 @@
-package com.github.gogetters.letsgo
+package com.github.gogetters.letsgo.activities
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
 import android.widget.FrameLayout
-import android.widget.ImageView
+import com.github.gogetters.letsgo.game.view.GoView
+import com.github.gogetters.letsgo.game.util.InputDelegate
+import com.github.gogetters.letsgo.R
 import com.github.gogetters.letsgo.game.*
 import com.github.gogetters.letsgo.game.Game
 import kotlinx.coroutines.*

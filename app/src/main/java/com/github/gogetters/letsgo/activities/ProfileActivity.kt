@@ -1,13 +1,14 @@
-package com.github.gogetters.letsgo
+package com.github.gogetters.letsgo.activities
 
 import android.content.Intent
 import android.os.Bundle
 import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
+import com.github.gogetters.letsgo.R
 import com.google.firebase.auth.FirebaseAuth
 
-class Profile : FirebaseUIActivity() {
+class ProfileActivity : FirebaseUIActivity() {
 
     private var uploadImageText: TextView? = null
     private var profileImage: ImageView? = null
@@ -20,12 +21,12 @@ class Profile : FirebaseUIActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_profile)
 
-        uploadImageText = findViewById(R.id.upload_image_text)
-        profileImage = findViewById(R.id.profile_image)
-        nameText = findViewById(R.id.name_text)
-        emailText = findViewById(R.id.email_text)
-        cityCountyText = findViewById(R.id.city_country_text)
-        saveButton = findViewById(R.id.save_button)
+        uploadImageText = findViewById(R.id.profile_textView_upload_image_hint)
+        profileImage = findViewById(R.id.profile_imageView_image)
+        nameText = findViewById(R.id.profile_textView_name)
+        emailText = findViewById(R.id.profile_textView_email)
+        cityCountyText = findViewById(R.id.profile_textView_cityCountry)
+        saveButton = findViewById(R.id.profile_imageButton_save)
 
         updateUI()
     }

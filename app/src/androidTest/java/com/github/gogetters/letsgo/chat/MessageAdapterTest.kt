@@ -2,8 +2,7 @@ package com.github.gogetters.letsgo.chat
 
 import androidx.test.ext.junit.rules.ActivityScenarioRule
 import androidx.test.ext.junit.runners.AndroidJUnit4
-import com.github.gogetters.letsgo.ChatActivity
-import com.github.gogetters.letsgo.MapsActivity
+import com.github.gogetters.letsgo.activities.ChatActivity
 import junit.framework.Assert.assertEquals
 import org.junit.Rule
 import org.junit.Test

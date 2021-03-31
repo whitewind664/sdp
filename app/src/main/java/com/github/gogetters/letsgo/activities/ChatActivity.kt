@@ -1,14 +1,11 @@
-package com.github.gogetters.letsgo
+package com.github.gogetters.letsgo.activities
 
 import android.os.Bundle
-import android.os.Message
-import android.view.LayoutInflater
 import android.view.View
-import android.widget.ArrayAdapter
 import android.widget.EditText
 import android.widget.ListView
-import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import com.github.gogetters.letsgo.R
 import com.github.gogetters.letsgo.chat.ChatMessage
 import com.github.gogetters.letsgo.chat.MessageAdapter
 import com.google.firebase.auth.FirebaseAuth
@@ -25,9 +22,9 @@ class ChatActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_chat)
 
-        entryText = findViewById(R.id.editText)
+        entryText = findViewById(R.id.chat_editText_input)
 
-        val listView: ListView = findViewById(R.id.messages_view)
+        val listView: ListView = findViewById(R.id.chat_listView_messages)
         adapter = MessageAdapter(this)
         listView.adapter = adapter
     }
