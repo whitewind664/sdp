@@ -24,6 +24,7 @@ class TutorialActivity : AppCompatActivity() {
                 textView.text = resources.getString(R.string.tutorial_outro)
                 val buttonView = findViewById<Button>(R.id.tutorial_button_next)
                 buttonView.text = "Back to main menu"
+                // TODO go to main menu
             }
         }
     }
