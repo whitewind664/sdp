@@ -7,15 +7,21 @@ import androidx.appcompat.app.AppCompatActivity
 import com.github.gogetters.letsgo.R
 
 class TutorialActivity : AppCompatActivity() {
-    private var tutorialProgress: Int = 0
+    private var tutorialProgressIndex: Int = 0
+    private var tutorialTextIds = arrayOf(R.string.tutorial_intro, R.string.tutorial_board, R.string.tutorial_stones, R.string.tutorial_capturing, R.string.tutorial_selfCapture, R.string.tutorial_score1, R.string.tutorial_KoRule, R.string.tutorial_end, R.string.tutorial_score2)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_tutorial)
 
-        findViewById<Button>(R.id.tutorial_button_next).setOnClickListener { view ->
-            val textView = findViewById<TextView>(R.id.tutorial_textView_explanation)
-            textView.text = "New text here"
+        findViewById<Button>(R.id.tutorial_button_next).setOnClickListener { _ ->
+            if (tutorialProgressIndex + 1 < tutorialTextIds.size) {
+                tutorialProgressIndex += 1
+                val textView = findViewById<TextView>(R.id.tutorial_textView_explanation)
+                textView.text = resources.getString(tutorialTextIds[tutorialProgressIndex])
+            } else {
+                // handle end of tutorial
+            }
         }
     }
 }
