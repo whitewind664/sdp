@@ -8,7 +8,7 @@ import com.github.gogetters.letsgo.R
 
 class TutorialActivity : AppCompatActivity() {
     private var tutorialProgressIndex: Int = 0
-    private var tutorialTextIds = arrayOf(R.string.tutorial_intro, R.string.tutorial_board, R.string.tutorial_stones, R.string.tutorial_capturing, R.string.tutorial_selfCapture, R.string.tutorial_score1, R.string.tutorial_KoRule, R.string.tutorial_end, R.string.tutorial_score2)
+    private val tutorialTextIds = arrayOf(R.string.tutorial_intro, R.string.tutorial_board, R.string.tutorial_stones, R.string.tutorial_capturing, R.string.tutorial_selfCapture, R.string.tutorial_score1, R.string.tutorial_KoRule, R.string.tutorial_end, R.string.tutorial_score2)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -23,7 +23,7 @@ class TutorialActivity : AppCompatActivity() {
                 // handle end of tutorial
                 textView.text = resources.getString(R.string.tutorial_outro)
                 val buttonView = findViewById<Button>(R.id.tutorial_button_next)
-                buttonView.text = "Back to main menu"
+                buttonView.text = resources.getString(R.string.tutorial_buttonTextGoBack)
                 // TODO go to main menu
             }
         }

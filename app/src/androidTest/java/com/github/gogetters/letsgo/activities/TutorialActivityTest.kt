@@ -3,15 +3,18 @@ package com.github.gogetters.letsgo.activities
 import android.content.Intent
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.espresso.Espresso.onView
+import androidx.test.espresso.NoMatchingViewException
+import androidx.test.espresso.ViewInteraction
 import androidx.test.espresso.action.ViewActions.*
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.intent.Intents
-import androidx.test.espresso.matcher.ViewMatchers.withId
-import androidx.test.espresso.matcher.ViewMatchers.withText
+import androidx.test.espresso.matcher.ViewMatchers
+import androidx.test.espresso.matcher.ViewMatchers.*
 import androidx.test.ext.junit.rules.ActivityScenarioRule
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.github.gogetters.letsgo.R
 import junit.framework.Assert.*
+import org.hamcrest.Matchers.containsString
 import org.junit.After
 import org.junit.Before
 import org.junit.Rule
@@ -45,21 +48,16 @@ class TutorialActivityTest {
 
     @Test
     fun boardExplanationIsShowedSecond() {
-        onView(withId(R.id.main_button_startGame)).perform(click())
-        onView(withId(R.id.tutorial_textView_explanation)).check(matches(withText("The board")))
+        onView(withId(R.id.tutorial_button_next)).perform(click())
+        onView(withId(R.id.tutorial_textView_explanation)).check(matches(withText(containsString("The board"))))
     }
 
     @Test
     fun buttonTextChangesAtEndOfTutorial() {
-        /**val scenario = activityRule.scenario
-        scenario.onActivity { activity ->
-            val textView = activity.findViewById<TextView>(R.id.tutorial_textView_explanation)
-            val buttonView = activity.findViewById<Button>(R.id.tutorial_button_next)
-            while (textView.text != activity.resources.getString(R.string.tutorial_outro)) {
-                onView(withId(R.id.main_button_startGame)).perform(click())
-            }
-
-            //assertEquals()
-        }*/
+        for (i in 1..20) {
+            onView(withId(R.id.tutorial_button_next)).perform(click()) // TODO do it the correct number of times
+        }
+        onView(withId(R.id.tutorial_button_next)).check(matches(withText(containsString("Back"))))
     }
+
 }

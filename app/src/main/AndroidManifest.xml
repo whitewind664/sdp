@@ -25,8 +25,8 @@
         android:theme="@style/Theme.LetsGo">
         <activity
             android:name=".activities.TutorialActivity"
-            android:label="@string/title_activity_tutorial"
-            android:theme="@style/Theme.LetsGo.NoActionBar"></activity>
+            android:label="@string/title_activity_tutorial">
+        </activity>
         <activity
             android:name=".activities.ChatActivity"
             android:label="@string/title_activity_chat">
