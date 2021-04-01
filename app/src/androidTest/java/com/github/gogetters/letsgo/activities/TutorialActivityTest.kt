@@ -57,6 +57,7 @@ class TutorialActivityTest {
     fun buttonTextChangesAtEndOfTutorial() {
         for (i in 1..20) {
             onView(withId(R.id.tutorial_button_next)).perform(click()) // TODO do it the correct number of times
+            Thread.sleep(5)
         }
         onView(withId(R.id.tutorial_button_next)).check(matches(withText(containsString("Back"))))
     }
