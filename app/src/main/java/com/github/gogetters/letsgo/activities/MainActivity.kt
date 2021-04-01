@@ -22,7 +22,7 @@ class MainActivity : AppCompatActivity() {
 
         val mapButton = findViewById<Button>(R.id.main_button_map)
         mapButton.setOnClickListener {
-            val intent = Intent(this, MapsActivity::class.java).apply {}
+            val intent = Intent(this, MapsActivity::class.java)
             startActivity(intent)
         }
 

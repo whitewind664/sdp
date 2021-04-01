@@ -49,4 +49,22 @@ class MainActivityTest {
         onView(withId(R.id.main_button_profile)).perform(click())
         Intents.intended(Matchers.allOf(IntentMatchers.hasComponent(ProfileActivity::class.java.name)))
     }
+
+    @Test
+    fun mapButtonOpensMap() {
+        onView(withId(R.id.main_button_map)).perform(click())
+        Intents.intended(Matchers.allOf(IntentMatchers.hasComponent(MapsActivity::class.java.name)))
+    }
+
+    @Test
+    fun chatButtonOpensChat() {
+        onView(withId(R.id.main_button_chat)).perform(click())
+        Intents.intended(Matchers.allOf(IntentMatchers.hasComponent(ChatActivity::class.java.name)))
+    }
+
+    @Test
+    fun tutorialButtonOpensTutorial() {
+        onView(withId(R.id.main_button_tutorial)).perform(click())
+        Intents.intended(Matchers.allOf(IntentMatchers.hasComponent(TutorialActivity::class.java.name)))
+    }
 }
