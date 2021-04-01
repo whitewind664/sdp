@@ -37,6 +37,7 @@ class TutorialActivityTest {
         activityRule.scenario.onActivity { activity ->
             activity.sendBroadcast(Intent(Intent.ACTION_CLOSE_SYSTEM_DIALOGS))
         }
+        Thread.sleep(5000)
     }
 
     @After
