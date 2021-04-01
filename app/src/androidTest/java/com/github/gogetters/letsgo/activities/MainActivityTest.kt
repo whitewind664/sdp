@@ -8,6 +8,9 @@ import androidx.test.espresso.intent.matcher.IntentMatchers
 import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.ext.junit.rules.ActivityScenarioRule
 import androidx.test.ext.junit.runners.AndroidJUnit4
+import androidx.test.platform.app.InstrumentationRegistry.getInstrumentation
+import androidx.test.uiautomator.UiDevice
+import androidx.test.uiautomator.UiSelector
 import com.github.gogetters.letsgo.R
 import org.hamcrest.Matchers
 import org.junit.After
@@ -25,10 +28,13 @@ class MainActivityTest {
     @Before
     fun init() {
         Intents.init()
-        activityRule.scenario.onActivity { activity ->
-            activity.sendBroadcast(Intent(Intent.ACTION_CLOSE_SYSTEM_DIALOGS))
+
+        val device = UiDevice.getInstance(getInstrumentation())
+        var waitButton = device.findObject(UiSelector().textContains("wait"))
+        if (waitButton.exists()) {
+            waitButton.click()
         }
-        Thread.sleep(5000)
+        //Thread.sleep(5000)
     }
 
     @After

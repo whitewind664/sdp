@@ -12,6 +12,9 @@ import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.espresso.matcher.ViewMatchers.*
 import androidx.test.ext.junit.rules.ActivityScenarioRule
 import androidx.test.ext.junit.runners.AndroidJUnit4
+import androidx.test.platform.app.InstrumentationRegistry
+import androidx.test.uiautomator.UiDevice
+import androidx.test.uiautomator.UiSelector
 import com.github.gogetters.letsgo.R
 import junit.framework.Assert.*
 import org.hamcrest.Matchers.containsString
@@ -34,10 +37,11 @@ class TutorialActivityTest {
     @Before
     fun init() {
         Intents.init()
-        activityRule.scenario.onActivity { activity ->
-            activity.sendBroadcast(Intent(Intent.ACTION_CLOSE_SYSTEM_DIALOGS))
+        val device = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation())
+        var waitButton = device.findObject(UiSelector().textContains("wait"))
+        if (waitButton.exists()) {
+            waitButton.click()
         }
-        Thread.sleep(5000)
     }
 
     @After
