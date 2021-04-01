@@ -1,6 +1,5 @@
 package com.github.gogetters.letsgo.activities
 
-import android.content.Intent
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.action.ViewActions.*
 import androidx.test.espresso.intent.Intents

@@ -3,11 +3,11 @@ package com.github.gogetters.letsgo.activities
 import android.content.Intent
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.espresso.Espresso.onView
-import androidx.test.espresso.NoMatchingViewException
 import androidx.test.espresso.ViewInteraction
 import androidx.test.espresso.action.ViewActions.*
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.intent.Intents
+import androidx.test.espresso.intent.matcher.IntentMatchers
 import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.espresso.matcher.ViewMatchers.*
 import androidx.test.ext.junit.rules.ActivityScenarioRule
@@ -16,7 +16,7 @@ import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.uiautomator.UiDevice
 import androidx.test.uiautomator.UiSelector
 import com.github.gogetters.letsgo.R
-import junit.framework.Assert.*
+import org.hamcrest.Matchers
 import org.hamcrest.Matchers.containsString
 import org.junit.After
 import org.junit.Before
@@ -58,12 +58,19 @@ class TutorialActivityTest {
     }
 
     @Test
-    fun buttonTextChangesAtEndOfTutorial() {
-        for (i in 1..20) {
-            onView(withId(R.id.tutorial_button_next)).perform(click()) // TODO do it the correct number of times
-            Thread.sleep(5)
-        }
-        onView(withId(R.id.tutorial_button_next)).check(matches(withText(containsString("Back"))))
+    fun goesBackToMainAtEndOfTutorial() {
+        onView(withId(R.id.tutorial_button_next)).perform(click())
+        onView(withId(R.id.tutorial_button_next)).perform(click())
+        onView(withId(R.id.tutorial_button_next)).perform(click())
+        onView(withId(R.id.tutorial_button_next)).perform(click())
+        onView(withId(R.id.tutorial_button_next)).perform(click())
+        onView(withId(R.id.tutorial_button_next)).perform(click())
+        onView(withId(R.id.tutorial_button_next)).perform(click())
+        onView(withId(R.id.tutorial_button_next)).perform(click())
+        onView(withId(R.id.tutorial_button_next)).perform(click())
+        onView(withId(R.id.tutorial_button_next)).perform(click())
+        // TODO attention, the number of clicks matters!
+        Intents.intended(Matchers.allOf(IntentMatchers.hasComponent(MainActivity::class.java.name)))
     }
 
 }
