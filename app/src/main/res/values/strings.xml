@@ -4,6 +4,7 @@
 
     <string name="startGameButtonText">Start Game</string>
     <string name="openMapButtonText">Open Map</string>
+    <string name="openBTButtonText">Bluetooth</string>
     <string name="scoreTitleText">Score</string>
     <string name="scoreDefaultText">0</string>
 
