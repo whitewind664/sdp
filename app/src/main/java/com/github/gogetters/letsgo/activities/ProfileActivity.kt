@@ -21,7 +21,7 @@ class ProfileActivity : FirebaseUIActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_profile)
 
-        uploadImageText = findViewById(R.id.profile_textView_upload_image_hint)
+        uploadImageText = findViewById(R.id.profile_textView_uploadImageHint)
         profileImage = findViewById(R.id.profile_imageView_image)
         nameText = findViewById(R.id.profile_textView_name)
         emailText = findViewById(R.id.profile_textView_email)
