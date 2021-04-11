@@ -61,7 +61,7 @@ class BluetoothActivity: AppCompatActivity() {
             startActivityForResult(enableIntent, REQUEST_ENABLE_BLUETOOTH)
         }
 
-        foundDevices = mutableSetOf();
+        foundDevices = mutableSetOf()
         registerReceiver(receiver, IntentFilter(BluetoothDevice.ACTION_FOUND))
 
         implementListeners()
