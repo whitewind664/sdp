@@ -32,7 +32,7 @@ class GameActivity : AppCompatActivity() {
         goView.inputDelegate = inputDelegate
 
 
-        val boardFrame = findViewById<FrameLayout>(R.id.gameBoardFrame)
+        val boardFrame = findViewById<FrameLayout>(R.id.game_frameLayout_boardFrame)
         boardFrame.addView(goView)
 
         val whitePlayer = LocalPlayer(Stone.WHITE, inputDelegate)
