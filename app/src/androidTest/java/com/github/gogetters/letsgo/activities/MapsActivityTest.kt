@@ -76,7 +76,6 @@ class MapsActivityTest {
             allowPermissionsButton.click();
         }
 
-
         // after waiting for a while, check whether the map is displayed
         onView(withId(R.id.map)).check(matches(isDisplayed())) // this line somehow does run forever
     }
