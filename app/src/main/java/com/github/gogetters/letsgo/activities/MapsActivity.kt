@@ -11,6 +11,7 @@ import android.widget.Button
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.github.gogetters.letsgo.R
+import com.github.gogetters.letsgo.map.LocationSharingService
 import com.github.gogetters.letsgo.util.PermissionUtils.isPermissionGranted
 import com.github.gogetters.letsgo.util.PermissionUtils.requestPermission
 import com.google.android.gms.location.FusedLocationProviderClient
@@ -31,7 +32,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMyLoca
     private var permissionDenied = false
     private lateinit var mMap: GoogleMap
     private lateinit var fusedLocationClient: FusedLocationProviderClient
-
+    private lateinit var locationSharingService: LocationSharingService
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -44,10 +45,11 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMyLoca
 
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
 
+
         // set listeners for buttons
         val showPlayersButton = findViewById<Button>(R.id.map_button_showPlayers)
         showPlayersButton.setOnClickListener {
-            
+            this.getAndDisplayOtherPlayers()
         }
     }
 
@@ -75,6 +77,13 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMyLoca
         sendLocation()
     }
 
+    /**
+     * Allows to set a locationSharingService that is used to share and retrieve locations of users
+     */
+    fun setLocationSharingService(locationSharingService: LocationSharingService) {
+        this.locationSharingService = locationSharingService
+    }
+
     private fun enableLocation() {
         if (!::mMap.isInitialized)
             return
@@ -97,13 +106,23 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMyLoca
                 fusedLocationClient.lastLocation
                         .addOnSuccessListener { location: Location? ->
                             // Got last known location. In some rare situations this can be null.
-                            // TODO send later the retrieved position to the other players
-                            println("Location is $location")
+                            if (!::locationSharingService.isInitialized || location == null)
+                                // TODO display dialog with error message
+                            else
+                                locationSharingService.shareMyLocation(location)
                         }
             }
         } catch (e: SecurityException) {
             Log.e("Exception: %s", e.message, e)
         }
+    }
+
+    private fun getAndDisplayOtherPlayers() {
+        if (!::locationSharingService.isInitialized)
+            return
+
+        var otherPlayers: List<Location> = locationSharingService.getSharedLocations()
+
     }
 
     override fun onMyLocationButtonClick(): Boolean {
@@ -141,4 +160,5 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMyLoca
             permissionDenied = false
         }
     }
+
 }
