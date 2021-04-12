@@ -17,5 +17,5 @@ abstract class LocationSharingService {
     /**
      * Get all the recent shared location by other users from the database
      */
-    abstract fun getSharedLocations(): List<LatLng>
+    abstract fun getSharedLocations(): Map<LatLng, String>
 }

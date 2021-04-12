@@ -22,6 +22,7 @@ import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
+import com.google.android.gms.maps.model.Marker
 import com.google.android.gms.maps.model.MarkerOptions
 
 class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMyLocationButtonClickListener,
@@ -33,6 +34,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMyLoca
     private lateinit var mMap: GoogleMap
     private lateinit var fusedLocationClient: FusedLocationProviderClient
     private lateinit var locationSharingService: LocationSharingService
+    private var userMarkers: Map<Marker, String> = emptyMap()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -84,6 +86,15 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMyLoca
         this.locationSharingService = locationSharingService
     }
 
+    /**
+     *  Returns all the actual displayed markers of users looking for players on the map
+     *  and their user id
+     */
+    fun getUserMarkers(): Map<Marker, String> {
+        // TODO is this function necessary?
+        return userMarkers
+    }
+
     private fun enableLocation() {
         if (!::mMap.isInitialized)
             return
@@ -126,10 +137,11 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMyLoca
         if (!::locationSharingService.isInitialized)
             return
 
-        var otherPlayers: List<LatLng> = locationSharingService.getSharedLocations()
-        for (playerPosition in otherPlayers) {
-            val marker = mMap.addMarker(MarkerOptions().position(playerPosition))
-            marker // TODO add to a map that maps it to userinfo
+        var otherPlayers: Map<LatLng, String> = locationSharingService.getSharedLocations()
+        userMarkers = emptyMap()
+        for ((playerPosition, id) in otherPlayers.entries) {
+            val marker = mMap.addMarker(MarkerOptions().position(playerPosition).title("User $id"))
+            userMarkers = userMarkers + Pair(marker, id)
         }
     }
 

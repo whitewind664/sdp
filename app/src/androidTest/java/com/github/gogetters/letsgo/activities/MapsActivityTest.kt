@@ -58,7 +58,7 @@ class MapsActivityTest {
     fun otherPlayersAreDisplayedOnButtonClick() {
         onView(withId(R.id.map_button_showPlayers)).perform(click())
 
-        // TODO test if the markers are displayed (first, the maps activity needs to be completed)
+        // TODO
     }
 
     @Test
@@ -77,7 +77,7 @@ class MapsActivityTest {
         }
 
         // after waiting for a while, check whether the map is displayed
-        onView(withId(R.id.map)).check(matches(isDisplayed())) // this line somehow does run forever
+        onView(withId(R.id.map)).check(matches(isDisplayed()))
     }
 
 }
