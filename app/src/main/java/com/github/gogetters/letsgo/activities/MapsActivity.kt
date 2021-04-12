@@ -1,11 +1,13 @@
 package com.github.gogetters.letsgo.activities
 
 import android.Manifest
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.location.Location
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import android.widget.Button
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.github.gogetters.letsgo.R
@@ -41,6 +43,12 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMyLoca
         mapFragment.getMapAsync(this)
 
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
+
+        // set listeners for buttons
+        val showPlayersButton = findViewById<Button>(R.id.map_button_showPlayers)
+        showPlayersButton.setOnClickListener {
+            
+        }
     }
 
     /**
