@@ -1,6 +1,7 @@
 package com.github.gogetters.letsgo.map
 
 import android.location.Location
+import com.google.android.gms.maps.model.LatLng
 
 /**
  * A class that is responsible for sharing the location between users.
@@ -11,10 +12,10 @@ abstract class LocationSharingService {
     /**
      * Share the location with the database
      */
-    abstract fun shareMyLocation(location: Location): Boolean
+    abstract fun shareMyLocation(location: LatLng): Boolean
 
     /**
      * Get all the recent shared location by other users from the database
      */
-    abstract fun getSharedLocations(): List<Location>
+    abstract fun getSharedLocations(): List<LatLng>
 }

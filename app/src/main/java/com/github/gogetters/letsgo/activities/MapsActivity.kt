@@ -67,7 +67,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMyLoca
 
         // Add a marker at EPFL and move the camera
         val epfl = LatLng(46.51899505106699, 6.563449219980816)
-        val zoom: Float = 10f
+        val zoom = 10f
         mMap.addMarker(MarkerOptions().position(epfl).title("Marker at EPFL"))
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(epfl, zoom))
 
@@ -106,10 +106,12 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMyLoca
                 fusedLocationClient.lastLocation
                         .addOnSuccessListener { location: Location? ->
                             // Got last known location. In some rare situations this can be null.
-                            if (!::locationSharingService.isInitialized || location == null)
+                            if (!::locationSharingService.isInitialized || location == null) {
                                 // TODO display dialog with error message
-                            else
-                                locationSharingService.shareMyLocation(location)
+                            } else {
+                                // share the location with other users
+                                locationSharingService.shareMyLocation(LatLng(location.latitude, location.longitude))
+                            }
                         }
             }
         } catch (e: SecurityException) {
@@ -117,12 +119,18 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMyLoca
         }
     }
 
+    /**
+     *  Gets the positions of other users and displays them on the map
+     */
     private fun getAndDisplayOtherPlayers() {
         if (!::locationSharingService.isInitialized)
             return
 
-        var otherPlayers: List<Location> = locationSharingService.getSharedLocations()
-
+        var otherPlayers: List<LatLng> = locationSharingService.getSharedLocations()
+        for (playerPosition in otherPlayers) {
+            val marker = mMap.addMarker(MarkerOptions().position(playerPosition))
+            marker // TODO add to a map that maps it to userinfo
+        }
     }
 
     override fun onMyLocationButtonClick(): Boolean {

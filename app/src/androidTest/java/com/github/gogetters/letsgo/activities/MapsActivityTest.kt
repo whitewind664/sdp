@@ -1,7 +1,21 @@
 package com.github.gogetters.letsgo.activities
 
+import androidx.test.espresso.Espresso.*
+import androidx.test.espresso.action.ViewActions.*
+import androidx.test.espresso.matcher.ViewMatchers.*
+import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.ext.junit.rules.ActivityScenarioRule
 import androidx.test.ext.junit.runners.AndroidJUnit4
+import androidx.test.platform.app.InstrumentationRegistry
+import androidx.test.uiautomator.UiDevice
+import androidx.test.uiautomator.UiSelector
+import com.github.gogetters.letsgo.R
+import com.github.gogetters.letsgo.util.MockLocationSharingService
+import androidx.test.platform.app.InstrumentationRegistry.getInstrumentation
+import androidx.test.uiautomator.UiObject
+
+import org.junit.After
+import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -22,28 +36,49 @@ class MapsActivityTest {
 
     @get:Rule var activityRule = ActivityScenarioRule<MapsActivity>(MapsActivity::class.java)
 
+    @Before
+    fun init() {
+        val device = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation())
+        var waitButton = device.findObject(UiSelector().textContains("wait"))
+        if (waitButton.exists()) {
+            waitButton.click()
+        }
+        // set locationSharingService
+        activityRule.scenario.onActivity { activity ->
+            activity.setLocationSharingService(MockLocationSharingService())
+        }
+    }
+
+    @After
+    fun cleanUp() {
+        activityRule.scenario.close()
+    }
+
+    @Test
+    fun otherPlayersAreDisplayedOnButtonClick() {
+        onView(withId(R.id.map_button_showPlayers)).perform(click())
+
+        // TODO test if the markers are displayed (first, the maps activity needs to be completed)
+    }
+
     @Test
     fun mapIsDisplayedIfPermissionIsGranted() {
         val scenario = activityRule.scenario
-        /** EXCLUDED DUE TO ERRORS
-        scenario.onActivity { activity ->
-            // in case the permission hasn't been requested
-            requestPermission(activity, 1,  Manifest.permission.ACCESS_FINE_LOCATION) // this line somehow produces keyDispatchingTimedOut fail
-            val device: UiDevice = UiDevice.getInstance(getInstrumentation())
-            val allowPermissionsButton: UiObject = device.findObject(UiSelector()
-                    .clickable(true)
-                    .checkable(false)
-                    .index(GRANT_PERMISSION_BUTTON_INDEX))
-            if (allowPermissionsButton.exists()) {
-                allowPermissionsButton.click();
-            }
+        getInstrumentation()
 
-            //sleep()
+        // in case the permission hasn't been requested
+        val device: UiDevice = UiDevice.getInstance(getInstrumentation())
+        val allowPermissionsButton: UiObject = device.findObject(UiSelector()
+                .clickable(true)
+                .checkable(false)
+                .index(GRANT_PERMISSION_BUTTON_INDEX))
+        if (allowPermissionsButton.exists()) {
+            allowPermissionsButton.click();
+        }
 
-            // after waiting for a while, check whether the map is displayed
-            onView(withId(R.id.map)).check(matches(isDisplayed())) // this line somehow does run forever
 
-        }**/
+        // after waiting for a while, check whether the map is displayed
+        onView(withId(R.id.map)).check(matches(isDisplayed())) // this line somehow does run forever
     }
 
 }
