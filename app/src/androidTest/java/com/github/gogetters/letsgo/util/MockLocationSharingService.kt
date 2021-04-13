@@ -3,6 +3,7 @@ package com.github.gogetters.letsgo.util
 import android.location.Location
 import com.github.gogetters.letsgo.map.LocationSharingService
 import com.google.android.gms.maps.model.LatLng
+import java.util.concurrent.CompletableFuture
 
 class MockLocationSharingService(): LocationSharingService() {
     val EPFL = LatLng(46.51899505106699, 6.563449219980816)
@@ -13,7 +14,11 @@ class MockLocationSharingService(): LocationSharingService() {
         return true
     }
 
-    override fun getSharedLocations(): Map<LatLng, String> {
-        return others
+    override fun disableLocationSharing() {
+
+    }
+
+    override fun getSharedLocations(): CompletableFuture<Map<LatLng, String>> {
+        return CompletableFuture.completedFuture(others)
     }
 }

@@ -1,7 +1,6 @@
 package com.github.gogetters.letsgo.activities
 
 import android.Manifest
-import android.content.Intent
 import android.content.pm.PackageManager
 import android.location.Location
 import androidx.appcompat.app.AppCompatActivity
@@ -11,6 +10,7 @@ import android.widget.Button
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.github.gogetters.letsgo.R
+import com.github.gogetters.letsgo.map.DatabaseLocationSharingService
 import com.github.gogetters.letsgo.map.LocationSharingService
 import com.github.gogetters.letsgo.util.PermissionUtils.isPermissionGranted
 import com.github.gogetters.letsgo.util.PermissionUtils.requestPermission
@@ -35,6 +35,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMyLoca
     private lateinit var fusedLocationClient: FusedLocationProviderClient
     private lateinit var locationSharingService: LocationSharingService
     private var userMarkers: Map<Marker, String> = emptyMap()
+    private var otherUsersActivated: Boolean = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -46,12 +47,12 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMyLoca
         mapFragment.getMapAsync(this)
 
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
-
+        locationSharingService = DatabaseLocationSharingService()
 
         // set listeners for buttons
         val showPlayersButton = findViewById<Button>(R.id.map_button_showPlayers)
         showPlayersButton.setOnClickListener {
-            this.getAndDisplayOtherPlayers()
+            this.activateAndUpdateOtherPlayers()
         }
     }
 
@@ -67,10 +68,9 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMyLoca
     override fun onMapReady(googleMap: GoogleMap) {
         mMap = googleMap
 
-        // Add a marker at EPFL and move the camera
+        // Move the camera to EPFL
         val epfl = LatLng(46.51899505106699, 6.563449219980816)
         val zoom = 10f
-        mMap.addMarker(MarkerOptions().position(epfl).title("Marker at EPFL"))
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(epfl, zoom))
 
         googleMap.setOnMyLocationButtonClickListener(this)
@@ -86,14 +86,6 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMyLoca
         this.locationSharingService = locationSharingService
     }
 
-    /**
-     *  Returns all the actual displayed markers of users looking for players on the map
-     *  and their user id
-     */
-    fun getUserMarkers(): Map<Marker, String> {
-        // TODO is this function necessary?
-        return userMarkers
-    }
 
     private fun enableLocation() {
         if (!::mMap.isInitialized)
@@ -133,16 +125,48 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMyLoca
     /**
      *  Gets the positions of other users and displays them on the map
      */
-    private fun getAndDisplayOtherPlayers() {
+    private fun activateAndUpdateOtherPlayers() {
         if (!::locationSharingService.isInitialized)
             return
 
-        var otherPlayers: Map<LatLng, String> = locationSharingService.getSharedLocations()
-        userMarkers = emptyMap()
-        for ((playerPosition, id) in otherPlayers.entries) {
-            val marker = mMap.addMarker(MarkerOptions().position(playerPosition).title("User $id"))
-            userMarkers = userMarkers + Pair(marker, id)
+        otherUsersActivated = true
+
+        locationSharingService.getSharedLocations().thenApply {
+            if (it == null || it.isEmpty()) {
+                // TODO display that there are no other players
+            } else {
+                setOtherPlayers(it)
+            }
         }
+
+    }
+
+    private fun setOtherPlayers(updatedUsers: Map<LatLng, String>) {
+        if (otherUsersActivated) {
+            removeAllOtherPlayers()
+            for ((playerPosition, id) in updatedUsers.entries) {
+                val marker = mMap.addMarker(MarkerOptions().position(playerPosition).title("User $id"))
+                userMarkers = userMarkers + Pair(marker, id)
+            }
+        }
+    }
+
+    /**
+     * Deact
+     */
+    private fun deactivateDisplayOtherPlayers() {
+        otherUsersActivated = false
+        removeAllOtherPlayers()
+    }
+
+    /**
+     * Removes all markers of other users from the map
+     */
+    private fun removeAllOtherPlayers() {
+        for ((marker, _) in userMarkers.entries) {
+            marker.remove()
+        }
+        userMarkers = emptyMap()
     }
 
     override fun onMyLocationButtonClick(): Boolean {
