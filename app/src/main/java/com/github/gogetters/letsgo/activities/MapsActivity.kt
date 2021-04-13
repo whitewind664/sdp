@@ -106,11 +106,13 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMyLoca
     private fun sendLocation() {
         try {
             if (!permissionDenied) {
+                Log.i("MapsActivity", "Create request")
                 fusedLocationClient.lastLocation
                         .addOnSuccessListener { location: Location? ->
                             // Got last known location. In some rare situations this can be null.
                             if (!::locationSharingService.isInitialized || location == null) {
                                 // TODO display dialog with error message
+                                Log.v("MapsActivity", "Location could not be shared")
                             } else {
                                 // share the location with other users
                                 locationSharingService.shareMyLocation(LatLng(location.latitude, location.longitude))

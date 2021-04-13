@@ -1,5 +1,6 @@
 package com.github.gogetters.letsgo.database
 
+import android.util.Log
 import com.google.android.gms.maps.model.LatLng
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot
@@ -10,11 +11,12 @@ import java.util.concurrent.CompletableFuture
 
 class Database {
     companion object {
-        val database = Firebase.database.reference
 
         init {
             Firebase.database.setPersistenceEnabled(true)
         }
+
+        val database = Firebase.database.reference
 
         // TODO write database functions here
         
@@ -29,6 +31,7 @@ class Database {
             userRef.child("isLookingForPlayers").setValue(true)
             userRef.child("lastPositionLatitude").setValue(location.latitude)
             userRef.child("lastPositionLongitude").setValue(location.longitude)
+            Log.i("DB","Shared")
             return true
         }
 
@@ -50,7 +53,7 @@ class Database {
                 // unpack the values
                 var map: Map<LatLng, String> = emptyMap()
                 for(user: DataSnapshot in it.children) {
-                    val userId: String = user.value as String
+                    val userId: String = user.key as String
 
                     var lat: Double = 0.0
                     var lng: Double = 0.0
@@ -59,9 +62,10 @@ class Database {
                         when (attribute.key) {
                             "isLookingForPlayers" -> isActive = attribute.value as Boolean
                             "lastPositionLatitude" -> lat = attribute.value as Double
-                            "lastPositionLatitude" -> lng = attribute.value as Double
+                            "lastPositionLongitude" -> lng = attribute.value as Double
                         }
                     }
+                    Log.i("DB", "Values: $userId, $isActive, $lat, $lng")
                     if (isActive) {
                         // TODO check that its not me
                         map = map + Pair(LatLng(lat, lng), userId)
