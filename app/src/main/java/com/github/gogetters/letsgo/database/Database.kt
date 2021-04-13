@@ -17,6 +17,7 @@ class Database {
         }
 
         // TODO write database functions here
+        
         // ---- Map related ----
         /**
          * Activates the location sharing and sends location to database.
