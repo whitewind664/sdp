@@ -9,7 +9,9 @@ import android.content.*
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.os.Handler
+import android.os.Looper
 import android.os.Message
+import android.util.Log
 import android.widget.ArrayAdapter
 import android.view.View
 import android.widget.*
@@ -19,6 +21,9 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.github.gogetters.letsgo.R
+import com.github.gogetters.letsgo.util.BluetoothClient
+import com.github.gogetters.letsgo.util.BluetoothGTPService
+import com.github.gogetters.letsgo.util.BluetoothServer
 import com.github.gogetters.letsgo.util.PermissionUtils
 import java.io.IOException
 import java.io.InputStream
@@ -38,6 +43,20 @@ class BluetoothActivity: AppCompatActivity() {
     lateinit var btArray: Array<BluetoothDevice?>
     private var sendReceive: SendReceive? = null
     private var foundDevices: MutableSet<BluetoothDevice>? = null
+
+    private val handler = Handler(Looper.getMainLooper()) {
+        when (it.what) {
+            0 -> {
+                Log.d("BLUETOOTHTEST", "message received: $it.obj")
+                Toast.makeText(this, "$it.obj", Toast.LENGTH_LONG)
+                true
+            }
+            else ->  {
+                Log.d("BLUETOOTHTEST", "not working...")
+                false
+            }
+        }
+    }
 
 
 
@@ -95,27 +114,11 @@ class BluetoothActivity: AppCompatActivity() {
     private fun implementListeners() {
       listView!!.onItemClickListener =
             OnItemClickListener { adapterView, view, i, l ->
-                val clientClass: ClientClass = ClientClass(btArray[i]!!)
-                clientClass.start()
-                status!!.text = "Connecting"
+                val client = BluetoothClient(handler)
+                val service = BluetoothGTPService(handler)
+                client.connect(btArray[i]!!, service)
+                service.write("HELLO WORLD!!!!")
             }
-
-    }
-
-    // handles messages sent between client and server
-    var handler = Handler { msg ->
-        when (msg.what) {
-            STATE_LISTENING -> status!!.text = "Listening"
-            STATE_CONNECTING -> status!!.text = "Connecting"
-            STATE_CONNECTED -> status!!.text = "Connected"
-            STATE_CONNECTION_FAILED -> status!!.text = "Connection Failed"
-            STATE_MESSAGE_RECEIVED -> {
-                val readBuff = msg.obj as ByteArray
-                val tempMsg = String(readBuff, 0, msg.arg1)
-                msg_box!!.text = tempMsg
-            }
-        }
-        true
     }
 
 
@@ -138,8 +141,8 @@ class BluetoothActivity: AppCompatActivity() {
      * Launches a BT server
      */
     fun launchServer(v: View?){
-        val serverClass: ServerClass = ServerClass()
-        serverClass.start()
+        val server = BluetoothServer(handler)
+        server.connect()
     }
 
     /**

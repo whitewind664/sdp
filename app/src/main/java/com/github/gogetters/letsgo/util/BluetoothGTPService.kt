@@ -7,21 +7,19 @@ import android.os.Looper
 import android.util.Log
 import com.github.gogetters.letsgo.game.GTPCommand
 import com.github.gogetters.letsgo.game.Move
-import com.github.gogetters.letsgo.game.Point
-import com.github.gogetters.letsgo.game.Stone
 import java.io.IOException
 import java.io.InputStream
 import java.io.OutputStream
-import java.util.*
 import java.util.concurrent.ArrayBlockingQueue
 
-private const val TAG = "MY_APP_DEBUG_TAG"
-
-const val MESSAGE_READ: Int = 0
-const val MESSAGE_WRITE: Int = 1
-const val MESSAGE_TOAST: Int = 2
 
 class BluetoothGTPService(private val handler: Handler) {
+    private val TAG = "MY_APP_DEBUG_TAG"
+
+    private val MESSAGE_READ: Int = 0
+    private val MESSAGE_WRITE: Int = 1
+    private val MESSAGE_TOAST: Int = 2
+
 
     private val queue = ArrayBlockingQueue<Move>(64)
 
@@ -30,6 +28,11 @@ class BluetoothGTPService(private val handler: Handler) {
     fun connect(socket: BluetoothSocket) {
         connectedThread = ConnectedThread(socket)
         connectedThread.start()
+    }
+
+    fun write(s: String) {
+        val bytes = s.toByteArray()
+        connectedThread.write(bytes)
     }
 
     fun sendCommand(gtpCommand: GTPCommand) {
@@ -53,15 +56,6 @@ class BluetoothGTPService(private val handler: Handler) {
             return false
         }
         return true
-    }
-
-    fun getHandler(): Handler {
-        return Handler(Looper.getMainLooper()) { msg ->
-            when(msg.what) {
-                MESSAGE_READ -> receiveCommand(msg.obj as ByteArray)
-                else -> false
-            }
-        }
     }
 
     private inner class ConnectedThread(private val mmSocket: BluetoothSocket) : Thread() {

@@ -11,6 +11,14 @@ import java.util.*
 class BluetoothClient(val handler: Handler) {
 
     private val bluetoothAdapter = BluetoothAdapter.getDefaultAdapter()
+    private lateinit var connectThread: ConnectThread
+    private lateinit var service: BluetoothGTPService
+
+    fun connect(device: BluetoothDevice, service: BluetoothGTPService) {
+        this.service = service
+        connectThread = ConnectThread(device)
+        connectThread.start()
+    }
 
     private inner class ConnectThread(device: BluetoothDevice): Thread() {
         private val uuid: UUID = UUID.fromString("8ce255c0-223a-11e0-ac64-0803450c9a66")
@@ -31,7 +39,7 @@ class BluetoothClient(val handler: Handler) {
                 // The connection attempt succeeded. Perform work associated with
                 // the connection in a separate thread.
 
-                BluetoothGTPService(handler).connect(socket)
+                service.connect(socket)
             }
         }
 
