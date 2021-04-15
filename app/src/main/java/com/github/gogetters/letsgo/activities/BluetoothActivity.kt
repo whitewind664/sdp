@@ -45,6 +45,9 @@ class BluetoothActivity: AppCompatActivity() {
     lateinit var btArray: Array<BluetoothDevice?>
     private var sendReceive: SendReceive? = null
     private var foundDevices: MutableSet<BluetoothDevice>? = null
+    private lateinit var client: BluetoothClient
+    private lateinit var server: BluetoothServer
+    private lateinit var service: BluetoothGTPService
 
     private val handler = Handler(Looper.getMainLooper()) {
         when (it.what) {
@@ -116,8 +119,8 @@ class BluetoothActivity: AppCompatActivity() {
     private fun implementListeners() {
       listView!!.onItemClickListener =
             OnItemClickListener { adapterView, view, i, l ->
-                val client = BluetoothClient(handler)
-                val service = BluetoothGTPService(handler)
+                client = BluetoothClient(handler)
+                service = BluetoothGTPService(handler)
                 val deviceName = adapterView.adapter.getItem(i) as String
                 var serverDevice: BluetoothDevice? = null
                 for (device in foundDevices!!) {
@@ -139,6 +142,10 @@ class BluetoothActivity: AppCompatActivity() {
 
     fun sendMessage(v: View?){
         val string = writeMsg!!.text.toString()
+
+        service.write(string)
+
+        /**
         if(sendReceive != null)
             sendReceive!!.write(string.toByteArray())
         else
@@ -146,13 +153,14 @@ class BluetoothActivity: AppCompatActivity() {
                     "Need to establish a connection first",
                     Toast.LENGTH_SHORT)
                     .show()
+        */
     }
 
     /**
      * Launches a BT server
      */
     fun launchServer(v: View?){
-        val server = BluetoothServer(handler)
+        server = BluetoothServer(handler)
         server.connect()
     }
 
