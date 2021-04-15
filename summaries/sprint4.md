@@ -23,9 +23,14 @@
 - To improve:
 
 ## Roust, Michael Murad
-- Done:
-- Went well:
-- To improve:
+- Done: Created a single class for communicating for accessing User data and metadata. This was necessary as
+some user info like email is stored in FirebaseAuth however, extra infomations such as nickname, lets go profile picture
+and friends list cannot be stored in FirebaseAuth and has to be managed by us seperately. My work was to create
+a class that communicates with both FirebaseAuth and our Firestore and give us a unified place to interact with all user
+info.
+- Went well: Understanding Firestore and working with Tasks (like Java Futures).
+- To improve: Time needs to be invested to standardise accessing User info throughout the app. Next step will be
+to be able to store more user information.
 
 ## Wengle, Erik Alessandro
 - Done: Can establish bluetooth connection with any device
