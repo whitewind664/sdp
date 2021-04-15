@@ -3,11 +3,17 @@ package com.github.gogetters.letsgo.util
 import android.bluetooth.BluetoothSocket
 import android.os.Bundle
 import android.os.Handler
+import android.os.Looper
 import android.util.Log
 import com.github.gogetters.letsgo.game.GTPCommand
+import com.github.gogetters.letsgo.game.Move
+import com.github.gogetters.letsgo.game.Point
+import com.github.gogetters.letsgo.game.Stone
 import java.io.IOException
 import java.io.InputStream
 import java.io.OutputStream
+import java.util.*
+import java.util.concurrent.ArrayBlockingQueue
 
 private const val TAG = "MY_APP_DEBUG_TAG"
 
@@ -17,15 +23,45 @@ const val MESSAGE_TOAST: Int = 2
 
 class BluetoothGTPService(private val handler: Handler) {
 
-    private lateinit var handleThread: ConnectedThread
+    private val queue = ArrayBlockingQueue<Move>(64)
+
+    private lateinit var connectedThread: ConnectedThread
 
     fun connect(socket: BluetoothSocket) {
-        handleThread = ConnectedThread(socket)
-        handleThread.run()
+        connectedThread = ConnectedThread(socket)
+        connectedThread.start()
     }
 
-    fun parseCommand(command: GTPCommand) {
+    fun sendCommand(gtpCommand: GTPCommand) {
+        val serializedCommand = gtpCommand.toString()
+        val commandBytes = serializedCommand.toByteArray()
+        connectedThread.write(commandBytes)
+    }
 
+    private fun receiveCommand(bytes: ByteArray): Boolean {
+        try {
+            val commandString = bytes.toString()
+            val command = GTPCommand.toCommand(commandString)
+
+            if (command is GTPCommand.PLAY) {
+                queue.add(command.move)
+            }
+
+        } catch (e: Error) { //TODO figure out what exception bytes.toString() would throw
+            return false
+        } catch (e: Error) {
+            return false
+        }
+        return true
+    }
+
+    fun getHandler(): Handler {
+        return Handler(Looper.getMainLooper()) { msg ->
+            when(msg.what) {
+                MESSAGE_READ -> receiveCommand(msg.obj as ByteArray)
+                else -> false
+            }
+        }
     }
 
     private inner class ConnectedThread(private val mmSocket: BluetoothSocket) : Thread() {

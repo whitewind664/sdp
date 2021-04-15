@@ -16,9 +16,12 @@ class BluetoothServer(val handler: Handler) {
     private val acceptThread = AcceptThread()
 
     fun connect() {
-        acceptThread.run()
+        acceptThread.start()
     }
 
+    fun cancel() {
+        acceptThread.cancel()
+    }
 
     private inner class AcceptThread : Thread() {
 
