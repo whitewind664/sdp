@@ -6,6 +6,7 @@ import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
 import com.github.gogetters.letsgo.R
+import com.github.gogetters.letsgo.database.LetsGoUserManager
 import com.google.firebase.auth.FirebaseAuth
 
 class ProfileActivity : FirebaseUIActivity() {
@@ -42,11 +43,14 @@ class ProfileActivity : FirebaseUIActivity() {
         val authInstance = FirebaseAuth.getInstance().currentUser
 
         if (authInstance == null) {
-
+            // TODO Don't let the user see this screen without having successfully completed sign-in.
         } else {
-            nameText!!.text = authInstance.displayName
-            emailText!!.text = authInstance.email
-            // cityCountyText!!.text = authInstance.
+            LetsGoUserManager.currentUser().addOnCompleteListener { x->
+                val user = x.result
+                nameText!!.text = user.fb.displayName
+                emailText!!.text = user.fb.email
+                cityCountyText!!.text = "${user.city}, ${user.country}"
+            }
         }
     }
 }
