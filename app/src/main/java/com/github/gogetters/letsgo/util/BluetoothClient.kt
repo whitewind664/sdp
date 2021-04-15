@@ -30,7 +30,7 @@ class BluetoothClient(val handler: Handler) {
             // Cancel discovery because it otherwise slows down the connection.
             bluetoothAdapter?.cancelDiscovery()
 
-            mmSocket?.use { socket ->
+            mmSocket?.also { socket ->
                 // Connect to the remote device through the socket. This call blocks
                 // until it succeeds or throws an exception.
                 //TODO handle IOException for timeout???? surely....
