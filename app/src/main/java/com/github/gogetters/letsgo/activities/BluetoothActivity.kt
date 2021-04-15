@@ -20,6 +20,7 @@ import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import androidx.core.view.get
 import com.github.gogetters.letsgo.R
 import com.github.gogetters.letsgo.util.BluetoothClient
 import com.github.gogetters.letsgo.util.BluetoothGTPService
@@ -29,6 +30,7 @@ import java.io.IOException
 import java.io.InputStream
 import java.io.OutputStream
 import java.util.*
+import kotlin.collections.HashMap
 
 
 class BluetoothActivity: AppCompatActivity() {
@@ -116,7 +118,17 @@ class BluetoothActivity: AppCompatActivity() {
             OnItemClickListener { adapterView, view, i, l ->
                 val client = BluetoothClient(handler)
                 val service = BluetoothGTPService(handler)
-                client.connect(btArray[i]!!, service)
+                val deviceName = adapterView.adapter.getItem(i) as String
+                var serverDevice: BluetoothDevice? = null
+                for (device in foundDevices!!) {
+                    if (device.name == deviceName) {
+                        serverDevice = device
+                    }
+                }
+                if (serverDevice == null) {
+                    throw Error("DEVICE NOT FOUND")
+                }
+                client.connect(serverDevice, service)
                 service.write("HELLO WORLD!!!!")
             }
     }
