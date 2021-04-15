@@ -1,6 +1,5 @@
 package com.github.gogetters.letsgo.activities
 
-import android.R.id.message
 import android.os.Bundle
 import android.util.Log
 import android.view.View
@@ -11,27 +10,35 @@ import androidx.appcompat.app.AppCompatActivity
 import com.github.gogetters.letsgo.R
 import com.github.gogetters.letsgo.chat.ChatMessage
 import com.github.gogetters.letsgo.chat.MessageAdapter
+import com.github.gogetters.letsgo.database.Database
+import com.github.gogetters.letsgo.database.types.MessageData
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.database.ChildEventListener
+import com.google.firebase.database.ktx.getValue
 import java.util.*
 
 
 class ChatActivity : AppCompatActivity() {
 
     private val _defaultUsername = "Default User"
+    private val _testingChatId = "testingChatId"
+
     // current user of the chatApp
     private lateinit var userName: String
+    // current user id of the chatApp
+    private lateinit var userId: String
     // placeholder for chat bubbles
     private lateinit var listView: ListView
     // text message to send
     private lateinit var entryText: EditText
     // update connection to listview
     private lateinit var adapter: MessageAdapter
+    private lateinit var messageListener: ChildEventListener
 
     // connect to the Chat Collection's Message Document in Firestore
-    private val firestoreChat by lazy {
-        FirebaseFirestore.getInstance().collection(COLLECTION_KEY).document(DOCUMENT_KEY)
-    }
+//    private val firestoreChat by lazy {
+//        FirebaseFirestore.getInstance().collection(COLLECTION_KEY).document(DOCUMENT_KEY)
+//    }
 
     // data structure in Firestore
     companion object {
@@ -49,6 +56,7 @@ class ChatActivity : AppCompatActivity() {
         val authInstance = FirebaseAuth.getInstance().currentUser
         if (authInstance != null && authInstance.displayName != null) {
             userName = authInstance.displayName!!
+            userId = authInstance.uid
         } else {
             userName = _defaultUsername
         }
@@ -61,6 +69,11 @@ class ChatActivity : AppCompatActivity() {
         // define listener for message update (chat bubbles) in listview
         realtimeUpdateListener()
 
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        Database.removeMessagesListener(_testingChatId, messageListener)
     }
 
     /**
@@ -76,17 +89,18 @@ class ChatActivity : AppCompatActivity() {
             entryText.text.clear()
 
             // create the message by matching the Firebase data structure
-            val newMessage = mapOf(
-                NAME_FIELD to userName,
-                TEXT_FIELD to messageText
-            )
+//            val newMessage = mapOf(
+//                NAME_FIELD to userName,
+//                TEXT_FIELD to messageText
+//            )
 
             // send the message to the database
-            firestoreChat.set(newMessage)
-                .addOnSuccessListener({
-                    Toast.makeText(this@ChatActivity, "Message Sent", Toast.LENGTH_SHORT).show()
-                })
-                .addOnFailureListener { e -> e.message?.let { Log.e("ERROR", it) } }
+            Database.sendMessage(userId, _testingChatId, messageText, {
+                Log.i("INFO", "message sent")
+                Toast.makeText(this@ChatActivity, "Message Sent", Toast.LENGTH_SHORT).show()
+            }, { e ->
+                Log.e("ERROR", e.toString())
+            })
 
         }
     }
@@ -96,28 +110,40 @@ class ChatActivity : AppCompatActivity() {
      */
     private fun realtimeUpdateListener() {
 
-        firestoreChat.addSnapshotListener { documentSnapshot, e ->
+        messageListener = Database.addMessagesListener(_testingChatId) { snapshot ->
+            val messageData = snapshot.getValue<MessageData>()
 
-            when {
-                e != null -> e.message?.let { Log.e("ERROR", it) }
-                documentSnapshot != null && documentSnapshot.exists() -> {
-                    with(documentSnapshot) {
-                        // check whether incoming or outgoing message should be presented on screen based on userName
-                        var message: ChatMessage
-                        if (data?.get(NAME_FIELD).toString() != userName) {
-                            message = ChatMessage(data?.get(TEXT_FIELD).toString(), false, Calendar.getInstance().time, data?.get(NAME_FIELD).toString())
-                        } else {
-                            message = ChatMessage(data?.get(TEXT_FIELD).toString(), true, Calendar.getInstance().time, data?.get(NAME_FIELD).toString())
-                        }
-                        // present the message in the chat bubbles of the listview
-                        adapter.addMessage(message)
-                        listView.setSelection(listView.getCount() - 1)
+            messageData!!
 
-                    }
-                }
-            }
+            val belongsToUser = messageData.senderId == userId
 
+            val message = ChatMessage(messageData.messageText, belongsToUser, Date(messageData.timestamp), if (belongsToUser) userName else "other guy")
+            adapter.addMessage(message)
+            listView.setSelection(listView.count + 1)
         }
+//
+//        firestoreChat.addSnapshotListener { documentSnapshot, e ->
+//
+//            when {
+//                e != null -> e.message?.let { Log.e("ERROR", it) }
+//                documentSnapshot != null && documentSnapshot.exists() -> {
+//                    with(documentSnapshot) {
+//                        // check whether incoming or outgoing message should be presented on screen based on userName
+//                        var message: ChatMessage
+//                        if (data?.get(NAME_FIELD).toString() != userName) {
+//                            message = ChatMessage(data?.get(TEXT_FIELD).toString(), false, Calendar.getInstance().time, data?.get(NAME_FIELD).toString())
+//                        } else {
+//                            message = ChatMessage(data?.get(TEXT_FIELD).toString(), true, Calendar.getInstance().time, data?.get(NAME_FIELD).toString())
+//                        }
+//                        // present the message in the chat bubbles of the listview
+//                        adapter.addMessage(message)
+//                        listView.setSelection(listView.getCount() - 1)
+//
+//                    }
+//                }
+//            }
+//
+//        }
 
     }
 
