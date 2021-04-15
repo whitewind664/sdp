@@ -18,9 +18,9 @@
 - To improve: First of all, the tutorial is not finished at all, we need to invest more time into that. And the quality of some tests can still be improved.
 
 ## Protopapas, Kimon Dimitrios
-- Done:
-- Went well:
-- To improve:
+- Done: Refactored Bluetooth functionality
+- Went well: Achieved good architecture for bluetooth service, design part went well
+- To improve: Read more about permissions and documentation for bluetooth
 
 ## Roust, Michael Murad
 - Done: Created a single class for communicating for accessing User data and metadata. This was necessary as
@@ -38,6 +38,6 @@ to be able to store more user information.
 - To improve: Find a friend with an android device to finally test it
 
 ## Overall team (Scrum Master)
-- Done:
-- Went well:
-- To improve:
+- Done: Advances in bluetooth connectivity, database setup and some of the existing features
+- Went well: Looks like everyone finished one of their two tasks despite the complicated schedules
+- To improve: Coordination was pretty hard due to upcoming holidays, conflicting advances in some areas due to having to do tasks for two sprints
