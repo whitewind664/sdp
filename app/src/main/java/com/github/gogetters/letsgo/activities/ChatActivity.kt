@@ -26,7 +26,7 @@ class ChatActivity : AppCompatActivity() {
     // current user of the chatApp
     private lateinit var userName: String
     // current user id of the chatApp
-    private lateinit var userId: String
+    private var userId: String? = null
     // placeholder for chat bubbles
     private lateinit var listView: ListView
     // text message to send
@@ -93,9 +93,10 @@ class ChatActivity : AppCompatActivity() {
 //                NAME_FIELD to userName,
 //                TEXT_FIELD to messageText
 //            )
+            userId ?: return
 
             // send the message to the database
-            Database.sendMessage(userId, _testingChatId, messageText, {
+            Database.sendMessage(userId!!, _testingChatId, messageText, {
                 Log.i("INFO", "message sent")
                 Toast.makeText(this@ChatActivity, "Message Sent", Toast.LENGTH_SHORT).show()
             }, { e ->
