@@ -1,0 +1,42 @@
+{
+  "users": {
+    "$userId": {
+      "TODO": "TODO"
+    }
+  },
+
+  "chats": {
+    "$chatId": {
+      "TODO": "TODO"
+    }
+  },
+
+  "messages": {
+    "$chatId": {
+      "$messageId": {
+        "sender": "value",
+        "message": "value",
+        "timestamp": "value"
+      }
+    }
+  },
+
+  "games": {
+    "$gameId": {
+      "moves": "TODO move list  "
+    }
+  },
+
+  "forum": {
+    "posts": {
+      "$postId": {
+        "TODO": "TODO",
+        "timestamp": "value"
+      }
+    },
+    "comments": {
+      "message": "value",
+      "timestamp": "value"
+    }
+  }
+}
