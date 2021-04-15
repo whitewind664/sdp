@@ -28,6 +28,7 @@ class BluetoothGTPService(private val handler: Handler) {
     fun connect(socket: BluetoothSocket) {
         connectedThread = ConnectedThread(socket)
         connectedThread.start()
+        write("HELLO WORLD")
     }
 
     fun write(s: String) {

@@ -129,7 +129,6 @@ class BluetoothActivity: AppCompatActivity() {
                     throw Error("DEVICE NOT FOUND")
                 }
                 client.connect(serverDevice, service)
-                service.write("HELLO WORLD!!!!")
             }
     }
 
