@@ -1,7 +1,9 @@
 {
   "users": {
     "$userId": {
-      "TODO": "TODO"
+      "isLookingForPlayers": "value",
+      "lastPositionLatitude": "value",
+      "lastPositionLongitude": "value"
     }
   },
 
