@@ -23,9 +23,9 @@
 - To improve:
 
 ## Roust, Michael Murad
-- Done:
-- Went well:
-- To improve:
+- Done: Further improving user management system and communication with database.
+- Went well: Using android Tasks (like Futures) correctly!
+- To improve: Think about how to cleanup the code maybe.
 
 ## Wengle, Erik Alessandro (Scrum Master)
 - Done:
