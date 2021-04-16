@@ -1,21 +1,24 @@
 {
   "users": {
     "$userId": {
-      "TODO": "TODO"
+      "isLookingForPlayers": "value",
+      "lastPositionLatitude": "value",
+      "lastPositionLongitude": "value"
     }
   },
 
   "chats": {
     "$chatId": {
-      "TODO": "TODO"
+      "lastMessageText": "value",
+      "timestamp": "value"
     }
   },
 
   "messages": {
     "$chatId": {
       "$messageId": {
-        "sender": "value",
-        "message": "value",
+        "senderId": "value",
+        "messageText": "value",
         "timestamp": "value"
       }
     }
