@@ -6,9 +6,12 @@ import android.location.Location
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import android.widget.Button
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.github.gogetters.letsgo.R
+import com.github.gogetters.letsgo.map.DatabaseLocationSharingService
+import com.github.gogetters.letsgo.map.LocationSharingService
 import com.github.gogetters.letsgo.util.PermissionUtils.isPermissionGranted
 import com.github.gogetters.letsgo.util.PermissionUtils.requestPermission
 import com.google.android.gms.location.FusedLocationProviderClient
@@ -19,6 +22,7 @@ import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
+import com.google.android.gms.maps.model.Marker
 import com.google.android.gms.maps.model.MarkerOptions
 
 class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMyLocationButtonClickListener,
@@ -29,7 +33,9 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMyLoca
     private var permissionDenied = false
     private lateinit var mMap: GoogleMap
     private lateinit var fusedLocationClient: FusedLocationProviderClient
-
+    private lateinit var locationSharingService: LocationSharingService
+    private var userMarkers: Map<Marker, String> = emptyMap()
+    private var otherUsersActivated: Boolean = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -41,6 +47,13 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMyLoca
         mapFragment.getMapAsync(this)
 
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
+        locationSharingService = DatabaseLocationSharingService()
+
+        // set listeners for buttons
+        val showPlayersButton = findViewById<Button>(R.id.map_button_showPlayers)
+        showPlayersButton.setOnClickListener {
+            this.activateAndUpdateOtherPlayers()
+        }
     }
 
     /**
@@ -55,10 +68,9 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMyLoca
     override fun onMapReady(googleMap: GoogleMap) {
         mMap = googleMap
 
-        // Add a marker at EPFL and move the camera
+        // Move the camera to EPFL
         val epfl = LatLng(46.51899505106699, 6.563449219980816)
-        val zoom: Float = 10f
-        mMap.addMarker(MarkerOptions().position(epfl).title("Marker at EPFL"))
+        val zoom = 10f
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(epfl, zoom))
 
         googleMap.setOnMyLocationButtonClickListener(this)
@@ -66,6 +78,14 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMyLoca
         enableLocation()
         sendLocation()
     }
+
+    /**
+     * Allows to set a locationSharingService that is used to share and retrieve locations of users
+     */
+    fun setLocationSharingService(locationSharingService: LocationSharingService) {
+        this.locationSharingService = locationSharingService
+    }
+
 
     private fun enableLocation() {
         if (!::mMap.isInitialized)
@@ -86,16 +106,69 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMyLoca
     private fun sendLocation() {
         try {
             if (!permissionDenied) {
+                Log.i("MapsActivity", "Create request")
                 fusedLocationClient.lastLocation
                         .addOnSuccessListener { location: Location? ->
                             // Got last known location. In some rare situations this can be null.
-                            // TODO send later the retrieved position to the other players
-                            println("Location is $location")
+                            if (!::locationSharingService.isInitialized || location == null) {
+                                // TODO display dialog with error message
+                                Log.v("MapsActivity", "Location could not be shared")
+                            } else {
+                                // share the location with other users
+                                locationSharingService.shareMyLocation(LatLng(location.latitude, location.longitude))
+                            }
                         }
             }
         } catch (e: SecurityException) {
             Log.e("Exception: %s", e.message, e)
         }
+    }
+
+    /**
+     *  Gets the positions of other users and displays them on the map
+     */
+    private fun activateAndUpdateOtherPlayers() {
+        if (!::locationSharingService.isInitialized)
+            return
+
+        otherUsersActivated = true
+
+        locationSharingService.getSharedLocations().thenApply {
+            if (it == null || it.isEmpty()) {
+                // TODO display that there are no other players
+            } else {
+                setOtherPlayers(it)
+            }
+        }
+
+    }
+
+    private fun setOtherPlayers(updatedUsers: Map<LatLng, String>) {
+        if (otherUsersActivated) {
+            removeAllOtherPlayers()
+            for ((playerPosition, id) in updatedUsers.entries) {
+                val marker = mMap.addMarker(MarkerOptions().position(playerPosition).title("User $id"))
+                userMarkers = userMarkers + Pair(marker, id)
+            }
+        }
+    }
+
+    /**
+     * Deact
+     */
+    private fun deactivateDisplayOtherPlayers() {
+        otherUsersActivated = false
+        removeAllOtherPlayers()
+    }
+
+    /**
+     * Removes all markers of other users from the map
+     */
+    private fun removeAllOtherPlayers() {
+        for ((marker, _) in userMarkers.entries) {
+            marker.remove()
+        }
+        userMarkers = emptyMap()
     }
 
     override fun onMyLocationButtonClick(): Boolean {
@@ -133,4 +206,5 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMyLoca
             permissionDenied = false
         }
     }
+
 }
