@@ -65,6 +65,8 @@ dependencies {
     // Declare the dependency for the Realtime Database library
     implementation 'com.google.firebase:firebase-database-ktx'
 
+    implementation 'com.google.firebase:firebase-firestore-ktx'
+
     //--------------------------------------------------------------
 
     implementation 'com.firebaseui:firebase-ui-auth:7.1.1'
