@@ -4,7 +4,7 @@ import android.util.Log
 import com.github.gogetters.letsgo.game.util.InputDelegate
 import com.github.gogetters.letsgo.game.exceptions.IllegalMoveException
 
-class LocalPlayer(color: Stone, private val inputDelegate: InputDelegate): Player(color) {
+open class LocalPlayer(color: Stone, private val inputDelegate: InputDelegate): Player(color) {
 
     override fun requestMove(board: BoardState): Move {
         return Move(color, inputDelegate.latestInput)

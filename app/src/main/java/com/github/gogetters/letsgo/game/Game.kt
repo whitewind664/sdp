@@ -4,8 +4,8 @@ import android.util.Log
 import com.github.gogetters.letsgo.game.exceptions.IllegalMoveException
 import com.github.gogetters.letsgo.util.CircularList
 
-internal class Game(size: Board.Size, val komi: Double,
-                    private val whitePlayer: Player, private val blackPlayer: Player) {
+internal open class Game(size: Board.Size, val komi: Double,
+                         private val whitePlayer: Player, private val blackPlayer: Player) {
 
     private val board = Board(size)
     private val passMove = Move(Stone.EMPTY, Point(0, 0))
