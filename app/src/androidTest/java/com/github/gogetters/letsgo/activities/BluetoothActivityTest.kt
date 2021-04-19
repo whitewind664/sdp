@@ -12,7 +12,7 @@ import org.junit.runner.RunWith
 @RunWith(AndroidJUnit4::class)
 class BluetoothActivityTest {
     @get:Rule
-    var activityRule = ActivityScenarioRule(ChatActivity::class.java)
+    var activityRule = ActivityScenarioRule(BluetoothActivity::class.java)
 
     @Test
     fun bluetoothTest() {
