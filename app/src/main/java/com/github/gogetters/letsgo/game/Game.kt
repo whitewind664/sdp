@@ -19,7 +19,7 @@ internal open class Game(size: Board.Size, val komi: Double,
      * Called to advance the game state.
      * @return state of the board after the move
      */
-    fun playTurn(): BoardState {
+    open fun playTurn(): BoardState {
         Log.d("GAME", "${nextPlayer.color}'s turn")
 
         var validMove = false

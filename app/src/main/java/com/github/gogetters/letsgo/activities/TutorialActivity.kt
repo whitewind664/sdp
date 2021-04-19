@@ -28,7 +28,7 @@ class TutorialActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_tutorial)
 
-        // board related initialisation
+        // board initialisation
         goView = GoView(this, Board.Size.SMALL)
         val inputDelegate = InputDelegate()
         goView.inputDelegate = inputDelegate
@@ -40,7 +40,7 @@ class TutorialActivity : AppCompatActivity() {
         game = TutorialGame(player)
         hideBoard()
 
-        // button related
+        // button
         findViewById<Button>(R.id.tutorial_button_next).setOnClickListener { _ ->
             val textView = findViewById<TextView>(R.id.tutorial_textView_explanation)
             if (tutorialProgressIndex + 1 < tutorialTextIds.size) {
@@ -61,11 +61,11 @@ class TutorialActivity : AppCompatActivity() {
         }
     }
 
-    fun showBoard() {
+    private fun showBoard() {
         boardFrame.visibility = View.VISIBLE
     }
 
-    fun hideBoard() {
+    private fun hideBoard() {
         boardFrame.visibility = View.GONE
     }
 }
