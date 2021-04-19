@@ -7,7 +7,7 @@ import com.github.gogetters.letsgo.game.Stone
 import com.github.gogetters.letsgo.game.exceptions.IllegalMoveException
 import com.github.gogetters.letsgo.game.util.InputDelegate
 
-class TutorialLocalPlayer(inputDelegate: InputDelegate): LocalPlayer(Stone.WHITE, inputDelegate) {
+class TutorialLocalPlayer(inputDelegate: InputDelegate): LocalPlayer(Stone.BLACK, inputDelegate) {
 
     private var turnCount: Int = 0
 
