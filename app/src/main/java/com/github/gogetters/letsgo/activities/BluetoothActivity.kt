@@ -52,7 +52,8 @@ class BluetoothActivity: AppCompatActivity() {
     private val handler = Handler(Looper.getMainLooper()) {
         when (it.what) {
             0 -> {
-                Log.d("BLUETOOTHTEST", "message received: $it.obj")
+                val msg = it.obj
+                Log.d("BLUETOOTHTEST", "message received: $msg")
                 Toast.makeText(this, "$it.obj", Toast.LENGTH_LONG)
                 true
             }
