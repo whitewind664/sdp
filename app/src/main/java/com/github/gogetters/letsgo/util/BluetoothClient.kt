@@ -25,7 +25,6 @@ class BluetoothClient(val handler: Handler) {
         private val mmSocket: BluetoothSocket? by lazy(LazyThreadSafetyMode.NONE) {
             device.createRfcommSocketToServiceRecord(uuid)
         }
-
         public override fun run() {
             // Cancel discovery because it otherwise slows down the connection.
             bluetoothAdapter?.cancelDiscovery()

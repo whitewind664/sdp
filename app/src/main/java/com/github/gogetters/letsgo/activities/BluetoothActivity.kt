@@ -12,7 +12,6 @@ import android.os.Handler
 import android.os.Looper
 import android.os.Message
 import android.util.Log
-import android.widget.ArrayAdapter
 import android.view.View
 import android.widget.*
 import android.widget.AdapterView.OnItemClickListener
@@ -20,7 +19,6 @@ import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
-import androidx.core.view.get
 import com.github.gogetters.letsgo.R
 import com.github.gogetters.letsgo.util.BluetoothClient
 import com.github.gogetters.letsgo.util.BluetoothGTPService
@@ -30,7 +28,6 @@ import java.io.IOException
 import java.io.InputStream
 import java.io.OutputStream
 import java.util.*
-import kotlin.collections.HashMap
 
 
 class BluetoothActivity: AppCompatActivity() {
@@ -52,8 +49,10 @@ class BluetoothActivity: AppCompatActivity() {
     private val handler = Handler(Looper.getMainLooper()) {
         when (it.what) {
             0 -> {
-                val msg = it.obj
-                Log.d("BLUETOOTHTEST", "message received: $msg")
+                val msg:ByteArray = it.obj as ByteArray
+                val byte = msg.toString()
+
+                Log.d("BLUETOOTHTEST", "message received: $byte")
                 Toast.makeText(this, "$it.obj", Toast.LENGTH_LONG)
                 true
             }
@@ -161,6 +160,10 @@ class BluetoothActivity: AppCompatActivity() {
      * Launches a BT server
      */
     fun launchServer(v: View?){
+        val getVisible = Intent(BluetoothAdapter.ACTION_REQUEST_DISCOVERABLE)
+        startActivityForResult(getVisible, 0)
+
+
         server = BluetoothServer(handler)
         server.connect()
     }
