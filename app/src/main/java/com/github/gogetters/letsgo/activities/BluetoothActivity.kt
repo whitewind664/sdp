@@ -69,6 +69,8 @@ class BluetoothActivity: AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_bluetooth)
 
+        service = BluetoothGTPService(handler)
+
         listen = findViewById<View>(R.id.listen) as Button
         send = findViewById<View>(R.id.send) as Button
         listView = findViewById<View>(R.id.listview) as ListView
@@ -120,7 +122,6 @@ class BluetoothActivity: AppCompatActivity() {
       listView!!.onItemClickListener =
             OnItemClickListener { adapterView, view, i, l ->
                 client = BluetoothClient(handler)
-                service = BluetoothGTPService(handler)
                 val deviceName = adapterView.adapter.getItem(i) as String
                 var serverDevice: BluetoothDevice? = null
                 for (device in foundDevices!!) {
