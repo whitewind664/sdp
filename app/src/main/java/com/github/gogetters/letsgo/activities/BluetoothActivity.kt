@@ -64,12 +64,10 @@ class BluetoothActivity: AppCompatActivity() {
     }
 
 
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_bluetooth)
 
-        service = BluetoothGTPService(handler)
 
         listen = findViewById<View>(R.id.listen) as Button
         send = findViewById<View>(R.id.send) as Button
@@ -89,6 +87,7 @@ class BluetoothActivity: AppCompatActivity() {
 
         foundDevices = mutableSetOf()
         registerReceiver(receiver, IntentFilter(BluetoothDevice.ACTION_FOUND))
+        service = BluetoothGTPService(handler)
 
         implementListeners()
     }
