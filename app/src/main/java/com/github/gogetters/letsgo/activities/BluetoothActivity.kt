@@ -50,7 +50,7 @@ class BluetoothActivity: AppCompatActivity() {
         when (it.what) {
             0 -> {
                 val msg:ByteArray = it.obj as ByteArray
-                val byte = msg.toString()
+                val byte = msg[0]
 
                 Log.d("BLUETOOTHTEST", "message received: $byte")
                 Toast.makeText(this, "$it.obj", Toast.LENGTH_LONG)

@@ -42,7 +42,7 @@ class BluetoothServer(val handler: Handler) {
                 }
                 socket?.also {
                     BluetoothGTPService(handler).connect(it)
-                    mmServerSocket?.close()
+                    //mmServerSocket?.close()
                     shouldLoop = false
                 }
             }
