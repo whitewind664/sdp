@@ -14,7 +14,15 @@ internal class TutorialGame(localPlayer: TutorialLocalPlayer): Game(Board.Size.S
     init {
         // create all the steps of the tutorial
         tutorialSteps += TutorialStep(2, false, true, emptyList())
+        tutorialSteps += TutorialStep(4, false, true, listOf(Move(Stone.BLACK, Point(2, 2))))
         // TODO
+    }
+
+    fun nextStep(): TutorialStep {
+        turnCount++
+        val step = currentStep()
+        // TODO init board if necessary
+        return step
     }
 
     override fun playTurn(): BoardState {
