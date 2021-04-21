@@ -178,6 +178,7 @@ class BluetoothActivity: AppCompatActivity() {
     }
 
 
+    //TODO: refactor so that the whole list doesn't get refreshed each time
     /**
      * Lists found devices
      */
