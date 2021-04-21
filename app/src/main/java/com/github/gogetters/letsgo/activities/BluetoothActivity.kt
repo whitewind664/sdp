@@ -164,9 +164,8 @@ class BluetoothActivity: AppCompatActivity() {
         val getVisible = Intent(BluetoothAdapter.ACTION_REQUEST_DISCOVERABLE)
         startActivityForResult(getVisible, 0)
 
-
         server = BluetoothServer(handler)
-        server.connect()
+        server.connect(service)
     }
 
     /**

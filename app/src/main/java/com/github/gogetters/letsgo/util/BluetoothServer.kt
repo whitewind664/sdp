@@ -14,8 +14,10 @@ class BluetoothServer(val handler: Handler) {
     private val adapter: BluetoothAdapter = BluetoothAdapter.getDefaultAdapter()
     private val uuid: UUID = UUID.fromString("8ce255c0-223a-11e0-ac64-0803450c9a66")
     private val acceptThread = AcceptThread()
+    private lateinit var service: BluetoothGTPService
 
-    fun connect() {
+    fun connect(service: BluetoothGTPService) {
+        this.service = service
         acceptThread.start()
     }
 
@@ -41,7 +43,7 @@ class BluetoothServer(val handler: Handler) {
                     null
                 }
                 socket?.also {
-                    BluetoothGTPService(handler).connect(it)
+                    service.connect(it)
                     //mmServerSocket?.close()
                     shouldLoop = false
                 }
