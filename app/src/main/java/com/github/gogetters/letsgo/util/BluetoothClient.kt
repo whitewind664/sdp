@@ -23,7 +23,7 @@ class BluetoothClient(val handler: Handler) {
     private inner class ConnectThread(device: BluetoothDevice): Thread() {
         private val uuid: UUID = UUID.fromString("8ce255c0-223a-11e0-ac64-0803450c9a66")
         private val mmSocket: BluetoothSocket? by lazy(LazyThreadSafetyMode.NONE) {
-            device.createRfcommSocketToServiceRecord(uuid)
+            device.createInsecureRfcommSocketToServiceRecord(uuid)
         }
         public override fun run() {
             // Cancel discovery because it otherwise slows down the connection.
