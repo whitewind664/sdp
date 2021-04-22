@@ -6,7 +6,7 @@ import java.util.concurrent.ArrayBlockingQueue
 /**
  * Class to delegate capturing input from UI.
  */
-open class InputDelegate {
+class InputDelegate {
 
     private val savedInput = ArrayBlockingQueue<Point>(1)
 
