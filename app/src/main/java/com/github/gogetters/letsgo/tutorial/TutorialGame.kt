@@ -4,31 +4,28 @@ import com.github.gogetters.letsgo.game.*
 import com.github.gogetters.letsgo.game.Game
 
 /**
- * A game that is used in the tutorial and that helps the given local player to learn to play Go
+ * A game that is used in the tutorial and that helps the given local player to learn to play Go.
+ * Note that points do not matter for this game.
  */
-internal class TutorialGame(localPlayer: TutorialLocalPlayer): Game(Board.Size.SMALL, 0.0, localPlayer, TutorialPlayer(Stone.WHITE)) {
-    private val DEFAULT_TURN = TutorialStep(-1, true, false, emptyList())
+internal class TutorialGame(private val localPlayer: TutorialLocalPlayer): Game(Board.Size.SMALL, 0.0, localPlayer, TutorialPlayer(Stone.WHITE)) {
+    private val DEFAULT_TURN = TutorialStep(-1, true, false, emptyList(), emptyList())
     private var turnCount: Int = 0
     private var tutorialSteps: List<TutorialStep> = emptyList()
 
     init {
         // create all the steps of the tutorial
-        tutorialSteps += TutorialStep(2, false, true, emptyList())
-        tutorialSteps += TutorialStep(4, false, true, listOf(Move(Stone.BLACK, Point(2, 2))))
+        tutorialSteps += TutorialStep(2, false, true, emptyList(), emptyList())
+        tutorialSteps += TutorialStep(4, false, true, listOf(Move(Stone.WHITE, Point(1, 2))), listOf(Move(Stone.BLACK, Point(2, 2))))
         // TODO
     }
 
     fun nextStep(): TutorialStep {
         turnCount++
         val step = currentStep()
-        // TODO init board if necessary
+        reinitBoard()
+        localPlayer.setRecommendedMoves(step.recommendedMoves)
         return step
     }
-
-    override fun playTurn(): BoardState {
-        return super.playTurn()
-    }
-
 
     private fun currentStep(): TutorialStep {
         var currentStep = DEFAULT_TURN
@@ -42,7 +39,7 @@ internal class TutorialGame(localPlayer: TutorialLocalPlayer): Game(Board.Size.S
     /**
      * Represents a step in the tutorial that can display text, the board (with some recommended moves)
      */
-    class TutorialStep(val turnNumber: Int, val displayText: Boolean,  val displayBoard: Boolean, val recommendedMoves: List<Move>) {
+    class TutorialStep(val turnNumber: Int, val displayText: Boolean,  val displayBoard: Boolean, val playedStones: List<Move>, val recommendedMoves: List<Move>) {
         init {
             assert(displayText || displayBoard)
         }
