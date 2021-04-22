@@ -1,27 +1,25 @@
 package com.github.gogetters.letsgo.game.util
 
 import android.os.Handler
-import com.github.gogetters.letsgo.game.Point
+import android.os.Looper
+import com.github.gogetters.letsgo.game.*
+import com.github.gogetters.letsgo.game.exceptions.IllegalMoveException
+import com.github.gogetters.letsgo.util.BluetoothGTPService
 import java.util.concurrent.ArrayBlockingQueue
 
 /**
- * Class to delegate capturing input from UI.
+ * Class to delegate capturing input from a remote player over Bluetooth.
  */
-class BluetoothDelegate: Handler() {
+class BluetoothDelegate(val color: Stone, private val service: BluetoothGTPService): Player {
 
-    private val savedInput = ArrayBlockingQueue<Point>(1)
 
-    /**
-     * Saves the argument as the most recent input to the program. Only the most recent input is
-     * kept.
-     *
-     * @param input: Point input to save
-     */
-    fun saveInput(input: Point) {
-        savedInput.clear()
-        savedInput.add(input)
+    override fun requestMove(board: BoardState): Move {
+        //service.sendCommand(GTPCommand.PLAY(board.lastMove))
+        service.sendCommand(GTPCommand.GENMOVE(color))
+        return Move(color, service.moveQueue.take())
     }
 
-    val latestInput: Point
-        get() = savedInput.take()
+    override fun notifyIllegalMove(illegalMove: IllegalMoveException) {
+        TODO("Not yet implemented")
+    }
 }

@@ -1,19 +1,19 @@
 package com.github.gogetters.letsgo.game
 
-data class Move(val stone: Stone, val coord: Point) {
+data class Move(val stone: Stone, val point: Point) {
     override fun equals(other: Any?): Boolean {
         if (other is Move) {
-            return other.stone == stone && other.coord == coord
+            return other.stone == stone && other.point == point
         }
 
         return false
     }
 
     override fun hashCode(): Int {
-        return stone.hashCode() * coord.hashCode()
+        return stone.hashCode() * point.hashCode()
     }
 
     override fun toString(): String {
-        return "play $stone $coord"
+        return "play $stone $point"
     }
 }

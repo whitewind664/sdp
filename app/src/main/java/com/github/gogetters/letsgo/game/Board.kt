@@ -138,10 +138,10 @@ class Board(private val boardSize: Size) {
      *
      */
     private fun isSuicide(m: Move): Boolean {
-        if (!insideBoard(m.coord)) throw OutOfBoardException()
-        if (!isEmpty(m.coord)) throw NotEmptyException()
+        if (!insideBoard(m.point)) throw OutOfBoardException()
+        if (!isEmpty(m.point)) throw NotEmptyException()
 
-        val neighbors = getNeighbors(m.coord)
+        val neighbors = getNeighbors(m.point)
         //CHECK IF WE HAVE AIR TO BREATHE, OR IF WE KILLED AN ENEMY GROUP
         for (neighbor in neighbors) {
             if (isEmpty(neighbor)) return false
@@ -200,13 +200,13 @@ class Board(private val boardSize: Size) {
         val capturedStones = HashSet<Point>()
 
         if (m.stone != Stone.EMPTY) {
-            if (!insideBoard(m.coord)) throw OutOfBoardException()
-            if (!isEmpty(m.coord)) throw NotEmptyException()
+            if (!insideBoard(m.point)) throw OutOfBoardException()
+            if (!isEmpty(m.point)) throw NotEmptyException()
             if (isSuicide(m)) throw SuicideException()
             if (isKo(m)) throw KoException()
 
-            board[m.coord] = m.stone
-            for (neighbor in getNeighbors(m.coord)) {
+            board[m.point] = m.stone
+            for (neighbor in getNeighbors(m.point)) {
                 if (board[neighbor] == m.stone.otherColor()) {
 
                     val enemyGroup = getGroup(neighbor)
@@ -225,8 +225,8 @@ class Board(private val boardSize: Size) {
                     else null
 
         } else {
-            if (insideBoard(m.coord)) {
-                board[m.coord] = m.stone
+            if (insideBoard(m.point)) {
+                board[m.point] = m.stone
             }
             koMove = null
         }

@@ -1,12 +1,14 @@
 package com.github.gogetters.letsgo.game.util
 
-import com.github.gogetters.letsgo.game.Point
+import android.util.Log
+import com.github.gogetters.letsgo.game.*
+import com.github.gogetters.letsgo.game.exceptions.IllegalMoveException
 import java.util.concurrent.ArrayBlockingQueue
 
 /**
  * Class to delegate capturing input from UI.
  */
-class InputDelegate {
+class InputDelegate(val color: Stone): Player {
 
     private val savedInput = ArrayBlockingQueue<Point>(1)
 
@@ -21,6 +23,12 @@ class InputDelegate {
         savedInput.add(input)
     }
 
-    val latestInput: Point
-        get() = savedInput.take()
+    override fun requestMove(board: BoardState): Move {
+        return Move(color, savedInput.take())
+    }
+
+    override fun notifyIllegalMove(illegalMove: IllegalMoveException) {
+        Log.d("LOCAL_PLAYER", "PLAYER HAS PLAYED ILLEGAL MOVE", illegalMove)
+
+    }
 }

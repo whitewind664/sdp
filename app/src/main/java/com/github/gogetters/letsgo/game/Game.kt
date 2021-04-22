@@ -2,7 +2,6 @@ package com.github.gogetters.letsgo.game
 
 import android.util.Log
 import com.github.gogetters.letsgo.game.exceptions.IllegalMoveException
-import com.github.gogetters.letsgo.util.CircularList
 
 internal class Game(size: Board.Size, val komi: Double,
                     private val whitePlayer: Player, private val blackPlayer: Player) {
@@ -27,7 +26,7 @@ internal class Game(size: Board.Size, val komi: Double,
             try {
                 val nextMove = nextPlayer.requestMove(board.getBoardState(0, 0))
                 val points = board.playMove(nextMove)
-                Log.d("GAME", "PLAYED A ${nextMove.stone} STONE AT ${nextMove.coord}")
+                Log.d("GAME", "PLAYED A ${nextMove.stone} STONE AT ${nextMove.point}")
                 addPoints(nextPlayer, points)
 
                 if (nextMove == passMove) ++passes
