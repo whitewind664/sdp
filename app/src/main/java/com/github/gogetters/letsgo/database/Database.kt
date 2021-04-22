@@ -4,6 +4,7 @@ import com.github.gogetters.letsgo.database.types.MessageData
 import com.google.firebase.database.*
 import android.util.Log
 import com.google.android.gms.maps.model.LatLng
+import com.google.android.gms.tasks.Task
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.ktx.database
@@ -18,9 +19,26 @@ class Database {
             Firebase.database.setPersistenceEnabled(true)
         }
 
+        private val db = Firebase.database
         val database = Firebase.database.reference
 
         // TODO write database functions here
+
+        fun writeData(ref: String, data:Any?): Task<Void> {
+            return db.getReference(ref).setValue(data)
+        }
+
+        fun readData(ref: String): Task<DataSnapshot> {
+            return db.getReference(ref).get()
+        }
+
+        fun updateData() {
+            // TODO Maybe Implement this!
+        }
+
+        fun deleteData(ref: String): Task<Void> {
+            return db.getReference(ref).removeValue()
+        }
         
         // ---- Map related ----
         /**
