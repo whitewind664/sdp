@@ -45,8 +45,16 @@ internal open class Game(val size: Board.Size, val komi: Double,
         return board.getBoardState(0, 0, gameOver = passes >= 2)
     }
 
-    protected fun reinitBoard() {
+    protected fun reinitBoard(playedStones: List<Move>): BoardState {
         board = Board(this.size)
+        try {
+            for (move in playedStones) {
+                board.playMove(move)
+            }
+        } catch (e: IllegalMoveException) {
+            board = Board(this.size)
+        }
+        return board.getBoardState(0, 0)
     }
 
     private fun addPoints(player: Player, points: Int) {

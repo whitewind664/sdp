@@ -7,7 +7,7 @@ import com.github.gogetters.letsgo.game.Game
  * A game that is used in the tutorial and that helps the given local player to learn to play Go.
  * Note that points do not matter for this game.
  */
-internal class TutorialGame(private val localPlayer: TutorialLocalPlayer): Game(Board.Size.SMALL, 0.0, localPlayer, TutorialPlayer(Stone.WHITE)) {
+internal class TutorialGame(private val localPlayer: TutorialLocalPlayer): Game(Board.Size.SMALL, 0.0, TutorialPlayer(Stone.WHITE), localPlayer) {
     private val DEFAULT_TURN = TutorialStep(-1, true, false, emptyList(), emptyList())
     private var turnCount: Int = 0
     private var tutorialSteps: List<TutorialStep> = emptyList()
@@ -19,12 +19,12 @@ internal class TutorialGame(private val localPlayer: TutorialLocalPlayer): Game(
         // TODO
     }
 
-    fun nextStep(): TutorialStep {
+    fun nextStep(): Pair<TutorialStep, BoardState> {
         turnCount++
         val step = currentStep()
-        reinitBoard()
+        val boardState = super.reinitBoard(step.playedStones)
         localPlayer.setRecommendedMoves(step.recommendedMoves)
-        return step
+        return Pair(step, boardState)
     }
 
     private fun currentStep(): TutorialStep {

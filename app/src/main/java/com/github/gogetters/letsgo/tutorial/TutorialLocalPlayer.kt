@@ -1,5 +1,6 @@
 package com.github.gogetters.letsgo.tutorial
 
+import android.util.Log
 import com.github.gogetters.letsgo.game.BoardState
 import com.github.gogetters.letsgo.game.LocalPlayer
 import com.github.gogetters.letsgo.game.Move
@@ -18,7 +19,7 @@ internal class TutorialLocalPlayer(inputDelegate: InputDelegate): LocalPlayer(St
             val isGoodChoice = isGoodChoice(move)
             if (!isGoodChoice)
                 notifyBadMove("This is not the best move... Think again!")
-        } while(isGoodChoice)
+        } while(!isGoodChoice)
         return move
     }
 
@@ -34,6 +35,6 @@ internal class TutorialLocalPlayer(inputDelegate: InputDelegate): LocalPlayer(St
      * Notifies about a move that is not illegal, but just not a good choice in this situation.
      */
     private fun notifyBadMove(comment: String) {
-        // TODO notify the user about the bad choice
+        Log.i("TutorialLocalPlayer", "This is not a good choice")
     }
 }
