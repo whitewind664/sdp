@@ -4,7 +4,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.FrameLayout
 import com.github.gogetters.letsgo.game.view.GoView
-import com.github.gogetters.letsgo.game.util.InputDelegate
+import com.github.gogetters.letsgo.game.util.TouchInputDelegate
 import com.github.gogetters.letsgo.R
 import com.github.gogetters.letsgo.game.*
 import com.github.gogetters.letsgo.game.Game
@@ -28,15 +28,18 @@ class GameActivity : AppCompatActivity() {
         val komi = intent.getDoubleExtra(EXTRA_KOMI, 5.5)
         val boardSize = Board.Size.withSize(gameSizeInput)
         goView = GoView(this, boardSize)
-        val inputDelegate = InputDelegate()
-        goView.inputDelegate = inputDelegate
+
+        val touchInputDelegate = TouchInputDelegate()
+
+        goView.touchInputDelegate = touchInputDelegate
 
 
         val boardFrame = findViewById<FrameLayout>(R.id.gameBoardFrame)
         boardFrame.addView(goView)
 
-        val whitePlayer = LocalPlayer(Stone.WHITE, inputDelegate)
-        val blackPlayer = LocalPlayer(Stone.BLACK, inputDelegate)
+        //TODO use different delegate depending on which type of Player
+        val whitePlayer = LocalPlayer(Stone.WHITE, touchInputDelegate)
+        val blackPlayer = LocalPlayer(Stone.BLACK, touchInputDelegate)
         game = Game(boardSize, komi, whitePlayer, blackPlayer)
 
         GlobalScope.launch {

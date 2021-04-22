@@ -11,7 +11,7 @@ import com.github.gogetters.letsgo.game.Board
 import com.github.gogetters.letsgo.game.BoardState
 import com.github.gogetters.letsgo.game.Stone
 import com.github.gogetters.letsgo.game.Point
-import com.github.gogetters.letsgo.game.util.InputDelegate
+import com.github.gogetters.letsgo.game.util.TouchInputDelegate
 import kotlin.math.roundToInt
 
 
@@ -26,7 +26,7 @@ class GoView(context: Context, private val boardSize: Board.Size) : View(context
         Board.Size.LARGE -> R.drawable.board_19
     }
 
-    lateinit var inputDelegate: InputDelegate
+    lateinit var touchInputDelegate: TouchInputDelegate
 
     private val boardImage = ContextCompat.getDrawable(context, boardImageID)
     private val whiteStoneImage = ContextCompat.getDrawable(context, R.drawable.white)
@@ -145,7 +145,7 @@ class GoView(context: Context, private val boardSize: Board.Size) : View(context
         when (event.action) {
             MotionEvent.ACTION_DOWN -> {
                 val closestPoint = coordToPoint(x, y)
-                inputDelegate.saveInput(closestPoint)
+                touchInputDelegate.saveLatestInput(closestPoint)
             }
         }
 

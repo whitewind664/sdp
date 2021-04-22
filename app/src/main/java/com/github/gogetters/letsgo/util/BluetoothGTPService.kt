@@ -6,11 +6,10 @@ import android.os.Handler
 import android.os.Looper
 import android.util.Log
 import com.github.gogetters.letsgo.game.GTPCommand
-import com.github.gogetters.letsgo.game.Point
+import com.github.gogetters.letsgo.game.util.BluetoothInputDelegate
 import java.io.IOException
 import java.io.InputStream
 import java.io.OutputStream
-import java.util.concurrent.ArrayBlockingQueue
 
 
 class BluetoothGTPService {
@@ -19,7 +18,7 @@ class BluetoothGTPService {
         receiveCommand(it.obj as ByteArray)
     }
 
-    val moveQueue = ArrayBlockingQueue<Point>(1)
+    lateinit var inputDelegate: BluetoothInputDelegate
 
     private val MESSAGE_READ: Int = 0
     private val MESSAGE_WRITE: Int = 1
@@ -46,13 +45,13 @@ class BluetoothGTPService {
         connectedThread.write(commandBytes)
     }
 
-    fun receiveCommand(bytes: ByteArray): Boolean {
+    private fun receiveCommand(bytes: ByteArray): Boolean {
         try {
             val commandString = bytes.toString()
             val command = GTPCommand.toCommand(commandString)
 
             if (command is GTPCommand.PLAY) {
-                moveQueue.add(command.move.point)
+                inputDelegate.saveLatestInput(command.move.point)
             } else if (command is GTPCommand.GENMOVE) {
                 //TODO figure out what to do here??? not sure
             }

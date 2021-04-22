@@ -5,8 +5,10 @@ import java.lang.IllegalArgumentException
 
 interface Player {
 
-    abstract fun requestMove(board: BoardState): Move
+    val color: Stone
 
-    abstract fun notifyIllegalMove(illegalMove: IllegalMoveException)
+    fun requestMove(board: BoardState): Move
+
+    fun notifyIllegalMove(illegalMove: IllegalMoveException)
 
 }

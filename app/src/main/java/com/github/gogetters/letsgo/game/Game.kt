@@ -20,11 +20,12 @@ internal class Game(size: Board.Size, val komi: Double,
      */
     fun playTurn(): BoardState {
         Log.d("GAME", "${nextPlayer.color}'s turn")
+        var nextMove: Move? = null
 
         var validMove = false
         do {
             try {
-                val nextMove = nextPlayer.requestMove(board.getBoardState(0, 0))
+                nextMove = nextPlayer.requestMove(board.getBoardState(0, 0))
                 val points = board.playMove(nextMove)
                 Log.d("GAME", "PLAYED A ${nextMove.stone} STONE AT ${nextMove.point}")
                 addPoints(nextPlayer, points)
@@ -41,7 +42,7 @@ internal class Game(size: Board.Size, val komi: Double,
 
         nextPlayer = if (nextPlayer.color == Stone.BLACK) whitePlayer else blackPlayer
 
-        return board.getBoardState(0, 0, gameOver = passes >= 2)
+        return board.getBoardState(0, 0, gameOver = passes >= 2, lastMove = nextMove)
     }
 
     private fun addPoints(player: Player, points: Int) {
