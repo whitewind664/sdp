@@ -15,42 +15,57 @@ import org.junit.runner.RunWith
 @RunWith(AndroidJUnit4::class)
 class DatabaseTest {
 
-//    init {
-//    }
+    init {
+        val appContext = InstrumentationRegistry.getInstrumentation().targetContext
+        FirebaseApp.initializeApp(appContext)
+    }
 
     @Test
     fun disableLocationSharingDoesntThrow() {
-        val appContext = InstrumentationRegistry.getInstrumentation().targetContext
-        FirebaseApp.initializeApp(appContext)
         Database.goOffline()
-        Database.writeValue("asdf", "fakeval1", {
-
-        }, {
-
-        })
+        Database.disableLocationSharing()
+        Database.purgeOutstandingWrites()
         Database.goOnline()
-//        Database.disableLocationSharing()
     }
 
-//    @Test
-//    fun getAllLocationsDoesntThrow() {
-//        Database.getAllLocations()
-//    }
-//
-//    @Test
-//    fun listenToMessages() {
-//        val chatId = "fakeChatId"
-//
-//        val listener = Database.addMessagesListener(chatId) {
-//            // do nothing
-//        }
-//
-//        Database.sendMessage("fakeSenderId", chatId, "fakeText", {
-//            // do nothing
-//        }, {
-//            // do nothing
-//        })
-//
-//        Database.removeMessagesListener(chatId, listener)
-//    }
+    @Test
+    fun getAllLocationsDoesntThrow() {
+        Database.goOffline()
+        Database.getAllLocations()
+        Database.disableLocationSharing()
+        Database.goOnline()
+    }
+
+    @Test
+    fun listenToMessages() {
+        Database.goOffline()
+
+        val chatId = "fakeChatId"
+
+        val listener = Database.addMessagesListener(chatId) {
+            // do nothing
+        }
+
+        Database.sendMessage("fakeSenderId", chatId, "fakeText", {
+            // do nothing
+        }, {
+            // do nothing
+        })
+
+        Database.removeMessagesListener(chatId, listener)
+
+        Database.goOnline()
+    }
+
+    fun writeValue() {
+        Database.goOffline()
+
+        Database.writeValue("asdf", "fakeval", {
+            Database.purgeOutstandingWrites()
+        }, {
+            Database.purgeOutstandingWrites()
+        })
+
+        Database.goOnline()
+    }
 }
