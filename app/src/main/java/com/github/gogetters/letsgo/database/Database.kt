@@ -39,6 +39,10 @@ class Database {
         fun deleteData(ref: String): Task<Void> {
             return db.getReference(ref).removeValue()
         }
+
+        fun goOffline() {
+            db.goOffline()
+        }
         
         // ---- Map related ----
         /**
