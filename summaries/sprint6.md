@@ -36,6 +36,7 @@ are quite complex, but I guess we will hear more from the team about this.
 - To improve: there are still unrelated devices being listed, which i will fix in the future
 
 ## Overall team (Scrum Master)
-- Done:
-- Went well:
-- To improve:
+- Done: Bluetooth is moving forward, Firebase is getting closer to completion and the tutorial is done.
+- Went well: Overall we are working well together, our code is more interdependent and we are adapting well to that.
+- To improve: We need to make smaller issues so that we have something to turn into a PR.
+Also testing needs to be part of the work done each week.
