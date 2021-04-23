@@ -3,9 +3,9 @@
 ---
 
 ## Bajraktarov, Dimitar
-- Done:
-- Went well:
-- To improve:
+- Done: Wrote tests for the database class
+- Went well: Found a way to test the database without writing a mocked one, which is probably better
+- To improve: Learn to use app contexts better in order to simulate logged in users
 
 ## Horvath-Mikulas, Szabina
 - Done: I checked the existing component of MATERIAL design for Android as well as the Jetpack libraries and the way how they can be integrated to the app. I also analysed the Google’s recommendation of having 1 activity and many fragments.
@@ -17,7 +17,7 @@
 - Went well: Good time management (especially also for writing tests).
 - To improve: I feel like I could communicate more effectively with the team. Reducing quantity and improve quality and relevance.
 
-## Protopapas, Kimon Dimitrios
+## Protopapas, Kimon Dimitrios (Scrum Master)
 - Done: Worked on making the game playable over Bluetooth using the Bluetooth communication code we wrote
 - Went well: Design done, and architecture is clean
 - To improve: Need to do more refactoring as there is a lot of common code
