@@ -32,7 +32,7 @@ class DatabaseTest {
     fun getAllLocationsDoesntThrow() {
         Database.goOffline()
         Database.getAllLocations()
-        Database.disableLocationSharing()
+        Database.purgeOutstandingWrites()
         Database.goOnline()
     }
 
@@ -46,15 +46,18 @@ class DatabaseTest {
             // do nothing
         }
 
+        // TODO write database functions with await instead of callbacks if possible
+
         Database.sendMessage("fakeSenderId", chatId, "fakeText", {
-            // do nothing
+            Database.purgeOutstandingWrites()
+            Database.goOnline()
         }, {
-            // do nothing
+            Database.purgeOutstandingWrites()
+            Database.goOnline()
         })
 
         Database.removeMessagesListener(chatId, listener)
 
-        Database.goOnline()
     }
 
     fun writeValue() {
@@ -62,10 +65,11 @@ class DatabaseTest {
 
         Database.writeValue("asdf", "fakeval", {
             Database.purgeOutstandingWrites()
+            Database.goOnline()
         }, {
             Database.purgeOutstandingWrites()
+            Database.goOnline()
         })
 
-        Database.goOnline()
     }
 }
