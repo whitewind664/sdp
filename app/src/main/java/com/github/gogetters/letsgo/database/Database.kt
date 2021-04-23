@@ -43,6 +43,14 @@ class Database {
         fun goOffline() {
             db.goOffline()
         }
+
+        fun goOnline() {
+            db.goOnline()
+        }
+
+        fun purgeOutstandingWrites() {
+            db.purgeOutstandingWrites()
+        }
         
         // ---- Map related ----
         /**

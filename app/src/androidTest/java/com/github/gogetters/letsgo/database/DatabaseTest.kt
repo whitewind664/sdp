@@ -22,12 +22,13 @@ class DatabaseTest {
     fun disableLocationSharingDoesntThrow() {
         val appContext = InstrumentationRegistry.getInstrumentation().targetContext
         FirebaseApp.initializeApp(appContext)
-//        Database.goOffline()
-        Database.writeValue("asdf", "fakeval", {
+        Database.goOffline()
+        Database.writeValue("asdf", "fakeval1", {
 
         }, {
 
         })
+        Database.goOnline()
 //        Database.disableLocationSharing()
     }
 
