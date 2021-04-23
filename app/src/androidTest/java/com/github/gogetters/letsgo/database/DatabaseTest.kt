@@ -3,6 +3,7 @@ package com.github.gogetters.letsgo
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
 import com.github.gogetters.letsgo.database.Database
+import com.google.android.gms.tasks.Tasks
 import com.google.firebase.FirebaseApp
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -70,6 +71,18 @@ class DatabaseTest {
             Database.purgeOutstandingWrites()
             Database.goOnline()
         })
+
+    }
+
+    fun refFunctions() {
+        Database.goOffline()
+
+        Tasks.await(Database.writeData("/test/test/test", "test"))
+        Tasks.await(Database.readData("/test/test/test"))
+        Tasks.await(Database.deleteData("/test/test/test"))
+
+        Database.purgeOutstandingWrites()
+        Database.goOnline()
 
     }
 }
