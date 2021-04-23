@@ -2,13 +2,20 @@ package com.github.gogetters.letsgo.util
 
 import android.Manifest
 import android.content.pm.PackageManager
-import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.github.gogetters.letsgo.util.PermissionUtils.isPermissionGranted
+import org.junit.Assert.*
 import org.junit.Test
 import org.junit.runner.RunWith
-import org.junit.Assert.*
+import org.mockito.MockedStatic
+import org.mockito.Mockito
+import org.mockito.Mock
+import org.mockito.junit.MockitoJUnitRunner
+import org.mockito.Mockito.verify
+import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.ActivityCompat
+import com.github.gogetters.letsgo.util.PermissionUtils.requestPermission
 
-@RunWith(AndroidJUnit4::class)
+@RunWith(MockitoJUnitRunner::class)
 class PermissionUtilsTest {
     @Test
     fun isPermissionGrantedRejectsIfNoPermission() {
