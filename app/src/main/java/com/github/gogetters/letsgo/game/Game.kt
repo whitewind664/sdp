@@ -4,10 +4,10 @@ import android.util.Log
 import com.github.gogetters.letsgo.game.exceptions.IllegalMoveException
 import com.github.gogetters.letsgo.util.CircularList
 
-internal class Game(size: Board.Size, val komi: Double,
-                    private val whitePlayer: Player, private val blackPlayer: Player) {
+internal open class Game(val size: Board.Size, val komi: Double,
+                         private val whitePlayer: Player, private val blackPlayer: Player) {
 
-    private val board = Board(size)
+    private var board = Board(size)
     private val passMove = Move(Stone.EMPTY, Point(0, 0))
     private var nextPlayer = blackPlayer
 
@@ -19,7 +19,7 @@ internal class Game(size: Board.Size, val komi: Double,
      * Called to advance the game state.
      * @return state of the board after the move
      */
-    fun playTurn(): BoardState {
+    open fun playTurn(): BoardState {
         Log.d("GAME", "${nextPlayer.color}'s turn")
 
         var validMove = false
@@ -43,6 +43,18 @@ internal class Game(size: Board.Size, val komi: Double,
         nextPlayer = if (nextPlayer.color == Stone.BLACK) whitePlayer else blackPlayer
 
         return board.getBoardState(0, 0, gameOver = passes >= 2)
+    }
+
+    protected fun reinitBoard(playedStones: List<Move>): BoardState {
+        board = Board(this.size)
+        try {
+            for (move in playedStones) {
+                board.playMove(move)
+            }
+        } catch (e: IllegalMoveException) {
+            board = Board(this.size)
+        }
+        return board.getBoardState(0, 0)
     }
 
     private fun addPoints(player: Player, points: Int) {
