@@ -8,11 +8,8 @@ import android.widget.FrameLayout
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import com.github.gogetters.letsgo.R
-import com.github.gogetters.letsgo.game.Board
 import com.github.gogetters.letsgo.game.BoardState
-import com.github.gogetters.letsgo.game.Game
-import com.github.gogetters.letsgo.game.util.InputDelegate
-import com.github.gogetters.letsgo.game.view.GoView
+import com.github.gogetters.letsgo.game.util.TouchInputDelegate
 import com.github.gogetters.letsgo.tutorial.TutorialGame
 import com.github.gogetters.letsgo.tutorial.TutorialGoView
 import com.github.gogetters.letsgo.tutorial.TutorialLocalPlayer
@@ -35,8 +32,8 @@ class TutorialActivity : AppCompatActivity() {
 
         // board initialisation
         goView = TutorialGoView(this)
-        val inputDelegate = InputDelegate()
-        goView.inputDelegate = inputDelegate
+        val inputDelegate = TouchInputDelegate()
+        goView.touchInputDelegate = inputDelegate
 
         boardFrame = findViewById<FrameLayout>(R.id.tutorial_frameLayout_boardFrame)
         boardFrame.addView(goView)

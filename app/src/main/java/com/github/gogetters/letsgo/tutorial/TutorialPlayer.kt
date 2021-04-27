@@ -4,7 +4,7 @@ import android.util.Log
 import com.github.gogetters.letsgo.game.*
 import com.github.gogetters.letsgo.game.exceptions.IllegalMoveException
 
-internal class TutorialPlayer(color: Stone): Player(color) {
+internal class TutorialPlayer(override val color: Stone): Player {
 
     private var turnCount: Int = 1
 

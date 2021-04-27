@@ -27,7 +27,7 @@ open class GoView(context: Context, private val boardSize: Board.Size) : View(co
         Board.Size.LARGE -> R.drawable.board_19
     }
 
-    lateinit var touchInputDelegate: TouchInputDelegate
+    public lateinit var touchInputDelegate: TouchInputDelegate
 
     private val boardImage = ContextCompat.getDrawable(context, boardImageID)
     protected val whiteStoneImage = ContextCompat.getDrawable(context, R.drawable.white)
