@@ -45,10 +45,11 @@ class MessageAdapterTest {
         scenario.onActivity { activity ->
             val adapter = MessageAdapter(activity)
             val message = ChatMessage("text", true, Date(), "name")
+            val message2 = ChatMessage("text", false, Date(), "name")
             assertEquals(adapter.count, 0)
             adapter.addMessage(message)
             adapter.addMessage(message)
-            adapter.addMessage(message)
+            adapter.addMessage(message2)
             assertEquals(adapter.count, 3)
         }
     }

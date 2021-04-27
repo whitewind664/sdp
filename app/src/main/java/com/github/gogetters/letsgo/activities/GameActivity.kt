@@ -34,7 +34,7 @@ class GameActivity : AppCompatActivity() {
         goView.touchInputDelegate = touchInputDelegate
 
 
-        val boardFrame = findViewById<FrameLayout>(R.id.gameBoardFrame)
+        val boardFrame = findViewById<FrameLayout>(R.id.game_frameLayout_boardFrame)
         boardFrame.addView(goView)
 
         //TODO use different delegate depending on which type of Player

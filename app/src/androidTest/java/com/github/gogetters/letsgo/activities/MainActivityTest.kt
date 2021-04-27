@@ -1,6 +1,5 @@
 package com.github.gogetters.letsgo.activities
 
-import android.content.Intent
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.action.ViewActions.*
 import androidx.test.espresso.intent.Intents
@@ -8,8 +7,13 @@ import androidx.test.espresso.intent.matcher.IntentMatchers
 import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.ext.junit.rules.ActivityScenarioRule
 import androidx.test.ext.junit.runners.AndroidJUnit4
+import androidx.test.platform.app.InstrumentationRegistry.getInstrumentation
+import androidx.test.uiautomator.UiDevice
+import androidx.test.uiautomator.UiSelector
 import com.github.gogetters.letsgo.R
 import org.hamcrest.Matchers
+import org.junit.After
+import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -20,31 +24,52 @@ class MainActivityTest {
     @get:Rule
     var activityRule = ActivityScenarioRule(MainActivity::class.java)
 
+    @Before
+    fun init() {
+        Intents.init()
+
+        val device = UiDevice.getInstance(getInstrumentation())
+        var waitButton = device.findObject(UiSelector().textContains("wait"))
+        if (waitButton.exists()) {
+            waitButton.click()
+        }
+        //Thread.sleep(5000)
+    }
+
+    @After
+    fun cleanUp() {
+        Intents.release()
+        activityRule.scenario.close()
+    }
+
+
     @Test
     fun gameButtonOpensGame() {
-        /** //Somehow doesn't work
-        val scenario = activityRule.scenario
-        scenario.onActivity { activity ->
-            // close system dialogs
-            Thread.sleep(1)
-            activity.sendBroadcast(Intent(Intent.ACTION_CLOSE_SYSTEM_DIALOGS))
-
-            Intents.init()
-            onView(withId(R.id.main_button_startGame)).perform(click())
-            Intents.intended(IntentMatchers.hasComponent(GameActivity::class.java.name))
-            Intents.release()
-        }*/
+        onView(withId(R.id.main_button_startGame)).perform(click())
+        Intents.intended(IntentMatchers.hasComponent(GameActivity::class.java.name))
     }
 
     @Test
     fun profileButtonOpensProfile() {
-        /** //Somehow doesn't work
-        val scenario = activityRule.scenario
-        scenario.onActivity { activity ->
-            Intents.init()
-            onView(withId(R.id.main_button_profile)).perform(click())
-            Intents.intended(Matchers.allOf(IntentMatchers.hasComponent(ProfileActivity::class.java.name)))
-            Intents.release()
-        }*/
+        onView(withId(R.id.main_button_profile)).perform(click())
+        Intents.intended(Matchers.allOf(IntentMatchers.hasComponent(ProfileActivity::class.java.name)))
+    }
+
+    @Test
+    fun mapButtonOpensMap() {
+        onView(withId(R.id.main_button_map)).perform(click())
+        Intents.intended(Matchers.allOf(IntentMatchers.hasComponent(MapsActivity::class.java.name)))
+    }
+
+    @Test
+    fun chatButtonOpensChat() {
+        onView(withId(R.id.main_button_chat)).perform(click())
+        Intents.intended(Matchers.allOf(IntentMatchers.hasComponent(ChatActivity::class.java.name)))
+    }
+
+    @Test
+    fun tutorialButtonOpensTutorial() {
+        onView(withId(R.id.main_button_tutorial)).perform(click())
+        Intents.intended(Matchers.allOf(IntentMatchers.hasComponent(TutorialActivity::class.java.name)))
     }
 }

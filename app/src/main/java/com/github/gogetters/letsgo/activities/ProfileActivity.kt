@@ -6,7 +6,9 @@ import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
 import com.github.gogetters.letsgo.R
+import com.github.gogetters.letsgo.database.UserBundle
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseUser
 
 class ProfileActivity : FirebaseUIActivity() {
 
@@ -21,7 +23,7 @@ class ProfileActivity : FirebaseUIActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_profile)
 
-        uploadImageText = findViewById(R.id.profile_textView_upload_image_hint)
+        uploadImageText = findViewById(R.id.profile_textView_uploadImageHint)
         profileImage = findViewById(R.id.profile_imageView_image)
         nameText = findViewById(R.id.profile_textView_name)
         emailText = findViewById(R.id.profile_textView_email)
@@ -39,14 +41,18 @@ class ProfileActivity : FirebaseUIActivity() {
     }
 
     private fun updateUI() {
-        val authInstance = FirebaseAuth.getInstance().currentUser
+        val authInstance: FirebaseUser? = FirebaseAuth.getInstance().currentUser
 
         if (authInstance == null) {
-
+            // TODO Don't let the user see this screen without having successfully completed sign-in.
         } else {
-            nameText!!.text = authInstance.displayName
-            emailText!!.text = authInstance.email
-            // cityCountyText!!.text = authInstance.
+            val userBundle = UserBundle(authInstance)
+
+            userBundle.letsGo.downloadUserData().addOnCompleteListener {
+                nameText!!.text = userBundle.letsGo.first
+                emailText!!.text = userBundle.firebase.email
+                cityCountyText!!.text = "${userBundle.letsGo.city}, ${userBundle.letsGo.country}"
+            }
         }
     }
 }

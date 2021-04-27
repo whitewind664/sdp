@@ -1,19 +1,41 @@
 ---
-# Summary for Sprint 4
+# Summary for week 6
 ---
 
+## Bajraktarov, Dimitar
+- Done:
+- Went well:
+- To improve:
 
-## Wengle, Erik Alessandro
-- Done: two let's go apps can exchange messages using bluetooth
-- Went well: i found most of the bugs from last week quickly
-- To improve: there are still unrelated devices being listed, which i will fix in the future
+## Horvath-Mikulas, Szabina
+- Done:
+- Went well:
+- To improve:
 
 ## Linder, Jan David
-- Done: I worked on the tutorial activity and made it possible to combine text with small (guided) game parts. Furthermore, I did some refactoring in the beginning of the sprint.
-- Went well: Good time management (especially also for writing tests).
-- To improve: I feel like I could communicate more effectively with the team. Reducing quantity and improve quality and relevance.
+- Done:
+- Went well:
+- To improve:
 
 ## Protopapas, Kimon Dimitrios
-- Done: Worked on making the game playable over Bluetooth using the Bluetooth communication code we wrote
-- Went well: Design done, and architecture is clean
-- To improve: Need to do more refactoring as there is a lot of common code
+- Done:
+- Went well:
+- To improve:
+
+## Roust, Michael Murad
+- Done: Changed User class from using Firestore to RealtimeDatabase. In the process I decoupled all online elements
+such as Database and Authentication from the User class to allow for it to be tested with a Mock Database.
+- Went well: Cleaning up the User class code and modifing exisiting code to fit the changes. Understanding RealtimeDatabase.
+- To improve: After switiching to RealtimeDatabase I realise that this will unfortunatly make things more tedious to work
+with lists. Also mocking the database will be a very challenging task since some functionalities we will probably use
+are quite complex, but I guess we will hear more from the team about this.
+
+## Wengle, Erik Alessandro
+- Done:
+- Went well:
+- To improve:
+
+## Overall team (Scrum Master)
+- Done:
+- Went well:
+- To improve:
