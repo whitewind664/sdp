@@ -11,11 +11,13 @@ import com.github.gogetters.letsgo.R
 import com.github.gogetters.letsgo.game.Board
 import com.github.gogetters.letsgo.game.BoardState
 import com.github.gogetters.letsgo.game.Game
+import com.github.gogetters.letsgo.game.Stone
 import com.github.gogetters.letsgo.game.util.InputDelegate
 import com.github.gogetters.letsgo.game.view.GoView
 import com.github.gogetters.letsgo.tutorial.TutorialGame
 import com.github.gogetters.letsgo.tutorial.TutorialGoView
 import com.github.gogetters.letsgo.tutorial.TutorialLocalPlayer
+import com.github.gogetters.letsgo.tutorial.TutorialPlayer
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 
@@ -41,8 +43,9 @@ class TutorialActivity : AppCompatActivity() {
         boardFrame = findViewById<FrameLayout>(R.id.tutorial_frameLayout_boardFrame)
         boardFrame.addView(goView)
 
-        val player = TutorialLocalPlayer(inputDelegate)
-        game = TutorialGame(player)
+        val localPlayer = TutorialLocalPlayer(inputDelegate)
+        val tutorialPlayer = TutorialPlayer()
+        game = TutorialGame(localPlayer, tutorialPlayer)
         hideBoard()
 
         // button
@@ -68,9 +71,10 @@ class TutorialActivity : AppCompatActivity() {
         GlobalScope.launch {
             var boardState = game.playTurn()
             while (!boardState.gameOver) {
-                if (gameIsRunning) {
+                if (gameIsRunning && !(game.tutorialPlayerIsNext() && tutorialPlayer.isOutOfMoves())) {
                     drawBoard(boardState)
                     boardState = game.playTurn()
+                    drawBoard(boardState)
                 }
             }
         }

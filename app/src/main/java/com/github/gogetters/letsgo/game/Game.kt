@@ -9,7 +9,7 @@ internal open class Game(val size: Board.Size, val komi: Double,
 
     private var board = Board(size)
     private val passMove = Move(Stone.EMPTY, Point(0, 0))
-    private var nextPlayer = blackPlayer
+    protected var nextPlayer = blackPlayer
 
     private var passes = 0
     private var whiteScore = 0
