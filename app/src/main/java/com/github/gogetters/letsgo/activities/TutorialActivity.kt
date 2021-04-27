@@ -2,6 +2,7 @@ package com.github.gogetters.letsgo.activities
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.Button
 import android.widget.FrameLayout
@@ -70,9 +71,10 @@ class TutorialActivity : AppCompatActivity() {
         // run the game
         GlobalScope.launch {
             var boardState = game.playTurn()
+            drawBoard(boardState)
             while (!boardState.gameOver) {
+                Log.d("ACT", "The game is running: ${game.tutorialPlayerIsNext()} and ${tutorialPlayer.isOutOfMoves()}")
                 if (gameIsRunning && !(game.tutorialPlayerIsNext() && tutorialPlayer.isOutOfMoves())) {
-                    drawBoard(boardState)
                     boardState = game.playTurn()
                     drawBoard(boardState)
                 }
