@@ -41,7 +41,7 @@ class TutorialActivity : AppCompatActivity() {
         val inputDelegate = InputDelegate()
         goView.inputDelegate = inputDelegate
 
-        boardFrame = findViewById<FrameLayout>(R.id.tutorial_frameLayout_boardFrame)
+        boardFrame = findViewById(R.id.tutorial_frameLayout_boardFrame)
         boardFrame.addView(goView)
 
         val localPlayer = TutorialLocalPlayer(inputDelegate)
@@ -73,7 +73,6 @@ class TutorialActivity : AppCompatActivity() {
             var boardState = game.playTurn()
             drawBoard(boardState)
             while (!boardState.gameOver) {
-                Log.d("ACT", "The game is running: ${game.tutorialPlayerIsNext()} and ${tutorialPlayer.isOutOfMoves()}")
                 if (gameIsRunning && !(game.tutorialPlayerIsNext() && tutorialPlayer.isOutOfMoves())) {
                     boardState = game.playTurn()
                     drawBoard(boardState)

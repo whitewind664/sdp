@@ -13,9 +13,10 @@ internal class TutorialGame(private val localPlayer: TutorialLocalPlayer, privat
     private var tutorialSteps: List<TutorialStep> = emptyList()
 
     init {
-        // create all the steps of the tutorial
+        // create all the steps of the tutorial. Note: Make sure that the order of the played stones makes sense, this determines the next player
         tutorialSteps += TutorialStep(2, false, true, emptyList(), emptyList(), emptyList())
-        tutorialSteps += TutorialStep(4, false, true, listOf(Move(Stone.WHITE, Point(1, 2))), listOf(Move(Stone.BLACK, Point(2, 2))), emptyList())
+        tutorialSteps += TutorialStep(4, false, true, emptyList(), emptyList(), emptyList())
+        tutorialSteps += TutorialStep(6, false, true, listOf(Move(Stone.BLACK, Point(3, 2)), Move(Stone.WHITE, Point(2, 1)), Move(Stone.BLACK, Point(4, 1)), Move(Stone.WHITE, Point(3, 1))), listOf(listOf(Move(Stone.BLACK, Point(2, 2))), listOf(Move(Stone.BLACK, Point(1, 2)))), listOf(Point(1, 1)))
         // TODO
     }
 
@@ -44,7 +45,7 @@ internal class TutorialGame(private val localPlayer: TutorialLocalPlayer, privat
     /**
      * Represents a step in the tutorial that can display text, the board (with some recommended moves)
      */
-    class TutorialStep(val turnNumber: Int, val displayText: Boolean,  val displayBoard: Boolean, val playedStones: List<Move>, val recommendedMoves: List<Move>, val tutorialPlayerMoves: List<Point>) {
+    class TutorialStep(val turnNumber: Int, val displayText: Boolean,  val displayBoard: Boolean, val playedStones: List<Move>, val recommendedMoves: List<List<Move>>, val tutorialPlayerMoves: List<Point>) {
         init {
             assert(displayText || displayBoard)
         }

@@ -10,7 +10,11 @@ import com.github.gogetters.letsgo.game.util.InputDelegate
 
 internal class TutorialLocalPlayer(inputDelegate: InputDelegate): LocalPlayer(Stone.BLACK, inputDelegate) {
 
-    private var recommendedMoves: List<Move> = emptyList()
+    /**
+     *  Contains the recommended moves per turn of the local player
+     */
+    private var recommendedMoves: List<List<Move>> = emptyList()
+    private var turnCount = 0
 
     override fun requestMove(board: BoardState): Move {
         var move: Move
@@ -20,15 +24,17 @@ internal class TutorialLocalPlayer(inputDelegate: InputDelegate): LocalPlayer(St
             if (!isGoodChoice)
                 notifyBadMove("This is not the best move... Think again!")
         } while(!isGoodChoice)
+        turnCount++
         return move
     }
 
-    fun setRecommendedMoves(recommendedMoves: List<Move>) {
+    fun setRecommendedMoves(recommendedMoves: List<List<Move>>) {
         this.recommendedMoves = recommendedMoves
     }
 
     private fun isGoodChoice(move: Move): Boolean {
-        return recommendedMoves.isEmpty() || move in recommendedMoves
+        val recommendedMovesInTurn = if (turnCount < recommendedMoves.size) recommendedMoves[turnCount] else emptyList()
+        return recommendedMovesInTurn.isEmpty() || move in recommendedMovesInTurn
     }
 
     /**
