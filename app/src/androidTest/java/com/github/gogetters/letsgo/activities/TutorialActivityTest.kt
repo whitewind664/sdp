@@ -82,6 +82,14 @@ class TutorialActivityTest {
     }
 
     @Test
+    fun canPlaceStoneFreelyAfterReset() {
+        goToFirstBoard()
+        onView(withParent(withId(R.id.tutorial_frameLayout_boardFrame))).perform(touchDownAndUp(1f, 1f))
+        onView(withId(R.id.tutorial_button_reset)).perform(click())
+        onView(withParent(withId(R.id.tutorial_frameLayout_boardFrame))).perform(touchDownAndUp(1f, 1f))
+    }
+
+    @Test
     fun goesBackToMainAtEndOfTutorial() {
         /*onView(withId(R.id.tutorial_button_next)).perform(click())
         onView(withId(R.id.tutorial_button_next)).perform(click())
