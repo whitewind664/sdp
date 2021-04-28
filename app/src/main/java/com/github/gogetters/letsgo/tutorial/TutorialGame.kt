@@ -16,7 +16,7 @@ internal class TutorialGame(private val localPlayer: TutorialLocalPlayer, privat
         // create all the steps of the tutorial. Note: Make sure that the order of the played stones makes sense, this determines the next player
         tutorialSteps += TutorialStep(2, false, true, emptyList(), emptyList(), emptyList())
         tutorialSteps += TutorialStep(4, false, true, emptyList(), emptyList(), emptyList())
-        tutorialSteps += TutorialStep(7, false, true, listOf(Move(Stone.BLACK, Point(3, 2)), Move(Stone.WHITE, Point(2, 1)), Move(Stone.BLACK, Point(4, 1)), Move(Stone.WHITE, Point(3, 1))), listOf(listOf(Move(Stone.BLACK, Point(2, 2))), listOf(Move(Stone.BLACK, Point(1, 2)))), listOf(Point(1, 1)))
+        tutorialSteps += TutorialStep(7, true, true, listOf(Move(Stone.BLACK, Point(3, 2)), Move(Stone.WHITE, Point(2, 1)), Move(Stone.BLACK, Point(4, 1)), Move(Stone.WHITE, Point(3, 1))), listOf(listOf(Move(Stone.BLACK, Point(2, 2))), listOf(Move(Stone.BLACK, Point(1, 2)))), listOf(Point(1, 1)))
         // TODO
     }
 
