@@ -24,7 +24,7 @@ import kotlinx.coroutines.launch
 
 class TutorialActivity : AppCompatActivity() {
     private var textProgressIndex: Int = 0
-    private val tutorialTextIds = arrayOf(R.string.tutorial_intro, R.string.tutorial_board, R.string.tutorial_stones, R.string.tutorial_territory, R.string.tutorial_capturing, R.string.tutorial_capturing2, R.string.tutorial_selfCapture, R.string.tutorial_score1, R.string.tutorial_KoRule, R.string.tutorial_end, R.string.tutorial_score2)
+    private val tutorialTextIds = arrayOf(R.string.tutorial_intro, R.string.tutorial_board, R.string.tutorial_board2, R.string.tutorial_stones, R.string.tutorial_stones2, R.string.tutorial_territory, R.string.tutorial_capturing, R.string.tutorial_capturing2, R.string.tutorial_selfCapture, R.string.tutorial_score1, R.string.tutorial_KoRule, R.string.tutorial_KoRule2, R.string.tutorial_end, R.string.tutorial_score2)
     private var isFinished = false
     private var gameIsRunning = false
 

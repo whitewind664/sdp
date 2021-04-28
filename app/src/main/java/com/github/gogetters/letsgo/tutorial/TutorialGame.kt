@@ -14,10 +14,10 @@ internal class TutorialGame(private val localPlayer: TutorialLocalPlayer, privat
 
     init {
         // create all the steps of the tutorial. Note: Make sure that the order of the played stones makes sense, this determines the next player
-        tutorialSteps += TutorialStep(2, false, true, emptyList(), emptyList(), emptyList())
-        tutorialSteps += TutorialStep(4, false, true, emptyList(), emptyList(), emptyList())
-        tutorialSteps += TutorialStep(7, true, true, listOf(Move(Stone.BLACK, Point(3, 2)), Move(Stone.WHITE, Point(2, 1)), Move(Stone.BLACK, Point(4, 1)), Move(Stone.WHITE, Point(3, 1))), listOf(listOf(Move(Stone.BLACK, Point(2, 2))), listOf(Move(Stone.BLACK, Point(1, 2)))), listOf(Point(1, 1)))
-        // TODO
+        tutorialSteps += TutorialStep(2, true, true, emptyList(), emptyList(), emptyList())
+        tutorialSteps += TutorialStep(4, true, true, emptyList(), emptyList(), emptyList())
+        tutorialSteps += TutorialStep(7, true, true, listOf(Move(Stone.BLACK, Point(3, 2)), Move(Stone.WHITE, Point(2, 1)), Move(Stone.BLACK, Point(4, 1)), Move(Stone.WHITE, Point(3, 1))), listOf(listOf(Move(Stone.BLACK, Point(2, 2))), listOf(Move(Stone.BLACK, Point(1, 2)))), listOf(Point(1, 1))) // capturing
+        tutorialSteps += TutorialStep(11, true, true, listOf(Move(Stone.BLACK, Point(5, 4)), Move(Stone.WHITE, Point(4, 4)), Move(Stone.BLACK, Point(6, 5)), Move(Stone.WHITE, Point(3, 5)), Move(Stone.BLACK, Point(5, 6)), Move(Stone.WHITE, Point(4, 6)), Move(Stone.BLACK, Point(6, 4)), Move(Stone.WHITE, Point(5, 5))), listOf(listOf(Move(Stone.BLACK, Point(4, 5)))), emptyList()) // Ko Rule
     }
 
     fun nextStep(): Pair<TutorialStep, BoardState> {
