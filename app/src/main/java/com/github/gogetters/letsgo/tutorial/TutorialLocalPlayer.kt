@@ -30,6 +30,7 @@ internal class TutorialLocalPlayer(inputDelegate: InputDelegate): LocalPlayer(St
 
     fun setRecommendedMoves(recommendedMoves: List<List<Move>>) {
         this.recommendedMoves = recommendedMoves
+        turnCount = 0
     }
 
     private fun isGoodChoice(move: Move): Boolean {

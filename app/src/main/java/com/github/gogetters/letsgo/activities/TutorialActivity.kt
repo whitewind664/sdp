@@ -73,8 +73,11 @@ class TutorialActivity : AppCompatActivity() {
             var boardState = game.playTurn()
             drawBoard(boardState)
             while (!boardState.gameOver) {
+                Log.d("LOOP", "We have ${game.tutorialPlayerIsNext()} and ${tutorialPlayer.isOutOfMoves()}")
                 if (gameIsRunning && !(game.tutorialPlayerIsNext() && tutorialPlayer.isOutOfMoves())) {
+                    Log.d("LOOP", "ENTER")
                     boardState = game.playTurn()
+                    Log.d("LOOP", "LEAVE")
                     drawBoard(boardState)
                 }
             }
