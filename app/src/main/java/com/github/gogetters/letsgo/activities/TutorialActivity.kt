@@ -32,6 +32,7 @@ class TutorialActivity : AppCompatActivity() {
     private lateinit var goView: TutorialGoView
     private lateinit var boardFrame: FrameLayout
     private lateinit var boardExplanationText: TextView
+    private lateinit var boardResetButton: Button
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -46,30 +47,24 @@ class TutorialActivity : AppCompatActivity() {
         boardFrame.addView(goView)
 
         boardExplanationText = findViewById(R.id.tutorial_textView_boardExplanation)
+        boardResetButton = findViewById(R.id.tutorial_button_reset)
 
         val localPlayer = TutorialLocalPlayer(inputDelegate)
         val tutorialPlayer = TutorialPlayer()
         game = TutorialGame(localPlayer, tutorialPlayer)
         hideBoard()
 
-        // button
-        findViewById<Button>(R.id.tutorial_button_next).setOnClickListener { _ ->
+        // "next" button
+        findViewById<Button>(R.id.tutorial_button_next).setOnClickListener {
             val (tutorialStep, boardState) = game.nextStep()
-            drawBoard(boardState)
+            changeView(tutorialStep, boardState, nextText = true)
+        }
 
-            // display board if necessary
-            if (tutorialStep.displayBoard) {
-                boardExplanationText.text = ""
-                showBoard()
-                goView.setPlayOptions(tutorialStep.recommendedMoves)
-            } else {
-                hideBoard()
-            }
-
-            // display text if necessary
-            if (tutorialStep.displayText) {
-                displayNextText(tutorialStep.displayBoard)
-            }
+        // "reset" button
+        boardResetButton.setOnClickListener {
+            inputDelegate.clearInput()
+            val (tutorialStep, boardState) = game.reinitStep()
+            changeView(tutorialStep, boardState, nextText = false)
         }
 
         // run the game
@@ -77,14 +72,29 @@ class TutorialActivity : AppCompatActivity() {
             var boardState = game.playTurn()
             drawBoard(boardState)
             while (!boardState.gameOver) {
-                Log.d("LOOP", "We have ${game.tutorialPlayerIsNext()} and ${tutorialPlayer.isOutOfMoves()}")
                 if (gameIsRunning && !(game.tutorialPlayerIsNext() && tutorialPlayer.isOutOfMoves())) {
-                    Log.d("LOOP", "ENTER")
                     boardState = game.playTurn()
-                    Log.d("LOOP", "LEAVE")
                     drawBoard(boardState)
                 }
             }
+        }
+    }
+
+    private fun changeView(tutorialStep: TutorialGame.TutorialStep, boardState: BoardState, nextText: Boolean) {
+        drawBoard(boardState)
+
+        // display board if necessary
+        if (tutorialStep.displayBoard) {
+            boardExplanationText.text = ""
+            showBoard()
+            goView.setPlayOptions(tutorialStep.recommendedMoves)
+        } else {
+            hideBoard()
+        }
+
+        // display text if necessary
+        if (tutorialStep.displayText) {
+            displayNextText(tutorialStep.displayBoard, nextText)
         }
     }
 
@@ -92,18 +102,21 @@ class TutorialActivity : AppCompatActivity() {
         gameIsRunning = true
         boardFrame.visibility = View.VISIBLE
         boardExplanationText.visibility = View.VISIBLE
+        boardResetButton.visibility = View.VISIBLE
     }
 
     private fun hideBoard() {
         boardFrame.visibility = View.GONE
         boardExplanationText.visibility = View.GONE
+        boardResetButton.visibility = View.GONE
         gameIsRunning = false
     }
     
-    private fun displayNextText(boardIsDisplayed: Boolean) {
+    private fun displayNextText(boardIsDisplayed: Boolean, next: Boolean) {
         val textView = if (boardIsDisplayed) boardExplanationText else findViewById(R.id.tutorial_textView_explanation)
-        if (textProgressIndex + 1 < tutorialTextIds.size) {
-            textProgressIndex += 1
+        val nextIndex = if (next) textProgressIndex + 1 else textProgressIndex
+        if (nextIndex < tutorialTextIds.size) {
+            textProgressIndex = nextIndex
             textView.text = resources.getString(tutorialTextIds[textProgressIndex])
         } else {
             if (!isFinished) {

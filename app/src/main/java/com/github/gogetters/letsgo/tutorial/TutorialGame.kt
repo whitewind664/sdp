@@ -29,6 +29,11 @@ internal class TutorialGame(private val localPlayer: TutorialLocalPlayer, privat
         tutorialPlayer.setMoves(step.tutorialPlayerMoves)
         return Pair(step, boardState)
     }
+
+    fun reinitStep(): Pair<TutorialStep, BoardState> {
+        turnCount--
+        return nextStep()
+    }
     
     fun tutorialPlayerIsNext(): Boolean {
         return super.nextPlayer.color == tutorialPlayer.color
