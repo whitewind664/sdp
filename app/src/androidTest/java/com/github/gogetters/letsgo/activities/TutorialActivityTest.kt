@@ -91,7 +91,6 @@ class TutorialActivityTest {
 
     @Test
     fun goesBackToMainAtEndOfTutorial() {
-        /*onView(withId(R.id.tutorial_button_next)).perform(click())
         onView(withId(R.id.tutorial_button_next)).perform(click())
         onView(withId(R.id.tutorial_button_next)).perform(click())
         onView(withId(R.id.tutorial_button_next)).perform(click())
@@ -101,8 +100,16 @@ class TutorialActivityTest {
         onView(withId(R.id.tutorial_button_next)).perform(click())
         onView(withId(R.id.tutorial_button_next)).perform(click())
         onView(withId(R.id.tutorial_button_next)).perform(click())
-        // TODO attention, the number of clicks matters!
-        Intents.intended(Matchers.allOf(IntentMatchers.hasComponent(MainActivity::class.java.name)))*/
+        onView(withId(R.id.tutorial_button_next)).perform(click())
+        onView(withId(R.id.tutorial_button_next)).perform(click())
+        onView(withId(R.id.tutorial_button_next)).perform(click())
+        onView(withId(R.id.tutorial_button_next)).perform(click())
+        onView(withId(R.id.tutorial_button_next)).perform(click())
+        onView(withId(R.id.tutorial_button_next)).perform(click())
+        onView(withId(R.id.tutorial_button_next)).perform(click())
+        onView(withId(R.id.tutorial_button_next)).perform(click())
+        // ATTENTION: the number of clicks matters!
+        Intents.intended(Matchers.allOf(IntentMatchers.hasComponent(MainActivity::class.java.name)))
     }
 
     private fun touchDownAndUp(x: Float, y: Float): ViewAction {

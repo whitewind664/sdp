@@ -25,7 +25,7 @@ import kotlin.math.exp
 
 class TutorialActivity : AppCompatActivity() {
     private var textProgressIndex: Int = 0
-    private val tutorialTextIds = listOf(R.string.tutorial_intro, R.string.tutorial_board, R.string.tutorial_board2, R.string.tutorial_stones, R.string.tutorial_stones2, R.string.tutorial_territory, R.string.tutorial_capturing, R.string.tutorial_capturing2, R.string.tutorial_selfCapture, R.string.tutorial_selfCapture2, R.string.tutorial_twoEyes, R.string.tutorial_score1, R.string.tutorial_KoRule, R.string.tutorial_KoRule2, R.string.tutorial_end, R.string.tutorial_score2)
+    private val tutorialTextIds = listOf(R.string.tutorial_intro, R.string.tutorial_board, R.string.tutorial_board2, R.string.tutorial_stones, R.string.tutorial_stones2, R.string.tutorial_territory, R.string.tutorial_territory2, R.string.tutorial_capturing, R.string.tutorial_capturing2, R.string.tutorial_selfCapture, R.string.tutorial_selfCapture2, R.string.tutorial_twoEyes, R.string.tutorial_score1, R.string.tutorial_KoRule, R.string.tutorial_KoRule2, R.string.tutorial_end, R.string.tutorial_score2)
     private var titleProgressIndex: Int = 0
     private val tutorialTitleIds = listOf(R.string.tutorial_title_intro, R.string.tutorial_title_board, R.string.tutorial_title_stones, R.string.tutorial_title_territories, R.string.tutorial_title_capturing, R.string.tutorial_title_selfCapture, R.string.tutorial_title_score1, R.string.tutorial_title_KoRule, R.string.tutorial_title_end, R.string.tutorial_title_score2, R.string.tutorial_title_outro)
     private var isFinished = false
@@ -133,6 +133,7 @@ class TutorialActivity : AppCompatActivity() {
             if (!isFinished) {
                 // handle end of tutorial
                 textView.text = resources.getString(R.string.tutorial_outro)
+                explanationTitle.text = resources.getString(R.string.tutorial_title_outro)
                 val buttonView = findViewById<Button>(R.id.tutorial_button_next)
                 buttonView.text = resources.getString(R.string.tutorial_buttonTextGoBack)
                 isFinished = true
