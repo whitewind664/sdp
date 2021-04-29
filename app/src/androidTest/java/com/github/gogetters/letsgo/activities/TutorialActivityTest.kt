@@ -58,7 +58,8 @@ class TutorialActivityTest {
     @Test
     fun boardExplanationIsShowedSecond() {
         onView(withId(R.id.tutorial_button_next)).perform(click())
-        onView(withId(R.id.tutorial_textView_explanation)).check(matches(withText(containsString("The board"))))
+        onView(withId(R.id.tutorial_textView_title)).check(matches(withText(containsString("The Board"))))
+        onView(withId(R.id.tutorial_textView_explanation)).check(matches(withText(containsString("Go is"))))
     }
 
     /**
@@ -91,6 +92,7 @@ class TutorialActivityTest {
 
     @Test
     fun goesBackToMainAtEndOfTutorial() {
+        onView(withId(R.id.tutorial_button_next)).perform(click())
         onView(withId(R.id.tutorial_button_next)).perform(click())
         onView(withId(R.id.tutorial_button_next)).perform(click())
         onView(withId(R.id.tutorial_button_next)).perform(click())
