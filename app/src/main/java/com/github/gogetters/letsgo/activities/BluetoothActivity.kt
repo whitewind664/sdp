@@ -3,14 +3,11 @@ package com.github.gogetters.letsgo.activities
 import android.Manifest
 import android.bluetooth.BluetoothAdapter
 import android.bluetooth.BluetoothDevice
-import android.bluetooth.BluetoothServerSocket
-import android.bluetooth.BluetoothSocket
 import android.content.*
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
-import android.os.Message
 import android.util.Log
 import android.view.View
 import android.widget.*
@@ -24,9 +21,6 @@ import com.github.gogetters.letsgo.util.BluetoothClient
 import com.github.gogetters.letsgo.util.BluetoothGTPService
 import com.github.gogetters.letsgo.util.BluetoothServer
 import com.github.gogetters.letsgo.util.PermissionUtils
-import java.io.IOException
-import java.io.InputStream
-import java.io.OutputStream
 import java.util.*
 
 
@@ -44,6 +38,9 @@ class BluetoothActivity: AppCompatActivity() {
     private lateinit var client: BluetoothClient
     private lateinit var server: BluetoothServer
     private lateinit var service: BluetoothGTPService
+    private lateinit var initClient: BluetoothClient
+    private lateinit var initServer: BluetoothServer
+
 
     private val handler = Handler(Looper.getMainLooper()) {
         when (it.what) {
@@ -53,6 +50,25 @@ class BluetoothActivity: AppCompatActivity() {
 
                 Log.d("BLUETOOTHTEST", "message received: $msg")
                 msg_box!!.setText(msg)
+                Toast.makeText(this, "$it.obj", Toast.LENGTH_LONG)
+                true
+            }
+            else ->  {
+                Log.d("BLUETOOTHTEST", "not working...")
+                false
+            }
+        }
+    }
+
+
+    //TODO: use it
+    private val initHandler = Handler(Looper.getMainLooper()) {
+        when (it.what) {
+            0 -> {
+                val msg:ByteArray = it.obj as ByteArray
+                val byte = msg[0]
+
+                Log.d("BLUETOOTHTEST", "message received INSIDE THE INIT HANDLER: $byte")
                 Toast.makeText(this, "$it.obj", Toast.LENGTH_LONG)
                 true
             }
@@ -87,7 +103,7 @@ class BluetoothActivity: AppCompatActivity() {
 
         foundDevices = mutableSetOf()
         registerReceiver(receiver, IntentFilter(BluetoothDevice.ACTION_FOUND))
-        service = BluetoothGTPService(handler)
+        service = BluetoothGTPService()
 
         implementListeners()
     }
@@ -107,8 +123,14 @@ class BluetoothActivity: AppCompatActivity() {
                             intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE)!!
                     val deviceName = device.name
 
-                    if (deviceName != null)
-                        foundDevices!!.add(device)
+                    if (deviceName != null){
+                        try{
+                            initClient.connect(device, service)
+                            foundDevices!!.add(device)
+                        } catch (e: Exception) {
+                            Log.d("BLUETOOTH","non running device found")
+                        }
+                    }
 
                     listFound(null)
                 }
@@ -140,12 +162,11 @@ class BluetoothActivity: AppCompatActivity() {
      *  Sends a message
      */
 
-    fun sendMessage(v: View?){
+    fun sendMessage(v: View?) {
         val string = writeMsg!!.text.toString()
 
-        service.write(string)
-
     }
+
 
     /**
      * Launches a BT server
@@ -189,6 +210,7 @@ class BluetoothActivity: AppCompatActivity() {
      */
     fun search(v: View?){
         showLocationPermission()
+        initClient = BluetoothClient(initHandler);
 
         if(bluetoothAdapter!!.isEnabled()){
             bluetoothAdapter!!.startDiscovery()
@@ -241,6 +263,7 @@ class BluetoothActivity: AppCompatActivity() {
         }
     }
 
+
     companion object {
         const val STATE_LISTENING = 1
         const val STATE_CONNECTING = 2
@@ -250,6 +273,7 @@ class BluetoothActivity: AppCompatActivity() {
 
         const val REQUEST_PERMISSION_FINE_LOCATION = 1
         const val REQUEST_ENABLE_BLUETOOTH = 1
+
 
         //TODO: create own UUID
         private val APP_UUID = UUID.fromString("8ce255c0-223a-11e0-ac64-0803450c9a66")

@@ -1,15 +1,18 @@
 package com.github.gogetters.letsgo.game.util
 
-import android.os.Handler
-import com.github.gogetters.letsgo.game.Point
+import android.util.Log
+import com.github.gogetters.letsgo.game.*
+import com.github.gogetters.letsgo.game.exceptions.IllegalMoveException
 import java.util.concurrent.ArrayBlockingQueue
 
 /**
  * Class to delegate capturing input from UI.
  */
-class BluetoothDelegate: Handler() {
+class TouchInputDelegate: InputDelegate {
 
     private val savedInput = ArrayBlockingQueue<Point>(1)
+
+    override fun getLatestInput(boardState: BoardState): Point = savedInput.take()
 
     /**
      * Saves the argument as the most recent input to the program. Only the most recent input is
@@ -17,11 +20,9 @@ class BluetoothDelegate: Handler() {
      *
      * @param input: Point input to save
      */
-    fun saveInput(input: Point) {
+    override fun saveLatestInput(input: Point) {
         savedInput.clear()
         savedInput.add(input)
     }
 
-    val latestInput: Point
-        get() = savedInput.take()
 }

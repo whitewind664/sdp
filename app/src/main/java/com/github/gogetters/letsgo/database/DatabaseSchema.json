@@ -1,0 +1,45 @@
+{
+  "users": {
+    "$userId": {
+      "isLookingForPlayers": "value",
+      "lastPositionLatitude": "value",
+      "lastPositionLongitude": "value"
+    }
+  },
+
+  "chats": {
+    "$chatId": {
+      "lastMessageText": "value",
+      "timestamp": "value"
+    }
+  },
+
+  "messages": {
+    "$chatId": {
+      "$messageId": {
+        "senderId": "value",
+        "messageText": "value",
+        "timestamp": "value"
+      }
+    }
+  },
+
+  "games": {
+    "$gameId": {
+      "moves": "TODO move list  "
+    }
+  },
+
+  "forum": {
+    "posts": {
+      "$postId": {
+        "TODO": "TODO",
+        "timestamp": "value"
+      }
+    },
+    "comments": {
+      "message": "value",
+      "timestamp": "value"
+    }
+  }
+}

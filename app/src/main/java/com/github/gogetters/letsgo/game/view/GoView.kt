@@ -2,6 +2,7 @@ package com.github.gogetters.letsgo.game.view
 
 import android.content.Context
 import android.graphics.*
+import android.graphics.drawable.Drawable
 import android.util.Log
 import android.view.MotionEvent
 import android.view.View
@@ -11,11 +12,11 @@ import com.github.gogetters.letsgo.game.Board
 import com.github.gogetters.letsgo.game.BoardState
 import com.github.gogetters.letsgo.game.Stone
 import com.github.gogetters.letsgo.game.Point
-import com.github.gogetters.letsgo.game.util.InputDelegate
+import com.github.gogetters.letsgo.game.util.TouchInputDelegate
 import kotlin.math.roundToInt
 
 
-class GoView(context: Context, private val boardSize: Board.Size) : View(context) {
+open class GoView(context: Context, private val boardSize: Board.Size) : View(context) {
 
     constructor(context: Context): this(context, Board.Size.withSize(9))
 
@@ -26,11 +27,11 @@ class GoView(context: Context, private val boardSize: Board.Size) : View(context
         Board.Size.LARGE -> R.drawable.board_19
     }
 
-    lateinit var inputDelegate: InputDelegate
+    public lateinit var touchInputDelegate: TouchInputDelegate
 
     private val boardImage = ContextCompat.getDrawable(context, boardImageID)
-    private val whiteStoneImage = ContextCompat.getDrawable(context, R.drawable.white)
-    private val blackStoneImage = ContextCompat.getDrawable(context, R.drawable.black)
+    protected val whiteStoneImage = ContextCompat.getDrawable(context, R.drawable.white)
+    protected val blackStoneImage = ContextCompat.getDrawable(context, R.drawable.black)
 
     private var marginRatio = 120F / 880F
 
@@ -83,14 +84,11 @@ class GoView(context: Context, private val boardSize: Board.Size) : View(context
         boardImage?.draw(canvas)
     }
 
-    private fun drawStoneAt(canvas: Canvas, col: Int, row: Int, color: Stone) {
+    protected fun drawStoneAt(canvas: Canvas, col: Int, row: Int, color: Stone) {
         Log.d("GOVIEW", "DRAWING STONE AT $col, $row")
 
 
-        val stoneImage = when(color) {
-            Stone.BLACK -> blackStoneImage
-            else -> whiteStoneImage
-        }
+        val stoneImage = getStoneImage(col, row, color)
 
         val marginX: Float = width.toFloat() * marginRatio
         val marginY: Float = height.toFloat() * marginRatio
@@ -113,7 +111,17 @@ class GoView(context: Context, private val boardSize: Board.Size) : View(context
 
     }
 
-    private fun drawStones(canvas: Canvas) {
+    /**
+     * Function that can be overwritten if other stone images want to be used
+     */
+    protected open fun getStoneImage(col: Int, row: Int, color: Stone): Drawable? {
+        return when(color) {
+            Stone.BLACK -> blackStoneImage
+            else -> whiteStoneImage
+        }
+    }
+
+    protected open fun drawStones(canvas: Canvas) {
         for (i in 1..boardSize.size) {
             for (j in 1..boardSize.size) {
                 val color = board[Point(i, j)]
@@ -145,7 +153,7 @@ class GoView(context: Context, private val boardSize: Board.Size) : View(context
         when (event.action) {
             MotionEvent.ACTION_DOWN -> {
                 val closestPoint = coordToPoint(x, y)
-                inputDelegate.saveInput(closestPoint)
+                touchInputDelegate.saveLatestInput(closestPoint)
             }
         }
 

@@ -2,39 +2,39 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/gameConstraintLayout"
+    android:id="@+id/game_constraintLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".activities.GameActivity">
 
     <FrameLayout
-        android:id="@+id/gameBoardFrame"
+        android:id="@+id/game_frameLayout_boardFrame"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_marginTop="16dp"
         android:layout_marginBottom="16dp"
-        app:layout_constraintBottom_toTopOf="@+id/gamePassButton"
+        app:layout_constraintBottom_toTopOf="@+id/game_button_pass"
         app:layout_constraintDimensionRatio="1:1"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/gameScoreTitle"
+        app:layout_constraintTop_toBottomOf="@+id/game_textView_scoreTitle"
         app:layout_constraintVertical_bias="0.48000002" />
 
     <Button
-        android:id="@+id/gamePassButton"
+        android:id="@+id/game_button_pass"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginEnd="16dp"
         android:layout_marginBottom="24dp"
-        android:text="@string/passButtonText"
+        android:text="@string/game_buttonTextPass"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent" />
 
     <TextView
-        android:id="@+id/gameScoreTitle"
+        android:id="@+id/game_textView_scoreTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
@@ -46,23 +46,23 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/gameBlackScoreText"
+        android:id="@+id/game_textView_blackScore"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="32dp"
         android:layout_marginEnd="16dp"
         android:text="@string/scoreDefaultText"
-        app:layout_constraintEnd_toStartOf="@+id/gameScoreTitle"
-        app:layout_constraintTop_toBottomOf="@+id/gameScoreTitle" />
+        app:layout_constraintEnd_toStartOf="@+id/game_textView_scoreTitle"
+        app:layout_constraintTop_toBottomOf="@+id/game_textView_scoreTitle" />
 
     <TextView
-        android:id="@+id/gameWhiteScoreText"
+        android:id="@+id/game_textView_whiteScore"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginTop="32dp"
         android:text="@string/scoreDefaultText"
-        app:layout_constraintStart_toEndOf="@+id/gameScoreTitle"
-        app:layout_constraintTop_toBottomOf="@+id/gameScoreTitle" />
+        app:layout_constraintStart_toEndOf="@+id/game_textView_scoreTitle"
+        app:layout_constraintTop_toBottomOf="@+id/game_textView_scoreTitle" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
