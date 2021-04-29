@@ -11,6 +11,8 @@ object PermissionUtils {
 
     /**
      *  Requests the given permission if necessary.
+     *  Note: this method can hardly been tested as it contains static methods that
+     *  would need to be mocked (which is not easily possible for Android)
      */
     @JvmStatic
     fun requestPermission(activity: AppCompatActivity, requestId: Int, permission: String) {

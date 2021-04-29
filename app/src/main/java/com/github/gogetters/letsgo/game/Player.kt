@@ -3,14 +3,12 @@ package com.github.gogetters.letsgo.game
 import com.github.gogetters.letsgo.game.exceptions.IllegalMoveException
 import java.lang.IllegalArgumentException
 
-abstract class Player(val color: Stone) {
-    init {
-        if (color == Stone.EMPTY)
-            throw IllegalArgumentException("Player's color cannot be empty")
-    }
+interface Player {
 
-    abstract fun requestMove(board: BoardState): Move
+    val color: Stone
 
-    abstract fun notifyIllegalMove(illegalMove: IllegalMoveException)
+    fun requestMove(board: BoardState): Move
+
+    fun notifyIllegalMove(illegalMove: IllegalMoveException)
 
 }

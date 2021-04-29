@@ -108,7 +108,7 @@ class BluetoothActivity: AppCompatActivity() {
 
         foundDevices = mutableSetOf()
         registerReceiver(receiver, IntentFilter(BluetoothDevice.ACTION_FOUND))
-        service = BluetoothGTPService(handler)
+        service = BluetoothGTPService()
 
         implementListeners()
     }
