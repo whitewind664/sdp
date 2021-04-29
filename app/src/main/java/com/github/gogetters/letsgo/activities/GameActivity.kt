@@ -10,7 +10,7 @@ import com.github.gogetters.letsgo.game.*
 import com.github.gogetters.letsgo.game.Game
 import kotlinx.coroutines.*
 
-class GameActivity : AppCompatActivity() {
+class GameActivity : BaseActivity() {
     companion object {
         const val EXTRA_GAME_SIZE = "com.github.gogetters.letsgo.game.GAME_SIZE"
         const val EXTRA_KOMI = "com.github.gogetters.letsgo.game.KOMI"
@@ -21,7 +21,6 @@ class GameActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_game)
 
 
         val gameSizeInput = intent.getIntExtra(EXTRA_GAME_SIZE, 9)
@@ -46,6 +45,10 @@ class GameActivity : AppCompatActivity() {
                 boardState = game.playTurn()
             }
         }
+    }
+
+    override fun getLayoutResource(): Int {
+        return R.layout.activity_game
     }
 
     private fun drawBoard(boardState: BoardState) {
