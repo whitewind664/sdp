@@ -40,7 +40,6 @@ class BluetoothActivity: AppCompatActivity() {
     var writeMsg: EditText? = null
     var bluetoothAdapter: BluetoothAdapter? = null
     lateinit var btArray: Array<BluetoothDevice?>
-    private var sendReceive: SendReceive? = null
     private var foundDevices: MutableSet<BluetoothDevice>? = null
     private lateinit var client: BluetoothClient
     private lateinit var server: BluetoothServer
@@ -49,10 +48,11 @@ class BluetoothActivity: AppCompatActivity() {
     private val handler = Handler(Looper.getMainLooper()) {
         when (it.what) {
             0 -> {
-                val msg:ByteArray = it.obj as ByteArray
-                val byte = msg[0]
+                val bytes = it.obj as ByteArray
+                val msg = bytes.decodeToString(0, bytes.indexOf(0))
 
-                Log.d("BLUETOOTHTEST", "message received: $byte")
+                Log.d("BLUETOOTHTEST", "message received: $msg")
+                msg_box!!.setText(msg)
                 Toast.makeText(this, "$it.obj", Toast.LENGTH_LONG)
                 true
             }
@@ -145,15 +145,6 @@ class BluetoothActivity: AppCompatActivity() {
 
         service.write(string)
 
-        /**
-        if(sendReceive != null)
-            sendReceive!!.write(string.toByteArray())
-        else
-            Toast.makeText(applicationContext,
-                    "Need to establish a connection first",
-                    Toast.LENGTH_SHORT)
-                    .show()
-        */
     }
 
     /**
@@ -250,127 +241,6 @@ class BluetoothActivity: AppCompatActivity() {
         }
     }
 
-
-    /**
-     * Would like to move this into utils as well, no idea how to handle the handler then
-     */
-    private inner class ServerClass : Thread() {
-        private var serverSocket: BluetoothServerSocket? = null
-        override fun run() {
-            var socket: BluetoothSocket? = null
-            while (socket == null) {
-                try {
-                    val message = Message.obtain()
-                    message.what = Companion.STATE_CONNECTING
-                    handler.sendMessage(message)
-                    socket = serverSocket!!.accept()
-                } catch (e: IOException) {
-                    e.printStackTrace()
-                    val message = Message.obtain()
-                    message.what = Companion.STATE_CONNECTION_FAILED
-                    handler.sendMessage(message)
-                }
-                if (socket != null) {
-                    val message = Message.obtain()
-                    message.what = Companion.STATE_CONNECTED
-                    handler.sendMessage(message)
-                    sendReceive = SendReceive(socket)
-                    sendReceive!!.start()
-                    break
-                }
-            }
-        }
-
-        init {
-            try {
-                serverSocket = bluetoothAdapter!!.listenUsingRfcommWithServiceRecord(
-                    Companion.APP_NAME,
-                    Companion.MY_UUID
-                )
-            } catch (e: IOException) {
-                e.printStackTrace()
-            }
-        }
-    }
-
-
-    /**
-     * Same here
-     */
-    private inner class ClientClass(private val device: BluetoothDevice) : Thread() {
-        private var socket: BluetoothSocket? = null
-        override fun run() {
-            try {
-                socket!!.connect()
-                val message = Message.obtain()
-                message.what = Companion.STATE_CONNECTED
-                handler.sendMessage(message)
-                sendReceive = SendReceive(socket!!)
-                sendReceive!!.start()
-            } catch (e: IOException) {
-                e.printStackTrace()
-                val message = Message.obtain()
-                message.what = Companion.STATE_CONNECTION_FAILED
-                handler.sendMessage(message)
-            }
-        }
-
-        init {
-            try {
-                socket = device.createRfcommSocketToServiceRecord(Companion.MY_UUID)
-            } catch (e: IOException) {
-                e.printStackTrace()
-            }
-        }
-    }
-
-
-    /**
-     *
-     */
-    private inner class SendReceive(private val bluetoothSocket: BluetoothSocket) : Thread() {
-        private val inputStream: InputStream?
-        private val outputStream: OutputStream?
-        override fun run() {
-            val buffer = ByteArray(1024)
-            var bytes: Int
-            while (true) {
-                try {
-                    bytes = inputStream!!.read(buffer)
-                    handler.obtainMessage(
-                        Companion.STATE_MESSAGE_RECEIVED,
-                        bytes,
-                        -1,
-                        buffer
-                    ).sendToTarget()
-                } catch (e: IOException) {
-                    e.printStackTrace()
-                }
-            }
-        }
-
-        fun write(bytes: ByteArray?) {
-            try {
-                outputStream!!.write(bytes)
-            } catch (e: IOException) {
-                e.printStackTrace()
-            }
-        }
-
-        init {
-            var tempIn: InputStream? = null
-            var tempOut: OutputStream? = null
-            try {
-                tempIn = bluetoothSocket.inputStream
-                tempOut = bluetoothSocket.outputStream
-            } catch (e: IOException) {
-                e.printStackTrace()
-            }
-            inputStream = tempIn
-            outputStream = tempOut
-        }
-    }
-
     companion object {
         const val STATE_LISTENING = 1
         const val STATE_CONNECTING = 2
@@ -381,9 +251,7 @@ class BluetoothActivity: AppCompatActivity() {
         const val REQUEST_PERMISSION_FINE_LOCATION = 1
         const val REQUEST_ENABLE_BLUETOOTH = 1
 
-        //TODO: remove this
-        private const val APP_NAME = "BTChat"
         //TODO: create own UUID
-        private val MY_UUID = UUID.fromString("8ce255c0-223a-11e0-ac64-0803450c9a66")
+        private val APP_UUID = UUID.fromString("8ce255c0-223a-11e0-ac64-0803450c9a66")
     }
 }
