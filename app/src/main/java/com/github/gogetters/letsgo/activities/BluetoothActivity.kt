@@ -154,7 +154,7 @@ class BluetoothActivity: AppCompatActivity() {
     /**
      * Launches a BT server
      */
-    fun launchServer(){
+    fun launchServer(v: View?){
         val getVisible = Intent(BluetoothAdapter.ACTION_REQUEST_DISCOVERABLE)
         startActivityForResult(getVisible, 0)
 
@@ -195,7 +195,7 @@ class BluetoothActivity: AppCompatActivity() {
     /**
      * search for BT devices
      */
-    fun search(){
+    fun search(v: View?){
         showLocationPermission()
         btProbe = BluetoothProbe()
 
