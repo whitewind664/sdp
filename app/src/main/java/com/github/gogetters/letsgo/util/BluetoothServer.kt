@@ -13,6 +13,7 @@ class BluetoothServer(val handler: Handler) {
 
     private val adapter: BluetoothAdapter = BluetoothAdapter.getDefaultAdapter()
     private val uuid: UUID = UUID.fromString("8ce255c0-223a-11e0-ac64-0803450c9a66")
+
     private val acceptThread = AcceptThread()
     private lateinit var service: BluetoothGTPService
 
@@ -30,6 +31,8 @@ class BluetoothServer(val handler: Handler) {
         private val mmServerSocket: BluetoothServerSocket? by lazy(LazyThreadSafetyMode.NONE) {
             adapter.listenUsingInsecureRfcommWithServiceRecord("Let's Go Server", uuid)
         }
+
+
 
         override fun run() {
             // Keep listening until exception occurs or a socket is returned.
