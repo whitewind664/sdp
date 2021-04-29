@@ -8,12 +8,26 @@
     tools:context=".activities.TutorialActivity">
 
     <TextView
+        android:id="@+id/tutorial_textView_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:padding="0sp"
+        android:text="@string/tutorial_title_intro"
+        android:textAlignment="center"
+        android:textAppearance="@style/TextAppearance.AppCompat.Body2"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toTopOf="@+id/tutorial_textView_explanation"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <TextView
         android:id="@+id/tutorial_textView_explanation"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:padding="20dp"
-        android:rotationX="0"
         android:text="@string/tutorial_intro"
         android:textSize="20sp"
         app:layout_constraintStart_toStartOf="parent"

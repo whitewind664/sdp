@@ -38,7 +38,19 @@
     <string name="tutorial_KoRule2">If you catch white here, then white doesn\'t have the right to catch you back right away. Otherwise, this could end in a never-ending back and forth. </string>
     <string name="tutorial_end">End of game: \nThis is the last rule you have to learn! The end of a Go game is not as clearly defined as in chess or other games. A player at each point in the game can pass if they don\'t see any benefit of placing a stone. The game ends if both players pass consecutively. Then, the points are counted as follows:</string>
     <string name="tutorial_score2">Final score:\n- one point for each yet captured stone\n- one point for every stone in your territory that cannot avoid capturing. Your territory is everything that is entirely surrounded by your stones. This is mostly obvious, and if not, keep on playing until it is. Theses stones are removed from the board.\n- one point for each empty intersection in your territory.\n- some points called komi for the white player, as starting the game is an advantage for black (usually 6.5 points in 19x19 games)</string>
-    <string name="tutorial_outro">Congrats! You reached the end of the tutorial. Have fun!</string>
+    <string name="tutorial_outro">You reached the end of the tutorial. Have fun!</string>
+
+    <string name="tutorial_title_intro">Welcome to Go!</string>
+    <string name="tutorial_title_board">The Board</string>
+    <string name="tutorial_title_stones">The Stones</string>
+    <string name="tutorial_title_territories">Territories</string>
+    <string name="tutorial_title_capturing">Capturing</string>
+    <string name="tutorial_title_selfCapture">Self-Capturing</string>
+    <string name="tutorial_title_score1">Score</string>
+    <string name="tutorial_title_KoRule">The Ko Rule</string>
+    <string name="tutorial_title_end">End of Game</string>
+    <string name="tutorial_title_score2">Final Score</string>
+    <string name="tutorial_title_outro">Congrats!</string>
 
     <!-- Strings for the map activity -->
     <string name="map_buttonTextShowPlayers">Show other players</string>
