@@ -28,7 +28,9 @@ class BluetoothProbe {
 
                 socket.close()
             }
-        return "Let's Go Player"
+
+        //TODO: replace this with the player info as a string
+        return "Let's go Player"
     }
 
 
