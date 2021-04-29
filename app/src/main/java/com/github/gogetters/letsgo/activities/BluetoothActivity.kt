@@ -18,10 +18,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.github.gogetters.letsgo.R
-import com.github.gogetters.letsgo.util.BluetoothClient
-import com.github.gogetters.letsgo.util.BluetoothGTPService
-import com.github.gogetters.letsgo.util.BluetoothServer
-import com.github.gogetters.letsgo.util.PermissionUtils
+import com.github.gogetters.letsgo.util.*
 import java.util.*
 
 
@@ -34,22 +31,21 @@ class BluetoothActivity: AppCompatActivity() {
     var status: TextView? = null
     var writeMsg: EditText? = null
     var bluetoothAdapter: BluetoothAdapter? = null
-    lateinit var btArray: Array<BluetoothDevice?>
-    private var foundDevices: MutableSet<BluetoothDevice>? = null
     private lateinit var client: BluetoothClient
     private lateinit var server: BluetoothServer
     private lateinit var service: BluetoothGTPService
-    private lateinit var initClient: BluetoothClient
-    private lateinit var initServer: BluetoothServer
-
+    private lateinit var btProbe: BluetoothProbe
+    private var foundDevices: MutableSet<BluetoothDevice>? = null
+    private lateinit var deviceInfo: MutableMap<BluetoothDevice, String>
 
     private val handler = Handler(Looper.getMainLooper()) {
         when (it.what) {
             0 -> {
-                val msg:ByteArray = it.obj as ByteArray
-                val byte = msg[0]
+                val bytes = it.obj as ByteArray
+                val msg = bytes.decodeToString(0, bytes.indexOf(0))
 
-                Log.d("BLUETOOTHTEST", "message received: $byte")
+                Log.d("BLUETOOTHTEST", "message received: $msg")
+                msg_box!!.setText(msg)
                 Toast.makeText(this, "$it.obj", Toast.LENGTH_LONG)
                 true
             }
@@ -60,24 +56,6 @@ class BluetoothActivity: AppCompatActivity() {
         }
     }
 
-
-    //TODO: use it
-    private val initHandler = Handler(Looper.getMainLooper()) {
-        when (it.what) {
-            0 -> {
-                val msg:ByteArray = it.obj as ByteArray
-                val byte = msg[0]
-
-                Log.d("BLUETOOTHTEST", "message received INSIDE THE INIT HANDLER: $byte")
-                Toast.makeText(this, "$it.obj", Toast.LENGTH_LONG)
-                true
-            }
-            else ->  {
-                Log.d("BLUETOOTHTEST", "not working...")
-                false
-            }
-        }
-    }
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -102,6 +80,7 @@ class BluetoothActivity: AppCompatActivity() {
         }
 
         foundDevices = mutableSetOf()
+        deviceInfo = mutableMapOf()
         registerReceiver(receiver, IntentFilter(BluetoothDevice.ACTION_FOUND))
         service = BluetoothGTPService()
 
@@ -125,14 +104,16 @@ class BluetoothActivity: AppCompatActivity() {
 
                     if (deviceName != null){
                         try{
-                            initClient.connect(device, service)
+                            val info = btProbe.connect(device)
+
+                            deviceInfo.put(device, info)
                             foundDevices!!.add(device)
+                            listFound(null)
                         } catch (e: Exception) {
-                            Log.d("BLUETOOTH","non running device found")
+                            Log.d("BLUETOOTH","NON RUNNING DEVICE FOUND: $deviceName")
                         }
                     }
 
-                    listFound(null)
                 }
             }
         }
@@ -145,14 +126,16 @@ class BluetoothActivity: AppCompatActivity() {
                 client = BluetoothClient(handler)
                 val deviceName = adapterView.adapter.getItem(i) as String
                 var serverDevice: BluetoothDevice? = null
+
                 for (device in foundDevices!!) {
-                    if (device.name == deviceName) {
+                    if (deviceInfo[device] == deviceName) {
                         serverDevice = device
                     }
                 }
                 if (serverDevice == null) {
                     throw Error("DEVICE NOT FOUND")
                 }
+                Toast.makeText(applicationContext, "Establishing Connection", Toast.LENGTH_SHORT).show()
                 client.connect(serverDevice, service)
             }
     }
@@ -164,6 +147,7 @@ class BluetoothActivity: AppCompatActivity() {
 
     fun sendMessage(v: View?) {
         val string = writeMsg!!.text.toString()
+
     }
 
 
@@ -197,8 +181,12 @@ class BluetoothActivity: AppCompatActivity() {
      */
     fun listFound(v: View?) {
         val list: ArrayList<String> = ArrayList<String>()
-        for (bt in foundDevices!!) list.add(bt.name)
-        Toast.makeText(applicationContext, "Showing Found Devices", Toast.LENGTH_SHORT).show()
+        for (device in foundDevices!!){
+            val info = deviceInfo[device]
+            if (info != null)
+                list.add(info)
+        }
+
         val adapter: ArrayAdapter<*> = ArrayAdapter(this, android.R.layout.simple_list_item_1, list)
         listView!!.adapter = adapter
     }
@@ -209,7 +197,7 @@ class BluetoothActivity: AppCompatActivity() {
      */
     fun search(v: View?){
         showLocationPermission()
-        initClient = BluetoothClient(initHandler);
+        btProbe = BluetoothProbe()
 
         if(bluetoothAdapter!!.isEnabled()){
             bluetoothAdapter!!.startDiscovery()
@@ -273,13 +261,13 @@ class BluetoothActivity: AppCompatActivity() {
         const val REQUEST_PERMISSION_FINE_LOCATION = 1
         const val REQUEST_ENABLE_BLUETOOTH = 1
 
-        //TODO: remove this
-        private const val APP_NAME = "Let's Go"
+
         //TODO: create own UUID
         private val MY_UUID = UUID.fromString("8ce255c0-223a-11e0-ac64-0803450c9a66")
 
         fun getSocket(): BluetoothSocket? {
             return null
         }
+        private val APP_UUID = UUID.fromString("8ce255c0-223a-11e0-ac64-0803450c9a66")
     }
 }
