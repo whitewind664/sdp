@@ -21,6 +21,13 @@ class InputDelegate {
         savedInput.add(input)
     }
 
+    /**
+     * Clears the last input.
+     */
+    fun clearInput() {
+        savedInput.clear()
+    }
+
     val latestInput: Point
         get() = savedInput.take()
 }
