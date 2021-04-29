@@ -164,9 +164,7 @@ class BluetoothActivity: AppCompatActivity() {
     fun sendMessage(v: View?){
         val string = writeMsg!!.text.toString()
 
-        service.write(string)
 
-    }
 
     /**
      * Launches a BT server

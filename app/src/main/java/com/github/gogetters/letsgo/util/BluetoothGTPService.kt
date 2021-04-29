@@ -15,7 +15,7 @@ import java.io.OutputStream
 class BluetoothGTPService {
 
     private val handler = Handler(Looper.getMainLooper()) {
-        receiveCommand(it.obj as ByteArray)
+        parseCommand(it.obj as ByteArray)
     }
 
     lateinit var inputDelegate: BluetoothInputDelegate
@@ -31,12 +31,6 @@ class BluetoothGTPService {
     fun connect(socket: BluetoothSocket) {
         connectedThread = ConnectedThread(socket)
         connectedThread.start()
-        write("HELLO WORLD")
-    }
-
-    fun write(s: String) {
-        val bytes = s.toByteArray()
-        connectedThread.write(bytes)
     }
 
     fun sendCommand(gtpCommand: GTPCommand) {
@@ -45,9 +39,9 @@ class BluetoothGTPService {
         connectedThread.write(commandBytes)
     }
 
-    private fun receiveCommand(bytes: ByteArray): Boolean {
+    private fun parseCommand(bytes: ByteArray): Boolean {
         try {
-            val commandString = bytes.toString()
+            val commandString = String(bytes, charset("utf-8"))
             val command = GTPCommand.toCommand(commandString)
 
             if (command is GTPCommand.PLAY) {
