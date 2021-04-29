@@ -63,13 +63,13 @@ class BluetoothActivity: AppCompatActivity() {
         setContentView(R.layout.activity_bluetooth)
 
 
-        listen = findViewById<View>(R.id.listen) as Button
-        send = findViewById<View>(R.id.send) as Button
+        listen = findViewById<View>(R.id.bluetooth_button_listen) as Button
+        send = findViewById<View>(R.id.bluetooth_button_send) as Button
         listView = findViewById<View>(R.id.listview) as ListView
         msg_box = findViewById<View>(R.id.msg) as TextView
         status = findViewById<View>(R.id.status) as TextView
         writeMsg = findViewById<View>(R.id.writemsg) as EditText
-        listDevices = findViewById<View>(R.id.listDevices) as Button
+        listDevices = findViewById<View>(R.id.bluetooth_button_listDevices) as Button
 
         bluetoothAdapter = BluetoothAdapter.getDefaultAdapter()
 

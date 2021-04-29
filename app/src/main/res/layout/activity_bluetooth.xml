@@ -8,7 +8,7 @@
 
     <Button
 
-        android:id="@+id/listen"
+        android:id="@+id/bluetooth_button_listen"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="14dp"
@@ -22,7 +22,7 @@
         android:layout_width="match_parent"
         android:layout_height="200dp"
         android:background="@android:color/darker_gray"
-        android:layout_below="@+id/listen"
+        android:layout_below="@+id/bluetooth_button_listen"
         android:layout_alignParentStart="true"
         android:layout_marginTop="31dp" />
 
@@ -47,10 +47,10 @@
         android:ems="10"
         android:inputType="textPersonName"
         android:layout_alignParentBottom="true"
-        android:layout_alignStart="@+id/listen" />
+        android:layout_alignStart="@+id/bluetooth_button_listen" />
 
     <Button
-        android:id="@+id/send"
+        android:id="@+id/bluetooth_button_send"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Send"
@@ -59,7 +59,7 @@
         android:onClick="sendMessage"/>
 
     <Button
-        android:id="@+id/listDevices"
+        android:id="@+id/bluetooth_button_listDevices"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_above="@+id/listview"
@@ -71,8 +71,8 @@
         android:id="@+id/status"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignBaseline="@+id/listDevices"
-        android:layout_alignBottom="@+id/listDevices"
+        android:layout_alignBaseline="@+id/bluetooth_button_listDevices"
+        android:layout_alignBottom="@+id/bluetooth_button_listDevices"
         android:layout_alignParentEnd="true"
         android:layout_marginEnd="14dp"
         android:text="Status"
