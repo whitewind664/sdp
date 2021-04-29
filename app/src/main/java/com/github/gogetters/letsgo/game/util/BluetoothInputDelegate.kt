@@ -11,10 +11,14 @@ class BluetoothInputDelegate(private val service: BluetoothGTPService): InputDel
 
     private val moveQueue = ArrayBlockingQueue<Point>(1)
 
+    init {
+        service.inputDelegate = this
+    }
+
     override fun getLatestInput(boardState: BoardState): Point {
         val lastMove = boardState.lastMove!!
 
-        service.sendCommand(GTPCommand.PLAY(lastMove))
+        service.sendCommand(GTPCommand.PLAY(lastMove))  //?????
         service.sendCommand(GTPCommand.GENMOVE(Stone.WHITE))
         return moveQueue.take()
     }

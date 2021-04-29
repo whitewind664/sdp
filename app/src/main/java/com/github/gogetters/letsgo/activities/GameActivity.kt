@@ -51,6 +51,7 @@ class GameActivity : AppCompatActivity() {
         }
     }
 
+    //TODO oneliner can be inlined??
     private fun drawBoard(boardState: BoardState) {
         goView.updateBoardState(boardState)
     }
