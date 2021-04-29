@@ -7,7 +7,7 @@ import java.util.*
 
 class BluetoothProbe {
 
-    fun connect(device: BluetoothDevice): String{
+    fun connect(device: BluetoothDevice): String {
         val uuid: UUID = UUID.fromString("8ce255c0-223a-11e0-ac64-0803450c9a66")
         val bluetoothAdapter = BluetoothAdapter.getDefaultAdapter()
         val mmSocket: BluetoothSocket? by lazy(LazyThreadSafetyMode.NONE) {
