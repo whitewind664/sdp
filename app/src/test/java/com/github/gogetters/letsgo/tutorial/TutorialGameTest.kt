@@ -10,7 +10,8 @@ class TutorialGameTest {
     fun defaultStepContainsNoStonesOnBoard() {
         val inputDelegate = InputDelegate()
         val player = TutorialLocalPlayer(inputDelegate)
-        val game = TutorialGame(player)
+        val tutorialPlayer = TutorialPlayer()
+        val game = TutorialGame(player, tutorialPlayer)
 
         val (step, boardState) = game.nextStep()
         assertTrue(step.playedStones.isEmpty())

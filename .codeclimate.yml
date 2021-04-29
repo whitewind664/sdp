@@ -2,3 +2,15 @@ exclude_patterns:
   - "**/test/"
   - "**/androidTest/"
   - "**test"
+version: "2"
+checks:
+    method-lines:
+      config:
+        threshold: 50
+plugins:
+  duplication:
+    enabled: true
+    config:
+      languages:
+        kotlin:
+          mass_threshold: 80

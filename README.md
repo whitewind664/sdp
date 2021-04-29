@@ -16,7 +16,6 @@ Standalone client for playing Go online against real players and offline against
  - Custom matchmaking that takes into account GPS position of players
  - Support for “teaching games”: so that teachers can supervise students’ games and give them advice
 
-
 # Requirements
 ## Split app model
 OGS website has an API that we can interface to play multiplayer games with players that have an OGS account, and has features like tournaments/forums. Most likely firebase for backend. We can store games with the history of moves with engine evaluations, forum posts and more.
@@ -36,9 +35,3 @@ We use the local cache to store the standing of a current (offline) game. It may
 ## Offline mode
 
 Offline play against bots, cached puzzles/joseki (learn theory) plus store cached history of games to review. Can use offline puzzles stored in cache.
-
-
-# Guides
-## Use secret that works locally and on Cirrus CI
-1. Follow the guide on https://developers.google.com/maps/documentation/android-sdk/get-api-key under "Adding the API key to your app"
-2. TODO
