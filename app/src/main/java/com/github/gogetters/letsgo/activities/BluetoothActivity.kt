@@ -45,8 +45,29 @@ class BluetoothActivity: AppCompatActivity() {
     private lateinit var client: BluetoothClient
     private lateinit var server: BluetoothServer
     private lateinit var service: BluetoothGTPService
+    private lateinit var initClient: BluetoothClient
+    private lateinit var initServer: BluetoothServer
 
     private val handler = Handler(Looper.getMainLooper()) {
+        when (it.what) {
+            0 -> {
+                val msg:ByteArray = it.obj as ByteArray
+                val byte = msg[0]
+
+                Log.d("BLUETOOTHTEST", "message received: $byte")
+                Toast.makeText(this, "$it.obj", Toast.LENGTH_LONG)
+                true
+            }
+            else ->  {
+                Log.d("BLUETOOTHTEST", "not working...")
+                false
+            }
+        }
+    }
+
+
+    //TODO: use it
+    private val initHandler = Handler(Looper.getMainLooper()) {
         when (it.what) {
             0 -> {
                 val msg:ByteArray = it.obj as ByteArray
@@ -200,6 +221,7 @@ class BluetoothActivity: AppCompatActivity() {
         showLocationPermission()
 
         if(bluetoothAdapter!!.isEnabled()){
+            initClient = BluetoothClient(handler);
             bluetoothAdapter!!.startDiscovery()
         } else {
             val turnOn = Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE)
