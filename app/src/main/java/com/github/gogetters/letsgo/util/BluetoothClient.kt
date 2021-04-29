@@ -12,10 +12,7 @@ class BluetoothClient(val handler: Handler) {
 
     private val bluetoothAdapter = BluetoothAdapter.getDefaultAdapter()
     private lateinit var connectThread: ConnectThread
-    private lateinit var service: BluetoothGTPService
-
-
-
+    private lateinit var service: BluetoothService
 
 
     fun connect(device: BluetoothDevice, service: BluetoothGTPService) {

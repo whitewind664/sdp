@@ -13,7 +13,7 @@ class BluetoothPingService: BluetoothService() {
     private val TAG = "MY_APP_DEBUG_TAG"
     private val PING = "PING"
 
-    private var receivedPing = false
+    var receivedPing = false
 
     override val handler = Handler (Looper.getMainLooper()) {
         receivedPing = String(it.obj as ByteArray, charset("utf-8")) == PING || receivedPing

@@ -15,7 +15,7 @@ class BluetoothServer(val handler: Handler) {
     private val uuid: UUID = UUID.fromString("8ce255c0-223a-11e0-ac64-0803450c9a66")
 
     private val acceptThread = AcceptThread()
-    private lateinit var service: BluetoothGTPService
+    private lateinit var service: BluetoothService
 
     fun connect(service: BluetoothGTPService) {
         this.service = service
@@ -32,8 +32,6 @@ class BluetoothServer(val handler: Handler) {
             adapter.listenUsingInsecureRfcommWithServiceRecord("Let's Go Server", uuid)
         }
 
-
-
         override fun run() {
             // Keep listening until exception occurs or a socket is returned.
             var shouldLoop = true
@@ -46,7 +44,15 @@ class BluetoothServer(val handler: Handler) {
                     null
                 }
                 socket?.also {
-                    service
+                    service = BluetoothPingService()
+                    service.connect(it)
+                    // Wait for ping
+                    var timeout = false
+                    while (!(service as BluetoothPingService).receivedPing) {
+                        //TODO timeout, go to real Bluetooth
+                    }
+                    service.close()
+                    shouldLoop = true
                 }
             }
         }
