@@ -14,13 +14,15 @@ class BluetoothClient(val handler: Handler) {
     private lateinit var connectThread: ConnectThread
     private lateinit var service: BluetoothGTPService
 
-    private var eHandler = Thread.UncaughtExceptionHandler { th, ex -> Log.d("BLUETOOTH","Uncaught exception: $ex"); throw ex }
+
+
+    private var eHandler = Thread.UncaughtExceptionHandler { t, e -> throw Exception() }
 
 
     fun connect(device: BluetoothDevice, service: BluetoothGTPService) {
         this.service = service
         connectThread = ConnectThread(device)
-        connectThread.setUncaughtExceptionHandler(eHandler)
+        connectThread.uncaughtExceptionHandler = eHandler
         connectThread.start()
     }
 
