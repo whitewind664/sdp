@@ -16,7 +16,6 @@ class GameActivity : AppCompatActivity() {
         const val EXTRA_GAME_SIZE = "com.github.gogetters.letsgo.game.GAME_SIZE"
         const val EXTRA_KOMI = "com.github.gogetters.letsgo.game.KOMI"
         const val EXTRA_PLAYER_TYPES = "com.github.gogetters.letsgo.game.PLAYER_TYPES"
-        const val EXTRA_BT_SERVICE = "com.github.gogetters.letsgo.game.BT_SERVICE"
     }
 
     private lateinit var game: Game
@@ -30,8 +29,12 @@ class GameActivity : AppCompatActivity() {
         val gameSizeInput = intent.getIntExtra(EXTRA_GAME_SIZE, 9)
         val komi = intent.getDoubleExtra(EXTRA_KOMI, 5.5)
         val playerTypes = intent.getStringArrayExtra(EXTRA_PLAYER_TYPES)
+
         //TODO HOW AM I SUPPOSED TO GET THIS SHIT..................
+        //TODO get it from a socket in another activity??? static var???
+
         val bluetoothService = BluetoothGTPService()
+        bluetoothService.connect(BluetoothActivity.getSocket()!!)
 
         val boardSize = Board.Size.withSize(gameSizeInput)
         goView = GoView(this, boardSize)

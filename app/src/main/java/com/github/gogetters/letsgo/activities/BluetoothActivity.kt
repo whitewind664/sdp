@@ -3,6 +3,7 @@ package com.github.gogetters.letsgo.activities
 import android.Manifest
 import android.bluetooth.BluetoothAdapter
 import android.bluetooth.BluetoothDevice
+import android.bluetooth.BluetoothSocket
 import android.content.*
 import android.content.pm.PackageManager
 import android.os.Bundle
@@ -276,5 +277,9 @@ class BluetoothActivity: AppCompatActivity() {
         private const val APP_NAME = "Let's Go"
         //TODO: create own UUID
         private val MY_UUID = UUID.fromString("8ce255c0-223a-11e0-ac64-0803450c9a66")
+
+        fun getSocket(): BluetoothSocket? {
+            return null
+        }
     }
 }
