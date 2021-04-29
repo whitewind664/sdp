@@ -46,9 +46,7 @@ class BluetoothServer(val handler: Handler) {
                     null
                 }
                 socket?.also {
-                    service.connect(it)
-                    //mmServerSocket?.close()
-                    shouldLoop = false
+                    service
                 }
             }
         }

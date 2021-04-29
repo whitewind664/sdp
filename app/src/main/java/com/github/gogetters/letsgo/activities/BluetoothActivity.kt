@@ -106,9 +106,9 @@ class BluetoothActivity: AppCompatActivity() {
                         try{
                             val info = btProbe.connect(device)
 
-                            deviceInfo.put(device, info)
+                            deviceInfo[device] = info
                             foundDevices!!.add(device)
-                            listFound(null)
+                            listFound()
                         } catch (e: Exception) {
                             Log.d("BLUETOOTH","NON RUNNING DEVICE FOUND: $deviceName")
                         }
@@ -145,7 +145,7 @@ class BluetoothActivity: AppCompatActivity() {
      *  Sends a message
      */
 
-    fun sendMessage(v: View?) {
+    fun sendMessage() {
         val string = writeMsg!!.text.toString()
 
     }
@@ -154,7 +154,7 @@ class BluetoothActivity: AppCompatActivity() {
     /**
      * Launches a BT server
      */
-    fun launchServer(v: View?){
+    fun launchServer(){
         val getVisible = Intent(BluetoothAdapter.ACTION_REQUEST_DISCOVERABLE)
         startActivityForResult(getVisible, 0)
 
@@ -165,7 +165,7 @@ class BluetoothActivity: AppCompatActivity() {
     /**
      * List devices user has paired with
      */
-    fun listPaired(v: View?) {
+    fun listPaired() {
         val pairedDevices: Set<BluetoothDevice> = bluetoothAdapter!!.bondedDevices
         val list: ArrayList<String> = ArrayList<String>()
         for (bt in pairedDevices) list.add(bt.name)
@@ -179,7 +179,7 @@ class BluetoothActivity: AppCompatActivity() {
     /**
      * Lists found devices
      */
-    fun listFound(v: View?) {
+    fun listFound() {
         val list: ArrayList<String> = ArrayList<String>()
         for (device in foundDevices!!){
             val info = deviceInfo[device]
@@ -195,7 +195,7 @@ class BluetoothActivity: AppCompatActivity() {
     /**
      * search for BT devices
      */
-    fun search(v: View?){
+    fun search(){
         showLocationPermission()
         btProbe = BluetoothProbe()
 
