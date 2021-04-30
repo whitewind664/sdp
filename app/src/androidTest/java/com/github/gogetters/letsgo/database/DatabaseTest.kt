@@ -7,6 +7,7 @@ import com.google.android.gms.tasks.Tasks
 import com.google.firebase.FirebaseApp
 import org.junit.Test
 import org.junit.runner.RunWith
+import org.junit.Assert.assertEquals
 
 /**
  * Instrumented test, which will execute on an Android device.
@@ -61,6 +62,7 @@ class DatabaseTest {
 
     }
 
+    @Test
     fun writeValue() {
         Database.goOffline()
 
@@ -74,6 +76,7 @@ class DatabaseTest {
 
     }
 
+    @Test
     fun refFunctions() {
         Database.goOffline()
 
@@ -85,4 +88,22 @@ class DatabaseTest {
         Database.goOnline()
 
     }
+
+    // ---- [START} Matchmaking  ----
+    @Test
+    fun matchmakingPairsTwoPlayers() {
+        Database.goOffline()
+
+        Database.findMatch("fakePlayer1", 1)
+        val x = Tasks.await(Database.readData("/matchmaking/currentlyWaiting")).value
+        assertEquals("fakePlayer1", x)
+        Database.findMatch("fakePlayer2", 2)
+        val y = Tasks.await(Database.readData("/matchmaking/currentlyWaiting")).value
+        assertEquals(null, y)
+
+        Database.purgeOutstandingWrites()
+        Database.goOnline()
+    }
+
+    // ---- [END} Matchmaking  ----
 }
