@@ -61,6 +61,7 @@ class DatabaseTest {
 
     }
 
+    @Test
     fun writeValue() {
         Database.goOffline()
 
@@ -74,6 +75,7 @@ class DatabaseTest {
 
     }
 
+    @Test
     fun refFunctions() {
         Database.goOffline()
 
