@@ -76,35 +76,34 @@ class DatabaseTest {
 
     }
 
-    @Test
-    fun refFunctions() {
-        Database.goOffline()
-
-        Tasks.await(Database.writeData("/test/test/test", "test"))
-        Tasks.await(Database.readData("/test/test/test"))
-        Tasks.await(Database.deleteData("/test/test/test"))
-
-        Database.purgeOutstandingWrites()
-        Database.goOnline()
-
-    }
-
-    // ---- [START} Matchmaking  ----
 //    @Test
-//    fun matchmakingPairsTwoPlayers() {
+//    fun refFunctions() {
 //        Database.goOffline()
 //
-//        Database.findMatch("fakePlayer1", 1)
-////        val x = Tasks.await(Database.readData("/matchmaking/currentlyWaiting")).value
-////        assertEquals("fakePlayer1", x)
-////        Database.findMatch("fakePlayer2", 2)
-////        val y = Tasks.await(Database.readData("/matchmaking/currentlyWaiting")).value
-////        assertEquals(null, y)
-////        Database.database
+//        Tasks.await(Database.writeData("/test/test/test", "test"))
+//        Tasks.await(Database.readData("/test/test/test"))
+//        Tasks.await(Database.deleteData("/test/test/test"))
 //
 //        Database.purgeOutstandingWrites()
 //        Database.goOnline()
+//
 //    }
+
+    // ---- [START} Matchmaking  ----
+    @Test
+    fun matchmakingPairsTwoPlayers() {
+        Database.goOffline()
+
+        Database.findMatch("fakePlayer1", 1)
+//        val x = Tasks.await(Database.readData("/matchmaking/currentlyWaiting")).value
+//        assertEquals("fakePlayer1", x)
+        Database.findMatch("fakePlayer2", 2)
+//        val y = Tasks.await(Database.readData("/matchmaking/currentlyWaiting")).value
+//        assertEquals(null, y)
+
+        Database.purgeOutstandingWrites()
+        Database.goOnline()
+    }
 
     // ---- [END} Matchmaking  ----
 }
