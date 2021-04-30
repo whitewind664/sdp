@@ -10,4 +10,17 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
     <color name="board">#FFF5C232</color>
+
+    <!--<color name="background">#FFF2EDD0</color>-->
+    <!--<color name="nav">#FFD9B64E</color>-->
+    <color name="nav">#FFA59CA6</color>
+    <!--<color name="app_green">#FFBCBF50</color>-->
+    <color name="app_green">#FFD9BD89</color>
+
+    <color name="color1">#FFA59CA6</color>
+    <color name="color2">#FFD2D2D9</color>
+    <color name="color3">#FFD9A648</color>
+    <color name="color4">#FFD9BD89</color>
+    <color name="color5">#FFA6763C</color>
+
 </resources>
