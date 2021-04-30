@@ -2,7 +2,10 @@ exclude_patterns:
   - "**/test/"
   - "**/androidTest/"
   - "**test"
-  - "**/summaries/"
+  - "**/*.md"
+  - "**/*.yml"
+  - "*.md"
+  - "*.yml"
 version: "2"
 checks:
     method-lines:
