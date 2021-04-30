@@ -45,7 +45,7 @@ class MainActivityTest {
 
     @Test
     fun gameButtonOpensGame() {
-        onView(withId(R.id.main_button_startGame)).perform(click())
+        onView(withId(R.id.item1)).perform(click())
         Intents.intended(IntentMatchers.hasComponent(GameActivity::class.java.name))
     }
 
@@ -63,13 +63,13 @@ class MainActivityTest {
 
     @Test
     fun chatButtonOpensChat() {
-        onView(withId(R.id.main_button_chat)).perform(click())
+        onView(withId(R.id.item3)).perform(click())
         Intents.intended(Matchers.allOf(IntentMatchers.hasComponent(ChatActivity::class.java.name)))
     }
 
     @Test
     fun tutorialButtonOpensTutorial() {
-        onView(withId(R.id.main_button_tutorial)).perform(click())
+        onView(withId(R.id.item2)).perform(click())
         Intents.intended(Matchers.allOf(IntentMatchers.hasComponent(TutorialActivity::class.java.name)))
     }
 }

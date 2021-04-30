@@ -2,23 +2,18 @@ package com.github.gogetters.letsgo.activities
 
 import android.content.Intent
 import android.os.Bundle
+import android.view.Menu
 import android.widget.Button
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.Toolbar
 import com.github.gogetters.letsgo.R
+import com.google.android.material.bottomnavigation.LabelVisibilityMode
+import kotlinx.android.synthetic.main.activity_main.*
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : BaseActivity() {
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
-
-        val gameButton = findViewById<Button>(R.id.main_button_startGame)
-        gameButton.setOnClickListener {
-            val intent = Intent(this, GameActivity::class.java).apply {
-                putExtra(GameActivity.EXTRA_GAME_SIZE, 9)
-                putExtra(GameActivity.EXTRA_KOMI, 5.5)
-            }
-            startActivity(intent)
-        }
 
         val mapButton = findViewById<Button>(R.id.main_button_map)
         mapButton.setOnClickListener {
@@ -32,16 +27,10 @@ class MainActivity : AppCompatActivity() {
             startActivity(intent)
         }
 
-        val chatButton = findViewById<Button>(R.id.main_button_chat)
-        chatButton.setOnClickListener {
-            val intent = Intent(this, ChatActivity::class.java)
-            startActivity(intent)
-        }
-
-        val tutorialButton = findViewById<Button>(R.id.main_button_tutorial)
-        tutorialButton.setOnClickListener {
-            val intent = Intent(this, TutorialActivity::class.java)
-            startActivity(intent)
-        }
     }
+
+    override fun getLayoutResource(): Int {
+        return R.layout.activity_main;
+    }
+
 }
