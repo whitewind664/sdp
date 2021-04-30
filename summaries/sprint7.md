@@ -3,7 +3,9 @@
 ---
 
 ## Bajraktarov, Dimitar
-
+- Done: Implemented ELO formula for rating change. Implemented game pairing without any server-side code i.e. only with database transactions.
+- Went well: Matchmaking algorithm seems to work well.
+- To improve: Improve matchmaking to accurately match players according to their skill (since it's totally random right now).
 
 ## Horvath-Mikulas, Szabina (Scrum Master)
 Done: I have implemented a general app bar and navigation bar for our app. The design is launched by the abstract BaseActivity that can be extended by any other activities.
@@ -30,7 +32,7 @@ Done this week: limited bluetooth device finding to active lets go app
 Went well: The bluetooth architecture is shaping up nicely and I learnt a lot about it
 To improve: while adding this feature i broke the part that enables bluetooth communication, which i now need to fix
 
-## Overall team
+## Overall team (Scrum Master)
 - Done: We managed to improve most of our activities, close to completion. We have a design layout, a nice tutorial, bluetooth is soon on horizon and matching algorithm is improved. The users are also displayed as friends.
 - Went well: Nice collaboration, smooth and efficient working environment, fruitful standups.
 - To improve: We should start to focus on priorities and to put the app in one.
