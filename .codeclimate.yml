@@ -2,6 +2,7 @@ exclude_patterns:
   - "**/test/"
   - "**/androidTest/"
   - "**test"
+  - "**/summaries/"
 version: "2"
 checks:
     method-lines:
