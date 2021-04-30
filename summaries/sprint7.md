@@ -21,7 +21,9 @@ Went well: really improved architecture of both Bluetooth game and Bluetooth ser
 To improve: add more tests
 
 ## Roust, Michael Murad
-
+Done this week: Started implementing friend list
+Went well: Spend some time cleaning up User class.
+To improve: Wasn't able to get nearly as much work as intended due to other projects. Will catchup on the weekend!
 
 ## Wengle, Erik Alessandro
 Done this week: limited bluetooth device finding to active lets go app
