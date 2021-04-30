@@ -24,12 +24,6 @@
     }
   },
 
-  "games": {
-    "$gameId": {
-      "moves": "TODO move list  "
-    }
-  },
-
   "forum": {
     "posts": {
       "$postId": {
@@ -40,6 +34,24 @@
     "comments": {
       "message": "value",
       "timestamp": "value"
+    }
+  },
+
+  "matchmaking": {
+    "currentlyWaiting": {
+      "$userId": "user rating"
+    },
+    "userGameHistory": {
+      "$userId": {
+        "$gameId": "true"
+      }
+    },
+    "games": {
+      "$gameId": {
+        "player1": "$userId",
+        "player2": "$userId",
+        "moves": "TODO move list  "
+      }
     }
   }
 }
