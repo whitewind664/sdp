@@ -4,17 +4,34 @@ import android.util.Log
 import com.google.android.gms.tasks.Task
 
 // Db is an optional argument to allow for testing!
-class LetsGoUser(val uid:String, val db: Database.Companion=Database) {
+class LetsGoUser(val uid: String, val db: Database.Companion = Database) {
     var nick: String? = null
     var first: String? = null
     var last: String? = null
     var city: String? = null
     var country: String? = null
 
-    // TODO Maybe find a way to make these constant or rename vars below to be consistent with format
-    private val TAG = "FirestoreTest"
-    private val USERS_PATH = "users"
-    private val USER_PATH = "$USERS_PATH/$uid"
+    // Be very careful if changing path values!
+    private val tag = "FirestoreTest"
+    private val usersPath = "users"
+    private val userPath = "$usersPath/$uid"
+    private val userFriendsPath = "$userPath/friends"
+
+    /**
+     * Verifies if the user exists in our database
+     */
+    fun requireUserExists(): Task<Unit> {
+        return db.readData(userPath).continueWith {
+            val userExists = it.result.value != null
+
+            if (userExists) {
+                Log.d(tag, "User exists! uid: $uid")
+            } else {
+                Log.e(tag, "User DOESN'T EXIST! uid: $uid")
+                throw IllegalStateException("User DOESN'T EXIST! uid: $uid")
+            }
+        }
+    }
 
     /**
      * Uploads this User's data to the DB. Returns a task to track progress and etc.
@@ -29,12 +46,12 @@ class LetsGoUser(val uid:String, val db: Database.Companion=Database) {
         )
 
         // Add a new document with user's uid
-        return db.writeData(USER_PATH, userData)
+        return db.writeData(userPath, userData)
             .addOnSuccessListener {
-                Log.d(TAG, "LetsGoUser document added for uid: $uid")
+                Log.d(tag, "LetsGoUser document added for uid: $uid")
             }
             .addOnFailureListener { e ->
-                Log.w(TAG, "Error adding LetsGoUser document", e)
+                Log.w(tag, "Error adding LetsGoUser document", e)
             }
     }
 
@@ -42,7 +59,7 @@ class LetsGoUser(val uid:String, val db: Database.Companion=Database) {
      * Downloads this User's data to the DB. Returns a task to track progress and etc.
      */
     fun downloadUserData(): Task<Unit> {
-        return db.readData(USER_PATH)
+        return db.readData(userPath)
             .continueWith {
                 for (attribute in it.result.children) {
                     when (attribute.key) {
@@ -55,10 +72,10 @@ class LetsGoUser(val uid:String, val db: Database.Companion=Database) {
                 }
             }
             .addOnSuccessListener {
-                Log.d(TAG, "LetsGoUser successfully downloaded: ${toString()}")
+                Log.d(tag, "LetsGoUser successfully downloaded: ${toString()}")
             }
             .addOnFailureListener { e ->
-                Log.w(TAG, "Error downloading LetsGoUser for uid: $uid", e)
+                Log.w(tag, "Error downloading LetsGoUser for uid: $uid", e)
             }
     }
 
@@ -66,12 +83,12 @@ class LetsGoUser(val uid:String, val db: Database.Companion=Database) {
      * Deletes this User's data from the DB. Returns a task to track progress and etc.
      */
     fun deleteUserData(): Task<Void> {
-        return db.deleteData(USER_PATH)
+        return db.deleteData(userPath)
             .addOnSuccessListener {
-                Log.d(TAG, "LetsGoUser successfully deleted!")
+                Log.d(tag, "LetsGoUser successfully deleted!")
             }
             .addOnFailureListener { e ->
-                Log.w(TAG, "Error deleting LetsGoUser", e)
+                Log.w(tag, "Error deleting LetsGoUser", e)
             }
     }
 
@@ -79,5 +96,68 @@ class LetsGoUser(val uid:String, val db: Database.Companion=Database) {
         // TODO Maybe improve this?
 
         return "LetsGoUser : " + super.toString() + "\t" + uid + "\t" + nick + "\t" + first + "\t" + last + "\t" + city + "\t" + country
+    }
+
+    //===========================================================================================
+    // Friend System
+
+    /* TODO
+    * - Do we need a function to check that status of a current friend request (probably)
+    * - A function that retrieves a list of all uid's in a friend list of a certain status!
+    * - Whatever else we need?
+    */
+
+    enum class FriendStatus {
+        SENT, REQUESTED, FRIENDS
+    }
+
+    fun requestFriend(otherUser: LetsGoUser): Task<Void> {
+        return updateFriendStatus(otherUser, FriendStatus.SENT, FriendStatus.REQUESTED)
+    }
+
+    fun acceptFriend(otherUser: LetsGoUser): Task<Void> {
+        return updateFriendStatus(otherUser, FriendStatus.FRIENDS, FriendStatus.FRIENDS)
+    }
+
+    /**
+     * Updates friend status for both users!
+     */
+    private fun updateFriendStatus(
+        otherUser: LetsGoUser,
+        status1: FriendStatus,
+        status2: FriendStatus
+    ): Task<Void> {
+        return requireUserExists().continueWithTask {
+            otherUser.requireUserExists().continueWithTask {
+                updateFriendStatusHelper(otherUser, status1).continueWithTask {
+                    otherUser.updateFriendStatusHelper(this, status2)
+                }
+            }
+        }
+        .addOnSuccessListener {
+            Log.d(tag, "Friend Status successfully updated")
+        }.addOnFailureListener {
+            Log.d(tag, "Friend Status FAILED to be updated")
+        }
+    }
+
+    /**
+     * Updates otherUsers friend status in this users friend list!
+     */
+    private fun updateFriendStatusHelper(otherUser: LetsGoUser, status: FriendStatus): Task<Void> {
+        val path = "$userFriendsPath/${otherUser.uid}"
+        Log.d(tag, "Adding friend data. path: $path\tstatus: $status")
+
+        return db.writeData(path , status.name);
+
+//        val newFriendRef = firebaseDb.getReference(userFriendsPath).push()
+//        val friendData = hashMapOf(
+//            "uid" to otherUser.uid,
+//            "status" to status.name,
+//        )
+//
+//        Log.d(tag, "Adding friend data. path: $userFriendsPath\tfriendData: $friendData")
+//
+//        return newFriendRef.setValue(friendData)
     }
 }
