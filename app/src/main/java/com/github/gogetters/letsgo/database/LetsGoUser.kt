@@ -2,6 +2,7 @@ package com.github.gogetters.letsgo.database
 
 import android.util.Log
 import com.google.android.gms.tasks.Task
+import com.google.firebase.database.ktx.getValue
 
 // Db is an optional argument to allow for testing!
 class LetsGoUser(val uid: String, val db: Database.Companion = Database) {
@@ -105,10 +106,24 @@ class LetsGoUser(val uid: String, val db: Database.Companion = Database) {
     * - Do we need a function to check that status of a current friend request (probably)
     * - A function that retrieves a list of all uid's in a friend list of a certain status!
     * - Whatever else we need?
+    * - Blocking users?
     */
 
     enum class FriendStatus {
-        SENT, REQUESTED, FRIENDS
+        /**
+         * User has sent a friend request and is awaiting a response
+         */
+        SENT,
+
+        /**
+         * User has received a friend request and can respond by either ignoring or accepting
+         */
+        REQUESTED,
+
+        /**
+         * Users are friends! yay :)
+         */
+        ACCEPTED
     }
 
     fun requestFriend(otherUser: LetsGoUser): Task<Void> {
@@ -116,7 +131,20 @@ class LetsGoUser(val uid: String, val db: Database.Companion = Database) {
     }
 
     fun acceptFriend(otherUser: LetsGoUser): Task<Void> {
-        return updateFriendStatus(otherUser, FriendStatus.FRIENDS, FriendStatus.FRIENDS)
+        return updateFriendStatus(otherUser, FriendStatus.ACCEPTED, FriendStatus.ACCEPTED)
+    }
+
+    /**
+     * Use to remove a friend or delete a friend request.
+     */
+    fun deleteFriend(otherUser: LetsGoUser): Task<Void> {
+        return db.deleteData("$userFriendsPath/${otherUser.uid}").continueWithTask {
+            db.deleteData("${otherUser.userFriendsPath}/${this.uid}")
+        }.addOnSuccessListener {
+            Log.d(tag, "'Friend' successfully deleted")
+        }.addOnFailureListener {
+            Log.d(tag, "'Friend' FAILED to be deleted")
+        }
     }
 
     /**
@@ -133,8 +161,7 @@ class LetsGoUser(val uid: String, val db: Database.Companion = Database) {
                     otherUser.updateFriendStatusHelper(this, status2)
                 }
             }
-        }
-        .addOnSuccessListener {
+        }.addOnSuccessListener {
             Log.d(tag, "Friend Status successfully updated")
         }.addOnFailureListener {
             Log.d(tag, "Friend Status FAILED to be updated")
@@ -148,16 +175,24 @@ class LetsGoUser(val uid: String, val db: Database.Companion = Database) {
         val path = "$userFriendsPath/${otherUser.uid}"
         Log.d(tag, "Adding friend data. path: $path\tstatus: $status")
 
-        return db.writeData(path , status.name);
+        return db.writeData(path, status.name);
+    }
 
-//        val newFriendRef = firebaseDb.getReference(userFriendsPath).push()
-//        val friendData = hashMapOf(
-//            "uid" to otherUser.uid,
-//            "status" to status.name,
-//        )
-//
-//        Log.d(tag, "Adding friend data. path: $userFriendsPath\tfriendData: $friendData")
-//
-//        return newFriendRef.setValue(friendData)
+    /**
+     * Lists all sent, pending or accepted friends of current user.
+     */
+    fun listFriendsByStatus(status: FriendStatus): Task<List<String>> {
+        return db.readData(userFriendsPath).continueWith {
+            val friends: ArrayList<String> = ArrayList()
+
+            for (friendEntry in it.result.children) {
+
+                if (friendEntry.getValue<String>() == status.name) {
+                    friends.add(friendEntry.key!!)
+                }
+            }
+
+            friends
+        }
     }
 }
