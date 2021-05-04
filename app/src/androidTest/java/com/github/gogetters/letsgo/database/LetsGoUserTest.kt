@@ -106,9 +106,20 @@ class LetsGoUserTest {
         Tasks.await(user.acceptFriend(user2))
     }
 
-
     @Test
     fun testCheckUserExists() {
         Tasks.await(user.requireUserExists())
+    }
+
+    @Test
+    fun testListFriendsByStatus() {
+        val a = Tasks.await(user.listFriendsByStatus(LetsGoUser.FriendStatus.ACCEPTED))
+
+        Log.d(TAG, a.toString())
+    }
+
+    @Test
+    fun deleteFriend() {
+        Tasks.await(user.deleteFriend(user2))
     }
 }
