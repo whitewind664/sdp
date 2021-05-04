@@ -47,7 +47,7 @@ class LetsGoUser(val uid: String, val db: Database.Companion = Database) {
         )
 
         // Add a new document with user's uid
-        return db.writeData(userPath, userData)
+        return db.updateData(userPath, userData)
             .addOnSuccessListener {
                 Log.d(tag, "LetsGoUser document added for uid: $uid")
             }
@@ -103,10 +103,11 @@ class LetsGoUser(val uid: String, val db: Database.Companion = Database) {
     // Friend System
 
     /* TODO
-    * - Do we need a function to check that status of a current friend request (probably)
-    * - A function that retrieves a list of all uid's in a friend list of a certain status!
+    * - Load a List<uids:String> into a populated List<LetsGoUsers>
+    * - DONE A function that retrieves a list of all uid's in a friend list of a certain status!
+    * - MAYBE Do we need a function to check that status of a current friend request (probably)
+    * - MAYBE Blocking users?
     * - Whatever else we need?
-    * - Blocking users?
     */
 
     enum class FriendStatus {
