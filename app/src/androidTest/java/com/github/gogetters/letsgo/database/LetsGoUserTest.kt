@@ -15,14 +15,17 @@ class LetsGoUserTest {
     private val TAG = "FirestoreTest"
     private val TEST_UID = "tESTuID"
     private val TEST_UID2 = "tESTuID2"
+    private val TEST_UID3 = "tESTuID3"
 
     private var user = LetsGoUser("")
     private var user2 = LetsGoUser("")
+    private var user3 = LetsGoUser("")
 
     @Before
     fun initialize() {
         user = LetsGoUser(TEST_UID)
         user2 = LetsGoUser(TEST_UID2)
+        user3 = LetsGoUser(TEST_UID3)
 
         // Once mock database is implemented we can use this!
         // val user = LetsGoUser(TEST_UID, <MockDatabase>)
@@ -45,9 +48,20 @@ class LetsGoUserTest {
         user2.first = "Mary"
         user2.last = "Pretzel"
         user2.city = "DoesntExist"
-        user2.country = "AU"
+        user2.country = "Australia"
 
         Tasks.await(user2.uploadUserData())
+    }
+
+    @Test
+    fun testUploadUserData3() {
+        user3.nick = "testerMonkey"
+        user3.first = "Marcel"
+        user3.last = "Banana"
+        user3.city = "Somewhere"
+        user3.country = "Africa"
+
+        Tasks.await(user3.uploadUserData())
     }
 
     @Test
@@ -103,7 +117,7 @@ class LetsGoUserTest {
 
     @Test
     fun testAcceptFriend() {
-        Tasks.await(user.acceptFriend(user2))
+        Tasks.await(user2.acceptFriend(user3))
     }
 
     @Test
@@ -112,10 +126,15 @@ class LetsGoUserTest {
     }
 
     @Test
-    fun testListFriendsByStatus() {
-        val a = Tasks.await(user.listFriendsByStatus(LetsGoUser.FriendStatus.ACCEPTED))
+    fun testDownloadFriends() {
+        Tasks.await(user2.downloadFriends())
 
-        Log.d(TAG, a.toString())
+        Log.d(TAG, "------------------------------------------------------------")
+        Log.d(TAG, "--- Friends by FriendStatus --------------------------------")
+        for (status in LetsGoUser.FriendStatus.values()) {
+            Log.d(TAG, "status=$status \t${user2.listFriendsByStatus(status)}")
+        }
+        Log.d(TAG, "------------------------------------------------------------")
     }
 
     @Test

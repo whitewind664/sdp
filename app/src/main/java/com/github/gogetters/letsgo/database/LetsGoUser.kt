@@ -3,8 +3,12 @@ package com.github.gogetters.letsgo.database
 import android.graphics.Bitmap
 import android.util.Log
 import com.google.android.gms.tasks.Task
-import com.google.firebase.database.ktx.getValue
+import com.google.android.gms.tasks.Tasks
+import java.util.*
+import kotlin.collections.ArrayList
 
+// I know we could use a data class or something but LetsGoUser's functioning is complex and this
+// approach just works so I will stick to it!
 // Db is an optional argument to allow for testing!
 class LetsGoUser(val uid: String, val db: Database.Companion = Database) {
     var nick: String? = null
@@ -12,7 +16,12 @@ class LetsGoUser(val uid: String, val db: Database.Companion = Database) {
     var last: String? = null
     var city: String? = null
     var country: String? = null
+
+    // Might have to change the type of these fields
     var profileImage: Bitmap? = null
+    private var profileImageUrl: String? = null
+
+    private var connections: EnumMap<FriendStatus, MutableList<LetsGoUser>>? = null
 
     // Be very careful if changing path values!
     private val tag = "FirestoreTest"
@@ -98,7 +107,7 @@ class LetsGoUser(val uid: String, val db: Database.Companion = Database) {
     override fun toString(): String {
         // TODO Maybe improve this?
 
-        return "LetsGoUser : " + super.toString() + "\t" + uid + "\t" + nick + "\t" + first + "\t" + last + "\t" + city + "\t" + country
+        return "LetsGoUser(uid=$uid, nick=$nick, first=$first, last=$last, city=$city, country=$country)"
     }
 
     //===========================================================================================
@@ -181,21 +190,85 @@ class LetsGoUser(val uid: String, val db: Database.Companion = Database) {
         return db.writeData(path, status.name);
     }
 
+    //-------------------------------------------------------------------------------------------
+    // Listing friends of a user
+
+//    /**
+//     * Lists all sent, pending or accepted friends of current user.
+//     */
+//    fun listFriendsByStatus(status: FriendStatus): Task<MutableList<LetsGoUser>> {
+//        return db.readData(userFriendsPath).continueWith {
+//            val friends: ArrayList<String> = ArrayList()
+//
+//            for (friendEntry in it.result.children) {
+//
+//                if (friendEntry.getValue<String>() == status.name) {
+//                    friends.add(friendEntry.key!!)
+//                }
+//            }
+//
+//            friends
+//        }.continueWithTask {
+//            downloadUserList(it.result)
+//        }
+//    }
+
+    fun listFriendsByStatus(status: FriendStatus): List<LetsGoUser> {
+        if (connections == null) {
+            throw IllegalStateException("MUST call downloadFriends before calling this function!")
+        }
+        return connections!![status]!!
+
+    }
+
     /**
-     * Lists all sent, pending or accepted friends of current user.
+     * Downloads Friends of all statuses.
      */
-    fun listFriendsByStatus(status: FriendStatus): Task<List<String>> {
-        return db.readData(userFriendsPath).continueWith {
-            val friends: ArrayList<String> = ArrayList()
+    // Sometimes I use the word connections and friends interchangeably
+    fun downloadFriends(): Task<Void> {
+        return db.readData(userFriendsPath).continueWithTask {
+            val connectionUids: EnumMap<FriendStatus, ArrayList<String>> =
+                EnumMap(FriendStatus::class.java)
+            connections = EnumMap(FriendStatus::class.java)
 
-            for (friendEntry in it.result.children) {
-
-                if (friendEntry.getValue<String>() == status.name) {
-                    friends.add(friendEntry.key!!)
-                }
+            // Initializing lists in connections
+            for (friendStatus in FriendStatus.values()) {
+                connectionUids[friendStatus] = ArrayList()
+                connections!![friendStatus] = ArrayList()
             }
 
-            friends
+            // Putting connection uids into their respective list
+            for (connectionData in it.result.children) {
+                val friendStatus = FriendStatus.valueOf(connectionData.value as String)
+                val uid = connectionData.key
+
+                connectionUids[friendStatus]!!.add(uid!!)
+            }
+
+            // Turning a list of uids into a list of downloaded LetsGoUsers
+            val tasks = ArrayList<Task<*>>()
+            for (friendStatus in FriendStatus.values()) {
+                tasks.add(
+                    downloadUserList(connectionUids[friendStatus]!!).continueWith {
+                        connections!![friendStatus] = it.result
+                    }
+                )
+            }
+            Tasks.whenAll(tasks)
         }
+    }
+
+    /**
+     * Given a list of uids. Creates a list of LetsGoUsers and downloads their data
+     */
+    private fun downloadUserList(uids: List<String>): Task<MutableList<LetsGoUser>> {
+        val tasks = ArrayList<Task<LetsGoUser>>()
+
+        for (uid in uids) {
+            val user = LetsGoUser(uid)
+            tasks.add(user.downloadUserData().continueWith { user })
+        }
+
+        return Tasks.whenAllSuccess(tasks)
     }
 }
