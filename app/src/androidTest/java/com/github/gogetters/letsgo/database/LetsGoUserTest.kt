@@ -3,12 +3,13 @@ package com.github.gogetters.letsgo.database
 import android.util.Log
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.google.android.gms.tasks.Tasks
-import com.google.firebase.database.ktx.database
-import com.google.firebase.ktx.Firebase
 import org.junit.Before
+import org.junit.FixMethodOrder
 import org.junit.Test
 import org.junit.runner.RunWith
+import org.junit.runners.MethodSorters
 
+@FixMethodOrder(MethodSorters.NAME_ASCENDING)
 @RunWith(AndroidJUnit4::class)
 class LetsGoUserTest {
 
@@ -32,7 +33,7 @@ class LetsGoUserTest {
     }
 
     @Test
-    fun testUploadUserData() {
+    fun aTestUploadUserData() {
         user.nick = "testerDude"
         user.first = "John"
         user.last = "Donut"
@@ -43,7 +44,7 @@ class LetsGoUserTest {
     }
 
     @Test
-    fun testUploadUserData2() {
+    fun aTestUploadUserData2() {
         user2.nick = "testerGirl"
         user2.first = "Mary"
         user2.last = "Pretzel"
@@ -54,7 +55,7 @@ class LetsGoUserTest {
     }
 
     @Test
-    fun testUploadUserData3() {
+    fun aTestUploadUserData3() {
         user3.nick = "testerMonkey"
         user3.first = "Marcel"
         user3.last = "Banana"
@@ -65,21 +66,20 @@ class LetsGoUserTest {
     }
 
     @Test
-    fun testDownloadUserData() {
+    fun bTestDownloadUserData() {
         Tasks.await(user.downloadUserData())
     }
 
     @Test
-    fun deleteUserData() {
+    fun bDeleteUserData() {
         Tasks.await(user.deleteUserData())
 
-        testUploadUserData()
+        aTestUploadUserData() // Reupload after delete
     }
-
 
     // TODO Remove this later
     @Test
-    fun testUploadMichaelUserData() {
+    fun zTestUploadMichaelUserData() {
         val my_user = LetsGoUser("WOs2S7EDiHRrXZrmvEAr7zV8Awk2")
 
         my_user.nick = "metaTinker"
@@ -91,42 +91,29 @@ class LetsGoUserTest {
         Tasks.await(my_user.uploadUserData())
     }
 
-
-    // TODO Remove this
     @Test
-    fun testUploadFriendListScratch() {
-//        val my_uid = "WOs2S7EDiHRrXZrmvEAr7zV8Awk2"
-//        val my_user = LetsGoUser(my_uid)
-
-//        Tasks.await(my_user.downloadUserData())
-
-        val db = Firebase.database
-
-        val friendListRef = db.getReference("users/${user.uid}/friends")
-        val newFriendRef = friendListRef.push()
-
-        Tasks.await(newFriendRef.setValue(TEST_UID2));
-
-        Log.d(TAG, "Wow!: $user")
-    }
-
-    @Test
-    fun testRequestFriend() {
+    fun cTestRequestFriend() {
         Tasks.await(user.requestFriend(user2))
     }
 
     @Test
-    fun testAcceptFriend() {
+    fun cTestAcceptFriend() {
         Tasks.await(user2.acceptFriend(user3))
+        Tasks.await(user3.acceptFriend(user))
     }
 
     @Test
-    fun testCheckUserExists() {
+    fun dTestDeleteFriend() {
+        Tasks.await(user3.deleteFriend(user))
+    }
+
+    @Test
+    fun eTestCheckUserExists() {
         Tasks.await(user.requireUserExists())
     }
 
     @Test
-    fun testDownloadFriends() {
+    fun eTestDownloadFriends() {
         Tasks.await(user2.downloadFriends())
 
         Log.d(TAG, "------------------------------------------------------------")
@@ -135,10 +122,5 @@ class LetsGoUserTest {
             Log.d(TAG, "status=$status \t${user2.listFriendsByStatus(status)}")
         }
         Log.d(TAG, "------------------------------------------------------------")
-    }
-
-    @Test
-    fun deleteFriend() {
-        Tasks.await(user.deleteFriend(user2))
     }
 }

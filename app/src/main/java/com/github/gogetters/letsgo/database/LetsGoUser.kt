@@ -113,11 +113,9 @@ class LetsGoUser(val uid: String, val db: Database.Companion = Database) {
     //===========================================================================================
     // Friend System
 
-    /* TODO
-    * - Load a List<uids:String> into a populated List<LetsGoUsers>
-    * - DONE A function that retrieves a list of all uid's in a friend list of a certain status!
-    * - MAYBE Do we need a function to check that status of a current friend request (probably)
-    * - MAYBE Blocking users?
+    /* MAYBE
+    * - Do we need a function to check that status of a current friend request (probably)
+    * - Blocking users?
     * - Whatever else we need?
     */
 
