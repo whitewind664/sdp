@@ -21,7 +21,7 @@ class LetsGoUser(val uid: String, val db: Database.Companion = Database) {
     var profileImage: Bitmap? = null
     private var profileImageUrl: String? = null
 
-    private var connections: EnumMap<FriendStatus, MutableList<LetsGoUser>>? = null
+    private var friends: EnumMap<FriendStatus, MutableList<LetsGoUser>>? = null
 
     // Be very careful if changing path values!
     private val tag = "FirestoreTest"
@@ -193,32 +193,12 @@ class LetsGoUser(val uid: String, val db: Database.Companion = Database) {
     //-------------------------------------------------------------------------------------------
     // Listing friends of a user
 
-//    /**
-//     * Lists all sent, pending or accepted friends of current user.
-//     */
-//    fun listFriendsByStatus(status: FriendStatus): Task<MutableList<LetsGoUser>> {
-//        return db.readData(userFriendsPath).continueWith {
-//            val friends: ArrayList<String> = ArrayList()
-//
-//            for (friendEntry in it.result.children) {
-//
-//                if (friendEntry.getValue<String>() == status.name) {
-//                    friends.add(friendEntry.key!!)
-//                }
-//            }
-//
-//            friends
-//        }.continueWithTask {
-//            downloadUserList(it.result)
-//        }
-//    }
-
     fun listFriendsByStatus(status: FriendStatus): List<LetsGoUser> {
-        if (connections == null) {
-            throw IllegalStateException("MUST call downloadFriends before calling this function!")
+        if (friends == null) {
+            throw IllegalStateException("MUST call downloadFriends and wait for it to complete" +
+                    " before calling this function!")
         }
-        return connections!![status]!!
-
+        return friends!![status]!!
     }
 
     /**
@@ -227,14 +207,14 @@ class LetsGoUser(val uid: String, val db: Database.Companion = Database) {
     // Sometimes I use the word connections and friends interchangeably
     fun downloadFriends(): Task<Void> {
         return db.readData(userFriendsPath).continueWithTask {
-            val connectionUids: EnumMap<FriendStatus, ArrayList<String>> =
+            val friendUids: EnumMap<FriendStatus, ArrayList<String>> =
                 EnumMap(FriendStatus::class.java)
-            connections = EnumMap(FriendStatus::class.java)
+            friends = EnumMap(FriendStatus::class.java)
 
             // Initializing lists in connections
             for (friendStatus in FriendStatus.values()) {
-                connectionUids[friendStatus] = ArrayList()
-                connections!![friendStatus] = ArrayList()
+                friendUids[friendStatus] = ArrayList()
+                friends!![friendStatus] = ArrayList()
             }
 
             // Putting connection uids into their respective list
@@ -242,15 +222,15 @@ class LetsGoUser(val uid: String, val db: Database.Companion = Database) {
                 val friendStatus = FriendStatus.valueOf(connectionData.value as String)
                 val uid = connectionData.key
 
-                connectionUids[friendStatus]!!.add(uid!!)
+                friendUids[friendStatus]!!.add(uid!!)
             }
 
             // Turning a list of uids into a list of downloaded LetsGoUsers
             val tasks = ArrayList<Task<*>>()
             for (friendStatus in FriendStatus.values()) {
                 tasks.add(
-                    downloadUserList(connectionUids[friendStatus]!!).continueWith {
-                        connections!![friendStatus] = it.result
+                    downloadUserList(friendUids[friendStatus]!!).continueWith {
+                        friends!![friendStatus] = it.result
                     }
                 )
             }
