@@ -191,6 +191,9 @@ class LetsGoUser(val uid: String, val db: Database.Companion = Database) {
     //-------------------------------------------------------------------------------------------
     // Listing friends of a user
 
+    /**
+     * List pending friends, sent friend requests or current friends of User!
+     */
     fun listFriendsByStatus(status: FriendStatus): List<LetsGoUser> {
         if (friends == null) {
             throw IllegalStateException("MUST call downloadFriends and wait for it to complete" +

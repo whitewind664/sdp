@@ -5,6 +5,7 @@ import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.google.android.gms.tasks.Tasks
 import org.junit.Before
 import org.junit.FixMethodOrder
+import org.junit.Ignore
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.junit.runners.MethodSorters
@@ -77,20 +78,6 @@ class LetsGoUserTest {
         aTestUploadUserData() // Reupload after delete
     }
 
-    // TODO Remove this later
-    @Test
-    fun zTestUploadMichaelUserData() {
-        val my_user = LetsGoUser("WOs2S7EDiHRrXZrmvEAr7zV8Awk2")
-
-        my_user.nick = "metaTinker"
-        my_user.first = "Michael"
-        my_user.last = "Roust"
-        my_user.city = "Lausanne"
-        my_user.country = "Switzerland"
-
-        Tasks.await(my_user.uploadUserData())
-    }
-
     @Test
     fun cTestRequestFriend() {
         Tasks.await(user.requestFriend(user2))
@@ -123,4 +110,33 @@ class LetsGoUserTest {
         }
         Log.d(TAG, "------------------------------------------------------------")
     }
+
+    @Ignore("We can remove this later")
+    @Test
+    fun zTestUploadMichaelUserData() {
+        val my_user = LetsGoUser("WOs2S7EDiHRrXZrmvEAr7zV8Awk2")
+
+        my_user.nick = "metaTinker"
+        my_user.first = "Michael"
+        my_user.last = "Roust"
+        my_user.city = "Lausanne"
+        my_user.country = "Switzerland"
+
+        Tasks.await(my_user.uploadUserData())
+    }
+
+    @Ignore("We can remove this later")
+    @Test
+    fun zTestMichaelAddFriends() {
+        val my_user = LetsGoUser("WOs2S7EDiHRrXZrmvEAr7zV8Awk2")
+
+        Tasks.await(
+            Tasks.whenAll(
+                my_user.requestFriend(user),
+                my_user.acceptFriend(user2),
+                my_user.acceptFriend(user3)
+            )
+        )
+    }
+
 }
