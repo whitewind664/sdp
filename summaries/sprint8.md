@@ -19,9 +19,9 @@
 - To improve:
 
 ## Roust, Michael Murad
-- Done:
-- Went well:
-- To improve:
+- Done: Completed social/friend system. We can now send friend requests and accept them and list current friends and their profile info. Next step is to connect the logic to the UI.
+- Went well: Great functional async code written
+- To improve: We could better modularize some code here but I don't see a good enough reason to do that.
 
 ## Wengle, Erik Alessandro
 - Done:
