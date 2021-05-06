@@ -27,7 +27,6 @@ class CloudStorage {
          * Tries to download a file from the storage and store it in the given local file.
          */
         fun downloadFile(ref: String, localFile: File): FileDownloadTask {
-            
             return storage.getReference(ref).getFile(localFile)
         }
     }
