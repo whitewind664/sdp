@@ -43,7 +43,7 @@ class BluetoothActivity: AppCompatActivity() {
     private lateinit var btProbe: BluetoothProbe
     private var foundDevices: MutableSet<BluetoothDevice>? = null
     private lateinit var deviceInfo: MutableMap<BluetoothDevice, String>
-    private lateinit var isServer: Boolean
+    private var isServer = false
 
     private val handler = Handler(Looper.getMainLooper()) {
         when (it.what) {
