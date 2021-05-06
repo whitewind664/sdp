@@ -43,7 +43,6 @@ class BluetoothActivity: AppCompatActivity() {
     var bluetoothAdapter: BluetoothAdapter? = null
     private lateinit var client: BluetoothClient
     private lateinit var server: BluetoothServer
-    private var service: BluetoothGTPService = BluetoothGTPService()
     private lateinit var btProbe: BluetoothProbe
     private var foundDevices: MutableSet<BluetoothDevice> = mutableSetOf()
     private var deviceInfo: MutableMap<BluetoothDevice, String> = mutableMapOf()
@@ -93,7 +92,6 @@ class BluetoothActivity: AppCompatActivity() {
         registerReceiver(receiver, IntentFilter(BluetoothDevice.ACTION_FOUND))
 
         implementListeners()
-        BluetoothActivity.service = service
     }
 
 
@@ -289,8 +287,8 @@ class BluetoothActivity: AppCompatActivity() {
         const val REQUEST_PERMISSION_FINE_LOCATION = 1
         const val REQUEST_ENABLE_BLUETOOTH = 1
 
-        //TODO even for me this is weak
-        lateinit var service: BluetoothGTPService
+        //TODO ??????????????????????????????????
+        val service = BluetoothGTPService()
 
 
         //TODO: create own UUID
