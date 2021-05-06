@@ -18,6 +18,8 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.github.gogetters.letsgo.R
+import com.github.gogetters.letsgo.game.GTPCommand
+import com.github.gogetters.letsgo.game.Stone
 import com.github.gogetters.letsgo.util.*
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
@@ -151,7 +153,7 @@ class BluetoothActivity: AppCompatActivity() {
 
     fun sendMessage(v: View?) {
         val string = writeMsg!!.text.toString()
-
+        service.sendCommand(GTPCommand.GENMOVE(Stone.BLACK))
     }
 
 
