@@ -38,7 +38,7 @@ class BluetoothServer(val handler: Handler) {
         override fun run() {
             // Keep listening until exception occurs or a socket is returned.
             var shouldLoop = true
-            service = BluetoothPingService()
+            service = BluetoothGTPService()
             while (shouldLoop) {
                 val socket: BluetoothSocket? = try {
                     mmServerSocket?.accept()
@@ -51,24 +51,15 @@ class BluetoothServer(val handler: Handler) {
 
                     service.connect(it)
                     // Wait for ping
-                    var timeout = false
                     val time = Calendar.getInstance().time
-                    while (!(service as BluetoothPingService).receivedPing) {
+                    while (!service.receivedPing) {
                         val diff = Calendar.getInstance().time.time - time.time
                         if (diff > 2000) {
                             break
                         }
                     }
 
-                    service.close()
-
-                    if ((service as BluetoothPingService).receivedPing) {
-                        service = BluetoothGTPService()
-                        service.connect(it)
-                        shouldLoop = false
-                    } else {
-                        shouldLoop = true
-                    }
+                    shouldLoop = !service.receivedPing
                 }
             }
         }

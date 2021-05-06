@@ -19,6 +19,8 @@ abstract class BluetoothService {
     private val MESSAGE_READ: Int = 0
     private val MESSAGE_WRITE: Int = 1
     private val MESSAGE_TOAST: Int = 2
+    internal val PING = "PING"
+    var receivedPing = false
 
     private val TAG = "MY_APP_DEBUG_TAG"
 
@@ -36,6 +38,11 @@ abstract class BluetoothService {
     internal fun write(bytes: ByteArray) {
         connectedThread.write(bytes)
     }
+
+    fun ping() {
+        write(PING.toByteArray(charset("utf-8")))
+    }
+
 
     private inner class ConnectedThread(private val mmSocket: BluetoothSocket) : Thread() {
 

@@ -35,15 +35,11 @@ class BluetoothClient(val handler: Handler) {
                 // until it succeeds or throws an exception.
                 //TODO handle IOException for timeout???? surely....
                 socket.connect()
-                val pingService = BluetoothPingService()
-                pingService.connect(socket)
-                pingService.ping()
-                pingService.close()
 
                 // The connection attempt succeeded. Perform work associated with
                 // the connection in a separate thread.
-
                 service.connect(socket)
+                service.ping()
             }
         }
 
