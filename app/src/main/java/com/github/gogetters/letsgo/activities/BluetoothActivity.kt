@@ -90,6 +90,7 @@ class BluetoothActivity: AppCompatActivity() {
 
 
         implementListeners()
+        BluetoothActivity.service = service
     }
 
 
@@ -266,13 +267,12 @@ class BluetoothActivity: AppCompatActivity() {
         const val REQUEST_PERMISSION_FINE_LOCATION = 1
         const val REQUEST_ENABLE_BLUETOOTH = 1
 
+        //TODO even for me this is weak
+        lateinit var service: BluetoothGTPService
+
 
         //TODO: create own UUID
         private val MY_UUID = UUID.fromString("8ce255c0-223a-11e0-ac64-0803450c9a66")
-
-        fun getSocket(): BluetoothSocket? {
-            return null
-        }
         private val APP_UUID = UUID.fromString("8ce255c0-223a-11e0-ac64-0803450c9a66")
     }
 }

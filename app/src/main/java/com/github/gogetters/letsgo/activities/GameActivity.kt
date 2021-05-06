@@ -33,8 +33,7 @@ class GameActivity : AppCompatActivity() {
         //TODO HOW AM I SUPPOSED TO GET THIS SHIT..................
         //TODO get it from a socket in another activity??? static var???
 
-        val bluetoothService = BluetoothGTPService()
-        bluetoothService.connect(BluetoothActivity.getSocket()!!)
+        val bluetoothService = BluetoothActivity.service
 
         val boardSize = Board.Size.withSize(gameSizeInput)
         goView = GoView(this, boardSize)
