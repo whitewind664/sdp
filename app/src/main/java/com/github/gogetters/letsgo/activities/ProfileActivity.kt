@@ -20,16 +20,17 @@ import android.widget.TextView
 import androidx.core.app.ActivityCompat
 import androidx.core.content.FileProvider
 import com.github.gogetters.letsgo.R
+import com.github.gogetters.letsgo.database.FirebaseUserBundleProvider
 import com.github.gogetters.letsgo.database.UserBundle
+import com.github.gogetters.letsgo.database.UserBundleProvider
 import com.github.gogetters.letsgo.util.PermissionUtils
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.FirebaseUser
 import java.io.File
 import java.text.SimpleDateFormat
 import java.util.*
 
 
-class ProfileActivity : ActivityCompat.OnRequestPermissionsResultCallback, FirebaseUIActivity() {
+class ProfileActivity() : ActivityCompat.OnRequestPermissionsResultCallback, FirebaseUIActivity() {
     companion object {
         // Codes used when creating a permission request. Used in the onRequestPermissionResult handler.
         private const val READ_EXTERNAL_STORAGE_PERMISSION_REQUEST_CODE: Int = 2
@@ -42,6 +43,8 @@ class ProfileActivity : ActivityCompat.OnRequestPermissionsResultCallback, Fireb
         private const val DIALOG_GALLERY_IDX = 1
         private const val DIALOG_CANCEL_IDX = 2
     }
+
+    private lateinit var userBundleProvider: UserBundleProvider
 
     private lateinit var uploadImageText: TextView
     private lateinit var profileImage: ImageView
@@ -64,6 +67,8 @@ class ProfileActivity : ActivityCompat.OnRequestPermissionsResultCallback, Fireb
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_profile)
 
+        userBundleProvider = intent.getSerializableExtra("UserBundleProvider") as UserBundleProvider
+
         uploadImageText = findViewById(R.id.profile_textView_uploadImageHint)
         profileImage = findViewById(R.id.profile_imageView_image)
         nameText = findViewById(R.id.profile_textView_name)
@@ -73,7 +78,7 @@ class ProfileActivity : ActivityCompat.OnRequestPermissionsResultCallback, Fireb
         profileImage.setOnClickListener {
             selectImage()
         }
-        
+
         // Open friend list with button!
         val friendListButton = findViewById<Button>(R.id.profile_show_friend_list_button)
         friendListButton.setOnClickListener {
@@ -105,20 +110,20 @@ class ProfileActivity : ActivityCompat.OnRequestPermissionsResultCallback, Fireb
     }
 
     private fun updateUI() {
-        val firebaseUser: FirebaseUser? = FirebaseAuth.getInstance().currentUser
+        val userBundle: UserBundle? = userBundleProvider.getUserBundle()
 
-        if (firebaseUser == null) {
+        if (userBundle == null) {
             // TODO Don't let the user see this screen without having successfully completed sign-in.
         } else {
-            val userBundle = UserBundle(firebaseUser)
-
-            userBundle.letsGo.downloadUserData().addOnCompleteListener {
-                nameText.text = userBundle.letsGo.first
-                emailText.text = userBundle.firebase.email
-                cityCountyText.text = "${userBundle.letsGo.city}, ${userBundle.letsGo.country}"
+            val user = userBundle.getUser()
+            user. downloadUserData().addOnCompleteListener {
+                nameText.text = user.first
+                emailText.text = userBundle.getEmail()
+                cityCountyText.text = "${user.city}, ${user.country}"
             }
         }
     }
+
 
     private fun selectImage() {
         val dialogTexts = arrayOf<CharSequence>(resources.getString(R.string.profile_takePicture), resources.getString(R.string.profile_chooseFromGallery), resources.getString(R.string.profile_cancel))

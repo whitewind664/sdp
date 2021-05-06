@@ -11,12 +11,12 @@ import androidx.test.espresso.Espresso.onView as onView
 import androidx.test.espresso.matcher.ViewMatchers.withText as withText
 
 @RunWith(AndroidJUnit4::class)
-class ProfileInstrumentedTest {
-
-
+class ProfileActivityTest {
 
     @get:Rule
     val testRule = ActivityScenarioRule(ProfileActivity::class.java)
+
+
 
     @Test
     fun testProfileOpens() {}
