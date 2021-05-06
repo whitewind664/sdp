@@ -4,6 +4,8 @@ import android.bluetooth.BluetoothAdapter
 import android.bluetooth.BluetoothDevice
 import android.bluetooth.BluetoothSocket
 import android.util.Log
+import com.github.gogetters.letsgo.game.GTPCommand
+import com.github.gogetters.letsgo.game.Stone
 import java.io.IOException
 import java.util.*
 
@@ -39,6 +41,7 @@ class BluetoothClient {
                 // the connection in a separate thread.
                 service.connect(socket)
                 service.ping()
+                (service as BluetoothGTPService).sendCommand(GTPCommand.GENMOVE(Stone.BLACK))
             }
         }
 

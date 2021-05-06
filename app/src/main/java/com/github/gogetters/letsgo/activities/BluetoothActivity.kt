@@ -143,7 +143,6 @@ class BluetoothActivity: AppCompatActivity() {
                 }
                 Toast.makeText(applicationContext, "Establishing Connection", Toast.LENGTH_SHORT).show()
                 client.connect(serverDevice, service)
-                service.sendCommand(GTPCommand.GENMOVE(Stone.BLACK))
             }
     }
 
