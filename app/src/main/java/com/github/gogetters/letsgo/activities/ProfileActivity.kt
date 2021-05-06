@@ -51,7 +51,7 @@ class ProfileActivity() : ActivityCompat.OnRequestPermissionsResultCallback, Fir
     private lateinit var nameText: TextView
     private lateinit var emailText: TextView
     private lateinit var cityCountyText: TextView
-    private lateinit var saveButton: ImageButton
+    //private lateinit var saveButton: ImageButton
 
     private lateinit var profilePictureUri: Uri
 
@@ -74,7 +74,7 @@ class ProfileActivity() : ActivityCompat.OnRequestPermissionsResultCallback, Fir
         nameText = findViewById(R.id.profile_textView_name)
         emailText = findViewById(R.id.profile_textView_email)
         cityCountyText = findViewById(R.id.profile_textView_cityCountry)
-        saveButton = findViewById(R.id.profile_imageButton_save)
+        //saveButton = findViewById(R.id.profile_imageButton_save)
         profileImage.setOnClickListener {
             selectImage()
         }
