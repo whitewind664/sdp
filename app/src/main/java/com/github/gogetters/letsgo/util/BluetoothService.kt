@@ -40,7 +40,7 @@ abstract class BluetoothService {
     }
 
     fun ping() {
-        write(PING.toByteArray(charset("utf-8")))
+        write(PING.toByteArray())
     }
 
 
