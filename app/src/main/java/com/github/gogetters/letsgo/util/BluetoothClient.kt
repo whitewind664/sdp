@@ -41,7 +41,6 @@ class BluetoothClient {
                 // the connection in a separate thread.
                 service.connect(socket)
                 service.ping()
-                (service as BluetoothGTPService).sendCommand(GTPCommand.GENMOVE(Stone.BLACK))
             }
         }
 
