@@ -182,6 +182,7 @@ class BluetoothActivity: AppCompatActivity() {
         startActivityForResult(getVisible, 0)
 
         server = BluetoothServer(handler)
+        Toast.makeText(this, "ESTABLISHING CONNECTION", Toast.LENGTH_SHORT)
         server.connect(service)
         isServer = true
     }
