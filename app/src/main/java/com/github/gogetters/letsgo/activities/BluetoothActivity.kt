@@ -149,7 +149,7 @@ class BluetoothActivity: AppCompatActivity() {
      *  Sends a message
      */
 
-    fun sendMessage() {
+    fun sendMessage(v: View?) {
         val string = writeMsg!!.text.toString()
 
     }
