@@ -38,7 +38,7 @@ class BluetoothActivity: AppCompatActivity() {
     var bluetoothAdapter: BluetoothAdapter? = null
     private lateinit var client: BluetoothClient
     private lateinit var server: BluetoothServer
-    private lateinit var service: BluetoothGTPService
+    private var service: BluetoothGTPService = BluetoothGTPService()
     private lateinit var btProbe: BluetoothProbe
     private var foundDevices: MutableSet<BluetoothDevice>? = null
     private lateinit var deviceInfo: MutableMap<BluetoothDevice, String>
@@ -87,7 +87,7 @@ class BluetoothActivity: AppCompatActivity() {
         foundDevices = mutableSetOf()
         deviceInfo = mutableMapOf()
         registerReceiver(receiver, IntentFilter(BluetoothDevice.ACTION_FOUND))
-        service = BluetoothGTPService()
+
 
         implementListeners()
     }
