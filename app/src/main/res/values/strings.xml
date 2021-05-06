@@ -63,6 +63,7 @@
     <string name="profile_takePicture">Take Picture</string>
     <string name="profile_chooseFromGallery">Choose from Gallery</string>
     <string name="profile_cancel">Cancel</string>
+    <string name="profile_gallerySelectionTitle">Select Profile Picture</string>
 
     <!--
     This string is used for square devices and overridden by hello_world in
