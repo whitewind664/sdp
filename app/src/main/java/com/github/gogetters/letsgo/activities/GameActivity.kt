@@ -48,11 +48,11 @@ class GameActivity : AppCompatActivity() {
         boardFrame.addView(goView)
 
         //TODO use different delegate depending on which type of Player
-        val whiteType = playerTypes!![0]
-        val blackType = playerTypes[0]
+        val blackType = playerTypes!![0]
+        val whiteType = playerTypes[1]
 
-        val whitePlayer = Player.playerOf(Stone.BLACK, whiteType, touchInputDelegate, bluetoothService)
-        val blackPlayer = Player.playerOf(Stone.WHITE, blackType, touchInputDelegate, bluetoothService)
+        val blackPlayer = Player.playerOf(Stone.BLACK, whiteType, touchInputDelegate, bluetoothService)
+        val whitePlayer = Player.playerOf(Stone.WHITE, blackType, touchInputDelegate, bluetoothService)
 
         game = Game(boardSize, komi, whitePlayer, blackPlayer)
 
