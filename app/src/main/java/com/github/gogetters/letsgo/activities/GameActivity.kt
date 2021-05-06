@@ -30,11 +30,7 @@ class GameActivity : AppCompatActivity() {
         val komi = intent.getDoubleExtra(EXTRA_KOMI, 5.5)
         val playerTypes = intent.getStringArrayExtra(EXTRA_PLAYER_TYPES)
 
-        //TODO HOW AM I SUPPOSED TO GET THIS SHIT..................
-        //TODO get it from a socket in another activity??? static var???
-
         val bluetoothService = BluetoothActivity.service
-        bluetoothService.sendCommand(GTPCommand.GENMOVE(Stone.BLACK))
 
         val boardSize = Board.Size.withSize(gameSizeInput)
         goView = GoView(this, boardSize)
