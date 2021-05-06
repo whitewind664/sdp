@@ -118,7 +118,7 @@ class BluetoothActivity: AppCompatActivity() {
                                 Log.d("FUTURES FUTURES FUTURES", "second part starting: $deviceName")
                                 deviceInfo[device] = it!!
                                 foundDevices!!.add(device)
-                                this@BluetoothActivity.runOnUiThread(Runnable {listFound()})
+                                this@BluetoothActivity.runOnUiThread({listFound()})
                                 Log.d("FUTURESSSSSSSSSSSSSSS", "done")
                             }
                     }
