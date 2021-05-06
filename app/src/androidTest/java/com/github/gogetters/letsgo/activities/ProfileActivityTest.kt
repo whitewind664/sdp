@@ -34,12 +34,20 @@ import org.junit.runner.RunWith
 @RunWith(AndroidJUnit4::class)
 class ProfileActivityTest {
     val GRANT_PERMISSION_BUTTON_INDEX = 0
-    val PERMISSIONS_DELAY = 5000L
+    val DELAY = 3000L
 
     val intent = Intent(ApplicationProvider.getApplicationContext(), ProfileActivity::class.java).putExtra("UserBundleProvider", MockUserBundleProvider())
 
     lateinit var scenario: ActivityScenario<ProfileActivity>
-    
+
+    private fun sleep() {
+        try {
+            Thread.sleep(DELAY)
+        } catch (e: InterruptedException) {
+            throw RuntimeException("Cannot execute Thread.sleep()")
+        }
+    }
+
     @Before
     fun init() {
         Intents.init()
@@ -59,6 +67,7 @@ class ProfileActivityTest {
     @Test
     fun dialogOpensOnProfileClick() {
         scenario = ActivityScenario.launch(intent)
+        sleep()
         onView(withId(R.id.profile_imageView_image)).perform(click())
         onView(withText(R.string.profile_dialogTitle)).check(matches(isDisplayed()))
     }
@@ -66,6 +75,7 @@ class ProfileActivityTest {
     @Test
     fun cameraIntentIsFired() {
         scenario = ActivityScenario.launch(intent)
+        sleep()
         onView(withId(R.id.profile_imageView_image)).perform(click())
         //onView(withText(R.string.profile_takePicture)).perform(click())
         clickAtIndex(0, "Take Picture")
@@ -76,6 +86,7 @@ class ProfileActivityTest {
     @Test
     fun galleryIntentIsFired() {
         scenario = ActivityScenario.launch(intent)
+        sleep()
         onView(withId(R.id.profile_imageView_image)).perform(click())
 
         //onView(withText(R.string.profile_chooseFromGallery)).perform(click())
@@ -87,6 +98,7 @@ class ProfileActivityTest {
     @Test
     fun profilePictureDialogDisappearsOnCancel() {
         scenario = ActivityScenario.launch(intent)
+        sleep()
         onView(withId(R.id.profile_imageView_image)).perform(click())
         //onView(withText(R.string.profile_cancel)).perform(click())
         clickAtIndex(2, "Cancel")
