@@ -20,10 +20,6 @@ class BluetoothGTPService: BluetoothService() {
 
     lateinit var inputDelegate: BluetoothInputDelegate
 
-    private val MESSAGE_READ: Int = 0
-    private val MESSAGE_WRITE: Int = 1
-    private val MESSAGE_TOAST: Int = 2
-
     private val TAG = "MY_APP_DEBUG_TAG"
 
 
@@ -35,7 +31,13 @@ class BluetoothGTPService: BluetoothService() {
 
     private fun parseCommand(bytes: ByteArray): Boolean {
         try {
-            val commandString = bytes.decodeToString(0, bytes.indexOf(0))
+            val commandString =  if (bytes.indexOf(0) == -1) {
+                String(bytes)
+            } else {
+                bytes.decodeToString(0, bytes.indexOf(0))
+            }
+
+            Log.d("BLUETOOTHGTPSERVICE", "RECEIVED COMMAND $commandString")
             receivedPing = commandString == PING || receivedPing
             if (commandString == PING) {
                 receivedPing = true
