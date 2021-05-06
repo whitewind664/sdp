@@ -184,6 +184,7 @@ class BluetoothActivity: AppCompatActivity() {
         server = BluetoothServer(handler)
         Toast.makeText(this, "ESTABLISHING CONNECTION", Toast.LENGTH_SHORT).show()
         server.connect(service)
+
         isServer = true
     }
 

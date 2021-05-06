@@ -38,7 +38,6 @@ class BluetoothServer(val handler: Handler) {
         override fun run() {
             // Keep listening until exception occurs or a socket is returned.
             var shouldLoop = true
-            service = BluetoothGTPService()
             while (shouldLoop) {
                 val socket: BluetoothSocket? = try {
                     mmServerSocket?.accept()
