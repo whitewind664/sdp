@@ -20,6 +20,7 @@ import androidx.core.content.ContextCompat
 import com.github.gogetters.letsgo.R
 import com.github.gogetters.letsgo.util.*
 import java.util.*
+import java.util.concurrent.Future
 
 
 class BluetoothActivity: AppCompatActivity() {
@@ -103,7 +104,8 @@ class BluetoothActivity: AppCompatActivity() {
                     val deviceName = device.name
 
                     if (deviceName != null){
-                        try{
+                        try {
+                            
                             val info = btProbe.connect(device)
 
                             deviceInfo[device] = info

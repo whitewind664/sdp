@@ -35,7 +35,7 @@ class BluetoothGTPService: BluetoothService() {
 
     private fun parseCommand(bytes: ByteArray): Boolean {
         try {
-            val commandString = String(bytes, charset("utf-8"))
+            val commandString = bytes.decodeToString(0, bytes.indexOf(0))
             receivedPing = commandString == PING || receivedPing
             if (commandString == PING) {
                 receivedPing = true
