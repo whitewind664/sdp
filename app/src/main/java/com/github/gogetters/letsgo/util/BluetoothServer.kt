@@ -7,6 +7,9 @@ import android.os.Handler
 import android.os.Looper
 import android.util.Log
 import java.io.IOException
+import java.io.Serializable
+import java.text.SimpleDateFormat
+import java.time.LocalDateTime
 import java.util.*
 
 class BluetoothServer(val handler: Handler) {
@@ -35,6 +38,7 @@ class BluetoothServer(val handler: Handler) {
         override fun run() {
             // Keep listening until exception occurs or a socket is returned.
             var shouldLoop = true
+            service = BluetoothPingService()
             while (shouldLoop) {
                 val socket: BluetoothSocket? = try {
                     mmServerSocket?.accept()
@@ -44,15 +48,27 @@ class BluetoothServer(val handler: Handler) {
                     null
                 }
                 socket?.also {
-                    service = BluetoothPingService()
+
                     service.connect(it)
                     // Wait for ping
                     var timeout = false
+                    val time = Calendar.getInstance().time
                     while (!(service as BluetoothPingService).receivedPing) {
-                        //TODO timeout, go to real Bluetooth
+                        val diff = Calendar.getInstance().time - time
+                        if (diff - time > 2000) {
+                            break
+                        }
                     }
+
                     service.close()
-                    shouldLoop = true
+
+                    if ((service as BluetoothPingService).receivedPing) {
+                        service = BluetoothGTPService()
+                        service.connect(it)
+                        shouldLoop = false
+                    } else {
+                        shouldLoop = true
+                    }
                 }
             }
         }
