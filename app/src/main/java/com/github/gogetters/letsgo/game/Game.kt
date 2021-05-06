@@ -19,7 +19,7 @@ internal open class Game(val size: Board.Size, val komi: Double,
      * @return state of the board after the move
      */
     open fun playTurn(): BoardState {
-        Log.d("GAME", "${nextPlayer.color}'s turn")
+        Log.d("GAME GAME GAME GAME", "${nextPlayer.color}'s turn")
         var nextMove: Move? = null
 
         var validMove = false
