@@ -19,4 +19,8 @@ class BluetoothPingService: BluetoothService() {
         receivedPing = String(it.obj as ByteArray, charset("utf-8")) == PING || receivedPing
         receivedPing
     }
+
+    fun ping() {
+        write(PING.toByteArray(charset("utf-8")))
+    }
 }

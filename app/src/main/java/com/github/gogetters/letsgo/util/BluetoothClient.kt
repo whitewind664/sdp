@@ -15,7 +15,7 @@ class BluetoothClient(val handler: Handler) {
     private lateinit var service: BluetoothService
 
 
-    fun connect(device: BluetoothDevice, service: BluetoothGTPService) {
+    fun connect(device: BluetoothDevice, service: BluetoothService) {
         this.service = service
         connectThread = ConnectThread(device)
         connectThread.start()
@@ -35,6 +35,9 @@ class BluetoothClient(val handler: Handler) {
                 // until it succeeds or throws an exception.
                 //TODO handle IOException for timeout???? surely....
                 socket.connect()
+                val pingService = BluetoothPingService()
+                pingService.connect(socket)
+                pingService.ping()
 
                 // The connection attempt succeeded. Perform work associated with
                 // the connection in a separate thread.
