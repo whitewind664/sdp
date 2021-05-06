@@ -38,6 +38,7 @@ class BluetoothClient(val handler: Handler) {
                 val pingService = BluetoothPingService()
                 pingService.connect(socket)
                 pingService.ping()
+                pingService.close()
 
                 // The connection attempt succeeded. Perform work associated with
                 // the connection in a separate thread.
