@@ -120,6 +120,7 @@ class BluetoothActivity: AppCompatActivity() {
                                 Log.d("FUTURES FUTURES FUTURES", "second part starting: $deviceName")
                                 deviceInfo[device] = it!!
                                 foundDevices!!.add(device)
+                                this@BluetoothActivity.runOnUiThread(Runnable {listFound()})
                                 Log.d("FUTURESSSSSSSSSSSSSSS", "done")
                             }
                     }
@@ -203,6 +204,9 @@ class BluetoothActivity: AppCompatActivity() {
      * Lists found devices
      */
     fun listFound() {
+
+
+        //Toast.makeText(applicationContext, "Showing Found Devices", Toast.LENGTH_SHORT).show()
         val list: ArrayList<String> = ArrayList<String>()
         for (device in foundDevices!!){
             val info = deviceInfo[device]
@@ -221,6 +225,7 @@ class BluetoothActivity: AppCompatActivity() {
     fun search(v: View?){
         showLocationPermission()
         btProbe = BluetoothProbe()
+        Toast.makeText(applicationContext, "Searching devices...", Toast.LENGTH_SHORT).show()
 
         if(bluetoothAdapter!!.isEnabled()){
             bluetoothAdapter!!.startDiscovery()
