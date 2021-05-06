@@ -174,31 +174,11 @@ class ProfileActivity : ActivityCompat.OnRequestPermissionsResultCallback, Fireb
                 intent,
                 resources.getString(R.string.profile_gallerySelectionTitle)),
                 GALLERY_SELECTION_ACTIVITY_REQUEST_CODE)
-        Log.i("PROFILE", "activity for gallery started")
     }
 
 
     private fun onCameraResult(data: Intent?) {
         profileImage.setImageURI(profilePictureUri)
-        /**val thumbnail = data.getExtras().get("data")
-        val bytes = ByteArrayOutputStream()
-        thumbnail.compress(Bitmap.CompressFormat.JPEG, 90, bytes)
-
-        val destination = File(Environment.getExternalStorageDirectory(), System.currentTimeMillis().toString() + ".jpg")
-
-        val fo: FileOutputStream
-        try {
-            destination.createNewFile()
-            fo = FileOutputStream(destination)
-            fo.write(bytes.toByteArray())
-            fo.close()
-        } catch (e: FileNotFoundException) {
-            e.printStackTrace()
-        } catch (e: IOException) {
-            e.printStackTrace()
-        }
-
-        ivImage.setImageBitmap(thumbnail)*/
     }
 
     private fun getOutputImageFile(): File {
