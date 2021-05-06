@@ -29,6 +29,7 @@ import kotlinx.coroutines.runBlocking
 import java.util.*
 import java.util.concurrent.CompletableFuture
 import java.util.concurrent.Future
+import kotlin.properties.Delegates
 
 
 class BluetoothActivity: AppCompatActivity() {
@@ -44,8 +45,9 @@ class BluetoothActivity: AppCompatActivity() {
     private lateinit var server: BluetoothServer
     private var service: BluetoothGTPService = BluetoothGTPService()
     private lateinit var btProbe: BluetoothProbe
-    private var foundDevices: MutableSet<BluetoothDevice>? = null
-    private lateinit var deviceInfo: MutableMap<BluetoothDevice, String>
+    private var foundDevices: MutableSet<BluetoothDevice>
+        by Delegates.observable(mutableSetOf(), onChange = {_, _, _ -> listFound()})
+    private var deviceInfo: MutableMap<BluetoothDevice, String> = mutableMapOf()
     private var isServer = false
 
     private val handler = Handler(Looper.getMainLooper()) {
@@ -89,10 +91,7 @@ class BluetoothActivity: AppCompatActivity() {
             startActivityForResult(enableIntent, REQUEST_ENABLE_BLUETOOTH)
         }
 
-        foundDevices = mutableSetOf()
-        deviceInfo = mutableMapOf()
         registerReceiver(receiver, IntentFilter(BluetoothDevice.ACTION_FOUND))
-
 
         implementListeners()
         BluetoothActivity.service = service
@@ -123,7 +122,6 @@ class BluetoothActivity: AppCompatActivity() {
                                 Log.d("FUTURES FUTURES FUTURES", "second part starting")
                                 deviceInfo[device] = it!!
                                 foundDevices!!.add(device)
-                                listFound()
                             }
 
                         } catch (e: Exception) {
