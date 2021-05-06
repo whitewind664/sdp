@@ -6,6 +6,7 @@ import android.bluetooth.BluetoothDevice
 import android.bluetooth.BluetoothSocket
 import android.content.*
 import android.content.pm.PackageManager
+import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -13,6 +14,7 @@ import android.util.Log
 import android.view.View
 import android.widget.*
 import android.widget.AdapterView.OnItemClickListener
+import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
@@ -25,6 +27,7 @@ import com.github.gogetters.letsgo.util.*
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import java.util.*
+import java.util.concurrent.CompletableFuture
 import java.util.concurrent.Future
 
 
@@ -99,6 +102,7 @@ class BluetoothActivity: AppCompatActivity() {
     // Handles found bluetooth devices
     private val receiver = object : BroadcastReceiver() {
 
+        @RequiresApi(Build.VERSION_CODES.N)
         override fun onReceive(context: Context, intent: Intent) {
             val action: String? = intent.action
 
@@ -112,14 +116,11 @@ class BluetoothActivity: AppCompatActivity() {
 
                     if (deviceName != null){
                         try {
-                            runBlocking {
-                                launch {
-                                    val info = btProbe.connect(device)
-
-                                    deviceInfo[device] = info
-                                    foundDevices!!.add(device)
-                                    listFound()
-                                }
+                            val futureInfo = CompletableFuture.supplyAsync { btProbe.connect(device) }
+                            val futureRest = futureInfo.thenApply {
+                                deviceInfo[device] = it!!
+                                foundDevices!!.add(device)
+                                listFound()
                             }
                         } catch (e: Exception) {
                             Log.d("BLUETOOTH","NON RUNNING DEVICE FOUND: $deviceName")
