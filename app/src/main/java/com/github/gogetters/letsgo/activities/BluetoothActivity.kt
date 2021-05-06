@@ -168,6 +168,8 @@ class BluetoothActivity: AppCompatActivity() {
                 putExtra(GameActivity.EXTRA_PLAYER_TYPES, arrayOf(remote, local))
             }
         }
+        Log.d("BLUETOOTH BLUETOOTH", "WE ARE SENDING A MOVE")
+        service.sendCommand(GTPCommand.GENMOVE(Stone.WHITE))
         startActivity(intent)
     }
 
