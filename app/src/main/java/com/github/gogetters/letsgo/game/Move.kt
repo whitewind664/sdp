@@ -14,6 +14,6 @@ data class Move(val stone: Stone, val point: Point) {
     }
 
     override fun toString(): String {
-        return "play $stone $point"
+        return "$stone $point"
     }
 }
