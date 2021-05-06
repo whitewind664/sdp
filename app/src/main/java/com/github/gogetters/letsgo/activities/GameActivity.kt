@@ -34,6 +34,7 @@ class GameActivity : AppCompatActivity() {
         //TODO get it from a socket in another activity??? static var???
 
         val bluetoothService = BluetoothActivity.service
+        bluetoothService.sendCommand(GTPCommand.GENMOVE(Stone.BLACK))
 
         val boardSize = Board.Size.withSize(gameSizeInput)
         goView = GoView(this, boardSize)
