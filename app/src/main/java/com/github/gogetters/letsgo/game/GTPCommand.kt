@@ -115,6 +115,10 @@ sealed class GTPCommand {
             val colorString = args[0]
             val pointString = args[1]
 
+            val color = Stone.fromString(colorString)
+            val point = Point.fromString(pointString)
+
+            return Move(color, point)
         }
     }
 }

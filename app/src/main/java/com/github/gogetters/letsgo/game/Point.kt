@@ -28,7 +28,6 @@ data class Point(val first: Int, val second: Int) {
     }
 
     companion object {
-        @ExperimentalStdlibApi
         fun fromString(string: String): Point {
             if (string.length != 2) {
                 throw IllegalArgumentException("Incorrectly formatted string")
@@ -38,7 +37,7 @@ data class Point(val first: Int, val second: Int) {
             val row = string[1]
             val colNumMaybeSkip = (col.toInt() - offsetASCII)
             val colNum = if (colNumMaybeSkip > skippedColumn) colNumMaybeSkip - 1 else colNumMaybeSkip
-            val rowNum = row.digitToInt()
+            val rowNum = row.toString().toInt()
 
             return Point(colNum, rowNum)
         }
