@@ -121,7 +121,7 @@ class BluetoothActivity: AppCompatActivity() {
                             }.thenAcceptAsync {
                                 Log.d("FUTURES FUTURES FUTURES", "second part starting")
                                 deviceInfo[device] = it!!
-                                foundDevices!!.add(device)
+                                foundDevices.add(device)
                             }
 
                         } catch (e: Exception) {
