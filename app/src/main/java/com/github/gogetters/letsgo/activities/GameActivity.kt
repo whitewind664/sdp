@@ -47,8 +47,8 @@ class GameActivity : AppCompatActivity() {
         val blackType = playerTypes!![0]
         val whiteType = playerTypes[1]
 
-        val blackPlayer = Player.playerOf(Stone.BLACK, whiteType, touchInputDelegate, bluetoothService)
-        val whitePlayer = Player.playerOf(Stone.WHITE, blackType, touchInputDelegate, bluetoothService)
+        val blackPlayer = Player.playerOf(Stone.BLACK, blackType, touchInputDelegate, bluetoothService)
+        val whitePlayer = Player.playerOf(Stone.WHITE, whiteType, touchInputDelegate, bluetoothService)
 
         game = Game(boardSize, komi, whitePlayer, blackPlayer)
 
