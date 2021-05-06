@@ -116,7 +116,11 @@ class BluetoothActivity: AppCompatActivity() {
 
                     if (deviceName != null) {
                         try {
-                            val futureInfo = CompletableFuture.supplyAsync { btProbe.connect(device) }.thenAcceptAsync {
+                            val futureInfo = CompletableFuture.supplyAsync {
+                                Log.d("FUTURES FUTURES FUTURES", "first part starting")
+                                btProbe.connect(device)
+                            }.thenAcceptAsync {
+                                Log.d("FUTURES FUTURES FUTURES", "second part starting")
                                 deviceInfo[device] = it!!
                                 foundDevices!!.add(device)
                                 listFound()
