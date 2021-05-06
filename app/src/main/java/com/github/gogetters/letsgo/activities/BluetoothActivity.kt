@@ -45,8 +45,7 @@ class BluetoothActivity: AppCompatActivity() {
     private lateinit var server: BluetoothServer
     private var service: BluetoothGTPService = BluetoothGTPService()
     private lateinit var btProbe: BluetoothProbe
-    private var foundDevices: MutableSet<BluetoothDevice>
-        by Delegates.observable(mutableSetOf(), onChange = {_, _, _ -> listFound()})
+    private var foundDevices: MutableSet<BluetoothDevice> = mutableSetOf()
     private var deviceInfo: MutableMap<BluetoothDevice, String> = mutableMapOf()
     private var isServer = false
 
