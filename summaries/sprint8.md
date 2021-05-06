@@ -9,7 +9,7 @@
 - To improve:
 
 ## Linder, Jan David
-- Done: I implemented a profile picture (either taken with the camera or chosen from the gallery) that is stored locally.
+- Done: I implemented a profile picture (either taken with the camera or chosen from the gallery) that is stored locally. Unfortunately I could not merge to main because the tests that work locally won't pass on Cirrus. We need to discuss that with the assistants.
 - Went well: I learned a lot about data exchange with the phone, Intents and permissions. This knowledge will be very useful for future Android programming
 - To improve: My time estimation was very bad. I didn't complete the whole task and even like that I worked > 10 hours. Next time I should be more careful with time estimation when entering into a new topic.
 
