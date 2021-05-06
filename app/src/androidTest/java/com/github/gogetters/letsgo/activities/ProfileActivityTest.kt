@@ -48,9 +48,6 @@ class ProfileActivityTest {
         if (waitButton.exists()) {
             waitButton.click()
         }
-
-        scenario = ActivityScenario.launch(intent)
-        acceptPermissions()
     }
 
     @After
@@ -61,29 +58,35 @@ class ProfileActivityTest {
 
     @Test
     fun dialogOpensOnProfileClick() {
+        scenario = ActivityScenario.launch(intent)
         onView(withId(R.id.profile_imageView_image)).perform(click())
         onView(withText(R.string.profile_dialogTitle)).check(matches(isDisplayed()))
     }
 
     @Test
     fun cameraIntentIsFired() {
+        scenario = ActivityScenario.launch(intent)
         onView(withId(R.id.profile_imageView_image)).perform(click())
         //onView(withText(R.string.profile_takePicture)).perform(click())
         clickAtIndex(0, "Take Picture")
+        acceptPermissions()
         Intents.intended(IntentMatchers.hasAction(MediaStore.ACTION_IMAGE_CAPTURE))
     }
 
     @Test
     fun galleryIntentIsFired() {
+        scenario = ActivityScenario.launch(intent)
         onView(withId(R.id.profile_imageView_image)).perform(click())
 
         //onView(withText(R.string.profile_chooseFromGallery)).perform(click())
         clickAtIndex(1, "Choose from Gallery")
+        acceptPermissions()
         Intents.intended(IntentMatchers.hasAction(Intent.ACTION_CHOOSER))
     }
 
     @Test
     fun profilePictureDialogDisappearsOnCancel() {
+        scenario = ActivityScenario.launch(intent)
         onView(withId(R.id.profile_imageView_image)).perform(click())
         //onView(withText(R.string.profile_cancel)).perform(click())
         clickAtIndex(2, "Cancel")
