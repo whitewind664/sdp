@@ -143,6 +143,7 @@ class BluetoothActivity: AppCompatActivity() {
                 }
                 Toast.makeText(applicationContext, "Establishing Connection", Toast.LENGTH_SHORT).show()
                 client.connect(serverDevice, service)
+                service.sendCommand(GTPCommand.GENMOVE(Stone.BLACK))
             }
     }
 
@@ -153,7 +154,6 @@ class BluetoothActivity: AppCompatActivity() {
 
     fun sendMessage(v: View?) {
         val string = writeMsg!!.text.toString()
-        service.sendCommand(GTPCommand.GENMOVE(Stone.BLACK))
     }
 
 
