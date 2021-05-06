@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.widget.Button
 import androidx.appcompat.app.AppCompatActivity
 import com.github.gogetters.letsgo.R
+import com.github.gogetters.letsgo.game.Player
 
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -16,6 +17,8 @@ class MainActivity : AppCompatActivity() {
             val intent = Intent(this, GameActivity::class.java).apply {
                 putExtra(GameActivity.EXTRA_GAME_SIZE, 9)
                 putExtra(GameActivity.EXTRA_KOMI, 5.5)
+                val localType = Player.PlayerTypes.LOCAL.name
+                putExtra(GameActivity.EXTRA_PLAYER_TYPES, arrayOf(localType, localType))
             }
             startActivity(intent)
         }

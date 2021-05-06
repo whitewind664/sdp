@@ -19,9 +19,9 @@ interface Player {
                      bluetoothGTPService: BluetoothGTPService): Player {
 
             return when(type) {
-                "LOCAL" -> LocalPlayer(color, touchInputDelegate)
-                "BTREMOTE" -> BluetoothRemotePlayer(color, BluetoothInputDelegate(bluetoothGTPService))
-                "BTLOCAL" -> BluetoothLocalPlayer(LocalPlayer(color, touchInputDelegate), bluetoothGTPService)
+                PlayerTypes.LOCAL.name -> LocalPlayer(color, touchInputDelegate)
+                PlayerTypes.BTREMOTE.name -> BluetoothRemotePlayer(color, BluetoothInputDelegate(bluetoothGTPService))
+                PlayerTypes.BTLOCAL.name -> BluetoothLocalPlayer(LocalPlayer(color, touchInputDelegate), bluetoothGTPService)
                 else -> throw IllegalArgumentException("INVALID PLAYER TYPE")
             }
         }

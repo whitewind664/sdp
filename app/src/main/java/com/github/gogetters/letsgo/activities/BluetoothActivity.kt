@@ -19,6 +19,7 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.github.gogetters.letsgo.R
 import com.github.gogetters.letsgo.game.GTPCommand
+import com.github.gogetters.letsgo.game.Player
 import com.github.gogetters.letsgo.game.Stone
 import com.github.gogetters.letsgo.util.*
 import kotlinx.coroutines.launch
@@ -42,6 +43,7 @@ class BluetoothActivity: AppCompatActivity() {
     private lateinit var btProbe: BluetoothProbe
     private var foundDevices: MutableSet<BluetoothDevice>? = null
     private lateinit var deviceInfo: MutableMap<BluetoothDevice, String>
+    private lateinit var isServer: Boolean
 
     private val handler = Handler(Looper.getMainLooper()) {
         when (it.what) {
@@ -144,6 +146,7 @@ class BluetoothActivity: AppCompatActivity() {
                 }
                 Toast.makeText(applicationContext, "Establishing Connection", Toast.LENGTH_SHORT).show()
                 client.connect(serverDevice, service)
+                isServer = false
             }
     }
 
@@ -154,6 +157,18 @@ class BluetoothActivity: AppCompatActivity() {
 
     fun sendMessage(v: View?) {
         val string = writeMsg!!.text.toString()
+        val intent = Intent(this, GameActivity::class.java).apply {
+            putExtra(GameActivity.EXTRA_GAME_SIZE, 9)
+            putExtra(GameActivity.EXTRA_KOMI, 5.5)
+            val local = Player.PlayerTypes.BTLOCAL.name
+            val remote = Player.PlayerTypes.BTREMOTE.name
+            if (isServer) {
+                putExtra(GameActivity.EXTRA_PLAYER_TYPES, arrayOf(local, remote))
+            } else {
+                putExtra(GameActivity.EXTRA_PLAYER_TYPES, arrayOf(remote, local))
+            }
+        }
+        startActivity(intent)
     }
 
 
@@ -166,6 +181,7 @@ class BluetoothActivity: AppCompatActivity() {
 
         server = BluetoothServer(handler)
         server.connect(service)
+        isServer = true
     }
 
     /**
