@@ -3,12 +3,11 @@ package com.github.gogetters.letsgo.util
 import android.bluetooth.BluetoothAdapter
 import android.bluetooth.BluetoothDevice
 import android.bluetooth.BluetoothSocket
-import android.os.Handler
 import android.util.Log
 import java.io.IOException
 import java.util.*
 
-class BluetoothClient(val handler: Handler) {
+class BluetoothClient {
 
     private val bluetoothAdapter = BluetoothAdapter.getDefaultAdapter()
     private lateinit var connectThread: ConnectThread

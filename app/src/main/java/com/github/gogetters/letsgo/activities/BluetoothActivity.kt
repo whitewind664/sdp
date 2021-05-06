@@ -123,7 +123,7 @@ class BluetoothActivity: AppCompatActivity() {
     private fun implementListeners() {
       listView!!.onItemClickListener =
             OnItemClickListener { adapterView, view, i, l ->
-                client = BluetoothClient(handler)
+                client = BluetoothClient()
                 val deviceName = adapterView.adapter.getItem(i) as String
                 var serverDevice: BluetoothDevice? = null
 
