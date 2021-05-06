@@ -112,12 +112,15 @@ class BluetoothActivity: AppCompatActivity() {
 
                     if (deviceName != null){
                         try {
+                            runBlocking {
+                                launch {
+                                    val info = btProbe.connect(device)
 
-                            val info = btProbe.connect(device)
-
-                            deviceInfo[device] = info
-                            foundDevices!!.add(device)
-                            listFound()
+                                    deviceInfo[device] = info
+                                    foundDevices!!.add(device)
+                                    listFound()
+                                }
+                            }
                         } catch (e: Exception) {
                             Log.d("BLUETOOTH","NON RUNNING DEVICE FOUND: $deviceName")
                         }
