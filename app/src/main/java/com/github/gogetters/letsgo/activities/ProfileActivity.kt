@@ -13,6 +13,7 @@ import android.os.Bundle
 import android.os.Environment
 import android.provider.MediaStore
 import android.util.Log
+import android.widget.Button
 import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
@@ -72,6 +73,21 @@ class ProfileActivity : ActivityCompat.OnRequestPermissionsResultCallback, Fireb
         profileImage.setOnClickListener {
             selectImage()
         }
+        
+        // Open friend list with button!
+        val friendListButton = findViewById<Button>(R.id.profile_show_friend_list_button)
+        friendListButton.setOnClickListener {
+            val firebaseUser = FirebaseAuth.getInstance().currentUser
+
+            if (firebaseUser != null) {
+                val intent = Intent(this, FriendListActivity::class.java)
+//                    .apply {
+////                    putExtra(FriendListActivity.EXTRA_USER_UID, firebaseUser.uid)
+//                }
+                startActivity(intent)
+            }
+        }
+
 
         updateUI()
     }
@@ -89,12 +105,12 @@ class ProfileActivity : ActivityCompat.OnRequestPermissionsResultCallback, Fireb
     }
 
     private fun updateUI() {
-        val authInstance: FirebaseUser? = FirebaseAuth.getInstance().currentUser
+        val firebaseUser: FirebaseUser? = FirebaseAuth.getInstance().currentUser
 
-        if (authInstance == null) {
+        if (firebaseUser == null) {
             // TODO Don't let the user see this screen without having successfully completed sign-in.
         } else {
-            val userBundle = UserBundle(authInstance)
+            val userBundle = UserBundle(firebaseUser)
 
             userBundle.letsGo.downloadUserData().addOnCompleteListener {
                 nameText.text = userBundle.letsGo.first

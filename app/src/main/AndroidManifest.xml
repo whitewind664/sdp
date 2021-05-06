@@ -27,17 +27,16 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.LetsGo">
+        <activity android:name=".activities.FriendListActivity"></activity>
         <activity
             android:name=".activities.TutorialActivity"
-            android:label="@string/title_activity_tutorial">
-        </activity>
+            android:label="@string/title_activity_tutorial"></activity>
         <activity
             android:name=".activities.ChatActivity"
-            android:label="@string/title_activity_chat">
-        </activity>
+            android:label="@string/title_activity_chat"></activity>
         <activity
             android:name=".activities.BluetoothActivity"
-            android:exported="true"></activity>
+            android:exported="true" />
         <activity
             android:name=".activities.GameActivity"
             android:label="@string/title_activity_game" />
