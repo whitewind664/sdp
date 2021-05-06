@@ -114,14 +114,14 @@ class BluetoothActivity: AppCompatActivity() {
                             intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE)!!
                     val deviceName = device.name
 
-                    if (deviceName != null){
+                    if (deviceName != null) {
                         try {
-                            val futureInfo = CompletableFuture.supplyAsync { btProbe.connect(device) }
-                            val futureRest = futureInfo.thenApply {
+                            val futureInfo = CompletableFuture.supplyAsync { btProbe.connect(device) }.thenAcceptAsync {
                                 deviceInfo[device] = it!!
                                 foundDevices!!.add(device)
                                 listFound()
                             }
+
                         } catch (e: Exception) {
                             Log.d("BLUETOOTH","NON RUNNING DEVICE FOUND: $deviceName")
                         }
