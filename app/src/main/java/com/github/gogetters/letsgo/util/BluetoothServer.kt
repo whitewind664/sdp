@@ -54,8 +54,8 @@ class BluetoothServer(val handler: Handler) {
                     var timeout = false
                     val time = Calendar.getInstance().time
                     while (!(service as BluetoothPingService).receivedPing) {
-                        val diff = Calendar.getInstance().time - time
-                        if (diff - time > 2000) {
+                        val diff = Calendar.getInstance().time.time - time.time
+                        if (diff > 2000) {
                             break
                         }
                     }
