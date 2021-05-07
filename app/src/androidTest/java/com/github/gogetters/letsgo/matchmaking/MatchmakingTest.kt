@@ -24,7 +24,7 @@ public class MatchmakingTest {
         Database.goOffline()
 
         val auth = Firebase.auth
-        auth.signInWithEmailAndPassword("test@test.com", "test")
+        auth.signInWithEmailAndPassword("test@test.com", "password")
                 .addOnCompleteListener {
                     Matchmaking.findMatch {  }
 
