@@ -27,9 +27,9 @@ class MatchmakingTest {
         auth.signInWithEmailAndPassword("test@test.com", "test")
             .addOnCompleteListener {
                 Matchmaking.findMatch {  }
-            }
 
-        Database.purgeOutstandingWrites()
-        Database.goOnline()
+                Database.purgeOutstandingWrites()
+                Database.goOnline()
+            }
     }
 }
