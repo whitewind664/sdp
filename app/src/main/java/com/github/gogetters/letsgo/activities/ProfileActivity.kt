@@ -116,7 +116,7 @@ class ProfileActivity() : ActivityCompat.OnRequestPermissionsResultCallback, Fir
             // TODO Don't let the user see this screen without having successfully completed sign-in.
         } else {
             val user = userBundle.getUser()
-            user. downloadUserData().addOnCompleteListener {
+            user.downloadUserData().addOnCompleteListener {
                 nameText.text = user.first
                 emailText.text = userBundle.getEmail()
                 cityCountyText.text = "${user.city}, ${user.country}"
