@@ -20,6 +20,9 @@
     <string name="title_activity_maps">Map</string>
     <string name="title_activity_game">Game</string>
     <string name="title_activity_chat">Chat</string>
+    <string name="title_activity_tutorial">Tutorial</string>
+    <string name="title_activity_profile">Profile</string>
+    <string name="title_activity_firebaseui">Login</string>
 
     <!-- Strings for tutorial -->
     <string name="tutorial_intro">Congrats for wanting to learn Go, a great strategic game! We have good news for you: Even though Go is hard to master, learning the basic rules is really easy and you will be able to play your first game very soon!</string>
@@ -72,7 +75,6 @@
     <string name="hello_world">Hello Square World!</string>
     <string name="chat">Chat</string>
     <string name="email">Email</string>
-    <string name="title_activity_tutorial">Tutorial</string>
     <!-- Strings used for fragments for navigation -->
     <string name="next">Next</string>
     <string name="previous">Previous</string>

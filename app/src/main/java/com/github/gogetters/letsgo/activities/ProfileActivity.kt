@@ -17,6 +17,7 @@ import android.widget.Button
 import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.FileProvider
 import com.github.gogetters.letsgo.R
@@ -30,7 +31,7 @@ import java.text.SimpleDateFormat
 import java.util.*
 
 
-class ProfileActivity() : ActivityCompat.OnRequestPermissionsResultCallback, FirebaseUIActivity() {
+class ProfileActivity() : ActivityCompat.OnRequestPermissionsResultCallback, AppCompatActivity() {
     companion object {
         // Codes used when creating a permission request. Used in the onRequestPermissionResult handler.
         private const val READ_EXTERNAL_STORAGE_PERMISSION_REQUEST_CODE: Int = 2
@@ -113,7 +114,8 @@ class ProfileActivity() : ActivityCompat.OnRequestPermissionsResultCallback, Fir
         val userBundle: UserBundle? = userBundleProvider.getUserBundle()
 
         if (userBundle == null) {
-            // TODO Don't let the user see this screen without having successfully completed sign-in.
+            // Don't let the user see this screen without having successfully completed sign-in.
+            dispatchLoginIntent()
         } else {
             val user = userBundle.getUser()
             user.downloadUserData().addOnCompleteListener {
@@ -171,6 +173,11 @@ class ProfileActivity() : ActivityCompat.OnRequestPermissionsResultCallback, Fir
             true -> dispatchCameraIntent()
             false -> dispatchGalleryIntent()
         }
+    }
+
+    private fun dispatchLoginIntent() {
+        val intent = Intent(this, FirebaseUIActivity::class.java)
+        startActivity(intent)
     }
 
     private fun dispatchCameraIntent() {
