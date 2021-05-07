@@ -1,9 +1,13 @@
+---
+# Summary for week 0
+---
+
 ## Bajraktarov, Dimitar
 - Done:
 - Went well:
 - To improve:
 
-## Horvath-Mikulas, Szabina (Scrum Master)
+## Horvath-Mikulas, Szabina
 - Done:
 - Went well:
 - To improve:

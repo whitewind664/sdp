@@ -1,7 +1,11 @@
+---
+# Summary for week 8
+---
+
 ## Bajraktarov, Dimitar
-- Done:
-- Went well:
-- To improve:
+- Done: Set up connecting 2 players to an activity so they can play online
+- Went well: Actually writing the code
+- To improve: Fixing cirrus issues still takes more time than actually writing the code
 
 ## Horvath-Mikulas, Szabina (Scrum Master)
 - Done:
