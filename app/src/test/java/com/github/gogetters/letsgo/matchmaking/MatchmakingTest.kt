@@ -1,5 +1,6 @@
 package com.github.gogetters.letsgo.matchmaking
 
+import com.github.gogetters.letsgo.database.Database
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import org.junit.Test
@@ -20,10 +21,15 @@ class MatchmakingTest {
 
     @Test
     fun findMatchWorks() {
+        Database.goOffline()
+
         val auth = Firebase.auth
         auth.signInWithEmailAndPassword("test@test.com", "test")
             .addOnCompleteListener {
                 Matchmaking.findMatch {  }
             }
+
+        Database.purgeOutstandingWrites()
+        Database.goOnline()
     }
 }
