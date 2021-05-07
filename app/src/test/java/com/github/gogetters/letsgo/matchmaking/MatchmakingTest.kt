@@ -1,5 +1,7 @@
 package com.github.gogetters.letsgo.matchmaking
 
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.ktx.Firebase
 import org.junit.Test
 import org.junit.Assert.assertTrue
 import kotlin.math.abs
@@ -14,5 +16,14 @@ class MatchmakingTest {
         val (newRating1, newRating2) = Matchmaking.eloChange(rating1, rating2, 1)
         assertTrue(abs(newRating1 - 1207.2) < 0.1)
         assertTrue(abs(newRating2 - 992.8) < 0.1)
+    }
+
+    @Test
+    fun findMatchWorks() {
+        val auth = Firebase.auth
+        auth.signInWithEmailAndPassword("test@test.com", "test")
+            .addOnCompleteListener {
+                Matchmaking.findMatch {  }
+            }
     }
 }
