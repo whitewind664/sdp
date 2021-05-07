@@ -8,6 +8,8 @@
     <string name="scoreTitleText">Score</string>
     <string name="scoreDefaultText">0</string>
 
+    <string name="main_findMatch">Find match</string>
+
     <string name="my_profile">My Profile</string>
     <string name="go">Go</string>
     <string name="user_name">User Name</string>
@@ -19,6 +21,7 @@
 
     <string name="title_activity_maps">Map</string>
     <string name="title_activity_game">Game</string>
+    <string name="title_activity_onlineGame">Online Game</string>
     <string name="title_activity_chat">Chat</string>
 
     <!-- Strings for tutorial -->

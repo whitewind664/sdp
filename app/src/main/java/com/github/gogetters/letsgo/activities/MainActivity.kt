@@ -2,13 +2,9 @@ package com.github.gogetters.letsgo.activities
 
 import android.content.Intent
 import android.os.Bundle
-import android.view.Menu
 import android.widget.Button
-import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.widget.Toolbar
 import com.github.gogetters.letsgo.R
-import com.google.android.material.bottomnavigation.LabelVisibilityMode
-import kotlinx.android.synthetic.main.activity_main.*
+import com.github.gogetters.letsgo.matchmaking.Matchmaking
 
 class MainActivity : BaseActivity() {
 
@@ -25,6 +21,18 @@ class MainActivity : BaseActivity() {
         profileButton.setOnClickListener {
             val intent = Intent(this, ProfileActivity::class.java)
             startActivity(intent)
+        }
+
+        val findMatchButton = findViewById<Button>(R.id.main_button_findMatch)
+        findMatchButton.setOnClickListener {
+            mapButton.isEnabled = false
+            profileButton.isEnabled = false
+            findMatchButton.isEnabled = false
+            Matchmaking.findMatch { gameId ->
+                val intent = Intent(this, OnlineGameActivity::class.java)
+                intent.putExtra(OnlineGameActivity.GAME_ID, gameId)
+                startActivity(intent)
+            }
         }
 
     }

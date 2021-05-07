@@ -17,7 +17,7 @@ class Database {
     companion object {
 
         init {
-            Firebase.database.setPersistenceEnabled(true)
+//            Firebase.database.setPersistenceEnabled(true)
         }
 
         private val db = Firebase.database
@@ -56,7 +56,7 @@ class Database {
         // ---- [START} Matchmaking  ----
 
 
-        fun findMatch(playerId: String, playerRating: Int) {
+        fun findMatch(playerId: String) {
             // TODO improve to match players according to rating
             database.child("matchmaking")
                 .runTransaction(object : Transaction.Handler {
@@ -69,6 +69,8 @@ class Database {
                             currentData.child("currentlyWaiting").value = null
                             val gameId = database.child("matchmaking").child("games").push().key
                             currentData.child("games").child("$gameId").value = gameData
+                            currentData.child("currentGamesPerUser").child(gameData.player1).value = gameId
+                            currentData.child("currentGamesPerUser").child(gameData.player2).value = gameId
                         }
                         return Transaction.success(currentData)
                     }
@@ -78,7 +80,9 @@ class Database {
                         committed: Boolean,
                         currentData: DataSnapshot?
                     ) {
-                        Log.d("Database::findMatch", "msg")
+                        if (error != null) {
+                            Log.d("Database::findMatch", error.toString())
+                        }
                     }
                 })
         }
@@ -156,7 +160,8 @@ class Database {
             }
         }
 
-        fun addEventListener(databaseReference: DatabaseReference, onDataChange: (DataSnapshot) -> Unit, onCancelled: (DatabaseError) -> Unit): ValueEventListener {
+        fun addEventListener(path: String, onDataChange: (DataSnapshot) -> Unit, onCancelled: (DatabaseError) -> Unit): ValueEventListener {
+            val databaseReference = db.getReference(path)
             val listener = object : ValueEventListener {
                 override fun onDataChange(snapshot: DataSnapshot) {
                     onDataChange(snapshot)
