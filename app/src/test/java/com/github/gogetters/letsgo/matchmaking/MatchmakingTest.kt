@@ -18,18 +18,4 @@ class MatchmakingTest {
         assertTrue(abs(newRating1 - 1207.2) < 0.1)
         assertTrue(abs(newRating2 - 992.8) < 0.1)
     }
-
-    @Test
-    fun findMatchWorks() {
-        Database.goOffline()
-
-        val auth = Firebase.auth
-        auth.signInWithEmailAndPassword("test@test.com", "test")
-            .addOnCompleteListener {
-                Matchmaking.findMatch {  }
-
-                Database.purgeOutstandingWrites()
-                Database.goOnline()
-            }
-    }
 }
