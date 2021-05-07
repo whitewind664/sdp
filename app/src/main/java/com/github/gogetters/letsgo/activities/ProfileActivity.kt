@@ -2,6 +2,7 @@ package com.github.gogetters.letsgo.activities
 
 import android.content.Intent
 import android.os.Bundle
+import android.widget.Button
 import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
@@ -28,6 +29,21 @@ class ProfileActivity : FirebaseUIActivity() {
         nameText = findViewById(R.id.profile_textView_name)
         emailText = findViewById(R.id.profile_textView_email)
         cityCountyText = findViewById(R.id.profile_textView_cityCountry)
+
+        // Open friend list with button!
+        val friendListButton = findViewById<Button>(R.id.profile_show_friend_list_button)
+        friendListButton.setOnClickListener {
+            val firebaseUser = FirebaseAuth.getInstance().currentUser
+
+            if (firebaseUser != null) {
+                val intent = Intent(this, FriendListActivity::class.java)
+//                    .apply {
+////                    putExtra(FriendListActivity.EXTRA_USER_UID, firebaseUser.uid)
+//                }
+                startActivity(intent)
+            }
+        }
+
         saveButton = findViewById(R.id.profile_imageButton_save)
 
         updateUI()
@@ -41,12 +57,12 @@ class ProfileActivity : FirebaseUIActivity() {
     }
 
     private fun updateUI() {
-        val authInstance: FirebaseUser? = FirebaseAuth.getInstance().currentUser
+        val firebaseUser: FirebaseUser? = FirebaseAuth.getInstance().currentUser
 
-        if (authInstance == null) {
+        if (firebaseUser == null) {
             // TODO Don't let the user see this screen without having successfully completed sign-in.
         } else {
-            val userBundle = UserBundle(authInstance)
+            val userBundle = UserBundle(firebaseUser)
 
             userBundle.letsGo.downloadUserData().addOnCompleteListener {
                 nameText!!.text = userBundle.letsGo.first

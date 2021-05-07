@@ -33,8 +33,8 @@ class Database {
             return db.getReference(ref).get()
         }
 
-        fun updateData() {
-            // TODO Maybe Implement this!
+        fun updateData(ref: String, data: Map<String, Any?>): Task<Void> {
+            return db.getReference(ref).updateChildren(data)
         }
 
         fun deleteData(ref: String): Task<Void> {
