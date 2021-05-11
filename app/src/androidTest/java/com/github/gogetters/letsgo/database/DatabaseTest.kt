@@ -19,20 +19,7 @@ import org.junit.BeforeClass
  * See [testing documentation](http://d.android.com/tools/testing).
  */
 @RunWith(AndroidJUnit4::class)
-class DatabaseTest {
-    companion object {
-        @BeforeClass @JvmStatic
-        fun databaseSetup() {
-            val appContext = InstrumentationRegistry.getInstrumentation().targetContext
-            FirebaseApp.initializeApp(appContext)
-            Database.emulatorSettings()
-        }
-    }
-
-    @Before
-    fun cleanDatabase() {
-        Database.flushRealtimeDatabase()
-    }
+class DatabaseTest: EmulatedFirebaseTest() {
 
     @Test
     fun disableLocationSharingDoesntThrow() {

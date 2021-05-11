@@ -26,6 +26,9 @@ class Database {
             db.reference
         }
 
+        var isEmulated = false
+            get() = field
+
         // TODO write database functions here
 
         fun emulatorSettings() {

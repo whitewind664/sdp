@@ -12,7 +12,7 @@ import org.junit.runners.MethodSorters
 
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 @RunWith(AndroidJUnit4::class)
-class LetsGoUserTest {
+class LetsGoUserTest: EmulatedFirebaseTest() {
 
     private val TAG = "FirestoreTest"
     private val TEST_UID = "tESTuID"

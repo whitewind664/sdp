@@ -6,13 +6,14 @@ import androidx.test.ext.junit.rules.ActivityScenarioRule
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.github.gogetters.letsgo.R
 import com.github.gogetters.letsgo.chat.ChatMessage
+import com.github.gogetters.letsgo.database.EmulatedFirebaseTest
 import junit.framework.Assert.*
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 
 @RunWith(AndroidJUnit4::class)
-class ChatActivityTest {
+class ChatActivityTest: EmulatedFirebaseTest() {
     @get:Rule
     var activityRule = ActivityScenarioRule(ChatActivity::class.java)
 
