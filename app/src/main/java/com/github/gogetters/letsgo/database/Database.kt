@@ -41,7 +41,9 @@ class Database {
         fun flushRealtimeDatabase() {
             // With a DatabaseReference, write null to clear the database.
             // NEVER USE IN PRODUCTION
-            Tasks.await(db.reference.setValue(null))
+            if (isEmulated) {
+                Tasks.await(db.reference.setValue(null))
+            }
         }
 
         fun writeData(ref: String, data:Any?): Task<Void> {
