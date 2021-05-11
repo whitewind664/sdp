@@ -32,7 +32,8 @@ check_android_task:
       chmod +x ./cc-test-reporter
       ./cc-test-reporter before-build
   prepare_firebase_emulator_script: |
-    curl -sL firebase.tools | bash
+    ./scripts/install_firebase_tools.sh
+#    curl -sL firebase.tools | bash
   check_script:
 #    ./gradlew check connectedCheck
     firebase emulators:exec "./scripts/check.sh"
