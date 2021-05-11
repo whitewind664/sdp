@@ -94,10 +94,10 @@ class LetsGoUserTest: EmulatedFirebaseTest() {
         Tasks.await(user3.deleteFriend(user))
     }
 
-    @Test
-    fun eTestCheckUserExists() {
-        Tasks.await(user.requireUserExists())
-    }
+//    @Test
+//    fun eTestCheckUserExists() {
+//        Tasks.await(user.requireUserExists())
+//    }
 
     @Test
     fun eTestDownloadFriends() {
