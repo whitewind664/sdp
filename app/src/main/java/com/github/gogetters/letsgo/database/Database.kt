@@ -35,6 +35,7 @@ class Database {
             // 10.0.2.2 is the special IP address to connect to the 'localhost' of
             // the host computer from an Android emulator.
             db.useEmulator("10.0.2.2", 9000)
+            isEmulated = true
         }
 
         fun flushRealtimeDatabase() {
