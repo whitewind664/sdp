@@ -12,10 +12,10 @@ check_android_task:
     cpu: 8
     memory: 10G
   firebase_emulator_cache:
-    folder: "~/.cache/firebase/emulators/"
+    folder: "/root/.cache/firebase/emulators/"
   prepare_firebase_emulator_script: |
-    cat ./scripts/install_firebase_tools.sh | bash
-  #    curl -sL firebase.tools | bash
+    chmod +x ./scripts/install_firebase_tools.sh
+    ./scripts/install_firebase_tools.sh
   create_device_script:
     echo no | avdmanager create avd --force --name test --abi "$TARGET/$ARCH" --package "system-images;android-$API_LEVEL;$TARGET;$ARCH"
   start_emulator_background_script:
@@ -36,6 +36,7 @@ check_android_task:
       ./cc-test-reporter before-build
   check_script:
 #    ./gradlew check connectedCheck
+    chmod +x ./scripts/check.sh
     firebase emulators:exec "./scripts/check.sh"
   report_codeclimate_script: |
     export JACOCO_SOURCE_PATH=app/src/main/java/
