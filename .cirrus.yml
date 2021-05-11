@@ -13,6 +13,9 @@ check_android_task:
     memory: 10G
   firebase_emulator_cache:
     folder: "~/.cache/firebase/emulators/"
+  prepare_firebase_emulator_script: |
+    cat ./scripts/install_firebase_tools.sh | bash
+  #    curl -sL firebase.tools | bash
   create_device_script:
     echo no | avdmanager create avd --force --name test --abi "$TARGET/$ARCH" --package "system-images;android-$API_LEVEL;$TARGET;$ARCH"
   start_emulator_background_script:
@@ -31,9 +34,6 @@ check_android_task:
       curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
       chmod +x ./cc-test-reporter
       ./cc-test-reporter before-build
-  prepare_firebase_emulator_script: |
-    ./scripts/install_firebase_tools.sh
-#    curl -sL firebase.tools | bash
   check_script:
 #    ./gradlew check connectedCheck
     firebase emulators:exec "./scripts/check.sh"
