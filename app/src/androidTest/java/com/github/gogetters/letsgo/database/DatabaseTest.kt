@@ -6,9 +6,12 @@ import com.google.android.gms.tasks.Tasks
 import com.google.firebase.FirebaseApp
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.runBlocking
+import org.junit.After
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.junit.Assert.assertEquals
+import org.junit.Before
+import org.junit.BeforeClass
 
 /**
  * Instrumented test, which will execute on an Android device.
@@ -18,11 +21,17 @@ import org.junit.Assert.assertEquals
 @RunWith(AndroidJUnit4::class)
 class DatabaseTest {
     companion object {
-        init {
+        @BeforeClass
+        fun databaseSetup() {
             val appContext = InstrumentationRegistry.getInstrumentation().targetContext
             FirebaseApp.initializeApp(appContext)
             Database.emulatorSettings()
         }
+    }
+
+    @Before
+    fun cleanDatabase() {
+        Database.flushRealtimeDatabase()
     }
 
     @Test
@@ -58,8 +67,6 @@ class DatabaseTest {
 
     @Test
     fun writeValue() {
-        Database.flushRealtimeDatabase()
-
         var done = 0
 
         Database.writeValue("fakepath", "fakeval", {
@@ -80,8 +87,6 @@ class DatabaseTest {
 
     @Test
     fun refFunctions() {
-        Database.flushRealtimeDatabase()
-
         Tasks.await(Database.writeData("/test/test/test", "test"))
         Tasks.await(Database.readData("/test/test/test"))
         Tasks.await(Database.deleteData("/test/test/test"))
@@ -90,8 +95,6 @@ class DatabaseTest {
     // ---- [START} Matchmaking  ----
     @Test
     fun matchmakingPairsTwoPlayers() {
-        Database.flushRealtimeDatabase()
-
         var canContinue = false
 
         Database.findMatch("fakePlayer1", 1) { _, _, _ ->
