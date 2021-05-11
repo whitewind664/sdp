@@ -14,3 +14,7 @@
 .cxx
 local.properties
 .idea
+/ui-debug.log
+/storage-debug.log
+/database-debug.log
+/firebase-debug.log

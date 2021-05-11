@@ -17,7 +17,7 @@ class Database {
     companion object {
 
         init {
-            Firebase.database.setPersistenceEnabled(true)
+//            Firebase.database.setPersistenceEnabled(true)
         }
 
         private val db = Firebase.database
