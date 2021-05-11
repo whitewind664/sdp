@@ -18,3 +18,4 @@ local.properties
 /storage-debug.log
 /database-debug.log
 /firebase-debug.log
+/authentication-debug.log
