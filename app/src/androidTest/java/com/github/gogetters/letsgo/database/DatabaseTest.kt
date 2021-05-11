@@ -21,7 +21,7 @@ import org.junit.BeforeClass
 @RunWith(AndroidJUnit4::class)
 class DatabaseTest {
     companion object {
-        @BeforeClass
+        @BeforeClass @JvmStatic
         fun databaseSetup() {
             val appContext = InstrumentationRegistry.getInstrumentation().targetContext
             FirebaseApp.initializeApp(appContext)
