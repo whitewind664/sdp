@@ -36,7 +36,7 @@ check_android_task:
       ./cc-test-reporter before-build
   check_script: |
       chmod +x ./scripts/check.sh
-      firebase emulators:exec "./scripts/check.sh
+      firebase emulators:exec "./scripts/check.sh"
   report_codeclimate_script: |
     export JACOCO_SOURCE_PATH=app/src/main/java/
     ./cc-test-reporter format-coverage ./app/build/reports/jacoco/jacocoTestReport/jacocoTestReport.xml --input-type jacoco
