@@ -14,14 +14,14 @@ import android.os.Environment
 import android.provider.MediaStore
 import android.util.Log
 import android.widget.Button
-import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.FileProvider
+import androidx.core.net.toUri
 import com.github.gogetters.letsgo.R
-import com.github.gogetters.letsgo.database.user.FirebaseUserBundleProvider
+import com.github.gogetters.letsgo.database.CloudStorage
 import com.github.gogetters.letsgo.database.user.UserBundle
 import com.github.gogetters.letsgo.database.user.UserBundleProvider
 import com.github.gogetters.letsgo.util.PermissionUtils
@@ -31,7 +31,7 @@ import java.text.SimpleDateFormat
 import java.util.*
 
 
-class ProfileActivity() : ActivityCompat.OnRequestPermissionsResultCallback, AppCompatActivity() {
+class ProfileActivity : ActivityCompat.OnRequestPermissionsResultCallback, AppCompatActivity() {
     companion object {
         // Codes used when creating a permission request. Used in the onRequestPermissionResult handler.
         private const val READ_EXTERNAL_STORAGE_PERMISSION_REQUEST_CODE: Int = 2
@@ -83,19 +83,20 @@ class ProfileActivity() : ActivityCompat.OnRequestPermissionsResultCallback, App
         // Open friend list with button!
         val friendListButton = findViewById<Button>(R.id.profile_show_friend_list_button)
         friendListButton.setOnClickListener {
-            val firebaseUser = FirebaseAuth.getInstance().currentUser
+            val userBundle = userBundleProvider.getUserBundle()
 
-            if (firebaseUser != null) {
+            if (userBundle != null) {
+                val user = userBundle.getUser()
                 val intent = Intent(this, FriendListActivity::class.java)
 //                    .apply {
-////                    putExtra(FriendListActivity.EXTRA_USER_UID, firebaseUser.uid)
+////                    putExtra(FriendListActivity.EXTRA_USER_UID, user.uid)
 //                }
                 startActivity(intent)
             }
         }
 
-
         updateUI()
+
     }
 
 
@@ -117,12 +118,19 @@ class ProfileActivity() : ActivityCompat.OnRequestPermissionsResultCallback, App
             // Don't let the user see this screen without having successfully completed sign-in.
             dispatchLoginIntent()
         } else {
-            val user = userBundle.getUser()
+            var user = userBundle.getUser()
             user.downloadUserData().addOnCompleteListener {
                 nameText.text = user.first
                 emailText.text = userBundle.getEmail()
                 cityCountyText.text = "${user.city}, ${user.country}"
+                if (user.profileImageRef != null) {
+                    val file = File.createTempFile("images", "jpg")
+                    CloudStorage.downloadFile("images/${user.profileImageRef}", file).addOnSuccessListener {
+                        profileImage.setImageURI(file.toUri())
+                    }
+                }
             }
+
         }
     }
 
@@ -207,6 +215,9 @@ class ProfileActivity() : ActivityCompat.OnRequestPermissionsResultCallback, App
 
     private fun onCameraResult(data: Intent?) {
         profileImage.setImageURI(profilePictureUri)
+        // store the uri for the user
+        userBundleProvider.getUserBundle()!!.getUser().profileImageUri = profilePictureUri
+        storeImageOnCloud(profilePictureUri)
     }
 
     private fun getOutputImageFile(): File {
@@ -228,10 +239,26 @@ class ProfileActivity() : ActivityCompat.OnRequestPermissionsResultCallback, App
                         val bitmap = ImageDecoder.decodeBitmap(source)
                         profileImage.setImageBitmap(bitmap)
                     }
+                    // store the uri for the user
+                    userBundleProvider.getUserBundle()!!.getUser().profileImageUri = it
+                    storeImageOnCloud(it)
                 }
             } catch (e: Exception) {
                 e.printStackTrace()
             }
+        }
+    }
+
+    private fun storeImageOnCloud(pictureUri: Uri) {
+        val ref = pictureUri.lastPathSegment
+        CloudStorage.uploadFile("images/${ref}", pictureUri).addOnSuccessListener {
+            val user = userBundleProvider.getUserBundle()!!.getUser()
+            user.profileImageRef = ref
+            user.uploadUserData()
+            Log.e("PROFILE_PIC", "SUCCESS")
+        }.addOnFailureListener {
+            it.printStackTrace()
+            Log.e("PROFILE_PIC", "FAIL")
         }
     }
 }

@@ -1,6 +1,7 @@
 package com.github.gogetters.letsgo.database.user
 
 import android.graphics.Bitmap
+import android.net.Uri
 import android.util.Log
 import com.github.gogetters.letsgo.database.Database
 import com.google.android.gms.tasks.Task
@@ -19,9 +20,10 @@ class LetsGoUser(val uid: String, val db: Database.Companion = Database) {
     var city: String? = null
     var country: String? = null
 
-    // Might have to change the type of these fields
-    var profileImage: Bitmap? = null
-    private var profileImageUrl: String? = null
+    // The uri of the local file containing the profile picture - is different on every device
+    var profileImageUri: Uri? = null
+    // The reference (== address) of the profile picture on cloud storage
+    var profileImageRef: String? = null
 
     private var friends: EnumMap<FriendStatus, MutableList<LetsGoUser>>? = null
 
@@ -56,7 +58,8 @@ class LetsGoUser(val uid: String, val db: Database.Companion = Database) {
             "first" to first,
             "last" to last,
             "city" to city,
-            "country" to country
+            "country" to country,
+            "profilePictureRef" to profileImageRef
         )
 
         // Add a new document with user's uid
@@ -82,6 +85,7 @@ class LetsGoUser(val uid: String, val db: Database.Companion = Database) {
                         "last" -> last = attribute.value as String
                         "city" -> city = attribute.value as String
                         "country" -> country = attribute.value as String
+                        "profilePictureRef" -> profileImageRef = attribute.value as String
                     }
                 }
             }
@@ -109,7 +113,7 @@ class LetsGoUser(val uid: String, val db: Database.Companion = Database) {
     override fun toString(): String {
         // TODO Maybe improve this?
 
-        return "LetsGoUser(uid=$uid, nick=$nick, first=$first, last=$last, city=$city, country=$country)"
+        return "LetsGoUser(uid=$uid, nick=$nick, first=$first, last=$last, city=$city, country=$country, profileImageRef=$profileImageRef)"
     }
 
     //===========================================================================================
