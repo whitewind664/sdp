@@ -4,6 +4,9 @@ import android.util.Log
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.github.gogetters.letsgo.database.user.LetsGoUser
 import com.google.android.gms.tasks.Tasks
+import io.mockk.every
+import io.mockk.mockkObject
+import io.mockk.verify
 import org.junit.Before
 import org.junit.FixMethodOrder
 import org.junit.Ignore
@@ -110,6 +113,18 @@ class LetsGoUserTest {
             Log.d(TAG, "status=$status \t${user2.listFriendsByStatus(status)}")
         }
         Log.d(TAG, "------------------------------------------------------------")
+    }
+
+    @Test
+    fun aaDeleteUserNotCallingStorageOnNull() {
+        mockkObject(Database)
+        mockkObject(CloudStorage)
+        val uid = "0"
+        //every { Database.deleteData("users/$uid") } returns
+        val user = LetsGoUser(uid)
+        user.profileImageRef = null
+        user.deleteUserData()
+        verify(exactly = 0) { CloudStorage.deleteFile("") }
     }
 
     @Ignore("We can remove this later")

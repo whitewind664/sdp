@@ -211,7 +211,6 @@ class ProfileActivity : ActivityCompat.OnRequestPermissionsResultCallback, AppCo
     private fun onCameraResult(data: Intent?) {
         profileImage.setImageURI(profilePictureUri)
         // store the uri for the user
-        userBundleProvider.getUserBundle()!!.getUser().profileImageUri = profilePictureUri
         storeImageOnCloud(profilePictureUri)
     }
 
@@ -235,7 +234,6 @@ class ProfileActivity : ActivityCompat.OnRequestPermissionsResultCallback, AppCo
                         profileImage.setImageBitmap(bitmap)
                     }
                     // store the uri for the user
-                    userBundleProvider.getUserBundle()!!.getUser().profileImageUri = it
                     storeImageOnCloud(it)
                 }
             } catch (e: Exception) {

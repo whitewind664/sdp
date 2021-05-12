@@ -21,8 +21,6 @@ class LetsGoUser(val uid: String, val db: Database.Companion = Database, val clo
     var city: String? = null
     var country: String? = null
 
-    // The uri of the local file containing the profile picture - is different on every device
-    var profileImageUri: Uri? = null
     // The reference (== address) of the profile picture on cloud storage
     var profileImageRef: String? = null
 
@@ -117,7 +115,6 @@ class LetsGoUser(val uid: String, val db: Database.Companion = Database, val clo
 
     override fun toString(): String {
         // TODO Maybe improve this?
-
         return "LetsGoUser(uid=$uid, nick=$nick, first=$first, last=$last, city=$city, country=$country, profileImageRef=$profileImageRef)"
     }
 

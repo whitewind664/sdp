@@ -14,7 +14,7 @@ import java.io.File
  * files, e.g., pictures.
  * For explanations of how Cloud Storage works, see https://firebase.google.com/docs/storage/android/start
  */
-class CloudStorage {
+class CloudStorage() {
     companion object {
         private val storage = Firebase.storage
 
@@ -34,6 +34,9 @@ class CloudStorage {
             return storage.getReference(ref).getFile(localFile)
         }
 
+        /**
+         * Deletes the file of the given reference
+         */
         fun deleteFile(ref: String): Task<Void> {
             return storage.getReference(ref).delete()
         }
