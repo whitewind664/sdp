@@ -1,6 +1,7 @@
 package com.github.gogetters.letsgo.database
 
 import android.net.Uri
+import com.google.android.gms.tasks.Task
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.FileDownloadTask
 import com.google.firebase.storage.UploadTask
@@ -31,6 +32,10 @@ class CloudStorage {
          */
         fun downloadFile(ref: String, localFile: File): FileDownloadTask {
             return storage.getReference(ref).getFile(localFile)
+        }
+
+        fun deleteFile(ref: String): Task<Void> {
+            return storage.getReference(ref).delete()
         }
     }
 }

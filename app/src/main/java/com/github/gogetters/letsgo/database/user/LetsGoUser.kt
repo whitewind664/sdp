@@ -3,6 +3,7 @@ package com.github.gogetters.letsgo.database.user
 import android.graphics.Bitmap
 import android.net.Uri
 import android.util.Log
+import com.github.gogetters.letsgo.database.CloudStorage
 import com.github.gogetters.letsgo.database.Database
 import com.google.android.gms.tasks.Task
 import com.google.android.gms.tasks.Tasks
@@ -13,7 +14,7 @@ import kotlin.collections.ArrayList
 // I know we could use a data class or something but LetsGoUser's functioning is complex and this
 // approach just works so I will stick to it!
 // Db is an optional argument to allow for testing!
-class LetsGoUser(val uid: String, val db: Database.Companion = Database) {
+class LetsGoUser(val uid: String, val db: Database.Companion = Database, val cloud: CloudStorage.Companion = CloudStorage) {
     var nick: String? = null
     var first: String? = null
     var last: String? = null
@@ -76,7 +77,7 @@ class LetsGoUser(val uid: String, val db: Database.Companion = Database) {
      * Downloads this User's data to the DB. Returns a task to track progress and etc.
      */
     fun downloadUserData(): Task<Unit> {
-        return Database.readData(userPath)
+        return db.readData(userPath)
             .continueWith {
                 for (attribute in it.result.children) {
                     when (attribute.key) {
@@ -101,7 +102,11 @@ class LetsGoUser(val uid: String, val db: Database.Companion = Database) {
      * Deletes this User's data from the DB. Returns a task to track progress and etc.
      */
     fun deleteUserData(): Task<Void> {
-        return Database.deleteData(userPath)
+        // delete the profile picture
+        if(profileImageRef != null) {
+            cloud.deleteFile(profileImageRef!!)
+        }
+        return db.deleteData(userPath)
             .addOnSuccessListener {
                 Log.d(tag, "LetsGoUser successfully deleted!")
             }

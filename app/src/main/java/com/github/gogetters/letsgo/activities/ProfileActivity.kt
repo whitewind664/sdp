@@ -33,6 +33,8 @@ import java.util.*
 
 class ProfileActivity : ActivityCompat.OnRequestPermissionsResultCallback, AppCompatActivity() {
     companion object {
+        const val PROFILE_PICTURE_PREFIX_CLOUD = "profileImage/"
+
         // Codes used when creating a permission request. Used in the onRequestPermissionResult handler.
         private const val READ_EXTERNAL_STORAGE_PERMISSION_REQUEST_CODE: Int = 2
         private const val WRITE_EXTERNAL_STORAGE_PERMISSION_REQUEST_CODE: Int = 3
@@ -96,7 +98,6 @@ class ProfileActivity : ActivityCompat.OnRequestPermissionsResultCallback, AppCo
         }
 
         updateUI()
-
     }
 
 
@@ -123,14 +124,8 @@ class ProfileActivity : ActivityCompat.OnRequestPermissionsResultCallback, AppCo
                 nameText.text = user.first
                 emailText.text = userBundle.getEmail()
                 cityCountyText.text = "${user.city}, ${user.country}"
-                if (user.profileImageRef != null) {
-                    val file = File.createTempFile("images", "jpg")
-                    CloudStorage.downloadFile("images/${user.profileImageRef}", file).addOnSuccessListener {
-                        profileImage.setImageURI(file.toUri())
-                    }
-                }
+                getProfileImageFromCloud(user.profileImageRef)
             }
-
         }
     }
 
@@ -251,14 +246,26 @@ class ProfileActivity : ActivityCompat.OnRequestPermissionsResultCallback, AppCo
 
     private fun storeImageOnCloud(pictureUri: Uri) {
         val ref = pictureUri.lastPathSegment
-        CloudStorage.uploadFile("images/${ref}", pictureUri).addOnSuccessListener {
+        CloudStorage.uploadFile("$PROFILE_PICTURE_PREFIX_CLOUD${ref}", pictureUri).addOnSuccessListener {
             val user = userBundleProvider.getUserBundle()!!.getUser()
-            user.profileImageRef = ref
+            // delete old profile picture
+            if (user.profileImageRef != null) {
+                CloudStorage.deleteFile(PROFILE_PICTURE_PREFIX_CLOUD + user.profileImageRef!!)
+            }
+            // store new profile picture
+            user.profileImageRef = PROFILE_PICTURE_PREFIX_CLOUD + ref
             user.uploadUserData()
-            Log.e("PROFILE_PIC", "SUCCESS")
         }.addOnFailureListener {
             it.printStackTrace()
-            Log.e("PROFILE_PIC", "FAIL")
+        }
+    }
+
+    private fun getProfileImageFromCloud(ref: String?) {
+        if (ref != null) {
+            val file = getOutputImageFile()
+            CloudStorage.downloadFile("$PROFILE_PICTURE_PREFIX_CLOUD$ref", file).addOnSuccessListener {
+                profileImage.setImageURI(file.toUri())
+            }
         }
     }
 }
