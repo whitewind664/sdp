@@ -21,9 +21,9 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.FileProvider
 import com.github.gogetters.letsgo.R
-import com.github.gogetters.letsgo.database.FirebaseUserBundleProvider
-import com.github.gogetters.letsgo.database.UserBundle
-import com.github.gogetters.letsgo.database.UserBundleProvider
+import com.github.gogetters.letsgo.database.user.FirebaseUserBundleProvider
+import com.github.gogetters.letsgo.database.user.UserBundle
+import com.github.gogetters.letsgo.database.user.UserBundleProvider
 import com.github.gogetters.letsgo.util.PermissionUtils
 import com.google.firebase.auth.FirebaseAuth
 import java.io.File

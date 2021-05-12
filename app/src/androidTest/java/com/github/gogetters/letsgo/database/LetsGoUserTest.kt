@@ -2,6 +2,7 @@ package com.github.gogetters.letsgo.database
 
 import android.util.Log
 import androidx.test.ext.junit.runners.AndroidJUnit4
+import com.github.gogetters.letsgo.database.user.LetsGoUser
 import com.google.android.gms.tasks.Tasks
 import org.junit.Before
 import org.junit.FixMethodOrder
