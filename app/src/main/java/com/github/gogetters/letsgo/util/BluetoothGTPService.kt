@@ -15,7 +15,11 @@ import java.io.OutputStream
 class BluetoothGTPService: BluetoothService() {
 
     override val handler = Handler(Looper.getMainLooper()) {
-        parseCommand(it.obj as ByteArray)
+        if (it.what == MESSAGE_READ) {
+            parseCommand(it.obj as ByteArray)
+        } else {
+            true
+        }
     }
 
     lateinit var inputDelegate: BluetoothInputDelegate

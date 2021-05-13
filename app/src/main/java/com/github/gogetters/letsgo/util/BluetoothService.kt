@@ -97,9 +97,9 @@ abstract class BluetoothService {
     }
 
     companion object {
-        private const val MESSAGE_READ: Int = 0
-        private const val MESSAGE_WRITE: Int = 1
-        private const val MESSAGE_TOAST: Int = 2
+        internal const val MESSAGE_READ: Int = 0
+        internal const val MESSAGE_WRITE: Int = 1
+        internal const val MESSAGE_TOAST: Int = 2
         internal const val PING = "PING"
         private const val TAG = "Bluetooth Service"
     }
