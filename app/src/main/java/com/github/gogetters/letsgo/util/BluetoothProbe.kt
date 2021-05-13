@@ -1,6 +1,6 @@
 package com.github.gogetters.letsgo.util
 
-import android.bluetooth.BluetoothAdapter
+
 import android.bluetooth.BluetoothDevice
 import android.bluetooth.BluetoothSocket
 import java.util.*
