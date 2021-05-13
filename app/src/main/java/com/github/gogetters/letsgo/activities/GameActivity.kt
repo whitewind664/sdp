@@ -44,6 +44,7 @@ class GameActivity : AppCompatActivity() {
         boardFrame.addView(goView)
 
         //TODO use different delegate depending on which type of Player
+        //TODO change playerTypes to a Pair??
         val blackType = playerTypes!![0]
         val whiteType = playerTypes[1]
 
