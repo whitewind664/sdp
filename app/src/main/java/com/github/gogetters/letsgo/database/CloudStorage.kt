@@ -14,7 +14,7 @@ import java.io.File
  * files, e.g., pictures.
  * For explanations of how Cloud Storage works, see https://firebase.google.com/docs/storage/android/start
  */
-class CloudStorage() {
+class CloudStorage {
     companion object {
         private val storage = Firebase.storage
 

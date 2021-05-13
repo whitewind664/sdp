@@ -51,7 +51,7 @@ import java.io.IOException
 @RunWith(AndroidJUnit4::class)
 class ProfileActivityTest {
     val GRANT_PERMISSION_BUTTON_INDEX = 0
-    val DELAY = 3000L
+    val DELAY = 5000L
 
     val intent = Intent(ApplicationProvider.getApplicationContext(), ProfileActivity::class.java).putExtra("UserBundleProvider", MockUserBundleProvider())
 
@@ -68,6 +68,10 @@ class ProfileActivityTest {
     @Before
     fun init() {
         Intents.init()
+        clickWaitButton()
+    }
+
+    private fun clickWaitButton() {
         val device = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation())
         var waitButton = device.findObject(UiSelector().textContains("wait"))
         if (waitButton.exists()) {
@@ -84,6 +88,7 @@ class ProfileActivityTest {
     @Test
     fun dialogOpensOnProfileClick() {
         scenario = ActivityScenario.launch(intent)
+        clickWaitButton()
         sleep()
         onView(withId(R.id.profile_imageView_image)).perform(click())
         onView(withText(R.string.profile_dialogTitle)).check(matches(isDisplayed()))
@@ -92,6 +97,7 @@ class ProfileActivityTest {
     @Test
     fun cameraIntentIsFired() {
         scenario = ActivityScenario.launch(intent)
+        clickWaitButton()
         sleep()
         onView(withId(R.id.profile_imageView_image)).perform(click())
         clickAtIndex(0, "Take Picture")
@@ -102,6 +108,7 @@ class ProfileActivityTest {
     @Test
     fun galleryIntentIsFired() {
         scenario = ActivityScenario.launch(intent)
+        clickWaitButton()
         sleep()
         onView(withId(R.id.profile_imageView_image)).perform(click())
 
@@ -114,15 +121,16 @@ class ProfileActivityTest {
     @Test
     fun profilePictureDialogDisappearsOnCancel() {
         scenario = ActivityScenario.launch(intent)
+        clickWaitButton()
         sleep()
         onView(withId(R.id.profile_imageView_image)).perform(click())
-        //onView(withText(R.string.profile_cancel)).perform(click())
         clickAtIndex(2, "Cancel")
     }
 
     //@Test doesn't work
     fun gallerySelectionIsWellPlaced() {
         scenario = ActivityScenario.launch(intent)
+        clickWaitButton()
         scenario.onActivity {
             savePickedImage(it)
             val imgGalleryResult = createImageGallerySetResultStub(it)
@@ -138,6 +146,7 @@ class ProfileActivityTest {
     //@Test doesn't work
     fun capturedImageIsWellPlaced() {
         scenario = ActivityScenario.launch(intent)
+        clickWaitButton()
         scenario.onActivity {
             val imgCaptureResult = createImageCaptureActivityResultStub(it)
             intending(hasAction(MediaStore.ACTION_IMAGE_CAPTURE)).respondWith(imgCaptureResult)
