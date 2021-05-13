@@ -11,7 +11,9 @@
 ## Linder, Jan David (Scrum Master)
 
 ## Protopapas, Kimon Dimitrios
-
+Done this week: finally finished Bluetooth gameplay
+Went well: extremely efficient pair programming with Erik, we know the Bluetooth code well now
+To improve: more tests
 
 ## Roust, Michael Murad
 
