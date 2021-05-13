@@ -39,6 +39,7 @@ class BluetoothGTPService: BluetoothService() {
             if (commandString == PING) {
                 receivedPing = true
                 sendCommand(GTPCommand.CLEAR_BOARD)
+                Log.d("BLUETOOTHGTPSERVICE", "CONNECTED")
                 return true
             }
 
