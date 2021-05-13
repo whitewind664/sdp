@@ -25,4 +25,8 @@ class TouchInputDelegate: InputDelegate {
         savedInput.add(input)
     }
 
+    fun clearInput() {
+        savedInput.clear()
+    }
+
 }
