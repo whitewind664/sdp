@@ -47,5 +47,9 @@ class CloudStorage {
             storage.getReference(ref).delete().addOnSuccessListener { future.complete(Unit) }.addOnFailureListener { future.completeExceptionally(DatabaseException()) }
             return future
         }
+
+        fun convertTaskToFuture(task: Task<Any>) {
+
+        }
     }
 }
