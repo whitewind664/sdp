@@ -191,6 +191,8 @@ class BluetoothActivity : AppCompatActivity() {
      * search for BT devices
      */
     private fun search() {
+        foundDevices.clear()
+        listFound()
         showLocationPermission()
         btProbe = BluetoothProbe()
         Toast.makeText(applicationContext, getString(R.string.search_bt), Toast.LENGTH_SHORT).show()
