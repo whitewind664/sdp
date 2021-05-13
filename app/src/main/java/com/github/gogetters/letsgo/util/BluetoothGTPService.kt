@@ -29,25 +29,23 @@ class BluetoothGTPService: BluetoothService() {
 
     private fun parseCommand(bytes: ByteArray): Boolean {
         try {
-            val commandString =  if (bytes.indexOf(0) == -1) {
+            val commandString = if (bytes.indexOf(0) == -1) {
                 String(bytes)
             } else {
                 bytes.decodeToString(0, bytes.indexOf(0))
             }
 
-            Log.d("Bluetooth GTP Service", "Received command: $commandString")
-            receivedPing = commandString == PING || receivedPing
+            Log.d("BLUETOOTHGTPSERVICE", "RECEIVED COMMAND $commandString")
             if (commandString == PING) {
                 receivedPing = true
+                sendCommand(GTPCommand.CLEAR_BOARD)
                 return true
             }
 
-            val command = GTPCommand.toCommand(commandString)
-
-            if (command is GTPCommand.PLAY) {
-                inputDelegate.saveLatestInput(command.move.point)
-            } else if (command is GTPCommand.GENMOVE) {
-                //TODO figure out what to do here??? not sure
+            when (val command = GTPCommand.toCommand(commandString)) {
+                is GTPCommand.PLAY -> inputDelegate.saveLatestInput(command.move.point)
+                is GTPCommand.GENMOVE -> return true
+                else -> return false
             }
 
         } catch (e: Error) { //TODO figure out what exception bytes.toString() would throw
