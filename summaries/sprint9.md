@@ -9,7 +9,9 @@
 
 
 ## Linder, Jan David
-
+Done: I implemented the profile picture such that it is stored on the CloudStorage and linked to a user. As I had some more times, I tried to work on better tests for services like the database and CloudStorage, but unfortunately I lost a lot of time because mockito is really not easy to use in instrumented android tests. Therefore, it was impossible to mock Tasks, hence I needed to convert those to futures.
+Went well: I managed to finish last weeks task quite quickly.
+To improved: I missed a stand-up meeting - this should not happen!
 ## Protopapas, Kimon Dimitrios
 Done this week: finally finished Bluetooth gameplay
 Went well: extremely efficient pair programming with Erik, we know the Bluetooth code well now
