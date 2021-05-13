@@ -21,7 +21,7 @@ class ImageStorageService {
                     CloudStorage.deleteFile(ProfileActivity.PROFILE_PICTURE_PREFIX_CLOUD + user.profileImageRef!!)
                 }
                 // store new profile picture
-                user.profileImageRef = referencePrefix + ref
+                user.profileImageRef = ref
                 user.uploadUserData()
             }
         }
