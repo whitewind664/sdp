@@ -49,7 +49,6 @@ class ProfileActivity : ActivityCompat.OnRequestPermissionsResultCallback, AppCo
     }
 
     private lateinit var userBundleProvider: UserBundleProvider
-    private lateinit var imageStorageService: ImageStorageService
 
     private lateinit var uploadImageText: TextView
     private lateinit var profileImage: ImageView
@@ -73,7 +72,6 @@ class ProfileActivity : ActivityCompat.OnRequestPermissionsResultCallback, AppCo
         setContentView(R.layout.activity_profile)
 
         userBundleProvider = intent.getSerializableExtra("UserBundleProvider") as UserBundleProvider
-        imageStorageService = ImageStorageService()
 
         uploadImageText = findViewById(R.id.profile_textView_uploadImageHint)
         profileImage = findViewById(R.id.profile_imageView_image)
@@ -127,7 +125,7 @@ class ProfileActivity : ActivityCompat.OnRequestPermissionsResultCallback, AppCo
                 nameText.text = user.first
                 emailText.text = userBundle.getEmail()
                 cityCountyText.text = "${user.city}, ${user.country}"
-                imageStorageService.getProfileImageFromCloud(user.profileImageRef,getOutputImageFile(), profileImage)
+                ImageStorageService.getProfileImageFromCloud(PROFILE_PICTURE_PREFIX_CLOUD, user.profileImageRef,getOutputImageFile(), profileImage)
             }
         }
     }
@@ -214,7 +212,7 @@ class ProfileActivity : ActivityCompat.OnRequestPermissionsResultCallback, AppCo
     private fun onCameraResult(data: Intent?) {
         profileImage.setImageURI(profilePictureUri)
         // store the uri for the user
-        imageStorageService.storeProfileImageOnCloud(
+        ImageStorageService.storeProfileImageOnCloud(
                 userBundleProvider.getUserBundle()!!.getUser(),
                 profilePictureUri,
                 PROFILE_PICTURE_PREFIX_CLOUD
@@ -241,7 +239,7 @@ class ProfileActivity : ActivityCompat.OnRequestPermissionsResultCallback, AppCo
                         profileImage.setImageBitmap(bitmap)
                     }
                     // store the uri for the user
-                    imageStorageService.storeProfileImageOnCloud(
+                    ImageStorageService.storeProfileImageOnCloud(
                             userBundleProvider.getUserBundle()!!.getUser(),
                             it,
                             PROFILE_PICTURE_PREFIX_CLOUD

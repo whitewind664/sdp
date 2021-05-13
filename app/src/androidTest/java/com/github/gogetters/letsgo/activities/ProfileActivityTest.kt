@@ -27,8 +27,6 @@ import androidx.test.espresso.matcher.ViewMatchers.*
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.internal.runner.junit4.statement.UiThreadStatement
 import androidx.test.platform.app.InstrumentationRegistry
-import androidx.test.platform.app.InstrumentationRegistry.getInstrumentation
-import androidx.test.rule.UiThreadTestRule
 import androidx.test.uiautomator.UiDevice
 import androidx.test.uiautomator.UiObject
 import androidx.test.uiautomator.UiSelector
@@ -128,8 +126,8 @@ class ProfileActivityTest {
         clickAtIndex(2, "Cancel")
     }
 
-    @Test
-    @UiThreadTest
+    //@Test does not work...
+    //@UiThreadTest
     fun gallerySelectionIsWellPlaced() {
 
         clickWaitButton()

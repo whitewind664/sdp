@@ -7,6 +7,7 @@ import com.google.firebase.storage.FileDownloadTask
 import com.google.firebase.storage.UploadTask
 import com.google.firebase.storage.ktx.storage
 import java.io.File
+import java.util.concurrent.CompletableFuture
 
 
 /**
@@ -23,22 +24,28 @@ class CloudStorage {
          * @param ref: The path where we want to store the file on storage
          * @param uri: the uri of the local file
          */
-        fun uploadFile(ref: String, uri: Uri): UploadTask {
-            return storage.getReference(ref).putFile(uri)
+        fun uploadFile(ref: String, uri: Uri): CompletableFuture<Unit> {
+            val future = CompletableFuture<Unit>()
+            storage.getReference(ref).putFile(uri).addOnSuccessListener { future.complete(Unit) }.addOnFailureListener {future.completeExceptionally(DatabaseException())}
+            return future
         }
 
         /**
          * Tries to download a file from the storage and store it in the given local file.
          */
-        fun downloadFile(ref: String, localFile: File): FileDownloadTask {
-            return storage.getReference(ref).getFile(localFile)
+        fun downloadFile(ref: String, localFile: File): CompletableFuture<Unit> {
+            val future = CompletableFuture<Unit>()
+            storage.getReference(ref).getFile(localFile).addOnSuccessListener { future.complete(Unit) }.addOnFailureListener { future.completeExceptionally(DatabaseException())}
+            return future
         }
 
         /**
          * Deletes the file of the given reference
          */
-        fun deleteFile(ref: String): Task<Void> {
-            return storage.getReference(ref).delete()
+        fun deleteFile(ref: String): CompletableFuture<Unit> {
+            val future = CompletableFuture<Unit>()
+            storage.getReference(ref).delete().addOnSuccessListener { future.complete(Unit) }.addOnFailureListener { future.completeExceptionally(DatabaseException()) }
+            return future
         }
     }
 }
