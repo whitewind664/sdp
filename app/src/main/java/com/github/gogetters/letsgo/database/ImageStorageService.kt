@@ -18,7 +18,7 @@ class ImageStorageService {
             CloudStorage.uploadFile("$referencePrefix${ref}", pictureUri).thenAccept {
                 // delete old profile picture
                 if (user.profileImageRef != null) {
-                    CloudStorage.deleteFile(ProfileActivity.PROFILE_PICTURE_PREFIX_CLOUD + user.profileImageRef!!)
+                    CloudStorage.deleteFile(referencePrefix + user.profileImageRef!!)
                 }
                 // store new profile picture
                 user.profileImageRef = ref

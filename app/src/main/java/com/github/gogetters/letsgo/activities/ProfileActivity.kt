@@ -212,11 +212,7 @@ class ProfileActivity : ActivityCompat.OnRequestPermissionsResultCallback, AppCo
     private fun onCameraResult(data: Intent?) {
         profileImage.setImageURI(profilePictureUri)
         // store the uri for the user
-        ImageStorageService.storeProfileImageOnCloud(
-                userBundleProvider.getUserBundle()!!.getUser(),
-                profilePictureUri,
-                PROFILE_PICTURE_PREFIX_CLOUD
-        )
+        ImageStorageService.storeProfileImageOnCloud(userBundleProvider.getUserBundle()!!.getUser(), profilePictureUri, PROFILE_PICTURE_PREFIX_CLOUD)
     }
 
     private fun getOutputImageFile(): File {
@@ -239,11 +235,7 @@ class ProfileActivity : ActivityCompat.OnRequestPermissionsResultCallback, AppCo
                         profileImage.setImageBitmap(bitmap)
                     }
                     // store the uri for the user
-                    ImageStorageService.storeProfileImageOnCloud(
-                            userBundleProvider.getUserBundle()!!.getUser(),
-                            it,
-                            PROFILE_PICTURE_PREFIX_CLOUD
-                    )
+                    ImageStorageService.storeProfileImageOnCloud(userBundleProvider.getUserBundle()!!.getUser(), it, PROFILE_PICTURE_PREFIX_CLOUD)
                 }
             } catch (e: Exception) {
                 e.printStackTrace()
