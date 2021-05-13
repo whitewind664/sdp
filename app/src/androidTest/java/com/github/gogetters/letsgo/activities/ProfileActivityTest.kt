@@ -8,10 +8,10 @@ import android.graphics.BitmapFactory
 import android.net.Uri
 import android.os.Bundle
 import android.os.Parcelable
-import android.provider.ContactsContract
 import android.provider.MediaStore
 import android.view.View
 import android.widget.ImageView
+import androidx.test.annotation.UiThreadTest
 import androidx.test.core.app.ActivityScenario
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.espresso.Espresso.onView
@@ -20,23 +20,21 @@ import androidx.test.espresso.action.ViewActions.click
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.intent.Intents
 import androidx.test.espresso.intent.Intents.intending
-import androidx.test.espresso.intent.matcher.IntentMatchers
 import androidx.test.espresso.intent.matcher.IntentMatchers.hasAction
 import androidx.test.espresso.matcher.BoundedMatcher
 import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.espresso.matcher.ViewMatchers.*
-import androidx.test.ext.junit.rules.ActivityScenarioRule
 import androidx.test.ext.junit.runners.AndroidJUnit4
+import androidx.test.internal.runner.junit4.statement.UiThreadStatement
 import androidx.test.platform.app.InstrumentationRegistry
-import androidx.test.rule.ActivityTestRule
+import androidx.test.platform.app.InstrumentationRegistry.getInstrumentation
+import androidx.test.rule.UiThreadTestRule
 import androidx.test.uiautomator.UiDevice
 import androidx.test.uiautomator.UiObject
 import androidx.test.uiautomator.UiSelector
 import com.github.gogetters.letsgo.R
 import com.github.gogetters.letsgo.activities.mocking.MockUserBundleProvider
-import kotlinx.android.synthetic.main.activity_profile.view.*
 import org.hamcrest.Description
-import org.hamcrest.Matchers.not
 import org.junit.After
 import org.junit.Before
 import org.junit.Rule
@@ -68,6 +66,7 @@ class ProfileActivityTest {
     @Before
     fun init() {
         Intents.init()
+        scenario = ActivityScenario.launch(intent)
         clickWaitButton()
     }
 
@@ -129,14 +128,17 @@ class ProfileActivityTest {
         clickAtIndex(2, "Cancel")
     }
 
-    //@Test doesn't work
+    @Test
+    @UiThreadTest
     fun gallerySelectionIsWellPlaced() {
-        scenario = ActivityScenario.launch(intent)
+
         clickWaitButton()
         scenario.onActivity {
-            savePickedImage(it)
-            val imgGalleryResult = createImageGallerySetResultStub(it)
-            intending(hasAction(Intent.ACTION_CHOOSER)).respondWith(imgGalleryResult)
+            UiThreadStatement.runOnUiThread {
+                savePickedImage(it)
+                val imgGalleryResult = createImageGallerySetResultStub(it)
+                intending(hasAction(Intent.ACTION_CHOOSER)).respondWith(imgGalleryResult)
+            }
             //auctionPhotos_CreationInitialUI()
             onView(withId(R.id.profile_imageView_image)).perform(click())
             clickAtIndex(1, "Choose from Gallery")
@@ -207,7 +209,7 @@ class ProfileActivityTest {
 
     // the following helper methods were adapted from https://proandroiddev.com/testing-camera-and-galley-intents-with-espresso-218eb9f59da9
     private fun savePickedImage(activity: Activity) {
-        val bm = BitmapFactory.decodeResource(activity.resources, R.mipmap.ic_launcher)
+        val bm = BitmapFactory.decodeResource(activity.resources, R.drawable.black)
         val dir = activity.externalCacheDir
         val file = File(dir?.path, "pickImageResult.jpeg")
         val outStream: FileOutputStream?

@@ -22,6 +22,7 @@ import androidx.core.content.FileProvider
 import androidx.core.net.toUri
 import com.github.gogetters.letsgo.R
 import com.github.gogetters.letsgo.database.CloudStorage
+import com.github.gogetters.letsgo.database.ImageStorageService
 import com.github.gogetters.letsgo.database.user.UserBundle
 import com.github.gogetters.letsgo.database.user.UserBundleProvider
 import com.github.gogetters.letsgo.util.PermissionUtils
@@ -48,6 +49,7 @@ class ProfileActivity : ActivityCompat.OnRequestPermissionsResultCallback, AppCo
     }
 
     private lateinit var userBundleProvider: UserBundleProvider
+    private lateinit var imageStorageService: ImageStorageService
 
     private lateinit var uploadImageText: TextView
     private lateinit var profileImage: ImageView
@@ -71,6 +73,7 @@ class ProfileActivity : ActivityCompat.OnRequestPermissionsResultCallback, AppCo
         setContentView(R.layout.activity_profile)
 
         userBundleProvider = intent.getSerializableExtra("UserBundleProvider") as UserBundleProvider
+        imageStorageService = ImageStorageService()
 
         uploadImageText = findViewById(R.id.profile_textView_uploadImageHint)
         profileImage = findViewById(R.id.profile_imageView_image)
@@ -124,7 +127,7 @@ class ProfileActivity : ActivityCompat.OnRequestPermissionsResultCallback, AppCo
                 nameText.text = user.first
                 emailText.text = userBundle.getEmail()
                 cityCountyText.text = "${user.city}, ${user.country}"
-                getProfileImageFromCloud(user.profileImageRef)
+                imageStorageService.getProfileImageFromCloud(user.profileImageRef,getOutputImageFile(), profileImage)
             }
         }
     }
@@ -211,7 +214,11 @@ class ProfileActivity : ActivityCompat.OnRequestPermissionsResultCallback, AppCo
     private fun onCameraResult(data: Intent?) {
         profileImage.setImageURI(profilePictureUri)
         // store the uri for the user
-        storeImageOnCloud(profilePictureUri)
+        imageStorageService.storeProfileImageOnCloud(
+                userBundleProvider.getUserBundle()!!.getUser(),
+                profilePictureUri,
+                PROFILE_PICTURE_PREFIX_CLOUD
+        )
     }
 
     private fun getOutputImageFile(): File {
@@ -234,35 +241,14 @@ class ProfileActivity : ActivityCompat.OnRequestPermissionsResultCallback, AppCo
                         profileImage.setImageBitmap(bitmap)
                     }
                     // store the uri for the user
-                    storeImageOnCloud(it)
+                    imageStorageService.storeProfileImageOnCloud(
+                            userBundleProvider.getUserBundle()!!.getUser(),
+                            it,
+                            PROFILE_PICTURE_PREFIX_CLOUD
+                    )
                 }
             } catch (e: Exception) {
                 e.printStackTrace()
-            }
-        }
-    }
-
-    private fun storeImageOnCloud(pictureUri: Uri) {
-        val ref = pictureUri.lastPathSegment
-        CloudStorage.uploadFile("$PROFILE_PICTURE_PREFIX_CLOUD${ref}", pictureUri).addOnSuccessListener {
-            val user = userBundleProvider.getUserBundle()!!.getUser()
-            // delete old profile picture
-            if (user.profileImageRef != null) {
-                CloudStorage.deleteFile(PROFILE_PICTURE_PREFIX_CLOUD + user.profileImageRef!!)
-            }
-            // store new profile picture
-            user.profileImageRef = PROFILE_PICTURE_PREFIX_CLOUD + ref
-            user.uploadUserData()
-        }.addOnFailureListener {
-            it.printStackTrace()
-        }
-    }
-
-    private fun getProfileImageFromCloud(ref: String?) {
-        if (ref != null) {
-            val file = getOutputImageFile()
-            CloudStorage.downloadFile("$PROFILE_PICTURE_PREFIX_CLOUD$ref", file).addOnSuccessListener {
-                profileImage.setImageURI(file.toUri())
             }
         }
     }
