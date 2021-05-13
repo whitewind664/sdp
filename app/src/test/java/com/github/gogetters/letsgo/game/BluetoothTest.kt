@@ -25,12 +25,12 @@ class BluetoothTest {
 
 
 
-
+        /*
         try{gtpService.ping()} catch(e: Exception) {Log.d("Test", "doesn't work...")}
         try{gtpService.close()} catch(e: Exception) {Log.d("Test", "doesn't work...")}
         try{gtpService.write(ByteArray(1))} catch(e: Exception) {Log.d("Test", "doesn't work...")}
         try{gtpService.sendCommand(GENMOVE(Stone.BLACK))} catch(e: Exception) {Log.d("Test", "doesn't work...")}
-
+        */
 
 
         val btInput = BluetoothInputDelegate(gtpService)
