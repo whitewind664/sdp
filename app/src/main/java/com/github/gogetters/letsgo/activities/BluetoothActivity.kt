@@ -111,16 +111,13 @@ class BluetoothActivity: AppCompatActivity() {
                     val deviceName = device.name
 
                     if (deviceName != null) {
-                            val futureInfo = CompletableFuture.supplyAsync {
-                                Log.d("FUTURES FUTURES FUTURES", "first part starting: $deviceName")
-                                btProbe.connect(device)
-                            }.thenAcceptAsync {
-                                Log.d("FUTURES FUTURES FUTURES", "second part starting: $deviceName")
-                                deviceInfo[device] = it!!
-                                foundDevices!!.add(device)
-                                this@BluetoothActivity.runOnUiThread({listFound()})
-                                Log.d("FUTURESSSSSSSSSSSSSSS", "done")
-                            }
+                        CompletableFuture.supplyAsync {
+                            btProbe.connect(device)
+                        }.thenAcceptAsync {
+                            deviceInfo[device] = it!!
+                            foundDevices.add(device)
+                            this@BluetoothActivity.runOnUiThread({listFound()})
+                        }
                     }
 
                 }
@@ -136,7 +133,7 @@ class BluetoothActivity: AppCompatActivity() {
                 val deviceName = adapterView.adapter.getItem(i) as String
                 var serverDevice: BluetoothDevice? = null
 
-                for (device in foundDevices!!) {
+                for (device in foundDevices) {
                     if (deviceInfo[device] == deviceName) {
                         serverDevice = device
                     }
