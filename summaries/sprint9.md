@@ -6,7 +6,9 @@
 
 
 ## Horvath-Mikulas, Szabina
-
+Done: This week I worked on the chat feature. I created a new activity that fetches the users to chat with. I can also list last messages from the different users. I also worked on the implementation on the different chat channels. In the meantime I tried to improve the navigation UI, ie. the AppBar and BottomNavigationBar.
+Went well: I got very close to completion. I learnt how to use and communicate with the database.
+To improve: I need to add tests to be able to merge. I should not pick different tasks for one week period.
 
 ## Linder, Jan David
 Done: 
