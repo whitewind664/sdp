@@ -13,8 +13,12 @@
     <uses-permission android:name="android.permission.BLUETOOTH" />
     <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
 
     <uses-feature android:name="android.hardware.bluetooth" />
+    <uses-feature android:name="android.hardware.camera"
+        android:required="true" />
 
     <application
         android:allowBackup="true"
@@ -23,25 +27,25 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.LetsGo">
-
+        <activity android:name=".activities.FriendListActivity"></activity>
         <activity
             android:name=".activities.TutorialActivity"
-            android:label="@string/title_activity_tutorial">
-        </activity>
-
+            android:label="@string/title_activity_tutorial"></activity>
         <activity
             android:name=".activities.ChatActivity"
-            android:label="@string/title_activity_chat">
-        </activity>
+            android:label="@string/title_activity_chat"></activity>
         <activity
             android:name=".activities.BluetoothActivity"
-            android:label="@string/title_activity_bluetooth"
-            android:screenOrientation="portrait"
             android:exported="true" />
         <activity
             android:name=".activities.GameActivity"
             android:label="@string/title_activity_game" />
-        <activity android:name=".activities.ProfileActivity" />
+        <activity
+            android:name=".activities.ProfileActivity"
+            android:label="@string/title_activity_profile" />
+        <activity
+            android:name=".activities.FirebaseUIActivity"
+            android:label="@string/title_activity_firebaseui" />
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"
@@ -62,6 +66,17 @@
         <meta-data
             android:name="preloaded_fonts"
             android:resource="@array/preloaded_fonts" />
+
+        <!-- To store files (especially pictures) on the device -->
+        <provider
+            android:name="androidx.core.content.FileProvider"
+            android:authorities="${applicationId}.provider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/provider_paths" />
+        </provider>
     </application>
 
 </manifest>

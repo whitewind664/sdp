@@ -18,7 +18,7 @@ class TutorialLocalPlayerTest {
         inputDelegate.saveLatestInput(move.point)
 
         val player = TutorialLocalPlayer(inputDelegate)
-        player.setRecommendedMoves(listOf(move))
+        player.setRecommendedMoves(listOf(listOf(move)))
         assertEquals(player.requestMove(boardState), move)
     }
 

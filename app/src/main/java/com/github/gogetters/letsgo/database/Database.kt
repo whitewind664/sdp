@@ -3,6 +3,7 @@ package com.github.gogetters.letsgo.database
 import com.github.gogetters.letsgo.database.types.MessageData
 import com.google.firebase.database.*
 import android.util.Log
+import com.github.gogetters.letsgo.database.types.GameData
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.tasks.Task
 import com.google.firebase.auth.FirebaseAuth
@@ -32,8 +33,8 @@ class Database {
             return db.getReference(ref).get()
         }
 
-        fun updateData() {
-            // TODO Maybe Implement this!
+        fun updateData(ref: String, data: Map<String, Any?>): Task<Void> {
+            return db.getReference(ref).updateChildren(data)
         }
 
         fun deleteData(ref: String): Task<Void> {
@@ -51,6 +52,39 @@ class Database {
         fun purgeOutstandingWrites() {
             db.purgeOutstandingWrites()
         }
+
+        // ---- [START} Matchmaking  ----
+
+
+        fun findMatch(playerId: String, playerRating: Int) {
+            // TODO improve to match players according to rating
+            database.child("matchmaking")
+                .runTransaction(object : Transaction.Handler {
+                    override fun doTransaction(currentData: MutableData): Transaction.Result {
+                        val p = currentData.child("currentlyWaiting").getValue(String::class.java)
+                        if (p == null) {
+                            currentData.child("currentlyWaiting").value = playerId
+                        } else {
+                            val gameData = GameData(p, playerId)
+                            currentData.child("currentlyWaiting").value = null
+                            val gameId = database.child("matchmaking").child("games").push().key
+                            currentData.child("games").child("$gameId").value = gameData
+                        }
+                        return Transaction.success(currentData)
+                    }
+
+                    override fun onComplete(
+                        error: DatabaseError?,
+                        committed: Boolean,
+                        currentData: DataSnapshot?
+                    ) {
+                        Log.d("Database::findMatch", "msg")
+                    }
+                })
+        }
+
+
+        // ---- [END] Matchmaking ----
         
         // ---- Map related ----
         /**

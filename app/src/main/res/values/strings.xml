@@ -23,24 +23,54 @@
     <string name="title_activity_maps">Map</string>
     <string name="title_activity_game">Game</string>
     <string name="title_activity_chat">Chat</string>
+    <string name="title_activity_tutorial">Tutorial</string>
+    <string name="title_activity_profile">Profile</string>
+    <string name="title_activity_firebaseui">Login</string>
 
     <!-- Strings for tutorial -->
     <string name="tutorial_intro">Congrats for wanting to learn Go, a great strategic game! We have good news for you: Even though Go is hard to master, learning the basic rules is really easy and you will be able to play your first game very soon!</string>
-    <string name="tutorial_board">The board: \nGo is usually played on a squared grid of 19x19 or 9x9 lines. Here\'s what that looks like.</string>
-    <string name="tutorial_stones">The stones: \nEach of the two players gets a set of stone that is either black or white. The stones can be played at the intersections of the lines. The first stone is played by black, then white can place one stone, then again black and so on. Once a stone is played, it cannot be moved anymore.\nPlace now your first stone on the board.</string>
-    <string name="tutorial_territory">Territories: \n One main goal of the game is to control territories, this is what gives you power and points in the end. A territory is empty space on the board that is entirely surrounded by stones of the same color. See the following example.</string>
-    <string name="tutorial_capturing">Capturing the opponent stones:\nCapturing stones from an opponent makes them be removed from the board. A stone or a group of stones are captured when it no longer has any empty space directly next to it. These empty spaces are called liberties. The following example shows a situation where your opponent\'s group only has one liberty left. Take your chance and capture it!</string>
-    <string name="tutorial_selfCapture">Self capture is not allowed in Go. This means, you don\'t have the right to place a stone on a place where it has no liberties - unless this move captures stones of the opponent:</string>
-    <string name="tutorial_score1">Score:\nThe nice thing about capturing: you get a point for each stone of the opponent you have captured!</string>
-    <string name="tutorial_KoRule">The "Ko" Rule: \nThere exist situations where the same moves could be repeated over and over again. To prevent this, the Ko rule says that a completely identical board position MUST NOT appear twice in one game. This makes endless recapturing in the same position impossible, as in the following example:</string>
-    <string name="tutorial_end">End of game: \nThis is the last rule you have to learn! The end of a Go game is not as clearly defined as in chess or other games. A player at each point in the game can pass if they don\'t see any benefit of placing a stone. The game ends if both players pass consecutively. Then, the points are counted as follows:</string>
-    <string name="tutorial_score2">Final score:\n- one point for each yet captured stone\n- one point for every stone in your territory that cannot avoid capturing. Your territory is everything that is entirely surrounded by your stones. This is mostly obvious, and if not, keep on playing until it is. Theses stones are removed from the board.\n- one point for each empty intersection in your territory.\n- some points called komi for the white player, as starting the game is an advantage for black (usually 6.5 points in 19x19 games)</string>
-    <string name="tutorial_outro">Congrats! You reached the end of the tutorial. Have fun!</string>
+    <string name="tutorial_board">Go is usually played on a squared grid of 19x19 or 9x9 lines. Click on the "next" button to see what it looks like.</string>
+    <string name="tutorial_board2">Not yet really complex, right?</string>
+    <string name="tutorial_stones">Each of the two players gets a set of stones that is either black or white. The stones can be played at the intersections of the lines. The first stone is played by black, then white can place one stone, then again black and so on. Once a stone is played, it cannot be moved anymore.</string>
+    <string name="tutorial_stones2">Place now your first stone on the board.</string>
+    <string name="tutorial_territory">One main goal of the game is to control territories, this is what gives you power and points in the end. A territory is empty space on the board that is entirely surrounded by stones of the same color. See the following example.</string>
+    <string name="tutorial_territory2">Here, the area on top is territory of Black, and the one on the bottom is territory of White.</string>
+    <string name="tutorial_capturing">Capturing stones of the opponent makes them be removed from the board. A stone or a group of stones are captured when it no longer has any empty space directly next to it. These empty spaces are called liberties.</string>
+    <string name="tutorial_capturing2">Your opponent runs out of liberties… Go for it!</string>
+    <string name="tutorial_selfCapture">Self capture is not allowed in Go. This means, you don\'t have the right to place a stone on a place where it has no liberties - unless this move captures stones of the opponent.</string>
+    <string name="tutorial_selfCapture2">In this situation, you as black do not have the right to place your stone at A9. Unfortunately, white can now easily capture your stones.</string>
+    <string name="tutorial_twoEyes">Here, you as black have "two eyes" in your group, which makes it uncapturable for white. Don\'t fill the eyes!</string>
+    <string name="tutorial_score1">The nice thing about capturing: you get a point for each stone of the opponent you have captured!</string>
+    <string name="tutorial_KoRule">There exist situations where the same moves could be repeated over and over again. To prevent this, the Ko rule says that a completely identical board position MUST NOT appear twice in one game. This makes endless recapturing in the same position impossible, as in the following example.</string>
+    <string name="tutorial_KoRule2">If you catch white here, then white doesn\'t have the right to catch you back right away. Otherwise, this could end in a never-ending back and forth. </string>
+    <string name="tutorial_end">This is the last rule you have to learn! The end of a game of Go is not as clearly defined as in chess or other games. A player at each point in the game can pass if they don\'t see any benefit of placing a stone. The game ends if both players pass consecutively. Then, the points are counted as explained on the next page</string>
+    <string name="tutorial_score2">- one point for each yet captured stone\n- one point for every stone in your territory that cannot avoid capturing. Your territory is everything that is entirely surrounded by your stones. This is mostly obvious, and if not, keep on playing until it is. Theses stones are removed from the board.\n- one point for each empty intersection in your territory.\n- some points called komi for the white player, as starting the game is an advantage for black (usually 6.5 points in 19x19 games)</string>
+    <string name="tutorial_outro">You reached the end of the tutorial. Have fun playing Go!</string>
+
+    <string name="tutorial_title_intro">Welcome to Go!</string>
+    <string name="tutorial_title_board">The Board</string>
+    <string name="tutorial_title_stones">The Stones</string>
+    <string name="tutorial_title_territories">Territories</string>
+    <string name="tutorial_title_capturing">Capturing</string>
+    <string name="tutorial_title_selfCapture">Self-Capturing</string>
+    <string name="tutorial_title_score1">Score</string>
+    <string name="tutorial_title_KoRule">The Ko Rule</string>
+    <string name="tutorial_title_end">End of Game</string>
+    <string name="tutorial_title_score2">Final Score</string>
+    <string name="tutorial_title_outro">Congrats!</string>
 
     <!-- Strings for the map activity -->
     <string name="map_buttonTextShowPlayers">Show other players</string>
 
     <string name="tutorial_buttonTextGoBack">Back to main menu</string>
+
+    <!-- Strings for the profile activity -->
+    <string name="profile_dialogTitle">Upload Profile Picture</string>
+    <string name="profile_takePicture">Take Picture</string>
+    <string name="profile_chooseFromGallery">Choose from Gallery</string>
+    <string name="profile_cancel">Cancel</string>
+    <string name="profile_gallerySelectionTitle">Select Profile Picture</string>
+
     <!--
     This string is used for square devices and overridden by hello_world in
     values-round/strings.xml for round devices.
@@ -48,7 +78,6 @@
     <string name="hello_world">Hello Square World!</string>
     <string name="chat">Chat</string>
     <string name="email">Email</string>
-    <string name="title_activity_tutorial">Tutorial</string>
     <!-- Strings used for fragments for navigation -->
     <string name="next">Next</string>
     <string name="previous">Previous</string>
@@ -68,6 +97,7 @@
     <string name="connection_start">Establishing Connection...</string>
     <string name="connection_error">Error while connecting device</string>
     <string name="title_activity_bluetooth">Bluetooth</string>
+    <string name="profile_show_friends">Show friends</string>
 
 
 </resources>

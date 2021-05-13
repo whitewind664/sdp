@@ -1,17 +1,15 @@
 package com.github.gogetters.letsgo.activities
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.FrameLayout
-import com.github.gogetters.letsgo.game.view.GoView
-import com.github.gogetters.letsgo.game.util.TouchInputDelegate
 import com.github.gogetters.letsgo.R
 import com.github.gogetters.letsgo.game.*
-import com.github.gogetters.letsgo.game.Game
-import com.github.gogetters.letsgo.util.BluetoothGTPService
-import kotlinx.coroutines.*
+import com.github.gogetters.letsgo.game.util.TouchInputDelegate
+import com.github.gogetters.letsgo.game.view.GoView
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 
-class GameActivity : AppCompatActivity() {
+class GameActivity : BaseActivity() {
     companion object {
         const val EXTRA_GAME_SIZE = "com.github.gogetters.letsgo.game.GAME_SIZE"
         const val EXTRA_KOMI = "com.github.gogetters.letsgo.game.KOMI"
@@ -23,7 +21,6 @@ class GameActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_game)
 
 
         val gameSizeInput = intent.getIntExtra(EXTRA_GAME_SIZE, 9)
@@ -62,7 +59,10 @@ class GameActivity : AppCompatActivity() {
         }
     }
 
-    //TODO oneliner can be inlined??
+    override fun getLayoutResource(): Int {
+        return R.layout.activity_game
+    }
+
     private fun drawBoard(boardState: BoardState) {
         goView.updateBoardState(boardState)
     }

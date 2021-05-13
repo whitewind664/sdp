@@ -4,19 +4,37 @@ import android.util.Log
 import com.github.gogetters.letsgo.game.*
 import com.github.gogetters.letsgo.game.exceptions.IllegalMoveException
 
-internal class TutorialPlayer(override val color: Stone): Player {
+internal class TutorialPlayer(): Player(Stone.WHITE) {
+    private val DEFAULT_MOVE = Move(Stone.EMPTY, Point(0, 0))
 
-    private var turnCount: Int = 1
+    private var moveIndex: Int = 0
+    private var moveCoordinates: List<Point> = emptyList()
 
     override fun requestMove(board: BoardState): Move {
-        //TODO("Not yet implemented: Implement logic of tutorial player")
-        turnCount++
-        return Move(color, Point(5, turnCount))
+        return if (this.isOutOfMoves()) {
+            moveIndex++
+            DEFAULT_MOVE
+        } else {
+            Move(Stone.WHITE, this.moveCoordinates[moveIndex++])
+        }
     }
 
     override fun notifyIllegalMove(illegalMove: IllegalMoveException) {
         Log.d("TUTORIAL_PLAYER", "PLAYER HAS PLAYED ILLEGAL MOVE", illegalMove)
-        // TODO show to user that this is not the best option
+        // TODO handle case that tutorial player plays illegal move
+    }
+
+    fun setMoves(moves: List<Point>) {
+        moveIndex = 0
+        if (moves.isNotEmpty()) {
+            this.moveCoordinates = moves
+        } else {
+            this.moveCoordinates = emptyList()
+        }
+    }
+
+    fun isOutOfMoves(): Boolean {
+        return moveIndex >= moveCoordinates.size
     }
 
 }

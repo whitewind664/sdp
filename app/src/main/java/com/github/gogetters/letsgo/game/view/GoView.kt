@@ -130,10 +130,9 @@ open class GoView(context: Context, private val boardSize: Board.Size) : View(co
                 }
             }
         }
-
     }
 
-    fun updateBoardState(boardState: BoardState) {
+    open fun updateBoardState(boardState: BoardState) {
         Log.d("GOVIEW", "UPDATING BOARD STATE: \n" +
                 "${boardState.board}")
         this.board = boardState.board

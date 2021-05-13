@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/item1"
+        android:icon="@drawable/ic_outline_play_arrow_24"
+        android:title="Play" />
+
+    <item
+        android:id="@+id/item2"
+        android:icon="@drawable/ic_outline_model_training_24"
+        android:title="Train" />
+
+    <item
+        android:id="@+id/item3"
+        android:icon="@drawable/ic_outline_chat_24"
+        android:title="Chat" />
+
+</menu>

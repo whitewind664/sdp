@@ -8,7 +8,7 @@ internal open class Game(val size: Board.Size, val komi: Double,
 
     private var board = Board(size)
     private val passMove = Move(Stone.EMPTY, Point(0, 0))
-    private var nextPlayer = blackPlayer
+    protected var nextPlayer = blackPlayer
 
     private var passes = 0
     private var whiteScore = 0
@@ -40,7 +40,7 @@ internal open class Game(val size: Board.Size, val komi: Double,
             }
         } while (!validMove)
 
-        nextPlayer = if (nextPlayer.color == Stone.BLACK) whitePlayer else blackPlayer
+        updateNextPlayer(nextPlayer.color)
 
         return board.getBoardState(0, 0, gameOver = passes >= 2, lastMove = nextMove)
     }
@@ -51,10 +51,19 @@ internal open class Game(val size: Board.Size, val komi: Double,
             for (move in playedStones) {
                 board.playMove(move)
             }
+            if (playedStones.isNotEmpty()) {
+                updateNextPlayer(playedStones[playedStones.size - 1].stone)
+            } else {
+                nextPlayer = blackPlayer
+            }
         } catch (e: IllegalMoveException) {
             board = Board(this.size)
         }
         return board.getBoardState(0, 0)
+    }
+
+    private fun updateNextPlayer(lastPlayedColor: Stone) {
+        nextPlayer = if (lastPlayedColor == Stone.BLACK) whitePlayer else blackPlayer
     }
 
     private fun addPoints(player: Player, points: Int) {

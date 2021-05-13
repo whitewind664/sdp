@@ -1,13 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/game_constraintLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".activities.ProfileActivity"
     android:background="@drawable/gradient"
-    android:orientation="vertical">
+    tools:context=".activities.ProfileActivity">
 
     <TextView
         android:id="@+id/profile_textView_uploadImageHint"
@@ -18,7 +17,8 @@
         android:text="@string/upload_your_profile_picture"
         android:textAlignment="center"
         android:textColor="#fff"
-        android:textSize="22sp" />
+        android:textSize="22sp"
+        app:layout_constraintBottom_toTopOf="@+id/profile_imageView_image"/>
 
     <ImageView
         android:id="@+id/profile_imageView_image"
@@ -26,8 +26,12 @@
         android:layout_height="145dp"
         android:src="@drawable/user"
         android:layout_gravity="center"
-        android:layout_marginTop="22dp"
-        android:contentDescription="@string/profile_picture" />
+        android:contentDescription="@string/profile_picture"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintDimensionRatio="1:1"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"/>
 
     <TextView
         android:id="@+id/profile_textView_name"
@@ -53,7 +57,7 @@
         android:textColor="#fff"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/profile_imageView_image" />
+        app:layout_constraintTop_toBottomOf="@+id/profile_textView_name" />
 
     <TextView
         android:id="@+id/profile_textView_cityCountry"
@@ -65,8 +69,20 @@
         android:textColor="#fff"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/profile_imageView_image" />
+        app:layout_constraintTop_toBottomOf="@+id/profile_textView_email" />
 
+    <Button
+        android:id="@+id/profile_show_friend_list_button"
+        android:layout_width="200dp"
+        android:layout_height="50dp"
+        android:layout_gravity="center"
+        android:text="@string/profile_show_friends"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/profile_textView_cityCountry" />
+
+    <!-- MAY BE HIDING STUFF
     <ImageButton
         android:id="@+id/profile_imageButton_save"
         android:layout_width="294dp"
@@ -74,6 +90,6 @@
         android:layout_gravity="center"
         android:layout_marginTop="110dp"
         android:background="@drawable/save"
-        android:contentDescription="@string/save_picture" />
+        android:contentDescription="@string/save_picture" />-->
 
-</LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

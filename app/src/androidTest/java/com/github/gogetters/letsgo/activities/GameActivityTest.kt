@@ -12,6 +12,7 @@ import androidx.test.ext.junit.rules.ActivityScenarioRule
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.github.gogetters.letsgo.R
 import org.hamcrest.Matcher
+import org.junit.After
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -27,6 +28,11 @@ class GameActivityTest {
 
     @get:Rule
     var activityScenarioRule = ActivityScenarioRule<GameActivity>(intent)
+
+    @After
+    fun cleanUp() {
+        activityScenarioRule.scenario.close()
+    }
 
     @Test
     fun tappingScreenPlacesStone() {
