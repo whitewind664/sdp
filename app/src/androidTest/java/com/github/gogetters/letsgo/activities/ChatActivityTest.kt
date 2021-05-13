@@ -2,11 +2,13 @@ package com.github.gogetters.letsgo.activities
 
 import android.widget.EditText
 import android.widget.ListView
+import androidx.test.espresso.intent.Intents
 import androidx.test.ext.junit.rules.ActivityScenarioRule
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.github.gogetters.letsgo.R
 import com.github.gogetters.letsgo.chat.ChatMessage
 import junit.framework.Assert.*
+import org.junit.After
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -15,6 +17,11 @@ import org.junit.runner.RunWith
 class ChatActivityTest {
     @get:Rule
     var activityRule = ActivityScenarioRule(ChatActivity::class.java)
+
+    @After
+    fun cleanUp() {
+        activityRule.scenario.close()
+    }
 
     @Test
     fun sentMessageIsAddedToListView() {

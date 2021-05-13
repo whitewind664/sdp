@@ -1,6 +1,12 @@
 {
   "users": {
     "$userId": {
+      "nick": "value",
+      "first": "value",
+      "last": "value",
+      "city": "value",
+      "country": "value",
+      "profilePictureURL": "value",
       "isLookingForPlayers": "value",
       "lastPositionLatitude": "value",
       "lastPositionLongitude": "value"
