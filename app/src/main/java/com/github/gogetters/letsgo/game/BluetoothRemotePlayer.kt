@@ -13,6 +13,6 @@ class BluetoothRemotePlayer(override val color: Stone, private val bluetoothInpu
     }
 
     override fun notifyIllegalMove(illegalMove: IllegalMoveException) {
-        TODO("Not yet implemented, maybe add something to bluetoothInputDelegate??")
+        return
     }
 }

@@ -11,7 +11,7 @@ open class LocalPlayer(override val color: Stone, inputDelegate: InputDelegate):
     }
 
     override fun notifyIllegalMove(illegalMove: IllegalMoveException) {
-        TODO("Not yet implemented")
+        return
     }
 
 }

@@ -1,21 +1,20 @@
 package com.github.gogetters.letsgo.util
 
-import android.bluetooth.BluetoothSocket
-import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.util.Log
 import com.github.gogetters.letsgo.game.GTPCommand
 import com.github.gogetters.letsgo.game.util.BluetoothInputDelegate
-import java.io.IOException
-import java.io.InputStream
-import java.io.OutputStream
 
 
 class BluetoothGTPService: BluetoothService() {
 
     override val handler = Handler(Looper.getMainLooper()) {
-        parseCommand(it.obj as ByteArray)
+        if (it.what == MESSAGE_READ) {
+            parseCommand(it.obj as ByteArray)
+        } else {
+            true
+        }
     }
 
     lateinit var inputDelegate: BluetoothInputDelegate
@@ -39,6 +38,7 @@ class BluetoothGTPService: BluetoothService() {
             if (commandString == PING) {
                 receivedPing = true
                 sendCommand(GTPCommand.CLEAR_BOARD)
+                Log.d("BLUETOOTHGTPSERVICE", "CONNECTED")
                 return true
             }
 
