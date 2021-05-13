@@ -35,8 +35,9 @@
         </activity>
         <activity
             android:name=".activities.BluetoothActivity"
+            android:label="@string/title_activity_bluetooth"
             android:screenOrientation="portrait"
-            android:exported="true"></activity>
+            android:exported="true" />
         <activity
             android:name=".activities.GameActivity"
             android:label="@string/title_activity_game" />

@@ -67,6 +67,7 @@
     <string name="permission_fail">Permission Denied!</string>
     <string name="connection_start">Establishing Connection...</string>
     <string name="connection_error">Error while connecting device</string>
+    <string name="title_activity_bluetooth">Bluetooth</string>
 
 
 </resources>
