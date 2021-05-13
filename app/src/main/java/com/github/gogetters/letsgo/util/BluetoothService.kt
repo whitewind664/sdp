@@ -3,10 +3,7 @@ package com.github.gogetters.letsgo.util
 import android.bluetooth.BluetoothSocket
 import android.os.Bundle
 import android.os.Handler
-import android.os.Looper
 import android.util.Log
-import com.github.gogetters.letsgo.game.GTPCommand
-import com.github.gogetters.letsgo.game.util.BluetoothInputDelegate
 import java.io.IOException
 import java.io.InputStream
 import java.io.OutputStream
@@ -15,14 +12,7 @@ import java.io.OutputStream
 abstract class BluetoothService {
 
     abstract val handler: Handler
-
-    private val MESSAGE_READ: Int = 0
-    private val MESSAGE_WRITE: Int = 1
-    private val MESSAGE_TOAST: Int = 2
-    internal val PING = "PING"
     var receivedPing = false
-
-    private val TAG = "MY_APP_DEBUG_TAG"
 
     private lateinit var connectedThread: ConnectedThread
 
@@ -66,7 +56,8 @@ abstract class BluetoothService {
                 // Send the obtained bytes to the UI activity.
                 val readMsg = handler.obtainMessage(
                     MESSAGE_READ, numBytes, -1,
-                    mmBuffer)
+                    mmBuffer
+                )
                 readMsg.sendToTarget()
             }
         }
@@ -90,7 +81,8 @@ abstract class BluetoothService {
 
             // Share the sent message with the UI activity.
             val writtenMsg = handler.obtainMessage(
-                MESSAGE_WRITE, -1, -1, bytes)
+                MESSAGE_WRITE, -1, -1, bytes
+            )
             writtenMsg.sendToTarget()
         }
 
@@ -102,5 +94,13 @@ abstract class BluetoothService {
                 Log.e(TAG, "Could not close the connect socket", e)
             }
         }
+    }
+
+    companion object {
+        private const val MESSAGE_READ: Int = 0
+        private const val MESSAGE_WRITE: Int = 1
+        private const val MESSAGE_TOAST: Int = 2
+        internal const val PING = "PING"
+        private const val TAG = "Bluetooth Service"
     }
 }

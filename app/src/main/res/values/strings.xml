@@ -56,5 +56,17 @@
     <string name="hello_second_fragment">Hello second fragment. Arg: %1$s</string>
     <string name="title_activity_bluetooth_game">BluetoothGameActivity</string>
 
+    <string name="listen">Listen</string>
+    <string name="search">Search</string>
+    <string name="send">Send</string>
+    <string name="listen_bt">Waiting for connection…</string>
+    <string name="search_bt">Searching devices...</string>
+    <string name="need_permission">Permission Needed</string>
+    <string name="bt_permission_explain">Please allow accessing your location via the app settings in order to play via Bluetooth.</string>
+    <string name="permission_ok">Permission Granted!</string>
+    <string name="permission_fail">Permission Denied!</string>
+    <string name="connection_start">Establishing Connection...</string>
+    <string name="connection_error">Error while connecting device</string>
+
 
 </resources>

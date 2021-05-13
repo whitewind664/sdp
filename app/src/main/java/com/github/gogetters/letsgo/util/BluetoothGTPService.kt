@@ -20,8 +20,6 @@ class BluetoothGTPService: BluetoothService() {
 
     lateinit var inputDelegate: BluetoothInputDelegate
 
-    private val TAG = "MY_APP_DEBUG_TAG"
-
 
     fun sendCommand(gtpCommand: GTPCommand) {
         val serializedCommand = gtpCommand.toString()
@@ -37,7 +35,7 @@ class BluetoothGTPService: BluetoothService() {
                 bytes.decodeToString(0, bytes.indexOf(0))
             }
 
-            Log.d("BLUETOOTHGTPSERVICE", "RECEIVED COMMAND $commandString")
+            Log.d("Bluetooth GTP Service", "Received command: $commandString")
             receivedPing = commandString == PING || receivedPing
             if (commandString == PING) {
                 receivedPing = true

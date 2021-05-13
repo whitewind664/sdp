@@ -4,8 +4,6 @@ import android.bluetooth.BluetoothAdapter
 import android.bluetooth.BluetoothDevice
 import android.bluetooth.BluetoothSocket
 import android.util.Log
-import com.github.gogetters.letsgo.game.GTPCommand
-import com.github.gogetters.letsgo.game.Stone
 import java.io.IOException
 import java.util.*
 
@@ -22,12 +20,13 @@ class BluetoothClient {
         connectThread.start()
     }
 
-    private inner class ConnectThread(device: BluetoothDevice): Thread() {
+    private inner class ConnectThread(device: BluetoothDevice) : Thread() {
         private val uuid: UUID = UUID.fromString("8ce255c0-223a-11e0-ac64-0803450c9a66")
         private val mmSocket: BluetoothSocket? by lazy(LazyThreadSafetyMode.NONE) {
             device.createInsecureRfcommSocketToServiceRecord(uuid)
         }
-        public override fun run() {
+
+        override fun run() {
             // Cancel discovery because it otherwise slows down the connection.
             bluetoothAdapter?.cancelDiscovery()
 
@@ -49,7 +48,7 @@ class BluetoothClient {
             try {
                 mmSocket?.close()
             } catch (e: IOException) {
-                Log.e("BLUETOOTHCLIENT", "Could not close the client socket", e)
+                Log.e("Bluetooth Client", "Could not close the client socket", e)
             }
         }
     }

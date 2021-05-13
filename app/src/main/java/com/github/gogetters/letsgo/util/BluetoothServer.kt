@@ -12,7 +12,7 @@ import java.text.SimpleDateFormat
 import java.time.LocalDateTime
 import java.util.*
 
-class BluetoothServer(val handler: Handler) {
+class BluetoothServer {
 
     private val adapter: BluetoothAdapter = BluetoothAdapter.getDefaultAdapter()
     private val uuid: UUID = UUID.fromString("8ce255c0-223a-11e0-ac64-0803450c9a66")
@@ -42,7 +42,7 @@ class BluetoothServer(val handler: Handler) {
                 val socket: BluetoothSocket? = try {
                     mmServerSocket?.accept()
                 } catch (e: IOException) {
-                    Log.e("BTSERVER", "Socket's accept() method failed", e)
+                    Log.e("Bluetooth Server", "Socket's accept() method failed", e)
                     shouldLoop = false
                     null
                 }
@@ -68,7 +68,7 @@ class BluetoothServer(val handler: Handler) {
             try {
                 mmServerSocket?.close()
             } catch (e: IOException) {
-                Log.e("BTSERVER", "Could not close the connect socket", e)
+                Log.e("Bluetooth Server", "Could not close the connect socket", e)
             }
         }
     }

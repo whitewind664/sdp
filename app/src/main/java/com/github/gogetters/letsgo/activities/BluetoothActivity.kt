@@ -3,13 +3,13 @@ package com.github.gogetters.letsgo.activities
 import android.Manifest
 import android.bluetooth.BluetoothAdapter
 import android.bluetooth.BluetoothDevice
-import android.bluetooth.BluetoothSocket
-import android.content.*
+import android.content.BroadcastReceiver
+import android.content.Context
+import android.content.Intent
+import android.content.IntentFilter
 import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
 import android.util.Log
 import android.view.View
 import android.widget.*
@@ -20,53 +20,26 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.github.gogetters.letsgo.R
-import com.github.gogetters.letsgo.game.GTPCommand
 import com.github.gogetters.letsgo.game.Player
-import com.github.gogetters.letsgo.game.Stone
 import com.github.gogetters.letsgo.util.*
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
 import java.util.*
 import java.util.concurrent.CompletableFuture
-import java.util.concurrent.Future
-import kotlin.properties.Delegates
 
 
-class BluetoothActivity: AppCompatActivity() {
-    var listen: Button? = null
-    var send: Button? = null
-    var listDevices: Button? = null
-    var listView: ListView? = null
-    var msg_box: TextView? = null
-    var status: TextView? = null
-    var writeMsg: EditText? = null
-    var bluetoothAdapter: BluetoothAdapter? = null
+class BluetoothActivity : AppCompatActivity() {
+    private lateinit var listen: Button
+    private lateinit var send: Button
+    private lateinit var search: Button
+    private lateinit var listView: ListView
+    private lateinit var status: TextView
+    private lateinit var bluetoothAdapter: BluetoothAdapter
     private lateinit var client: BluetoothClient
     private lateinit var server: BluetoothServer
     private lateinit var btProbe: BluetoothProbe
-    private var foundDevices: MutableSet<BluetoothDevice> = mutableSetOf()
-    private var deviceInfo: MutableMap<BluetoothDevice, String> = mutableMapOf()
+
+    private val foundDevices: MutableSet<BluetoothDevice> = mutableSetOf()
+    private val deviceInfo: MutableMap<BluetoothDevice, String> = mutableMapOf()
     private var isServer = false
-
-    private val handler = Handler(Looper.getMainLooper()) {
-        when (it.what) {
-            0 -> {
-                val bytes = it.obj as ByteArray
-                val msg = bytes.decodeToString(0, bytes.indexOf(0))
-
-                Log.d("BLUETOOTHTEST", "message received: $msg")
-                msg_box!!.setText(msg)
-                Toast.makeText(this, "$it.obj", Toast.LENGTH_LONG)
-                true
-            }
-            else ->  {
-                Log.d("BLUETOOTHTEST", "not working...")
-                false
-            }
-        }
-    }
-
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -75,19 +48,18 @@ class BluetoothActivity: AppCompatActivity() {
 
         listen = findViewById<View>(R.id.bluetooth_button_listen) as Button
         send = findViewById<View>(R.id.bluetooth_button_send) as Button
-        listView = findViewById<View>(R.id.listview) as ListView
-        msg_box = findViewById<View>(R.id.msg) as TextView
+        listView = findViewById<View>(R.id.found_devices) as ListView
         status = findViewById<View>(R.id.status) as TextView
-        writeMsg = findViewById<View>(R.id.writemsg) as EditText
-        listDevices = findViewById<View>(R.id.bluetooth_button_listDevices) as Button
+        search = findViewById<View>(R.id.bluetooth_button_listDevices) as Button
 
         bluetoothAdapter = BluetoothAdapter.getDefaultAdapter()
+        //TODO: catch case where device has no bt adapter
 
-
-        if (!bluetoothAdapter!!.isEnabled) {
+        if (!bluetoothAdapter.isEnabled) {
             val enableIntent = Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE)
             startActivityForResult(enableIntent, REQUEST_ENABLE_BLUETOOTH)
         }
+
 
         registerReceiver(receiver, IntentFilter(BluetoothDevice.ACTION_FOUND))
 
@@ -100,27 +72,25 @@ class BluetoothActivity: AppCompatActivity() {
 
         @RequiresApi(Build.VERSION_CODES.N)
         override fun onReceive(context: Context, intent: Intent) {
-            val action: String? = intent.action
 
-            when(action) {
+            when (intent.action) {
                 BluetoothDevice.ACTION_FOUND -> {
-                    // Discovery has found a device. Get the BluetoothDevice
-                    // object and its info from the Intent.
+
                     val device: BluetoothDevice =
-                            intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE)!!
+                        intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE)!!
                     val deviceName = device.name
 
                     if (deviceName != null) {
-                            val futureInfo = CompletableFuture.supplyAsync {
-                                Log.d("FUTURES FUTURES FUTURES", "first part starting: $deviceName")
-                                btProbe.connect(device)
-                            }.thenAcceptAsync {
-                                Log.d("FUTURES FUTURES FUTURES", "second part starting: $deviceName")
-                                deviceInfo[device] = it!!
-                                foundDevices!!.add(device)
-                                this@BluetoothActivity.runOnUiThread({listFound()})
-                                Log.d("FUTURESSSSSSSSSSSSSSS", "done")
-                            }
+                        CompletableFuture.supplyAsync {
+                            Log.d("FUTURES FUTURES FUTURES", "first part starting: $deviceName")
+                            btProbe.connect(device)
+                        }.thenAcceptAsync {
+                            Log.d("FUTURES FUTURES FUTURES", "second part starting: $deviceName")
+                            deviceInfo[device] = it!!
+                            foundDevices.add(device)
+                            this@BluetoothActivity.runOnUiThread { listFound() }
+                            Log.d("Futures", "done")
+                        }
                     }
 
                 }
@@ -130,24 +100,35 @@ class BluetoothActivity: AppCompatActivity() {
 
     //no idea how to add this via xml
     private fun implementListeners() {
-      listView!!.onItemClickListener =
-            OnItemClickListener { adapterView, view, i, l ->
+        listView.onItemClickListener =
+            OnItemClickListener { adapterView, _, i, _ ->
                 client = BluetoothClient()
                 val deviceName = adapterView.adapter.getItem(i) as String
                 var serverDevice: BluetoothDevice? = null
 
-                for (device in foundDevices!!) {
+                for (device in foundDevices) {
                     if (deviceInfo[device] == deviceName) {
                         serverDevice = device
                     }
                 }
                 if (serverDevice == null) {
-                    throw Error("DEVICE NOT FOUND")
+                    throw Error(getString(R.string.connection_error))
                 }
-                Toast.makeText(applicationContext, "Establishing Connection", Toast.LENGTH_SHORT).show()
+
+
+                Toast.makeText(
+                    applicationContext,
+                    getString(R.string.connection_start),
+                    Toast.LENGTH_SHORT
+                )
+                    .show()
                 client.connect(serverDevice, service)
                 isServer = false
             }
+        send.setOnClickListener { run { sendMessage() } }
+        search.setOnClickListener { run { search() } }
+        listen.setOnClickListener { run { launchServer() } }
+
     }
 
 
@@ -155,8 +136,7 @@ class BluetoothActivity: AppCompatActivity() {
      *  Sends a message
      */
 
-    fun sendMessage(v: View?) {
-        val string = writeMsg!!.text.toString()
+    private fun sendMessage() {
         val intent = Intent(this, GameActivity::class.java).apply {
             putExtra(GameActivity.EXTRA_GAME_SIZE, 9)
             putExtra(GameActivity.EXTRA_KOMI, 5.5)
@@ -175,27 +155,17 @@ class BluetoothActivity: AppCompatActivity() {
     /**
      * Launches a BT server
      */
-    fun launchServer(v: View?){
+    private fun launchServer() {
+
+        //TODO: prevent double server launch
         val getVisible = Intent(BluetoothAdapter.ACTION_REQUEST_DISCOVERABLE)
         startActivityForResult(getVisible, 0)
 
-        server = BluetoothServer(handler)
-        Toast.makeText(this, "ESTABLISHING CONNECTION", Toast.LENGTH_SHORT).show()
+        server = BluetoothServer()
+        Toast.makeText(this, getString(R.string.listen_bt), Toast.LENGTH_SHORT).show()
         server.connect(service)
 
         isServer = true
-    }
-
-    /**
-     * List devices user has paired with
-     */
-    fun listPaired() {
-        val pairedDevices: Set<BluetoothDevice> = bluetoothAdapter!!.bondedDevices
-        val list: ArrayList<String> = ArrayList<String>()
-        for (bt in pairedDevices) list.add(bt.name)
-        Toast.makeText(applicationContext, "Showing Paired Devices", Toast.LENGTH_SHORT).show()
-        val adapter: ArrayAdapter<*> = ArrayAdapter(this, android.R.layout.simple_list_item_1, list)
-        listView!!.adapter = adapter
     }
 
 
@@ -205,30 +175,28 @@ class BluetoothActivity: AppCompatActivity() {
      */
     fun listFound() {
 
-
-        //Toast.makeText(applicationContext, "Showing Found Devices", Toast.LENGTH_SHORT).show()
-        val list: ArrayList<String> = ArrayList<String>()
-        for (device in foundDevices!!){
+        val list: ArrayList<String> = ArrayList()
+        for (device in foundDevices) {
             val info = deviceInfo[device]
             if (info != null)
                 list.add(info)
         }
 
         val adapter: ArrayAdapter<*> = ArrayAdapter(this, android.R.layout.simple_list_item_1, list)
-        listView!!.adapter = adapter
+        listView.adapter = adapter
     }
 
 
     /**
      * search for BT devices
      */
-    fun search(v: View?){
+    private fun search() {
         showLocationPermission()
         btProbe = BluetoothProbe()
-        Toast.makeText(applicationContext, "Searching devices...", Toast.LENGTH_SHORT).show()
+        Toast.makeText(applicationContext, getString(R.string.search_bt), Toast.LENGTH_SHORT).show()
 
-        if(bluetoothAdapter!!.isEnabled()){
-            bluetoothAdapter!!.startDiscovery()
+        if (bluetoothAdapter.isEnabled) {
+            bluetoothAdapter.startDiscovery()
         } else {
             val turnOn = Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE)
             startActivityForResult(turnOn, 0)
@@ -241,13 +209,25 @@ class BluetoothActivity: AppCompatActivity() {
      */
     private fun showLocationPermission() {
         val permissionCheck = ContextCompat.checkSelfPermission(
-                this, Manifest.permission.ACCESS_FINE_LOCATION)
+            this, Manifest.permission.ACCESS_FINE_LOCATION
+        )
         if (permissionCheck != PackageManager.PERMISSION_GRANTED) {
-            if (ActivityCompat.shouldShowRequestPermissionRationale(this,
-                            Manifest.permission.ACCESS_FINE_LOCATION)) {
-                showExplanation("Permission Needed", "Please allow accessing your location via the app settings in order to play via Bluetooth.", Manifest.permission.ACCESS_FINE_LOCATION, REQUEST_PERMISSION_FINE_LOCATION)
+            if (ActivityCompat.shouldShowRequestPermissionRationale(
+                    this,
+                    Manifest.permission.ACCESS_FINE_LOCATION
+                )
+            ) {
+                getString(R.string.need_permission).explainBTPermission(
+                    getString(R.string.bt_permission_explain),
+                    Manifest.permission.ACCESS_FINE_LOCATION,
+                    REQUEST_PERMISSION_FINE_LOCATION
+                )
             } else {
-                PermissionUtils.requestPermission(this, REQUEST_PERMISSION_FINE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION)
+                PermissionUtils.requestPermission(
+                    this,
+                    REQUEST_PERMISSION_FINE_LOCATION,
+                    Manifest.permission.ACCESS_FINE_LOCATION
+                )
             }
         }
     }
@@ -255,46 +235,59 @@ class BluetoothActivity: AppCompatActivity() {
     /**
      * More permission stuff, might be moved into utils
      */
-    private fun showExplanation(title: String, message: String, permission: String, permissionRequestCode: Int) {
+    private fun String.explainBTPermission(
+        message: String,
+        permission: String,
+        permissionRequestCode: Int
+    ) {
 
-        val builder: AlertDialog.Builder = AlertDialog.Builder(this)
-        builder.setTitle(title)
-                .setMessage(message)
-                .setPositiveButton(android.R.string.ok, DialogInterface.OnClickListener { dialog, id -> PermissionUtils.requestPermission(this, permissionRequestCode, permission) })
+        val builder: AlertDialog.Builder = AlertDialog.Builder(this@BluetoothActivity)
+        builder.setTitle(this)
+            .setMessage(message)
+            .setPositiveButton(android.R.string.ok) { _, _ ->
+                PermissionUtils.requestPermission(
+                    this@BluetoothActivity,
+                    permissionRequestCode,
+                    permission
+                )
+            }
         builder.create().show()
     }
 
     /**
      * More permission stuff, might be moved into utils
      */
-    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<String>,
+        grantResults: IntArray
+    ) {
         when (requestCode) {
-            REQUEST_PERMISSION_FINE_LOCATION -> if (grantResults.size > 0
-                    && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                Toast.makeText(this, "Permission Granted!", Toast.LENGTH_SHORT).show()
+            REQUEST_PERMISSION_FINE_LOCATION -> if (grantResults.isNotEmpty()
+                && grantResults[0] == PackageManager.PERMISSION_GRANTED
+            ) {
+                Toast.makeText(this, getString(R.string.permission_ok), Toast.LENGTH_SHORT).show()
             } else {
-                Toast.makeText(this, "Permission Denied!", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, getString(R.string.permission_fail), Toast.LENGTH_SHORT).show()
             }
         }
     }
 
 
     companion object {
-        const val STATE_LISTENING = 1
-        const val STATE_CONNECTING = 2
-        const val STATE_CONNECTED = 3
-        const val STATE_CONNECTION_FAILED = 4
-        const val STATE_MESSAGE_RECEIVED = 5
+//        const val STATE_LISTENING = 1
+//        const val STATE_CONNECTING = 2
+//        const val STATE_CONNECTED = 3
+//        const val STATE_CONNECTION_FAILED = 4
+//        const val STATE_MESSAGE_RECEIVED = 5
 
         const val REQUEST_PERMISSION_FINE_LOCATION = 1
         const val REQUEST_ENABLE_BLUETOOTH = 1
 
-        //TODO ??????????????????????????????????
         val service = BluetoothGTPService()
 
 
-        //TODO: create own UUID
-        private val MY_UUID = UUID.fromString("8ce255c0-223a-11e0-ac64-0803450c9a66")
-        private val APP_UUID = UUID.fromString("8ce255c0-223a-11e0-ac64-0803450c9a66")
+//        private val MY_UUID = UUID.fromString("8ce255c0-223a-11e0-ac64-0803450c9a66")
+//        private val APP_UUID = UUID.fromString("8ce255c0-223a-11e0-ac64-0803450c9a66")
     }
 }
