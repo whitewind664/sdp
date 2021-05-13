@@ -102,7 +102,8 @@ class ProfileActivityTest {
         onView(withId(R.id.profile_imageView_image)).perform(click())
         clickAtIndex(0, "Take Picture")
         acceptPermissions()
-        Intents.intended(IntentMatchers.hasAction(MediaStore.ACTION_IMAGE_CAPTURE))
+        sleep()
+        Intents.intended(hasAction(MediaStore.ACTION_IMAGE_CAPTURE))
     }
 
     @Test
@@ -115,7 +116,8 @@ class ProfileActivityTest {
         //onView(withText(R.string.profile_chooseFromGallery)).perform(click())
         clickAtIndex(1, "Choose from Gallery")
         acceptPermissions()
-        Intents.intended(IntentMatchers.hasAction(Intent.ACTION_CHOOSER))
+        sleep()
+        Intents.intended(hasAction(Intent.ACTION_CHOOSER))
     }
 
     @Test
