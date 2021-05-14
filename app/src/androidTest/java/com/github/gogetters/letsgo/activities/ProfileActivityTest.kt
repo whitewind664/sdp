@@ -97,7 +97,7 @@ class ProfileActivityTest: EmulatedFirebaseTest() {
         onView(withId(R.id.profile_imageView_image)).perform(click())
         clickAtIndex(0, "Take Picture")
         acceptPermissions()
-        Intents.intended(IntentMatchers.hasAction(MediaStore.ACTION_IMAGE_CAPTURE))
+        Intents.intended(hasAction(MediaStore.ACTION_IMAGE_CAPTURE))
     }
 
     // TODO gotta test whether this works with firebase emulation
@@ -158,18 +158,18 @@ class ProfileActivityTest: EmulatedFirebaseTest() {
         val testEmail = ""
         val testPassword = ""
 
-        onView(withText("Sign in with email"))!!.perform(ViewActions.click())
+        onView(withText("Sign in with email"))!!.perform(click())
 
-        val emailField = onView(ViewMatchers.withHint("Email"))
+        val emailField = onView(withHint("Email"))
         emailField!!.perform(ViewActions.typeText(testEmail), ViewActions.closeSoftKeyboard())
 
-        onView(withText("Next"))!!.perform(ViewActions.click())
+        onView(withText("Next"))!!.perform(click())
 
 
-        val passwordField = onView(ViewMatchers.withHint("Password"))
+        val passwordField = onView(withHint("Password"))
         passwordField!!.perform(ViewActions.typeText(testPassword), ViewActions.closeSoftKeyboard())
 
-        onView(withText("Sign in"))!!.perform(ViewActions.click())
+        onView(withText("Sign in"))!!.perform(click())
     }
 
     fun acceptPermissions() {
