@@ -50,7 +50,7 @@ import java.io.IOException
 
 
 @RunWith(AndroidJUnit4::class)
-class ProfileActivityTest: EmulatedFirebaseTest() {
+class ProfileActivityTest {
     val GRANT_PERMISSION_BUTTON_INDEX = 0
     val DELAY = 3000L
 
