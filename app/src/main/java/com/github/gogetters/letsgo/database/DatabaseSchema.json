@@ -6,7 +6,7 @@
       "last": "value",
       "city": "value",
       "country": "value",
-      "profilePictureURL": "value",
+      "profilePictureRef": "value",
       "isLookingForPlayers": "value",
       "lastPositionLatitude": "value",
       "lastPositionLongitude": "value"

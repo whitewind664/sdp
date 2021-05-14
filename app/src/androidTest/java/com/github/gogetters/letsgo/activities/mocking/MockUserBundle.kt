@@ -1,7 +1,7 @@
 package com.github.gogetters.letsgo.activities.mocking
 
-import com.github.gogetters.letsgo.database.LetsGoUser
-import com.github.gogetters.letsgo.database.UserBundle
+import com.github.gogetters.letsgo.database.user.LetsGoUser
+import com.github.gogetters.letsgo.database.user.UserBundle
 
 class MockUserBundle: UserBundle() {
     override fun getUser(): LetsGoUser {

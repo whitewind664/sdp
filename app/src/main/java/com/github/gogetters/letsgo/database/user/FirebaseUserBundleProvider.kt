@@ -1,4 +1,4 @@
-package com.github.gogetters.letsgo.database
+package com.github.gogetters.letsgo.database.user
 
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
