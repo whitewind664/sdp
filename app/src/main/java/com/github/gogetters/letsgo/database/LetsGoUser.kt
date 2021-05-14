@@ -7,6 +7,7 @@ import com.google.android.gms.tasks.Tasks
 import java.util.*
 import kotlin.collections.ArrayList
 
+
 // I know we could use a data class or something but LetsGoUser's functioning is complex and this
 // approach just works so I will stick to it!
 // Db is an optional argument to allow for testing!
@@ -112,6 +113,7 @@ class LetsGoUser(val uid: String, val db: Database.Companion = Database) {
 
     //===========================================================================================
     // Friend System
+
 
     /* MAYBE
     * - Do we need a function to check that status of a current friend request (probably)

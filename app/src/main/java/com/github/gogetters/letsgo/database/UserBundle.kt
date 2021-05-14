@@ -1,15 +1,13 @@
 package com.github.gogetters.letsgo.database
 
-import com.google.firebase.auth.FirebaseUser
-
 /**
- * This is the simplest way to handle FirebaseUser and our own LetsGoUser together.
+ * Used to make mocking of FirebaseUserBundle possible
  */
-class UserBundle(val firebase: FirebaseUser) {
+abstract class UserBundle {
 
-    val letsGo = LetsGoUser(firebase.uid)
+    abstract fun getUser(): LetsGoUser
 
-    fun deleteUser() {
-        letsGo.deleteUserData().continueWith { firebase.delete() }
-    }
+    abstract fun  getEmail(): String
+
+    abstract fun deleteUser()
 }
