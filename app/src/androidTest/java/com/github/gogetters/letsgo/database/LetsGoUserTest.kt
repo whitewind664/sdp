@@ -16,7 +16,7 @@ import org.junit.runners.MethodSorters
 
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 @RunWith(AndroidJUnit4::class)
-class LetsGoUserTest {
+class LetsGoUserTest: EmulatedFirebaseTest() {
 
     private val TAG = "FirestoreTest"
     private val TEST_UID = "tESTuID"
@@ -98,10 +98,10 @@ class LetsGoUserTest {
         Tasks.await(user3.deleteFriend(user))
     }
 
-    @Test
-    fun eTestCheckUserExists() {
-        Tasks.await(user.requireUserExists())
-    }
+//    @Test
+//    fun eTestCheckUserExists() {
+//        Tasks.await(user.requireUserExists())
+//    }
 
     @Test
     fun eTestDownloadFriends() {
