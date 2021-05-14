@@ -3,6 +3,7 @@ package com.github.gogetters.letsgo.chat
 import androidx.test.ext.junit.rules.ActivityScenarioRule
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.github.gogetters.letsgo.activities.ChatActivity
+import com.github.gogetters.letsgo.database.EmulatedFirebaseTest
 import junit.framework.Assert.assertEquals
 import org.junit.Rule
 import org.junit.Test
@@ -10,7 +11,7 @@ import org.junit.runner.RunWith
 import java.util.*
 
 @RunWith(AndroidJUnit4::class)
-class MessageAdapterTest {
+class MessageAdapterTest: EmulatedFirebaseTest() {
     @get:Rule
     var activityRule = ActivityScenarioRule<ChatActivity>(ChatActivity::class.java)
 

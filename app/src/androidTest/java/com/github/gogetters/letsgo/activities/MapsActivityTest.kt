@@ -13,6 +13,7 @@ import com.github.gogetters.letsgo.R
 import com.github.gogetters.letsgo.util.MockLocationSharingService
 import androidx.test.platform.app.InstrumentationRegistry.getInstrumentation
 import androidx.test.uiautomator.UiObject
+import com.github.gogetters.letsgo.database.EmulatedFirebaseTest
 
 import org.junit.After
 import org.junit.Before
@@ -22,7 +23,7 @@ import org.junit.runner.RunWith
 
 
 @RunWith(AndroidJUnit4::class)
-class MapsActivityTest {
+class MapsActivityTest: EmulatedFirebaseTest() {
     val GRANT_PERMISSION_BUTTON_INDEX = 0
     val PERMISSIONS_DELAY = 5000L
 

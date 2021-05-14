@@ -6,6 +6,7 @@ import android.util.Log
 import com.github.gogetters.letsgo.database.types.GameData
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.tasks.Task
+import com.google.android.gms.tasks.Tasks
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.ktx.database
@@ -17,13 +18,33 @@ class Database {
     companion object {
 
         init {
-            Firebase.database.setPersistenceEnabled(true)
+//            Firebase.database.setPersistenceEnabled(true)
         }
 
         private val db = Firebase.database
-        val database = Firebase.database.reference
+        private val database by lazy {
+            db.reference
+        }
+
+        var isEmulated = false
+            get() = field
 
         // TODO write database functions here
+
+        fun emulatorSettings() {
+            // 10.0.2.2 is the special IP address to connect to the 'localhost' of
+            // the host computer from an Android emulator.
+            db.useEmulator("10.0.2.2", 9000)
+            isEmulated = true
+        }
+
+        fun flushRealtimeDatabase() {
+            // With a DatabaseReference, write null to clear the database.
+            // NEVER USE IN PRODUCTION
+            if (isEmulated) {
+                Tasks.await(db.reference.setValue(null))
+            }
+        }
 
         fun writeData(ref: String, data:Any?): Task<Void> {
             return db.getReference(ref).setValue(data)
@@ -41,22 +62,16 @@ class Database {
             return db.getReference(ref).removeValue()
         }
 
-        fun goOffline() {
-            db.goOffline()
-        }
-
-        fun goOnline() {
-            db.goOnline()
-        }
-
-        fun purgeOutstandingWrites() {
-            db.purgeOutstandingWrites()
-        }
-
         // ---- [START} Matchmaking  ----
 
 
-        fun findMatch(playerId: String, playerRating: Int) {
+        fun findMatch(
+                playerId: String,
+                playerRating: Int,
+                onComplete: (DatabaseError?,
+                             Boolean,
+                             DataSnapshot?) -> Unit
+        ) {
             // TODO improve to match players according to rating
             database.child("matchmaking")
                 .runTransaction(object : Transaction.Handler {
@@ -78,14 +93,14 @@ class Database {
                         committed: Boolean,
                         currentData: DataSnapshot?
                     ) {
-                        Log.d("Database::findMatch", "msg")
+                        onComplete(error, committed, currentData)
                     }
                 })
         }
 
 
         // ---- [END] Matchmaking ----
-        
+
         // ---- Map related ----
         /**
          * Activates the location sharing and sends location to database.
