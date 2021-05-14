@@ -38,10 +38,9 @@ class GameActivityTest {
     fun tappingScreenPlacesStone() {
         val scenario = activityScenarioRule.scenario
         val goView = Espresso.onView(withParent(withId(R.id.game_frameLayout_boardFrame)))
-        scenario.onActivity { activity ->
-            goView.perform(touchDownAndUp(1f, 1f))
-            goView.perform(touchDownAndUp(2f, 2f))
-        }
+
+        goView.perform(touchDownAndUp(1f, 1f))
+        goView.perform(touchDownAndUp(2f, 2f))
     }
 
     private fun touchDownAndUp(x: Float, y: Float): ViewAction {
