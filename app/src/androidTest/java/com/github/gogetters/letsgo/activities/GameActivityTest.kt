@@ -1,8 +1,6 @@
 package com.github.gogetters.letsgo.activities
 
-import android.content.Intent
 import android.view.View
-import androidx.test.core.app.ApplicationProvider
 import androidx.test.espresso.Espresso
 import androidx.test.espresso.UiController
 import androidx.test.espresso.ViewAction
@@ -12,7 +10,6 @@ import androidx.test.ext.junit.rules.ActivityScenarioRule
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.github.gogetters.letsgo.R
 import org.hamcrest.Matcher
-import org.junit.After
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -20,25 +17,13 @@ import org.junit.runner.RunWith
 
 @RunWith(AndroidJUnit4::class)
 class GameActivityTest {
-
-    private val intent = Intent(ApplicationProvider.getApplicationContext(), GameActivity::class.java)
-    init {
-        intent.putExtra(GameActivity.EXTRA_PLAYER_TYPES, arrayOf("LOCAL", "LOCAL"))
-    }
-
     @get:Rule
-    var activityScenarioRule = ActivityScenarioRule<GameActivity>(intent)
-
-    @After
-    fun cleanUp() {
-        activityScenarioRule.scenario.close()
-    }
+    var activityScenarioRule = ActivityScenarioRule<GameActivity>(GameActivity::class.java)
 
     @Test
     fun tappingScreenPlacesStone() {
         val scenario = activityScenarioRule.scenario
         val goView = Espresso.onView(withParent(withId(R.id.game_frameLayout_boardFrame)))
-
         goView.perform(touchDownAndUp(1f, 1f))
         goView.perform(touchDownAndUp(2f, 2f))
     }

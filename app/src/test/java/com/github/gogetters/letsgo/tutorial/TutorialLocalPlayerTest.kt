@@ -2,7 +2,6 @@ package com.github.gogetters.letsgo.tutorial
 
 import com.github.gogetters.letsgo.game.*
 import com.github.gogetters.letsgo.game.util.InputDelegate
-import com.github.gogetters.letsgo.game.util.TouchInputDelegate
 import org.junit.Test
 import org.junit.Assert.assertEquals
 import org.mockito.Mockito
@@ -14,8 +13,8 @@ class TutorialLocalPlayerTest {
         val move = Move(Stone.BLACK, Point(2, 2))
         val boardState = BoardState(BoardState.emptyBoard(Board.Size.SMALL), null, 0, 0)
 
-        val inputDelegate = TouchInputDelegate()
-        inputDelegate.saveLatestInput(move.point)
+        val inputDelegate = InputDelegate()
+        inputDelegate.saveInput(move.coord)
 
         val player = TutorialLocalPlayer(inputDelegate)
         player.setRecommendedMoves(listOf(listOf(move)))
