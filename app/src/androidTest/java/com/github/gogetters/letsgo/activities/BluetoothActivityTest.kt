@@ -12,6 +12,7 @@ import org.junit.runner.RunWith
 
 @RunWith(AndroidJUnit4::class)
 class BluetoothActivityTest: EmulatedFirebaseTest() {
+    /*
     @get:Rule
     var activityRule = ActivityScenarioRule(BluetoothActivity::class.java)
 
@@ -22,4 +23,5 @@ class BluetoothActivityTest: EmulatedFirebaseTest() {
             
         }
     }
+    */
 }
