@@ -100,7 +100,7 @@ class ProfileActivityTest: EmulatedFirebaseTest() {
         Intents.intended(IntentMatchers.hasAction(MediaStore.ACTION_IMAGE_CAPTURE))
     }
 
-    // fails with emulated database, no idea why - Dimitar
+    // TODO gotta test whether this works with firebase emulation
 //    @Test
 //    fun galleryIntentIsFired() {
 //        scenario = ActivityScenario.launch(intent)
