@@ -13,8 +13,12 @@
     <uses-permission android:name="android.permission.BLUETOOTH" />
     <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
 
     <uses-feature android:name="android.hardware.bluetooth" />
+    <uses-feature android:name="android.hardware.camera"
+        android:required="true" />
 
     <application
         android:allowBackup="true"
@@ -33,7 +37,12 @@
         <activity
             android:name=".activities.GameActivity"
             android:label="@string/title_activity_game" />
-        <activity android:name=".activities.ProfileActivity" />
+        <activity
+            android:name=".activities.ProfileActivity"
+            android:label="@string/title_activity_profile" />
+        <activity
+            android:name=".activities.FirebaseUIActivity"
+            android:label="@string/title_activity_firebaseui" />
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"
@@ -68,6 +77,17 @@
         <activity
             android:name=".activities.ChatActivity"
             android:label="@string/title_activity_chat"/>
+
+        <!-- To store files (especially pictures) on the device -->
+        <provider
+            android:name="androidx.core.content.FileProvider"
+            android:authorities="${applicationId}.provider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/provider_paths" />
+        </provider>
 
     </application>
 

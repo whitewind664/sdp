@@ -2,7 +2,11 @@ package com.github.gogetters.letsgo.database
 
 import android.util.Log
 import androidx.test.ext.junit.runners.AndroidJUnit4
+import com.github.gogetters.letsgo.database.user.LetsGoUser
 import com.google.android.gms.tasks.Tasks
+import io.mockk.every
+import io.mockk.mockkObject
+import io.mockk.verify
 import org.junit.Before
 import org.junit.FixMethodOrder
 import org.junit.Ignore
@@ -12,7 +16,7 @@ import org.junit.runners.MethodSorters
 
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 @RunWith(AndroidJUnit4::class)
-class LetsGoUserTest {
+class LetsGoUserTest: EmulatedFirebaseTest() {
 
     private val TAG = "FirestoreTest"
     private val TEST_UID = "tESTuID"
@@ -94,10 +98,10 @@ class LetsGoUserTest {
         Tasks.await(user3.deleteFriend(user))
     }
 
-    @Test
-    fun eTestCheckUserExists() {
-        Tasks.await(user.requireUserExists())
-    }
+//    @Test
+//    fun eTestCheckUserExists() {
+//        Tasks.await(user.requireUserExists())
+//    }
 
     @Test
     fun eTestDownloadFriends() {
@@ -109,6 +113,33 @@ class LetsGoUserTest {
             Log.d(TAG, "status=$status \t${user2.listFriendsByStatus(status)}")
         }
         Log.d(TAG, "------------------------------------------------------------")
+    }
+
+    @Test
+    fun aaDeleteUserNotCallingStorageOnNull() {
+        mockkObject(Database)
+        mockkObject(CloudStorage)
+        // TO SET THE RETURN VALUE OF A METHOD (not used here)
+        every { Database.disableLocationSharing() } returns true
+        //every { Database.readData("") } returns Task() how to create Task?
+
+        val uid = "0"
+        val user = LetsGoUser(uid)
+        user.profileImageRef = null
+        user.deleteUserData()
+        verify(exactly = 0) { CloudStorage.deleteFile("") }
+    }
+
+    @Test
+    fun aaProfilePictureIsDeletedOnDeleteUserData() {
+        mockkObject(Database)
+        mockkObject(CloudStorage)
+        val uid = "0"
+        val ref = "ref"
+        val user = LetsGoUser(uid)
+        user.profileImageRef = ref
+        user.deleteUserData()
+        verify(exactly = 1) { CloudStorage.deleteFile(ref) }
     }
 
     @Ignore("We can remove this later")

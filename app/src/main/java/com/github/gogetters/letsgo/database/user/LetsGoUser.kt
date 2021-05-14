@@ -1,25 +1,28 @@
-package com.github.gogetters.letsgo.database
+package com.github.gogetters.letsgo.database.user
 
 import android.graphics.Bitmap
+import android.net.Uri
 import android.util.Log
+import com.github.gogetters.letsgo.database.CloudStorage
+import com.github.gogetters.letsgo.database.Database
 import com.google.android.gms.tasks.Task
 import com.google.android.gms.tasks.Tasks
 import java.util.*
 import kotlin.collections.ArrayList
 
+
 // I know we could use a data class or something but LetsGoUser's functioning is complex and this
 // approach just works so I will stick to it!
 // Db is an optional argument to allow for testing!
-class LetsGoUser(val uid: String, val db: Database.Companion = Database) {
+class LetsGoUser(val uid: String, val db: Database.Companion = Database, val cloud: CloudStorage.Companion = CloudStorage) {
     var nick: String? = null
     var first: String? = null
     var last: String? = null
     var city: String? = null
     var country: String? = null
 
-    // Might have to change the type of these fields
-    var profileImage: Bitmap? = null
-    private var profileImageUrl: String? = null
+    // The reference (== address) of the profile picture on cloud storage
+    var profileImageRef: String? = null
 
     private var friends: EnumMap<FriendStatus, MutableList<LetsGoUser>>? = null
 
@@ -33,7 +36,7 @@ class LetsGoUser(val uid: String, val db: Database.Companion = Database) {
      * Verifies if the user exists in our database
      */
     fun requireUserExists(): Task<Unit> {
-        return db.readData(userPath).continueWith {
+        return Database.readData(userPath).continueWith {
             val userExists = it.result.value != null
 
             if (userExists) {
@@ -54,11 +57,12 @@ class LetsGoUser(val uid: String, val db: Database.Companion = Database) {
             "first" to first,
             "last" to last,
             "city" to city,
-            "country" to country
+            "country" to country,
+            "profilePictureRef" to profileImageRef
         )
 
         // Add a new document with user's uid
-        return db.updateData(userPath, userData)
+        return Database.updateData(userPath, userData)
             .addOnSuccessListener {
                 Log.d(tag, "LetsGoUser document added for uid: $uid")
             }
@@ -80,6 +84,7 @@ class LetsGoUser(val uid: String, val db: Database.Companion = Database) {
                         "last" -> last = attribute.value as String
                         "city" -> city = attribute.value as String
                         "country" -> country = attribute.value as String
+                        "profilePictureRef" -> profileImageRef = attribute.value as String
                     }
                 }
             }
@@ -95,6 +100,10 @@ class LetsGoUser(val uid: String, val db: Database.Companion = Database) {
      * Deletes this User's data from the DB. Returns a task to track progress and etc.
      */
     fun deleteUserData(): Task<Void> {
+        // delete the profile picture
+        if(profileImageRef != null) {
+            cloud.deleteFile(profileImageRef!!)
+        }
         return db.deleteData(userPath)
             .addOnSuccessListener {
                 Log.d(tag, "LetsGoUser successfully deleted!")
@@ -106,12 +115,12 @@ class LetsGoUser(val uid: String, val db: Database.Companion = Database) {
 
     override fun toString(): String {
         // TODO Maybe improve this?
-
-        return "LetsGoUser(uid=$uid, nick=$nick, first=$first, last=$last, city=$city, country=$country)"
+        return "LetsGoUser(uid=$uid, nick=$nick, first=$first, last=$last, city=$city, country=$country, profileImageRef=$profileImageRef)"
     }
 
     //===========================================================================================
     // Friend System
+
 
     /* MAYBE
     * - Do we need a function to check that status of a current friend request (probably)
@@ -148,8 +157,8 @@ class LetsGoUser(val uid: String, val db: Database.Companion = Database) {
      * Use to remove a friend or delete a friend request.
      */
     fun deleteFriend(otherUser: LetsGoUser): Task<Void> {
-        return db.deleteData("$userFriendsPath/${otherUser.uid}").continueWithTask {
-            db.deleteData("${otherUser.userFriendsPath}/${this.uid}")
+        return Database.deleteData("$userFriendsPath/${otherUser.uid}").continueWithTask {
+            Database.deleteData("${otherUser.userFriendsPath}/${this.uid}")
         }.addOnSuccessListener {
             Log.d(tag, "'Friend' successfully deleted")
         }.addOnFailureListener {
@@ -161,9 +170,9 @@ class LetsGoUser(val uid: String, val db: Database.Companion = Database) {
      * Updates friend status for both users!
      */
     private fun updateFriendStatus(
-        otherUser: LetsGoUser,
-        status1: FriendStatus,
-        status2: FriendStatus
+            otherUser: LetsGoUser,
+            status1: FriendStatus,
+            status2: FriendStatus
     ): Task<Void> {
         return requireUserExists().continueWithTask {
             otherUser.requireUserExists().continueWithTask {
@@ -185,7 +194,7 @@ class LetsGoUser(val uid: String, val db: Database.Companion = Database) {
         val path = "$userFriendsPath/${otherUser.uid}"
         Log.d(tag, "Adding friend data. path: $path\tstatus: $status")
 
-        return db.writeData(path, status.name);
+        return Database.writeData(path, status.name);
     }
 
     //-------------------------------------------------------------------------------------------
@@ -207,7 +216,7 @@ class LetsGoUser(val uid: String, val db: Database.Companion = Database) {
      */
     // Sometimes I use the word connections and friends interchangeably
     fun downloadFriends(): Task<Void> {
-        return db.readData(userFriendsPath).continueWithTask {
+        return Database.readData(userFriendsPath).continueWithTask {
             val friendUids: EnumMap<FriendStatus, ArrayList<String>> =
                 EnumMap(FriendStatus::class.java)
             friends = EnumMap(FriendStatus::class.java)

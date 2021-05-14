@@ -20,6 +20,7 @@ import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.uiautomator.UiDevice
 import androidx.test.uiautomator.UiSelector
 import com.github.gogetters.letsgo.R
+import com.github.gogetters.letsgo.database.EmulatedFirebaseTest
 import org.hamcrest.Matcher
 import org.hamcrest.Matchers
 import org.hamcrest.Matchers.containsString
@@ -30,7 +31,7 @@ import org.junit.Test
 import org.junit.runner.RunWith
 
 @RunWith(AndroidJUnit4::class)
-class TutorialActivityTest {
+class TutorialActivityTest: EmulatedFirebaseTest() {
     @get:Rule
     val activityRule: ActivityScenarioRule<TutorialActivity> = ActivityScenarioRule(
             Intent(
