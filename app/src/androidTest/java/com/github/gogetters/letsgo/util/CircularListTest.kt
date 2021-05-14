@@ -2,12 +2,13 @@ package com.github.gogetters.letsgo.util
 
 import android.util.Log
 import androidx.test.ext.junit.runners.AndroidJUnit4
+import com.github.gogetters.letsgo.database.EmulatedFirebaseTest
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.junit.Assert.*
 
 @RunWith(AndroidJUnit4::class)
-class CircularListTest {
+class CircularListTest: EmulatedFirebaseTest() {
 
     @Test
     fun sizeCorrespondsToNumberOfElements() {
