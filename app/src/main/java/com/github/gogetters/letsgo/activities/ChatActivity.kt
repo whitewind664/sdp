@@ -70,7 +70,7 @@ class ChatActivity : AppCompatActivity() {
         })
     }
 
-    private fun sendMessage() {
+    fun sendMessage() {
 
         val text = chat_editText_input.text.toString()
 

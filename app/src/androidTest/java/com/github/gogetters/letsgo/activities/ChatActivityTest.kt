@@ -24,6 +24,8 @@ class ChatActivityTest: EmulatedFirebaseTest() {
         activityRule.scenario.close()
     }
 
+    // TODO gotta test whether this works with firebase emulation
+
     @Test
     fun sentMessageIsAddedToListView() {
         val scenario = activityRule.scenario
@@ -31,7 +33,7 @@ class ChatActivityTest: EmulatedFirebaseTest() {
             val testText = "Hello"
             val entryText: EditText = activity.findViewById(R.id.chat_editText_input)
             entryText.setText(testText)
-            //activity.sendMessage(null) // argument is not used
+            activity.sendMessage() // argument is not used
 
             // Check if entry field was emptied
             assertTrue(entryText.text.toString().isEmpty())
@@ -43,23 +45,5 @@ class ChatActivityTest: EmulatedFirebaseTest() {
 //            val item: ChatMessageData = (listView.getItemAtPosition(listView.count - 1) as ChatMessageData)
 //            assertEquals(item.getText(), testText)
         }
-        // TODO gotta test whether this works with firebase emulation
-//        val scenario = activityRule.scenario
-//        scenario.onActivity { activity ->
-//            val testText = "Hello"
-//            val entryText: EditText = activity.findViewById(R.id.chat_editText_input)
-//            entryText.setText(testText)
-//            activity.sendMessage(null) // argument is not used
-//
-//            // Check if entry field was emptied
-//            assertTrue(entryText.text.toString().isEmpty())
-//
-////            Can't check the following since user not logged in, make mocked user in the future
-//
-////            // Check if the message was added to the listview
-////            val listView: ListView = activity.findViewById(R.id.chat_listView_messages)
-////            val item: ChatMessage = (listView.getItemAtPosition(listView.count - 1) as ChatMessage)
-////            assertEquals(item.getText(), testText)
-//        }
     }
 }
