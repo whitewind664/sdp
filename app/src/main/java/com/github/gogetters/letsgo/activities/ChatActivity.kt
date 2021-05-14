@@ -7,7 +7,7 @@ import com.github.gogetters.letsgo.chat.model.ChatMessageData
 import com.github.gogetters.letsgo.chat.model.UserData
 import com.github.gogetters.letsgo.chat.views.ChatMyMessageItem
 import com.github.gogetters.letsgo.chat.views.ChatTheirMessageItem
-import com.google.firebase.auth.FirebaseAuth
+import com.github.gogetters.letsgo.database.Database
 import com.google.firebase.database.ChildEventListener
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
@@ -22,20 +22,17 @@ class ChatActivity : AppCompatActivity() {
     var userId: String? = null
     var toUser: UserData? = null
 
+    companion object {
+        val UNKNOWN = "Unknown"
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_chat)
 
         chat_recyclerview_messages.adapter = adapter
-
+        userId = Database.getCurrentUserId() ?: UNKNOWN
         toUser = intent.getParcelableExtra<UserData>(ChatNewMessageActivity.KEY)
-
-        val authInstance = FirebaseAuth.getInstance().currentUser
-        if (authInstance != null) {
-            userId = authInstance.uid
-        } else {
-            userId = "Unknown"
-        }
 
         listenForMessages()
 
@@ -54,7 +51,7 @@ class ChatActivity : AppCompatActivity() {
                 val chatMessage = snapshot.getValue(ChatMessageData::class.java)
                 // ADD to the adapter the text messages
                 if (chatMessage != null) {
-                    if (chatMessage.fromId == FirebaseAuth.getInstance().currentUser.uid) {
+                    if (chatMessage.fromId == userId) {
                         adapter.add(ChatMyMessageItem(chatMessage.text))
                     } else {
                         adapter.add(ChatTheirMessageItem(chatMessage.text))
@@ -78,7 +75,7 @@ class ChatActivity : AppCompatActivity() {
             val fromId = userId!!
             var toId: String?
             if (toUser?.id == null) {
-                toId = "Unknown"
+                toId = UNKNOWN
             } else {
                 toId = toUser?.id
             }

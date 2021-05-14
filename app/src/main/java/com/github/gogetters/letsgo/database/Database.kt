@@ -233,7 +233,7 @@ class Database {
             databaseReference.removeEventListener(listener)
         }
 
-        private fun getCurrentUserId(): String? {
+        fun getCurrentUserId(): String? {
             val user = FirebaseAuth.getInstance().currentUser ?: return null
             return user.uid
         }
