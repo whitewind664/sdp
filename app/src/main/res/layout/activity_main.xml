@@ -38,12 +38,6 @@
             app:layout_constraintTop_toBottomOf="@+id/main_button_profile" />
 
         <Button
-            android:id="@+id/main_button_startGame"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/startGameButtonText" />
-
-        <Button
             android:id="@+id/main_button_bt"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

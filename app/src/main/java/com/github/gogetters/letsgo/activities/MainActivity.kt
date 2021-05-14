@@ -18,17 +18,6 @@ class MainActivity : BaseActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        val gameButton = findViewById<Button>(R.id.main_button_startGame)
-        gameButton.setOnClickListener {
-            val intent = Intent(this, GameActivity::class.java).apply {
-                putExtra(GameActivity.EXTRA_GAME_SIZE, 9)
-                putExtra(GameActivity.EXTRA_KOMI, 5.5)
-                val localType = Player.PlayerTypes.LOCAL.name
-                putExtra(GameActivity.EXTRA_PLAYER_TYPES, arrayOf(localType, localType))
-            }
-            startActivity(intent)
-        }
-
         val mapButton = findViewById<Button>(R.id.main_button_map)
         mapButton.setOnClickListener {
             val intent = Intent(this, MapsActivity::class.java)
