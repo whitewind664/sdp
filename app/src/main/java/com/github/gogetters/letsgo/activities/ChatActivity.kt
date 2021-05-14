@@ -1,7 +1,6 @@
 package com.github.gogetters.letsgo.activities
 
 import android.os.Bundle
-import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import com.github.gogetters.letsgo.R
 import com.github.gogetters.letsgo.chat.model.ChatMessageData
@@ -60,8 +59,8 @@ class ChatActivity : AppCompatActivity() {
                     } else {
                         adapter.add(ChatTheirMessageItem(chatMessage.text))
                     }
-                    chat_recyclerview_messages.scrollToPosition(adapter.itemCount-1)
                 }
+                chat_recyclerview_messages.scrollToPosition(adapter.itemCount - 1)
             }
 
             override fun onChildChanged(snapshot: DataSnapshot, previousChildName: String?) {}
@@ -85,6 +84,8 @@ class ChatActivity : AppCompatActivity() {
             }
             val ref = FirebaseDatabase.getInstance().getReference("/messages-node/$fromId/$toId").push()
             val toRef = FirebaseDatabase.getInstance().getReference("/messages-node/$toId/$fromId").push()
+            val lastMessageRef = FirebaseDatabase.getInstance().getReference("/last-messages-node/$fromId/$toId")
+            val lastMessageToRef = FirebaseDatabase.getInstance().getReference("/last-messages-node/$toId/$fromId")
 
             val chatMessage =
                 ChatMessageData(ref.key!!, text, fromId, toId!!, System.currentTimeMillis() / 1000)
@@ -97,6 +98,10 @@ class ChatActivity : AppCompatActivity() {
             toRef.setValue(chatMessage).addOnSuccessListener {
                 chat_recyclerview_messages.scrollToPosition(adapter.itemCount - 1)
             }
+
+            lastMessageRef.setValue(chatMessage)
+
+            lastMessageToRef.setValue(chatMessage)
         }
 
     }
