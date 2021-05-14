@@ -23,7 +23,9 @@
 - To improve: more tests
 
 ## Roust, Michael Murad
-
+- Done: Worked on the user login
+- Went well: the user login is progressing
+- To improve: Started work way too late
 
 ## Wengle, Erik Alessandro (Scrum Master)
 - Done: I refactored the entire code of the Bluetooth Activity and its respective classes
