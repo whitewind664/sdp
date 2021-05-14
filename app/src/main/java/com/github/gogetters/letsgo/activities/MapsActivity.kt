@@ -7,6 +7,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.widget.Button
+import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.github.gogetters.letsgo.R
@@ -29,6 +30,9 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMyLoca
         GoogleMap.OnMyLocationClickListener, ActivityCompat.OnRequestPermissionsResultCallback {
     companion object {
         private const val LOCATION_PERMISSION_REQUEST_CODE: Int = 1
+        private val EPFL: LatLng = LatLng(46.51899505106699, 6.563449219980816)
+        private const val INIT_ZOOM = 10f
+        private const val TOAST_DURATION = Toast.LENGTH_SHORT
     }
     private var permissionDenied = false
     private lateinit var mMap: GoogleMap
@@ -69,9 +73,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMyLoca
         mMap = googleMap
 
         // Move the camera to EPFL
-        val epfl = LatLng(46.51899505106699, 6.563449219980816)
-        val zoom = 10f
-        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(epfl, zoom))
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(EPFL, INIT_ZOOM))
 
         googleMap.setOnMyLocationButtonClickListener(this)
         googleMap.setOnMyLocationClickListener(this)
@@ -91,7 +93,6 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMyLoca
         if (!::mMap.isInitialized)
             return
 
-        // check location permission
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
                 == PackageManager.PERMISSION_GRANTED) {
             mMap.isMyLocationEnabled = true
@@ -111,7 +112,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMyLoca
                         .addOnSuccessListener { location: Location? ->
                             // Got last known location. In some rare situations this can be null.
                             if (!::locationSharingService.isInitialized || location == null) {
-                                // TODO display dialog with error message
+                                Toast.makeText(this, resources.getString(R.string.map_permissionSharingFailed), TOAST_DURATION).show()
                                 Log.v("MapsActivity", "Location could not be shared")
                             } else {
                                 // share the location with other users
@@ -135,7 +136,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMyLoca
 
         locationSharingService.getSharedLocations().thenApply {
             if (it == null || it.isEmpty()) {
-                // TODO display that there are no other players
+                Toast.makeText(this, resources.getString(R.string.map_noPlayersFound), TOAST_DURATION).show()
             } else {
                 setOtherPlayers(it)
             }
@@ -151,14 +152,6 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMyLoca
                 userMarkers = userMarkers + Pair(marker, id)
             }
         }
-    }
-
-    /**
-     * Deact
-     */
-    private fun deactivateDisplayOtherPlayers() {
-        otherUsersActivated = false
-        removeAllOtherPlayers()
     }
 
     /**
@@ -201,8 +194,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMyLoca
         super.onResumeFragments()
         if (permissionDenied) {
             // Permission was not granted, display error dialog.
-            // showMissingPermissionError()
-            // TODO actually show error
+            Toast.makeText(this, resources.getString(R.string.map_permissionDeniedError), TOAST_DURATION).show()
             permissionDenied = false
         }
     }
