@@ -28,9 +28,6 @@
             android:name=".activities.TutorialActivity"
             android:label="@string/title_activity_tutorial"></activity>
         <activity
-            android:name=".activities.ChatActivity"
-            android:label="@string/title_activity_chat"></activity>
-        <activity
             android:name=".activities.BluetoothActivity"
             android:exported="true" />
         <activity
@@ -57,6 +54,21 @@
         <meta-data
             android:name="preloaded_fonts"
             android:resource="@array/preloaded_fonts" />
+
+        <!-- Chat related activities -->
+        <!-- Lists the last messages of different users -->
+        <activity android:name=".activities.ChatLastMessageActivity" />
+        <!-- Fetches users from DB to chat with -->
+        <activity android:name=".activities.ChatNewMessageActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".activities.ChatLastMessageActivity" />
+        </activity>
+        <!-- Launches the chat with a specific user -->
+        <activity
+            android:name=".activities.ChatActivity"
+            android:label="@string/title_activity_chat"/>
+
     </application>
 
 </manifest>
