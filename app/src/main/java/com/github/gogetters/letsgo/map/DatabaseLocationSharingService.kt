@@ -7,7 +7,7 @@ import java.util.concurrent.CompletableFuture
 /**
  * Uses the Firebase database to provide the location sharing service
  */
-class DatabaseLocationSharingService(): LocationSharingService() {
+class DatabaseLocationSharingService: LocationSharingService() {
     override fun shareMyLocation(location: LatLng): Boolean {
         return Database.shareLocation(location)
     }
