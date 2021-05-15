@@ -62,6 +62,10 @@ class Database {
             return db.getReference(ref).removeValue()
         }
 
+        fun setCache() {
+            Firebase.database.setPersistenceEnabled(true)
+        }
+
         // ---- [START} Matchmaking  ----
 
 
