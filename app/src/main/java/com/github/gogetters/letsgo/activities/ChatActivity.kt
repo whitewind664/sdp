@@ -1,6 +1,7 @@
 package com.github.gogetters.letsgo.activities
 
 import android.os.Bundle
+import android.provider.ContactsContract
 import androidx.appcompat.app.AppCompatActivity
 import com.github.gogetters.letsgo.R
 import com.github.gogetters.letsgo.chat.model.ChatMessageData
@@ -45,6 +46,7 @@ class ChatActivity : AppCompatActivity() {
         val fromId = userId
         val toId = toUser?.id
         val ref = FirebaseDatabase.getInstance().getReference("/messages-node/$fromId/$toId")
+        ref.keepSynced(true)
 
         ref.addChildEventListener(object: ChildEventListener {
             override fun onChildAdded(snapshot: DataSnapshot, previousChildName: String?) {
@@ -80,9 +82,13 @@ class ChatActivity : AppCompatActivity() {
                 toId = toUser?.id
             }
             val ref = FirebaseDatabase.getInstance().getReference("/messages-node/$fromId/$toId").push()
+            ref.keepSynced(true)
             val toRef = FirebaseDatabase.getInstance().getReference("/messages-node/$toId/$fromId").push()
+            toRef.keepSynced(true)
             val lastMessageRef = FirebaseDatabase.getInstance().getReference("/last-messages-node/$fromId/$toId")
+            lastMessageRef.keepSynced(true)
             val lastMessageToRef = FirebaseDatabase.getInstance().getReference("/last-messages-node/$toId/$fromId")
+            lastMessageToRef.keepSynced(true)
 
             val chatMessage =
                 ChatMessageData(ref.key!!, text, fromId, toId!!, System.currentTimeMillis() / 1000)

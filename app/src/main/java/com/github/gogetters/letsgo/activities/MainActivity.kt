@@ -4,12 +4,15 @@ import android.content.Intent
 import android.os.Bundle
 import android.widget.Button
 import com.github.gogetters.letsgo.R
+import com.github.gogetters.letsgo.database.Database
 import com.github.gogetters.letsgo.database.user.FirebaseUserBundleProvider
 
 class MainActivity : BaseActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        Database.enableCache()
 
         val mapButton = findViewById<Button>(R.id.main_button_map)
         mapButton.setOnClickListener {
