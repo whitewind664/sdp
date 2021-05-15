@@ -26,8 +26,7 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.LetsGo"
-        android:name=".activities.CacheActivity">
+        android:theme="@style/Theme.LetsGo">
         <activity android:name=".activities.FriendListActivity"></activity>
         <activity
             android:name=".activities.TutorialActivity"
