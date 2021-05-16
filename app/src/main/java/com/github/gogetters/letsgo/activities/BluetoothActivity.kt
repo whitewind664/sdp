@@ -140,12 +140,14 @@ class BluetoothActivity : AppCompatActivity() {
         val intent = Intent(this, GameActivity::class.java).apply {
             putExtra(GameActivity.EXTRA_GAME_SIZE, 9)
             putExtra(GameActivity.EXTRA_KOMI, 5.5)
-            val local = Player.PlayerTypes.BTLOCAL.name
-            val remote = Player.PlayerTypes.BTREMOTE.name
+            val local = Player.PlayerTypes.BTLOCAL.ordinal
+            val remote = Player.PlayerTypes.BTREMOTE.ordinal
             if (isServer) {
-                putExtra(GameActivity.EXTRA_PLAYER_TYPES, arrayOf(local, remote))
+                putExtra(GameActivity.EXTRA_PLAYER_BLACK, local)
+                putExtra(GameActivity.EXTRA_PLAYER_WHITE, remote)
             } else {
-                putExtra(GameActivity.EXTRA_PLAYER_TYPES, arrayOf(remote, local))
+                putExtra(GameActivity.EXTRA_PLAYER_BLACK, remote)
+                putExtra(GameActivity.EXTRA_PLAYER_WHITE, local)
             }
         }
         startActivity(intent)

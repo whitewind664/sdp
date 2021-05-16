@@ -25,6 +25,15 @@ interface Player {
                 else -> throw IllegalArgumentException("INVALID PLAYER TYPE")
             }
         }
+
+        fun playerOf(color: Stone, type: Int, touchInputDelegate: TouchInputDelegate, bluetoothGTPService: BluetoothGTPService): Player {
+            return when(type) {
+                PlayerTypes.LOCAL.ordinal -> LocalPlayer(color, touchInputDelegate)
+                PlayerTypes.BTREMOTE.ordinal -> BluetoothRemotePlayer(color, BluetoothInputDelegate(bluetoothGTPService))
+                PlayerTypes.BTLOCAL.ordinal -> BluetoothLocalPlayer(LocalPlayer(color, touchInputDelegate), bluetoothGTPService)
+                else -> throw IllegalArgumentException("INVALID PLAYER TYPE")
+            }
+        }
     }
 
     enum class PlayerTypes {

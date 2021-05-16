@@ -13,7 +13,8 @@ class GameActivity : BaseActivity() {
     companion object {
         const val EXTRA_GAME_SIZE = "com.github.gogetters.letsgo.game.GAME_SIZE"
         const val EXTRA_KOMI = "com.github.gogetters.letsgo.game.KOMI"
-        const val EXTRA_PLAYER_TYPES = "com.github.gogetters.letsgo.game.PLAYER_TYPES"
+        const val EXTRA_PLAYER_WHITE = "com.github.gogetters.letsgo.game.PLAYER_ONE"
+        const val EXTRA_PLAYER_BLACK = "com.github.gogetters.letsgo.game.PLAYER_TWO"
     }
 
     private lateinit var game: Game
@@ -25,7 +26,8 @@ class GameActivity : BaseActivity() {
 
         val gameSizeInput = intent.getIntExtra(EXTRA_GAME_SIZE, 9)
         val komi = intent.getDoubleExtra(EXTRA_KOMI, 5.5)
-        val playerTypes = intent.getStringArrayExtra(EXTRA_PLAYER_TYPES)
+        val blackType = intent.getIntExtra(EXTRA_PLAYER_BLACK, 0)
+        val whiteType = intent.getIntExtra(EXTRA_PLAYER_WHITE, 0)
 
         val bluetoothService = BluetoothActivity.service
 
@@ -39,11 +41,6 @@ class GameActivity : BaseActivity() {
 
         val boardFrame = findViewById<FrameLayout>(R.id.game_frameLayout_boardFrame)
         boardFrame.addView(goView)
-
-        //TODO use different delegate depending on which type of Player
-        //TODO change playerTypes to a Pair??
-        val blackType = playerTypes!![0]
-        val whiteType = playerTypes[1]
 
         val blackPlayer = Player.playerOf(Stone.BLACK, blackType, touchInputDelegate, bluetoothService)
         val whitePlayer = Player.playerOf(Stone.WHITE, whiteType, touchInputDelegate, bluetoothService)

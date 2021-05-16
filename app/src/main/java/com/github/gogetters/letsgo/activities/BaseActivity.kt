@@ -48,8 +48,9 @@ abstract class BaseActivity : AppCompatActivity() {
                     val intent = Intent(this, GameActivity::class.java).apply {
                         putExtra(GameActivity.EXTRA_GAME_SIZE, 9)
                         putExtra(GameActivity.EXTRA_KOMI, 5.5)
-                        val localType = Player.PlayerTypes.LOCAL.name
-                        putExtra(GameActivity.EXTRA_PLAYER_TYPES, arrayOf(localType, localType))
+                        val localType = Player.PlayerTypes.LOCAL.ordinal
+                        putExtra(GameActivity.EXTRA_PLAYER_BLACK, localType)
+                        putExtra(GameActivity.EXTRA_PLAYER_WHITE, localType)
                     }
                     startActivity(intent)
                     true
