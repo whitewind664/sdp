@@ -7,62 +7,19 @@ import org.junit.Assert.*
 class ChatMessageDataTest {
 
     @Test
-    fun toMap() {
-    }
+    fun toMapContainsCorrectValues() {
+        val id: String = "1"
+        val text: String ="text"
+        val fromId: String = "2"
+        val toId: String = "3"
+        val sendTime: Long = 3000L
 
-    @Test
-    fun getId() {
-    }
-
-    @Test
-    fun getText() {
-    }
-
-    @Test
-    fun getFromId() {
-    }
-
-    @Test
-    fun getToId() {
-    }
-
-    @Test
-    fun getSendTime() {
-    }
-
-    @Test
-    operator fun component1() {
-    }
-
-    @Test
-    operator fun component2() {
-    }
-
-    @Test
-    operator fun component3() {
-    }
-
-    @Test
-    operator fun component4() {
-    }
-
-    @Test
-    operator fun component5() {
-    }
-
-    @Test
-    fun copy() {
-    }
-
-    @Test
-    fun testToString() {
-    }
-
-    @Test
-    fun testHashCode() {
-    }
-
-    @Test
-    fun testEquals() {
+        val data = ChatMessageData(id, text, fromId, toId, sendTime)
+        val dataMap = data.toMap()
+        assertEquals(id, dataMap["id"])
+        assertEquals(text, dataMap["text"])
+        assertEquals(fromId, dataMap["fromId"])
+        assertEquals(toId, dataMap["toId"])
+        assertEquals(sendTime, dataMap["sendTime"])
     }
 }
