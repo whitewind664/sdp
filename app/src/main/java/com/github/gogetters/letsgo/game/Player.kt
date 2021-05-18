@@ -15,16 +15,6 @@ interface Player {
     fun notifyIllegalMove(illegalMove: IllegalMoveException)
 
     companion object {
-        fun playerOf(color: Stone, type: String, touchInputDelegate: TouchInputDelegate,
-                     bluetoothGTPService: BluetoothGTPService): Player {
-
-            return when(type) {
-                PlayerTypes.LOCAL.name -> LocalPlayer(color, touchInputDelegate)
-                PlayerTypes.BTREMOTE.name -> BluetoothRemotePlayer(color, BluetoothInputDelegate(bluetoothGTPService))
-                PlayerTypes.BTLOCAL.name -> BluetoothLocalPlayer(LocalPlayer(color, touchInputDelegate), bluetoothGTPService)
-                else -> throw IllegalArgumentException("INVALID PLAYER TYPE")
-            }
-        }
 
         fun playerOf(color: Stone, type: Int, touchInputDelegate: TouchInputDelegate, bluetoothGTPService: BluetoothGTPService): Player {
             return when(type) {
