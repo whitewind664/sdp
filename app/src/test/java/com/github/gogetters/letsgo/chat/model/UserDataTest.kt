@@ -17,11 +17,11 @@ class UserDataTest {
 
         val data = UserData(id, nick, first, last, city, country)
         val dataMap = data.toMap()
-        assertEquals(id, dataMap["id"])
-        assertEquals(nick, dataMap["nick"])
-        assertEquals(first, dataMap["first"])
-        assertEquals(last, dataMap["last"])
-        assertEquals(city, dataMap["city"])
-        assertEquals(country, dataMap["country"])
+        assertEquals(data.id, dataMap["id"])
+        assertEquals(data.nick, dataMap["nick"])
+        assertEquals(data.first, dataMap["first"])
+        assertEquals(data.last, dataMap["last"])
+        assertEquals(data.city, dataMap["city"])
+        assertEquals(data.country, dataMap["country"])
     }
 }

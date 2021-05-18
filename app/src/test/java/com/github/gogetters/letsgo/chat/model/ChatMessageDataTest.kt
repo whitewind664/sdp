@@ -16,10 +16,10 @@ class ChatMessageDataTest {
 
         val data = ChatMessageData(id, text, fromId, toId, sendTime)
         val dataMap = data.toMap()
-        assertEquals(id, dataMap["id"])
-        assertEquals(text, dataMap["text"])
-        assertEquals(fromId, dataMap["fromId"])
-        assertEquals(toId, dataMap["toId"])
-        assertEquals(sendTime, dataMap["sendTime"])
+        assertEquals(data.id, dataMap["id"])
+        assertEquals(data.text, dataMap["text"])
+        assertEquals(data.fromId, dataMap["fromId"])
+        assertEquals(data.toId, dataMap["toId"])
+        assertEquals(data.sendTime, dataMap["sendTime"])
     }
 }
