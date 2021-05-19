@@ -1,112 +1,297 @@
 package com.github.gogetters.letsgo.activities
 
+import android.Manifest
 import android.bluetooth.BluetoothAdapter
 import android.bluetooth.BluetoothDevice
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
+import android.content.pm.PackageManager
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.View
-import android.widget.ArrayAdapter
-import android.widget.Button
-import android.widget.ListView
-import android.widget.Toast
+import android.widget.*
+import android.widget.AdapterView.OnItemClickListener
+import androidx.annotation.RequiresApi
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import com.github.gogetters.letsgo.R
+import com.github.gogetters.letsgo.game.Player
+import com.github.gogetters.letsgo.util.*
 import java.util.*
+import java.util.concurrent.CompletableFuture
 
 
 class BluetoothActivity : AppCompatActivity() {
-    var b1: Button? = null
-    var b2: Button? = null
-    var b3: Button? = null
-    var b4: Button? = null
-    var b5: Button? = null
+    private lateinit var listen: Button
+    private lateinit var send: Button
+    private lateinit var search: Button
+    private lateinit var listView: ListView
+    private lateinit var status: TextView
+    private lateinit var bluetoothAdapter: BluetoothAdapter
+    private lateinit var client: BluetoothClient
+    private lateinit var server: BluetoothServer
+    private lateinit var btProbe: BluetoothProbe
 
-    private var BA: BluetoothAdapter? = null
-    private var pairedDevices: Set<BluetoothDevice>? = null
-    var lv: ListView? = null
+    private val foundDevices: MutableSet<BluetoothDevice> = mutableSetOf()
+    private val deviceInfo: MutableMap<BluetoothDevice, String> = mutableMapOf()
+    private var isServer = false
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_bluetooth)
-        b1 = findViewById<View>(R.id.button) as Button
-        b2 = findViewById<View>(R.id.button2) as Button
-        b3 = findViewById<View>(R.id.button3) as Button
-        b4 = findViewById<View>(R.id.button4) as Button
-        b5 = findViewById<View>(R.id.button5) as Button
-        BA = BluetoothAdapter.getDefaultAdapter()
-        lv = findViewById<View>(R.id.listView) as ListView
 
-        // Register for broadcasts when a device is discovered.
-        val filter = IntentFilter(BluetoothDevice.ACTION_FOUND)
-        registerReceiver(receiver, filter)
 
-        BA!!.disable()
-        BA!!.enable()
+        listen = findViewById<View>(R.id.bluetooth_button_listen) as Button
+        send = findViewById<View>(R.id.bluetooth_button_send) as Button
+        listView = findViewById<View>(R.id.found_devices) as ListView
+        status = findViewById<View>(R.id.status) as TextView
+        search = findViewById<View>(R.id.bluetooth_button_listDevices) as Button
+
+        bluetoothAdapter = BluetoothAdapter.getDefaultAdapter()
+        //TODO: catch case where device has no bt adapter
+
+        if (!bluetoothAdapter.isEnabled) {
+            val enableIntent = Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE)
+            startActivityForResult(enableIntent, REQUEST_ENABLE_BLUETOOTH)
+        }
+
+
+        registerReceiver(receiver, IntentFilter(BluetoothDevice.ACTION_FOUND))
+
+        implementListeners()
     }
 
-    // Create a BroadcastReceiver for ACTION_FOUND.
+
+    // Handles found bluetooth devices
     private val receiver = object : BroadcastReceiver() {
 
+        @RequiresApi(Build.VERSION_CODES.N)
         override fun onReceive(context: Context, intent: Intent) {
-            val action: String? = intent.action
 
-            when(action) {
+            when (intent.action) {
                 BluetoothDevice.ACTION_FOUND -> {
-                    // Discovery has found a device. Get the BluetoothDevice
-                    // object and its info from the Intent.
+
                     val device: BluetoothDevice =
                         intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE)!!
                     val deviceName = device.name
-                    val deviceHardwareAddress = device.address // MAC address
 
-                    Log.i("INFO", "name: $deviceName MAC: $deviceHardwareAddress")
+                    if (deviceName != null) {
+                        CompletableFuture.supplyAsync {
+                            Log.d("FUTURES FUTURES FUTURES", "first part starting: $deviceName")
+                            btProbe.connect(device)
+                        }.thenAcceptAsync {
+                            Log.d("FUTURES FUTURES FUTURES", "second part starting: $deviceName")
+                            deviceInfo[device] = it!!
+                            foundDevices.add(device)
+                            this@BluetoothActivity.runOnUiThread { listFound() }
+                            Log.d("Futures", "done")
+                        }
+                    }
+
                 }
             }
         }
     }
 
-    fun on(v: View?) {
-        if (!BA!!.isEnabled) {
-            val turnOn = Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE)
-            startActivityForResult(turnOn, 0)
-            Toast.makeText(applicationContext, "Turned on", Toast.LENGTH_LONG).show()
-        } else {
-            Toast.makeText(applicationContext, "Already on", Toast.LENGTH_LONG).show()
+    //no idea how to add this via xml
+    private fun implementListeners() {
+        listView.onItemClickListener =
+            OnItemClickListener { adapterView, _, i, _ ->
+                client = BluetoothClient()
+                val deviceName = adapterView.adapter.getItem(i) as String
+                var serverDevice: BluetoothDevice? = null
+
+                for (device in foundDevices) {
+                    if (deviceInfo[device] == deviceName) {
+                        serverDevice = device
+                    }
+                }
+                if (serverDevice == null) {
+                    throw Error(getString(R.string.connection_error))
+                }
+
+
+                Toast.makeText(
+                    applicationContext,
+                    getString(R.string.connection_start),
+                    Toast.LENGTH_SHORT
+                )
+                    .show()
+                client.connect(serverDevice, service)
+                isServer = false
+            }
+        send.setOnClickListener { run { sendMessage() } }
+        search.setOnClickListener { run { search() } }
+        listen.setOnClickListener { run { launchServer() } }
+
+    }
+
+
+    /**
+     *  Sends a message
+     */
+
+    private fun sendMessage() {
+        val intent = Intent(this, GameActivity::class.java).apply {
+            putExtra(GameActivity.EXTRA_GAME_SIZE, 9)
+            putExtra(GameActivity.EXTRA_KOMI, 5.5)
+            val local = Player.PlayerTypes.BTLOCAL.ordinal
+            val remote = Player.PlayerTypes.BTREMOTE.ordinal
+            if (isServer) {
+                putExtra(GameActivity.EXTRA_PLAYER_BLACK, local)
+                putExtra(GameActivity.EXTRA_PLAYER_WHITE, remote)
+            } else {
+                putExtra(GameActivity.EXTRA_PLAYER_BLACK, remote)
+                putExtra(GameActivity.EXTRA_PLAYER_WHITE, local)
+            }
         }
+        startActivity(intent)
     }
 
-    fun off(v: View?) {
-        BA!!.disable()
-        Toast.makeText(applicationContext, "Turned off", Toast.LENGTH_LONG).show()
-    }
 
-    fun visible(v: View?) {
+    /**
+     * Launches a BT server
+     */
+    private fun launchServer() {
+
+        //TODO: prevent double server launch
         val getVisible = Intent(BluetoothAdapter.ACTION_REQUEST_DISCOVERABLE)
         startActivityForResult(getVisible, 0)
+
+        server = BluetoothServer()
+        Toast.makeText(this, getString(R.string.listen_bt), Toast.LENGTH_SHORT).show()
+        server.connect(service)
+
+        isServer = true
     }
 
-    fun search(v: View?){
-        if(BA!!.isEnabled()){
-            BA!!.startDiscovery()
-            if(BA!!.isDiscovering())
-                Toast.makeText(applicationContext, "Discovering devices", Toast.LENGTH_LONG).show()
-        } else {
-            Toast.makeText(applicationContext, "Bluetooth not enabled", Toast.LENGTH_LONG).show()
 
+    //TODO: refactor so that the whole list doesn't get refreshed each time
+    /**
+     * Lists found devices
+     */
+    fun listFound() {
+
+        val list: ArrayList<String> = ArrayList()
+        for (device in foundDevices) {
+            val info = deviceInfo[device]
+            if (info != null)
+                list.add(info)
         }
 
-
+        val adapter: ArrayAdapter<*> = ArrayAdapter(this, android.R.layout.simple_list_item_1, list)
+        listView.adapter = adapter
     }
 
-    fun listPaired(v: View?) {
-        val pairedDevices: Set<BluetoothDevice> = BA!!.bondedDevices
-        val list: ArrayList<String> = ArrayList<String>()
-        for (bt in pairedDevices) list.add(bt.name)
-        Toast.makeText(applicationContext, "Showing Paired Devices", Toast.LENGTH_SHORT).show()
-        val adapter: ArrayAdapter<*> = ArrayAdapter(this, android.R.layout.simple_list_item_1, list)
-        lv!!.adapter = adapter
+
+    /**
+     * search for BT devices
+     */
+    private fun search() {
+        foundDevices.clear()
+        listFound()
+        showLocationPermission()
+        btProbe = BluetoothProbe()
+        Toast.makeText(applicationContext, getString(R.string.search_bt), Toast.LENGTH_SHORT).show()
+
+        if (bluetoothAdapter.isEnabled) {
+            bluetoothAdapter.startDiscovery()
+        } else {
+            val turnOn = Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE)
+            startActivityForResult(turnOn, 0)
+        }
+    }
+
+
+    /**
+     * Used for requesting the location permission. Might as well be moved into utils
+     */
+    private fun showLocationPermission() {
+        val permissionCheck = ContextCompat.checkSelfPermission(
+            this, Manifest.permission.ACCESS_FINE_LOCATION
+        )
+        if (permissionCheck != PackageManager.PERMISSION_GRANTED) {
+            if (ActivityCompat.shouldShowRequestPermissionRationale(
+                    this,
+                    Manifest.permission.ACCESS_FINE_LOCATION
+                )
+            ) {
+                getString(R.string.need_permission).explainBTPermission(
+                    getString(R.string.bt_permission_explain),
+                    Manifest.permission.ACCESS_FINE_LOCATION,
+                    REQUEST_PERMISSION_FINE_LOCATION
+                )
+            } else {
+                PermissionUtils.requestPermission(
+                    this,
+                    REQUEST_PERMISSION_FINE_LOCATION,
+                    Manifest.permission.ACCESS_FINE_LOCATION
+                )
+            }
+        }
+    }
+
+    /**
+     * More permission stuff, might be moved into utils
+     */
+    private fun String.explainBTPermission(
+        message: String,
+        permission: String,
+        permissionRequestCode: Int
+    ) {
+
+        val builder: AlertDialog.Builder = AlertDialog.Builder(this@BluetoothActivity)
+        builder.setTitle(this)
+            .setMessage(message)
+            .setPositiveButton(android.R.string.ok) { _, _ ->
+                PermissionUtils.requestPermission(
+                    this@BluetoothActivity,
+                    permissionRequestCode,
+                    permission
+                )
+            }
+        builder.create().show()
+    }
+
+    /**
+     * More permission stuff, might be moved into utils
+     */
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<String>,
+        grantResults: IntArray
+    ) {
+        when (requestCode) {
+            REQUEST_PERMISSION_FINE_LOCATION -> if (grantResults.isNotEmpty()
+                && grantResults[0] == PackageManager.PERMISSION_GRANTED
+            ) {
+                Toast.makeText(this, getString(R.string.permission_ok), Toast.LENGTH_SHORT).show()
+            } else {
+                Toast.makeText(this, getString(R.string.permission_fail), Toast.LENGTH_SHORT).show()
+            }
+        }
+    }
+
+
+    companion object {
+//        const val STATE_LISTENING = 1
+//        const val STATE_CONNECTING = 2
+//        const val STATE_CONNECTED = 3
+//        const val STATE_CONNECTION_FAILED = 4
+//        const val STATE_MESSAGE_RECEIVED = 5
+
+        const val REQUEST_PERMISSION_FINE_LOCATION = 1
+        const val REQUEST_ENABLE_BLUETOOTH = 1
+
+        val service = BluetoothGTPService()
+
+
+//        private val MY_UUID = UUID.fromString("8ce255c0-223a-11e0-ac64-0803450c9a66")
+//        private val APP_UUID = UUID.fromString("8ce255c0-223a-11e0-ac64-0803450c9a66")
     }
 }

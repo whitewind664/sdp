@@ -11,7 +11,6 @@ import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.github.gogetters.letsgo.R
 import com.github.gogetters.letsgo.database.EmulatedFirebaseTest
 import org.hamcrest.Matcher
-import org.junit.After
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -21,11 +20,6 @@ import org.junit.runner.RunWith
 class GameActivityTest: EmulatedFirebaseTest() {
     @get:Rule
     var activityScenarioRule = ActivityScenarioRule<GameActivity>(GameActivity::class.java)
-
-    @After
-    fun cleanUp() {
-        activityScenarioRule.scenario.close()
-    }
 
     @Test
     fun tappingScreenPlacesStone() {

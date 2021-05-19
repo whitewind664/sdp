@@ -24,6 +24,12 @@ class MainActivity : BaseActivity() {
             startActivity(intent)
         }
 
+        val btButton = findViewById<Button>(R.id.main_button_bt)
+        btButton.setOnClickListener {
+            val intent = Intent(this, BluetoothActivity::class.java)
+            startActivity(intent)
+        }
+
     }
 
     override fun getLayoutResource(): Int {

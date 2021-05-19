@@ -38,7 +38,7 @@ class TutorialGoView(context: Context): GoView(context, Board.Size.SMALL) {
     override fun drawStones(canvas: Canvas) {
         super.drawStones(canvas)
         for (move in getCurrentPlayOptions()) {
-            super.drawStoneAt(canvas, move.coord.first, move.coord.second, move.stone)
+            super.drawStoneAt(canvas, move.point.first, move.point.second, move.stone)
         }
     }
 

@@ -3,7 +3,8 @@ package com.github.gogetters.letsgo.game
 import com.github.gogetters.letsgo.game.exceptions.IllegalMoveException
 import kotlin.system.measureTimeMillis
 
-final class PacedPlayer(private val underlyingPlayer: Player, private val minTime: Long = 3000, color: Stone): Player(color) {
+class PacedPlayer(private val underlyingPlayer: Player, private val minTime: Long = 3000,
+                  override val color: Stone): Player {
 
 
     /**
