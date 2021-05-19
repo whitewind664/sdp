@@ -8,6 +8,8 @@ import com.google.android.material.snackbar.Snackbar
 import androidx.appcompat.app.AppCompatActivity
 import com.github.gogetters.letsgo.R
 import com.github.gogetters.letsgo.game.Player
+import com.github.gogetters.letsgo.game.util.ogs.OGSCommunicator
+import com.github.gogetters.letsgo.game.util.ogs.OGSGame
 
 class GameModeChooserActivity : BaseActivity() {
 
@@ -31,7 +33,9 @@ class GameModeChooserActivity : BaseActivity() {
         ogsButton.setOnClickListener {
             // login
 
-            // TODO ask for information concerning the game 
+            // TODO ask for information concerning the game
+
+            // startOgsOnlineGame
         }
 
         val btButton = findViewById<Button>(R.id.gameModeChooser_button_bluetooth)
@@ -44,5 +48,14 @@ class GameModeChooserActivity : BaseActivity() {
 
     override fun getLayoutResource(): Int {
         return R.layout.activity_game_mode_chooser
+    }
+
+    /**
+     * Send the information of the new game on OGS to the interface
+     */
+    private fun startOgsOnlineGame(ogsCommunicator: OGSCommunicator) {
+        ogsCommunicator.startChallenge(OGSGame("game", OGSGame.RuleType.JAPANESE, false, OGSGame.HandicapType.NONE))
+
+        // TODO display waiting screen until confirmed
     }
 }

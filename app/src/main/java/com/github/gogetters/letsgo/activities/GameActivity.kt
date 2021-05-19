@@ -60,12 +60,6 @@ class GameActivity : BaseActivity() {
         return R.layout.activity_game
     }
 
-    /**
-     * Send the information of the new game on OGS to the interface
-     */
-    private fun startOgsOnlineGame() {
-        // TODO first pull from BluetoothActivity
-    }
 
     private fun drawBoard(boardState: BoardState) {
         goView.updateBoardState(boardState)

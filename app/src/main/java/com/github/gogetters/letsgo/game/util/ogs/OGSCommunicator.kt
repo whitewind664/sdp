@@ -3,8 +3,9 @@ package com.github.gogetters.letsgo.game.util.ogs
 import com.github.gogetters.letsgo.game.Move
 
 interface OGSCommunicator {
+    // TODO functions for authentication
 
-    fun startChallenge()
+    fun startChallenge(ogsGame: OGSGame)
     fun onChallengeAccepted(challengeData: String) //Maybe we change to a custom representation, for now JSON
     fun sendMove(move: Move)
     fun onReceiveMove(move: Move)
