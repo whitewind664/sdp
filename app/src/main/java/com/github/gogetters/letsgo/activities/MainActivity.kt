@@ -4,6 +4,9 @@ import android.content.Intent
 import android.os.Bundle
 import android.widget.Button
 import com.github.gogetters.letsgo.R
+import com.github.gogetters.letsgo.game.Player
+import com.google.android.material.bottomnavigation.LabelVisibilityMode
+import kotlinx.android.synthetic.main.activity_main.*
 import com.github.gogetters.letsgo.database.user.FirebaseUserBundleProvider
 
 class MainActivity : BaseActivity() {
@@ -21,6 +24,12 @@ class MainActivity : BaseActivity() {
         profileButton.setOnClickListener {
             val intent = Intent(this, ProfileActivity::class.java)
             intent.putExtra("UserBundleProvider", FirebaseUserBundleProvider())
+            startActivity(intent)
+        }
+
+        val btButton = findViewById<Button>(R.id.main_button_bt)
+        btButton.setOnClickListener {
+            val intent = Intent(this, BluetoothActivity::class.java)
             startActivity(intent)
         }
 
