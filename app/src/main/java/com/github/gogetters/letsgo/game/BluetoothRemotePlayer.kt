@@ -1,15 +1,12 @@
 package com.github.gogetters.letsgo.game
 
 import com.github.gogetters.letsgo.game.exceptions.IllegalMoveException
-import com.github.gogetters.letsgo.game.util.BluetoothInputDelegate
 import com.github.gogetters.letsgo.game.util.InputDelegate
 
-class BluetoothRemotePlayer(override val color: Stone, private val bluetoothInputDelegate: BluetoothInputDelegate):
-        Player, InputDelegate by bluetoothInputDelegate {
+class BluetoothRemotePlayer(override val color: Stone, private val inputDelegate: InputDelegate): Player {
 
     override fun requestMove(board: BoardState): Move {
-        val point = getLatestInput(board)
-        return Move(color, point)
+        return Move(color, inputDelegate.getLatestInput(board))
     }
 
     override fun notifyIllegalMove(illegalMove: IllegalMoveException) {

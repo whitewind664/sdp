@@ -1,11 +1,14 @@
 package com.github.gogetters.letsgo.game.util.ogs
 
 import com.github.gogetters.letsgo.game.Move
+import com.github.gogetters.letsgo.game.util.InputDelegate
 import org.json.JSONObject
 
 class OGSCommunicatorService(private val onlineService: OnlineService) : OGSCommunicator {
     private val CLIENT_ID: String = "" // TODO
     private val CLIENT_SECRET: String = "" // TODO
+
+    lateinit var inputDelegate: InputDelegate
 
     override fun authenticate(username: String, password: String) {
         var body = JSONObject()

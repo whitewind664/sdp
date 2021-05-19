@@ -4,7 +4,7 @@ import android.os.Bundle
 import android.widget.FrameLayout
 import com.github.gogetters.letsgo.R
 import com.github.gogetters.letsgo.game.*
-import com.github.gogetters.letsgo.game.util.TouchInputDelegate
+import com.github.gogetters.letsgo.game.util.InputDelegate
 import com.github.gogetters.letsgo.game.view.GoView
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
@@ -34,9 +34,9 @@ class GameActivity : BaseActivity() {
         val boardSize = Board.Size.withSize(gameSizeInput)
         goView = GoView(this, boardSize)
 
-        val touchInputDelegate = TouchInputDelegate()
+        val touchInputDelegate = InputDelegate()
 
-        goView.touchInputDelegate = touchInputDelegate
+        goView.inputDelegate = touchInputDelegate
 
 
         val boardFrame = findViewById<FrameLayout>(R.id.game_frameLayout_boardFrame)
