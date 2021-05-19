@@ -45,7 +45,7 @@ class GameModeChooserActivity : BaseActivity() {
         ogsButton = findViewById<Button>(R.id.gameModeChooser_button_ogs)
         ogsButton.setOnClickListener {
             // login
-            changeToOgsLoginView()
+            //changeToOgsLoginView()
             // TODO ask for information concerning the game if completed
 
             // startOgsOnlineGame
@@ -63,7 +63,7 @@ class GameModeChooserActivity : BaseActivity() {
         return R.layout.activity_game_mode_chooser
     }
 
-    private fun changeToOgsLoginView() {
+    private fun changeToOgsLoginView(ogsCommunicator: OGSCommunicator) {
         titleText.text = resources.getString(R.string.gameModeChooser_loginTitle)
         localButton.visibility = View.GONE
         ogsButton.visibility = View.GONE
@@ -72,7 +72,7 @@ class GameModeChooserActivity : BaseActivity() {
         passwordEditText.visibility = View.VISIBLE
         submitButton.visibility = View.VISIBLE
         submitButton.setOnClickListener {
-            // TODO send login
+            ogsCommunicator.authenticate(usernameEditText.toString(), passwordEditText.toString())
         }
     }
 
