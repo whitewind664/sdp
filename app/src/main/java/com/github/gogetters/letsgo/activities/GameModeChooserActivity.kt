@@ -2,10 +2,10 @@ package com.github.gogetters.letsgo.activities
 
 import android.content.Intent
 import android.os.Bundle
+import android.view.View
 import android.widget.Button
-import com.google.android.material.floatingactionbutton.FloatingActionButton
-import com.google.android.material.snackbar.Snackbar
-import androidx.appcompat.app.AppCompatActivity
+import android.widget.EditText
+import android.widget.TextView
 import com.github.gogetters.letsgo.R
 import com.github.gogetters.letsgo.game.Player
 import com.github.gogetters.letsgo.game.util.ogs.OGSCommunicator
@@ -13,10 +13,23 @@ import com.github.gogetters.letsgo.game.util.ogs.OGSGame
 
 class GameModeChooserActivity : BaseActivity() {
 
+    private lateinit var titleText: TextView
+    private lateinit var localButton: Button
+    private lateinit var ogsButton: Button
+    private lateinit var btButton: Button
+    private lateinit var usernameEditText: EditText
+    private lateinit var passwordEditText: EditText
+    private lateinit var submitButton: Button
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        val localButton = findViewById<Button>(R.id.gameModeChooser_button_local)
+        titleText = findViewById(R.id.gameModeChooser_textView_title)
+        usernameEditText = findViewById(R.id.gameModeChooser_editText_loginUsername)
+        passwordEditText = findViewById(R.id.gameModeChooser_editText_loginPassword)
+        submitButton = findViewById(R.id.gameModeChooser_button_loginSubmit)
+
+        localButton = findViewById<Button>(R.id.gameModeChooser_button_local)
         localButton.setOnClickListener {
             // start a local game
             val intent = Intent(this, GameActivity::class.java).apply {
@@ -29,16 +42,16 @@ class GameModeChooserActivity : BaseActivity() {
             startActivity(intent)
         }
 
-        val ogsButton = findViewById<Button>(R.id.gameModeChooser_button_ogs)
+        ogsButton = findViewById<Button>(R.id.gameModeChooser_button_ogs)
         ogsButton.setOnClickListener {
             // login
-
-            // TODO ask for information concerning the game
+            changeToOgsLoginView()
+            // TODO ask for information concerning the game if completed
 
             // startOgsOnlineGame
         }
 
-        val btButton = findViewById<Button>(R.id.gameModeChooser_button_bluetooth)
+        btButton = findViewById<Button>(R.id.gameModeChooser_button_bluetooth)
         btButton.setOnClickListener {
             val intent = Intent(this, BluetoothActivity::class.java)
             startActivity(intent)
@@ -48,14 +61,33 @@ class GameModeChooserActivity : BaseActivity() {
 
     override fun getLayoutResource(): Int {
         return R.layout.activity_game_mode_chooser
+    }
 
+    private fun changeToOgsLoginView() {
+        titleText.text = resources.getString(R.string.gameModeChooser_loginTitle)
+        localButton.visibility = View.GONE
+        ogsButton.visibility = View.GONE
+        btButton.visibility = View.GONE
+        usernameEditText.visibility = View.VISIBLE
+        passwordEditText.visibility = View.VISIBLE
+        submitButton.visibility = View.VISIBLE
+        submitButton.setOnClickListener {
+            // TODO send login
+        }
     }
 
     /**
      * Send the information of the new game on OGS to the interface
      */
     private fun startOgsOnlineGame(ogsCommunicator: OGSCommunicator) {
-        ogsCommunicator.startChallenge(OGSGame("game", OGSGame.RuleType.JAPANESE, false, OGSGame.HandicapType.NONE))
+        ogsCommunicator.startChallenge(
+            OGSGame(
+                "game",
+                OGSGame.RuleType.JAPANESE,
+                false,
+                OGSGame.HandicapType.NONE
+            )
+        )
 
         // TODO display waiting screen until confirmed
     }

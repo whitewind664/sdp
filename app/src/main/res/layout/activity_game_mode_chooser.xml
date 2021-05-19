@@ -36,6 +36,36 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent" />
 
+        <EditText
+            android:id="@+id/gameModeChooser_editText_loginUsername"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:hint="@string/gameModeChooser_loginUsername"
+            android:visibility="gone"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/gameModeChooser_textView_title" />
+
+        <EditText
+            android:id="@+id/gameModeChooser_editText_loginPassword"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:hint="@string/gameModeChooser_loginPassword"
+            android:visibility="gone"
+            android:inputType="textPassword"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/gameModeChooser_editText_loginUsername"
+            app:layout_constraintBottom_toBottomOf="parent"/>
+
+        <Button
+            android:id="@+id/gameModeChooser_button_loginSubmit"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/gameModeChooser_buttonLoginSubmit"
+            android:visibility="gone"
+            app:layout_constraintTop_toBottomOf="@+id/gameModeChooser_editText_loginPassword" />
+
         <Button
             android:id="@+id/gameModeChooser_button_local"
             android:layout_width="wrap_content"
