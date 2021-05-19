@@ -71,6 +71,11 @@
     <string name="profile_cancel">Cancel</string>
     <string name="profile_gallerySelectionTitle">Select Profile Picture</string>
 
+    <string name="gameModeChooser_buttonLocal">Local</string>
+    <string name="gameModeChooser_buttonOGS">Online via Online-Go</string>
+    <string name="gameModeChooser_buttonBluetooth">Bluetooth</string>
+    <string name="gameModeChooser_title">Choose the Game Mode</string>
+
     <!--
     This string is used for square devices and overridden by hello_world in
     values-round/strings.xml for round devices.
@@ -98,6 +103,10 @@
     <string name="connection_error">Error while connecting device</string>
     <string name="title_activity_bluetooth">Bluetooth</string>
     <string name="profile_show_friends">Show friends</string>
+    <string name="title_activity_game_mode_chooser">GameModeChooserActivity</string>
+    <!-- Strings used for fragments for navigation -->
+    <string name="first_fragment_label">First Fragment</string>
+    <string name="second_fragment_label">Second Fragment</string>
 
 
 </resources>
