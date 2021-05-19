@@ -3,7 +3,7 @@ package com.github.gogetters.letsgo.game.util.ogs
 import com.github.gogetters.letsgo.game.Move
 
 class OGSCommunicatorService(private val onlineService: OnlineService) : OGSCommunicator {
-    
+
     override fun authenticate(username: String, password: String) {
         TODO("Not yet implemented")
     }
