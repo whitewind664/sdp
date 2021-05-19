@@ -48,6 +48,7 @@ class GameModeChooserActivity : BaseActivity() {
 
     override fun getLayoutResource(): Int {
         return R.layout.activity_game_mode_chooser
+
     }
 
     /**
