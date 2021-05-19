@@ -2,15 +2,12 @@ package com.github.gogetters.letsgo.activities
 
 import android.content.Intent
 import android.os.Bundle
-import android.view.Menu
 import android.widget.Button
-import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.widget.Toolbar
 import com.github.gogetters.letsgo.R
-import com.github.gogetters.letsgo.database.FirebaseUserBundleProvider
 import com.github.gogetters.letsgo.game.Player
 import com.google.android.material.bottomnavigation.LabelVisibilityMode
 import kotlinx.android.synthetic.main.activity_main.*
+import com.github.gogetters.letsgo.database.user.FirebaseUserBundleProvider
 
 class MainActivity : BaseActivity() {
 
