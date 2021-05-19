@@ -29,13 +29,14 @@ class GameActivity : BaseActivity() {
         val blackType = intent.getIntExtra(EXTRA_PLAYER_BLACK, 0)
         val whiteType = intent.getIntExtra(EXTRA_PLAYER_WHITE, 0)
 
+        //TODO: unify "input providers???"
         val bluetoothService = BluetoothActivity.service
+        bluetoothService.inputDelegate = InputDelegate()
 
         val boardSize = Board.Size.withSize(gameSizeInput)
         goView = GoView(this, boardSize)
 
         val touchInputDelegate = InputDelegate()
-
         goView.inputDelegate = touchInputDelegate
 
 

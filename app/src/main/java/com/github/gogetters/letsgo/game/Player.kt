@@ -15,11 +15,11 @@ interface Player {
 
     companion object {
 
-        fun playerOf(color: Stone, type: Int, inputDelegate: InputDelegate, bluetoothGTPService: BluetoothGTPService): Player {
+        fun playerOf(color: Stone, type: Int, touchInputDelegate: InputDelegate, bluetoothGTPService: BluetoothGTPService): Player {
             return when(type) {
-                PlayerTypes.LOCAL.ordinal -> LocalPlayer(color, inputDelegate)
-                PlayerTypes.BTREMOTE.ordinal -> BluetoothRemotePlayer(color, InputDelegate())
-                PlayerTypes.BTLOCAL.ordinal -> BluetoothLocalPlayer(LocalPlayer(color, inputDelegate), bluetoothGTPService)
+                PlayerTypes.LOCAL.ordinal -> LocalPlayer(color, touchInputDelegate)
+                PlayerTypes.BTREMOTE.ordinal -> LocalPlayer(color, bluetoothGTPService.inputDelegate)
+                PlayerTypes.BTLOCAL.ordinal -> BluetoothPlayerAdapter(LocalPlayer(color, touchInputDelegate), bluetoothGTPService)
                 else -> throw IllegalArgumentException("INVALID PLAYER TYPE")
             }
         }
