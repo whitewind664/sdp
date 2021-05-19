@@ -13,6 +13,7 @@ import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.uiautomator.UiDevice
 import androidx.test.uiautomator.UiSelector
 import com.github.gogetters.letsgo.R
+import com.github.gogetters.letsgo.database.EmulatedFirebaseTest
 import org.junit.After
 import org.junit.Before
 import org.junit.Rule
@@ -20,9 +21,9 @@ import org.junit.Test
 import org.junit.runner.RunWith
 
 @RunWith(AndroidJUnit4::class)
-class GameModeChooserActivityTest {
+class GameModeChooserActivityTest: EmulatedFirebaseTest() {
     @get:Rule
-    var activityRule = ActivityScenarioRule(MainActivity::class.java)
+    var activityRule = ActivityScenarioRule(GameModeChooserActivity::class.java)
 
     @Before
     fun init() {
