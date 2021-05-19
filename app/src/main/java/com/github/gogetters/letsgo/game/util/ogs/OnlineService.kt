@@ -8,7 +8,7 @@ interface OnlineService {
     /**
      * Sends the given request to the service
      */
-    fun sendRequest(url: String, header: String, body: String)
+    fun sendRequest(url: String, body: String)
 
     /**
      * Function that is called when a request is answered
