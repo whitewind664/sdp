@@ -18,7 +18,7 @@ class VolleyOnlineService(context: Context) : OnlineService<JSONObject> {
 
         val jsonRequest = JsonObjectRequest(url, body,
                 { response -> responseListener.onResponse(response) },
-                { throw IOException("Could not send request to url $url") })
+                { throw IOException("Could not send request to url $url, ${it}") })
 
         queue.add(jsonRequest)
         return responseListener
@@ -29,7 +29,8 @@ class VolleyOnlineService(context: Context) : OnlineService<JSONObject> {
 
         val jsonRequest = JsonObjectRequest(url, null,
                 { response -> responseListener.onResponse(response) },
-                { throw IOException("Could not send request to url $url") })
+                { throw IOException("Could not send request to url $url, ${it}")
+                it.printStackTrace()})
 
         queue.add(jsonRequest)
         return responseListener
@@ -40,7 +41,7 @@ class VolleyOnlineService(context: Context) : OnlineService<JSONObject> {
 
         val stringRequest = StringRequest(Request.Method.DELETE, url,
             { response -> responseListener.onResponse(JSONObject(response)) },
-            { throw IOException("Could not send request to url $url") })
+            { throw IOException("Could not send request to url $url, ${it}") })
 
         queue.add(stringRequest)
         return responseListener

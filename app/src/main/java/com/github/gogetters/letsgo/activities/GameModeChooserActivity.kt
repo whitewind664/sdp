@@ -45,7 +45,7 @@ class GameModeChooserActivity : BaseActivity() {
         ogsButton = findViewById(R.id.gameModeChooser_button_ogs)
         ogsButton.setOnClickListener {
             // login
-            changeToOgsLoginView(OGSCommunicatorService(VolleyOnlineService(this)))
+            changeToOgsLoginView(OGSCommunicatorService(VolleyOnlineService(this), resources.getString(R.string.ogs_client_id), resources.getString(R.string.ogs_client_secret)))
             // TODO ask for information concerning the game if completed
 
             // startOgsOnlineGame
