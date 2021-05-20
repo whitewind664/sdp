@@ -7,94 +7,21 @@ import org.junit.Assert.*
 class UserDataTest {
 
     @Test
-    fun toMap() {
-    }
+    fun toMapContainsCorrectValues() {
+        var id: String? = "1"
+        var nick: String? = "2"
+        var first: String? = "3"
+        var last: String? = "4"
+        var city: String? = "5"
+        var country: String? = "6"
 
-    @Test
-    fun getId() {
-    }
-
-    @Test
-    fun setId() {
-    }
-
-    @Test
-    fun getNick() {
-    }
-
-    @Test
-    fun setNick() {
-    }
-
-    @Test
-    fun getFirst() {
-    }
-
-    @Test
-    fun setFirst() {
-    }
-
-    @Test
-    fun getLast() {
-    }
-
-    @Test
-    fun setLast() {
-    }
-
-    @Test
-    fun getCity() {
-    }
-
-    @Test
-    fun setCity() {
-    }
-
-    @Test
-    fun getCountry() {
-    }
-
-    @Test
-    fun setCountry() {
-    }
-
-    @Test
-    operator fun component1() {
-    }
-
-    @Test
-    operator fun component2() {
-    }
-
-    @Test
-    operator fun component3() {
-    }
-
-    @Test
-    operator fun component4() {
-    }
-
-    @Test
-    operator fun component5() {
-    }
-
-    @Test
-    operator fun component6() {
-    }
-
-    @Test
-    fun copy() {
-    }
-
-    @Test
-    fun testToString() {
-    }
-
-    @Test
-    fun testHashCode() {
-    }
-
-    @Test
-    fun testEquals() {
+        val data = UserData(id, nick, first, last, city, country)
+        val dataMap = data.toMap()
+        assertEquals(data.id, dataMap["id"])
+        assertEquals(data.nick, dataMap["nick"])
+        assertEquals(data.first, dataMap["first"])
+        assertEquals(data.last, dataMap["last"])
+        assertEquals(data.city, dataMap["city"])
+        assertEquals(data.country, dataMap["country"])
     }
 }
