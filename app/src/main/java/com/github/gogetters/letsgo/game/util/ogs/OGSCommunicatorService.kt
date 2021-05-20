@@ -31,19 +31,14 @@ class OGSCommunicatorService(private val onlineService: OnlineService<JSONObject
             .setOnResponse { onAuthenticationAccepted(it) }
     }
 
-    fun onAuthenticationAccepted(res: JSONObject) {
-        Log.i("OGS_COMM", res.toString(4))
-        //TODO("Not yet implemented")
-    }
 
     fun startChallenge(challenge: OGSChallenge) {
         val body = challenge.toJSON()
-        onlineService.post("$base$myChallenges", body)
+        onlineService.post("$base$challenges", body).setOnResponse {
+            gameID = it.getInt("game")
+        }
     }
 
-    fun onChallengeAccepted(challengeData: OGSChallenge) {
-        TODO("Not yet implemented")
-    }
 
     fun sendMove(move: Move) {
         val url = "$base$games/$gameID/move/"
@@ -57,24 +52,26 @@ class OGSCommunicatorService(private val onlineService: OnlineService<JSONObject
 
     }
 
-    fun onReceiveMove(move: Move) {
-        TODO("Not yet implemented")
-    }
-
-    fun listActiveGames(): String {
-        val url = "$base$myGames"
-        onlineService.get(url).setOnResponse {
-            // TODO
-        }
-        return "" //TODO.... not sure
-    }
-
     fun cancelChallenge(challengeID: String) {
         val url = "$base$challenges/$challengeID"
 
         onlineService.delete(url).setOnResponse {
             // TODO
         }
+    }
+
+    fun onAuthenticationAccepted(res: JSONObject) {
+        Log.i("OGS_COMM", res.toString(4))
+        //TODO("Not yet implemented")
+    }
+
+    fun onReceiveMove(move: Move) {
+        TODO("Not yet implemented")
+    }
+
+
+    fun onChallengeAccepted(challengeData: OGSChallenge) {
+        TODO("Not yet implemented")
     }
 
     companion object {
