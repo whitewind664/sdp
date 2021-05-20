@@ -7,11 +7,11 @@ import com.github.gogetters.letsgo.game.util.InputDelegate
 import org.json.JSONObject
 import java.lang.IllegalArgumentException
 
-class OGSCommunicatorService(private val onlineService: OnlineService<JSONObject>) {
-    private val CLIENT_ID: String = "" // TODO
-    private val CLIENT_SECRET: String = "" // TODO
-    private val base = "http://online-go.com"
-    private val auth = "/oauth2/access_token"
+class OGSCommunicatorService(private val onlineService: OnlineService<JSONObject>, private val CLIENT_ID: String, private val CLIENT_SECRET: String) {
+    //private val CLIENT_ID: String = "" // TODO
+    //private val CLIENT_SECRET: String = "" // TODO
+    private val base = "https://online-go.com"
+    private val auth = "/api/v0/login"
     private val myChallenges = "/v1/me/challenges/"
     private val challenges = "/v1/challenges"
     private val myGames = "/v1/me/games/"
@@ -24,10 +24,11 @@ class OGSCommunicatorService(private val onlineService: OnlineService<JSONObject
         val body = JSONObject()
         body.put("client_id", CLIENT_ID)
         body.put("client_secret", CLIENT_SECRET)
+        body.put("grant_type", "password")
         body.put("username", username)
         body.put("password", password)
 
-        onlineService.post("$base$auth", body)
+        onlineService.post("$base$auth", body, JSONObject().put("Content-Type", "application/x-www-form-urlencoded"))
             .setOnResponse { onAuthenticationAccepted(it) }
     }
 
@@ -38,7 +39,6 @@ class OGSCommunicatorService(private val onlineService: OnlineService<JSONObject
             gameID = it.getInt("game")
         }
     }
-
 
     fun sendMove(move: Move) {
         val url = "$base$games/$gameID/move/"
