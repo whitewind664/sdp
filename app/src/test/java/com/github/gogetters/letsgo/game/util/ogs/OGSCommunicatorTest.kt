@@ -12,7 +12,7 @@ class OGSCommunicatorTest {
     @Test
     fun authenticationSendsUsernameAndPassword() {
         val service = MockOnlineService()
-        val communicator = OGSCommunicatorService(service)
+        val communicator = OGSCommunicatorService(service, "", "")
         val username = "john"
         val password = "burgur"
 
@@ -28,7 +28,7 @@ class OGSCommunicatorTest {
     @Test
     fun createChallengeSendsChallengeInfo() {
         val service = MockOnlineService()
-        val communicator = OGSCommunicatorService(service)
+        val communicator = OGSCommunicatorService(service, "", "")
         val challenge = OGSChallenge(OGSGame("mygame"), Stone.BLACK)
 
         val existingGames = service.currentGames.size
@@ -42,7 +42,7 @@ class OGSCommunicatorTest {
     fun sendMoveUpdatesGame() {
 
         val service = MockOnlineService()
-        val communicator = OGSCommunicatorService(service)
+        val communicator = OGSCommunicatorService(service, "", "")
         val challenge = OGSChallenge(OGSGame("mygame"), Stone.BLACK)
 
         val existingGames = service.currentGames.size
