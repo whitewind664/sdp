@@ -5,7 +5,7 @@ import com.github.gogetters.letsgo.game.util.InputDelegate
 import org.json.JSONObject
 
 class OGSCommunicatorService(private val onlineService: OnlineService) : OGSCommunicator {
-    private val CLIENT_ID: String = "" // TODO
+    private val CLIENT_ID: String =  // TODO
     private val CLIENT_SECRET: String = "" // TODO
     private val base = "http://online-go.com"
     private var gameID = 0
