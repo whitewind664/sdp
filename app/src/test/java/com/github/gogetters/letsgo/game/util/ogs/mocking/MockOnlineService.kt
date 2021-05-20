@@ -2,19 +2,20 @@ package com.github.gogetters.letsgo.game.util.ogs.mocking
 
 import com.github.gogetters.letsgo.game.Point
 import com.github.gogetters.letsgo.game.util.ogs.*
-import org.json.JSONArray
 import org.json.JSONObject
 import java.lang.IllegalArgumentException
 import kotlin.random.Random
 
 class MockOnlineService : OnlineService<JSONObject> {
     var hasAuthenticated = false
-    lateinit var id: String
-    lateinit var secret: String
-    var currentGames = listOf(OGSGame("first"), OGSGame("second"))
+    lateinit var username: String
+    lateinit var password: String
+    val challengeList = mutableListOf<OGSChallenge>()
+    var currentGames = mutableListOf(OGSGame("first"), OGSGame("second"))
     var madeMove = false
     lateinit var lastMove: Point
-    var challengeList = listOf<OGSChallenge>()
+
+
     private val base = "http://online-go.com"
     private val auth = "/oauth2/access_token"
     private val myChallenges = "/v1/me/challenges/"
@@ -28,18 +29,20 @@ class MockOnlineService : OnlineService<JSONObject> {
         when {
             url.startsWith("$base$auth") -> {
                 hasAuthenticated = true
-                id = body.getString("client_id")
-                secret = body.getString("client_secret")
+                username = body.getString("username")
+                password = body.getString("password")
             }
             url.startsWith("$base$challenges") -> {
+                val challenge = OGSChallenge.fromJSON(body)
+                val game = OGSGame.fromJSON(body.getJSONObject("game"))
+                challengeList.add(challenge)
+                currentGames.add(game)
+
                 val response = JSONObject()
                 response.put("status", "ok")
                 response.put("challenge", Random.nextInt(0, 65535))
-
-            }
-            url.startsWith("$base$myGames") -> {
-                val gamesJSON = JSONObject().put("games", JSONArray(currentGames))
-                listener.onResponse(gamesJSON)
+                response.put("challenge", Random.nextInt(0, 65535))
+                listener.onResponse(response)
             }
             url.startsWith("$base$games") -> {
                 val response = JSONObject()
@@ -57,14 +60,15 @@ class MockOnlineService : OnlineService<JSONObject> {
     override fun get(url: String, headers: JSONObject): ResponseListener<JSONObject> {
         val listener = ResponseListener<JSONObject>()
         when {
-            url.startsWith("$base$myChallenges") ->  {
-                val challengesJSON = JSONObject().put("challenges", JSONArray(challengeList))
-                listener.onResponse(challengesJSON)
-            }
+            else -> throw IllegalArgumentException("should never send a get request??")
         }
     }
 
     override fun delete(url: String, headers: JSONObject): ResponseListener<JSONObject> {
-        TODO("Not yet implemented")
+        val listener = ResponseListener<JSONObject>()
+        val response = JSONObject()
+        response.put("success", "Challenge removed")
+        listener.onResponse(response)
+        return listener
     }
 }

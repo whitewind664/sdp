@@ -32,18 +32,12 @@ class OGSCommunicatorService(private val onlineService: OnlineService<JSONObject
             .setOnResponse { onAuthenticationAccepted(it) }
     }
 
-    fun onAuthenticationAccepted(res: JSONObject) {
-        Log.i("OGS_COMM", res.toString(4))
-        //TODO("Not yet implemented")
-    }
 
     fun startChallenge(challenge: OGSChallenge) {
         val body = challenge.toJSON()
-        onlineService.post("$base$myChallenges", body, JSONObject())
-    }
-
-    fun onChallengeAccepted(challengeData: OGSChallenge) {
-        TODO("Not yet implemented")
+        onlineService.post("$base$challenges", body).setOnResponse {
+            gameID = it.getInt("game")
+        }
     }
 
     fun sendMove(move: Move) {
@@ -52,30 +46,32 @@ class OGSCommunicatorService(private val onlineService: OnlineService<JSONObject
         val gtpMove = move.point.toString()
         val theirMove = gtpMove[0] + (gtpMove[1].toInt() + 'a'.toInt()).toChar().toString()
         body.put("move", theirMove)
-        onlineService.post(url, body, JSONObject()).setOnResponse {
+        onlineService.post(url, body).setOnResponse {
             // TODO parse Move
         }
 
+    }
+
+    fun cancelChallenge(challengeID: String) {
+        val url = "$base$challenges/$challengeID"
+
+        onlineService.delete(url).setOnResponse {
+            // TODO
+        }
+    }
+
+    fun onAuthenticationAccepted(res: JSONObject) {
+        Log.i("OGS_COMM", res.toString(4))
+        //TODO("Not yet implemented")
     }
 
     fun onReceiveMove(move: Move) {
         TODO("Not yet implemented")
     }
 
-    fun listActiveGames(): String {
-        val url = "$base$myGames"
-        onlineService.get(url, JSONObject()).setOnResponse {
-            // TODO
-        }
-        return "" //TODO.... not sure
-    }
 
-    fun cancelChallenge(challengeID: String) {
-        val url = "$base$challenges/$challengeID"
-
-        onlineService.delete(url, JSONObject()).setOnResponse {
-            // TODO
-        }
+    fun onChallengeAccepted(challengeData: OGSChallenge) {
+        TODO("Not yet implemented")
     }
 
     companion object {
