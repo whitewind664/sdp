@@ -32,7 +32,7 @@ import java.text.SimpleDateFormat
 import java.util.*
 
 
-class ProfileActivity : ActivityCompat.OnRequestPermissionsResultCallback, AppCompatActivity() {
+class ProfileActivity : ActivityCompat.OnRequestPermissionsResultCallback, BaseActivity() {
     companion object {
         const val PROFILE_PICTURE_PREFIX_CLOUD = "profileImage/"
 
@@ -69,7 +69,6 @@ class ProfileActivity : ActivityCompat.OnRequestPermissionsResultCallback, AppCo
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_profile)
 
         userBundleProvider = intent.getSerializableExtra("UserBundleProvider") as UserBundleProvider
 
@@ -101,6 +100,9 @@ class ProfileActivity : ActivityCompat.OnRequestPermissionsResultCallback, AppCo
         updateUI()
     }
 
+    override fun getLayoutResource(): Int {
+        return R.layout.activity_profile
+    }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
