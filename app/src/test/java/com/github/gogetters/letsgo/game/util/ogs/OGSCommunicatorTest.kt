@@ -5,6 +5,7 @@ import com.github.gogetters.letsgo.game.Point
 import com.github.gogetters.letsgo.game.Stone
 import com.github.gogetters.letsgo.game.util.ogs.mocking.MockOnlineService
 import junit.framework.Assert.*
+import org.json.JSONObject
 import org.junit.Test
 
 class OGSCommunicatorTest {
@@ -41,9 +42,15 @@ class OGSCommunicatorTest {
     @Test
     fun sendMoveUpdatesGame() {
 
+        val hello = JSONObject()
+        val goodbye = JSONObject()
+        val test = JSONObject().put("hello", "world").put("yumy", "burgur")
+
         val service = MockOnlineService()
         val communicator = OGSCommunicatorService(service, "", "")
-        val challenge = OGSChallenge(OGSGame("mygame"), Stone.BLACK)
+
+        val game = OGSGame("mygame")
+        val challenge = OGSChallenge(game, Stone.BLACK)
 
         val existingGames = service.currentGames.size
 

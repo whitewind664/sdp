@@ -16,8 +16,8 @@ class MockOnlineService : OnlineService<JSONObject> {
     lateinit var lastMove: Point
 
 
-    private val base = "http://online-go.com"
-    private val auth = "/oauth2/access_token"
+    private val base = "https://online-go.com"
+    private val auth = "/api/v0/login"
     private val myChallenges = "/v1/me/challenges/"
     private val challenges = "/v1/challenges"
     private val myGames = "/v1/me/games/"
@@ -51,7 +51,7 @@ class MockOnlineService : OnlineService<JSONObject> {
                 response.put("success", "Move Accepted")
                 listener.onResponse(response)
             }
-            else -> throw IllegalArgumentException("invalid API request")
+            else -> throw IllegalArgumentException("invalid API request, url does not match: $url")
         }
 
         return listener

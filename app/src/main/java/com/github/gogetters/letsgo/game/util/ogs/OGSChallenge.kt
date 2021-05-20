@@ -33,7 +33,7 @@ data class OGSChallenge(
                 "white" -> Stone.WHITE
                 "black" -> Stone.BLACK
                 "automatic" -> Stone.BLACK //todo :(((((((
-                else -> throw IllegalArgumentException("could not parse stone color")
+                else -> throw IllegalArgumentException("could not parse stone color ${challenge.getString("challenger_color")}")
             }
 
             val game = OGSGame.fromJSON(challenge.getJSONObject("game"))
