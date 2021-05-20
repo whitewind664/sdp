@@ -12,8 +12,6 @@ class MainActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        Database.enableCache()
-
         val mapButton = findViewById<Button>(R.id.main_button_map)
         mapButton.setOnClickListener {
             val intent = Intent(this, MapsActivity::class.java)
