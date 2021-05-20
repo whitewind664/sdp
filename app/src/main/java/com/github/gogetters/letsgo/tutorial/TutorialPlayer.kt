@@ -4,7 +4,8 @@ import android.util.Log
 import com.github.gogetters.letsgo.game.*
 import com.github.gogetters.letsgo.game.exceptions.IllegalMoveException
 
-internal class TutorialPlayer(): Player(Stone.WHITE) {
+internal
+class TutorialPlayer(override val color: Stone = Stone.WHITE): Player {
     private val DEFAULT_MOVE = Move(Stone.EMPTY, Point(0, 0))
 
     private var moveIndex: Int = 0
