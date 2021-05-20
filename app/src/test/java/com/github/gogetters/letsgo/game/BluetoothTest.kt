@@ -21,19 +21,16 @@ class BluetoothTest {
 
         val client = BluetoothClient()
         val gtpService = BluetoothGTPService()
-        val server = BluetoothServer()
         val probe = BluetoothProbe()
 
 
         try{
-            server.cancel()
         } catch(e: Exception) {
             Log.d("Test", "doesn't work...")
         }
 
 
         try{
-            server.connect(gtpService)
         } catch(e: Exception) {
             Log.d("Test", "doesn't work...")
         }
