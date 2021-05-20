@@ -41,10 +41,6 @@ class OGSCommunicatorTest {
 
     @Test
     fun sendMoveUpdatesGame() {
-
-        val hello = JSONObject()
-        val goodbye = JSONObject()
-
         val service = MockOnlineService()
         val communicator = OGSCommunicatorService(service, "", "")
 

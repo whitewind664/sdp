@@ -4,6 +4,8 @@ import android.util.Log
 import com.github.gogetters.letsgo.game.Move
 import com.github.gogetters.letsgo.game.Point
 import com.github.gogetters.letsgo.game.util.InputDelegate
+import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
 import org.json.JSONObject
 import java.lang.IllegalArgumentException
 
@@ -39,10 +41,6 @@ class OGSCommunicatorService(private val onlineService: OnlineService<String>,
 
 
     fun startChallenge(challenge: OGSChallenge) {
-        val body = challenge.toMap()
-        onlineService.post("$base$challenges", body).setOnResponse {
-            gameID = it.getInt("game")
-        }
     }
 
     fun sendMove(move: Move) {
@@ -55,7 +53,6 @@ class OGSCommunicatorService(private val onlineService: OnlineService<String>,
         onlineService.post(url, body).setOnResponse {
             // TODO parse Move
         }
-
     }
 
     fun cancelChallenge(challengeID: String) {
@@ -66,8 +63,8 @@ class OGSCommunicatorService(private val onlineService: OnlineService<String>,
         }
     }
 
-    fun onAuthenticationAccepted(res: JSONObject) {
-        Log.i("OGS_COMM", res.toString(4))
+    fun onAuthenticationAccepted(res: String) {
+        Log.i("OGS_COMM", res)
         //TODO("Not yet implemented")
     }
 
