@@ -8,24 +8,25 @@ interface OnlineService {
     /**
      * Sends the given POST request to the service
      */
-    fun post(url: String, body: String)
+    fun post(url: String, body: String): ResponseListener
 
     /**
      * Sends the given GET request to the service
      */
-    fun get(url: String)
+    fun get(url: String): ResponseListener
 
     /**
      * Sends the given DELETE request to the service
      */
-    fun delete(url: String)
+    fun delete(url: String): ResponseListener
 
-    /**
-     * Defines the behavior to handle responses
-     */
-    var responseListener: ResponseListener
 
-    fun interface ResponseListener {
+    interface ResponseListener {
+        /**
+         * Sets the function to call on response
+         */
+        fun setOnResponse(action: (String) -> Unit)
+
         /**
          * Function that is called when a response is received
          */

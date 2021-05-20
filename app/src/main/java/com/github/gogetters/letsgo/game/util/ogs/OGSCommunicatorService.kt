@@ -19,11 +19,7 @@ class OGSCommunicatorService(private val onlineService: OnlineService) : OGSComm
         body.put("username", username)
         body.put("password", password)
 
-        //TODO maybe not the best... requests are async, what if we do 2 at once?
-        //TODO maybe best would be some sort of sendRequest().onresponse(x -> y) but how?
-        onlineService.responseListener =
-            OnlineService.ResponseListener { onAuthenticationAccepted() }
-        onlineService.post("$base/oauth2/access_token", body.toString())
+        onlineService.post("$base/oauth2/access_token", body.toString()).setOnResponse { onAuthenticationAccepted() }
     }
 
     override fun onAuthenticationAccepted() {
@@ -32,8 +28,7 @@ class OGSCommunicatorService(private val onlineService: OnlineService) : OGSComm
 
     override fun startChallenge(challenge: OGSChallenge) {
         val body = challenge.toJSON()
-        onlineService.responseListener = OnlineService.ResponseListener { }
-        onlineService.post("$base/v1/me/challenges/", body.toString(4))
+        onlineService.post("$base/v1/me/challenges/", body.toString(4)).setOnResponse { onChallengeAccepted(it) }
     }
 
     override fun onChallengeAccepted(challengeData: String) {
@@ -44,8 +39,9 @@ class OGSCommunicatorService(private val onlineService: OnlineService) : OGSComm
         val url = "$base/v1/games/$gameID/move/"
         val body = JSONObject()
         body.put("move", move.point.toString())
-        onlineService.responseListener = OnlineService.ResponseListener {  }
-        onlineService.post(url, body.toString(4))
+        onlineService.post(url, body.toString(4)).setOnResponse {
+            // TODO parse Move
+        }
 
     }
 
@@ -55,15 +51,17 @@ class OGSCommunicatorService(private val onlineService: OnlineService) : OGSComm
 
     override fun listActiveGames(): String {
         val url = "$base/v1/me/games/"
-        onlineService.responseListener = OnlineService.ResponseListener {  }
-        onlineService.get(url)
+        onlineService.get(url).setOnResponse {
+            // TODO
+        }
         return "" //TODO.... not sure
     }
 
     override fun cancelChallenge(challengeID: String) {
         val url = "$base/v1/challenges/$challengeID"
 
-        onlineService.responseListener = OnlineService.ResponseListener {  }
-        onlineService.delete(url)
+        onlineService.delete(url).setOnResponse {
+            // TODO
+        }
     }
 }

@@ -8,6 +8,8 @@ import android.widget.EditText
 import android.widget.TextView
 import com.github.gogetters.letsgo.R
 import com.github.gogetters.letsgo.game.Player
+import com.github.gogetters.letsgo.game.Stone
+import com.github.gogetters.letsgo.game.util.ogs.OGSChallenge
 import com.github.gogetters.letsgo.game.util.ogs.OGSCommunicator
 import com.github.gogetters.letsgo.game.util.ogs.OGSGame
 
@@ -80,12 +82,16 @@ class GameModeChooserActivity : BaseActivity() {
      * Send the information of the new game on OGS to the interface
      */
     private fun startOgsOnlineGame(ogsCommunicator: OGSCommunicator) {
+        val game = OGSGame(
+            "game",
+            OGSGame.RuleType.JAPANESE,
+            false,
+            OGSGame.HandicapType.NONE
+        )
         ogsCommunicator.startChallenge(
-            OGSGame(
-                "game",
-                OGSGame.RuleType.JAPANESE,
-                false,
-                OGSGame.HandicapType.NONE
+            OGSChallenge(
+                game,
+                Stone.BLACK
             )
         )
 
