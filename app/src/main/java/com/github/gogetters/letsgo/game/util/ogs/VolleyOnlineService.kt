@@ -9,7 +9,7 @@ import org.json.JSONObject
 
 class VolleyOnlineService(context: Context) : OnlineService<JSONObject> {
     private val queue: RequestQueue = Volley.newRequestQueue(context)
-    
+
     override fun post(url: String, body: JSONObject, headers: JSONObject): ResponseListener<JSONObject> { return getOrPost(url, body, headers) }
 
     override fun get(url: String, headers: JSONObject): ResponseListener<JSONObject> { return getOrPost(url, null, headers) }

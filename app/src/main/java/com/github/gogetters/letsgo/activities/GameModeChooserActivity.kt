@@ -45,8 +45,12 @@ class GameModeChooserActivity : BaseActivity() {
         ogsButton = findViewById(R.id.gameModeChooser_button_ogs)
         ogsButton.setOnClickListener {
             // login
-            //changeToOgsLoginView(OGSCommunicatorService(VolleyOnlineService(this), resources.getString(R.string.ogs_client_id), resources.getString(R.string.ogs_client_secret)))
-            //changeToOgsLoginView(OGSCommunicatorService(VolleyOnlineService(this), resources.getString(R.string.ogs_client_id), resources.getString(R.string.ogs_client_secret)))
+            changeToOgsLoginView()
+            /**submitButton.setOnClickListener {
+                val ogsCommunicator = OGSCommunicatorService(VolleyOnlineService(this), resources.getString(R.string.ogs_client_id), resources.getString(R.string.ogs_client_secret))
+                ogsCommunicator.authenticate(usernameEditText.toString(), passwordEditText.toString())
+            }*/
+
             // TODO ask for information concerning the game if completed
 
             // startOgsOnlineGame
@@ -64,7 +68,7 @@ class GameModeChooserActivity : BaseActivity() {
         return R.layout.activity_game_mode_chooser
     }
 
-    private fun changeToOgsLoginView(ogsCommunicator: OGSCommunicatorService) {
+    private fun changeToOgsLoginView() {
         titleText.text = resources.getString(R.string.gameModeChooser_loginTitle)
         localButton.visibility = View.GONE
         ogsButton.visibility = View.GONE
@@ -72,9 +76,6 @@ class GameModeChooserActivity : BaseActivity() {
         usernameEditText.visibility = View.VISIBLE
         passwordEditText.visibility = View.VISIBLE
         submitButton.visibility = View.VISIBLE
-        submitButton.setOnClickListener {
-            ogsCommunicator.authenticate(usernameEditText.toString(), passwordEditText.toString())
-        }
     }
 
     /**
