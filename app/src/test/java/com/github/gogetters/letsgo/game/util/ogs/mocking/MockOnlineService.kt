@@ -1,6 +1,5 @@
 package com.github.gogetters.letsgo.game.util.ogs.mocking
 
-import com.github.gogetters.letsgo.game.Stone
 import com.github.gogetters.letsgo.game.util.ogs.OGSChallenge
 import com.github.gogetters.letsgo.game.util.ogs.OGSGame
 import com.github.gogetters.letsgo.game.util.ogs.OnlineService
@@ -8,7 +7,6 @@ import com.github.gogetters.letsgo.game.util.ogs.ResponseListener
 import org.json.JSONArray
 import org.json.JSONObject
 import java.lang.IllegalArgumentException
-import java.util.*
 
 class MockOnlineService : OnlineService<JSONObject> {
     var hasAuthenticated = false
@@ -16,6 +14,7 @@ class MockOnlineService : OnlineService<JSONObject> {
     lateinit var secret: String
     var currentGames = listOf(OGSGame("first"), OGSGame("second"))
     var madeMove = false
+    var las
     var challengeList = listOf<OGSChallenge>()
     private val base = "http://online-go.com"
     private val auth = "/oauth2/access_token"
@@ -46,7 +45,7 @@ class MockOnlineService : OnlineService<JSONObject> {
                 listener.onResponse(gamesJSON)
             }
             url.startsWith("$base$games") -> {
-                val id =
+                listener.onResponse()
             }
             else -> throw IllegalArgumentException("invalid API request")
         }
