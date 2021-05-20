@@ -100,11 +100,25 @@ sealed class GTPCommand {
                 "fixed_handicap" -> if(args.isEmpty()) throw Error() else return FIXED_HANDICAP(args[0].toInt())
                 "place_free_handicap" -> if(args.isEmpty()) throw Error() else return PLACE_FREE_HANDICAP(args[0].toInt())
                 "set_free_handicap" -> if(args.isEmpty()) throw Error() else TODO("need to convert strings to points")
-                "play" -> TODO("need to create moves from Strings")
+                "play" -> if (args.isEmpty()) throw Error() else PLAY(parseMove(args))
                 "genmove" -> TODO("need to create moves from Strings")
                 "undo" -> UNDO
                 else -> throw Error("no valid command detected")
             }
+        }
+
+        fun parseMove(args: List<String>): Move {
+            if (args.size != 2) {
+                throw IllegalArgumentException("invalid number of arguments (need 2)")
+            }
+
+            val colorString = args[0]
+            val pointString = args[1]
+
+            val color = Stone.fromString(colorString)
+            val point = Point.fromString(pointString)
+
+            return Move(color, point)
         }
     }
 }
