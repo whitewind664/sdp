@@ -10,7 +10,7 @@ import com.android.volley.toolbox.Volley
 import org.json.JSONObject
 import java.io.IOException
 
-abstract class VolleyOnlineService(context: Context) : OnlineService<JSONObject> {
+class VolleyOnlineService(context: Context) : OnlineService<JSONObject> {
     private val queue: RequestQueue = Volley.newRequestQueue(context)
 
     //TODO: where the do I put the body for the post request???

@@ -9,9 +9,7 @@ import android.widget.TextView
 import com.github.gogetters.letsgo.R
 import com.github.gogetters.letsgo.game.Player
 import com.github.gogetters.letsgo.game.Stone
-import com.github.gogetters.letsgo.game.util.ogs.OGSChallenge
-import com.github.gogetters.letsgo.game.util.ogs.OGSCommunicator
-import com.github.gogetters.letsgo.game.util.ogs.OGSGame
+import com.github.gogetters.letsgo.game.util.ogs.*
 
 class GameModeChooserActivity : BaseActivity() {
 
@@ -44,10 +42,10 @@ class GameModeChooserActivity : BaseActivity() {
             startActivity(intent)
         }
 
-        ogsButton = findViewById<Button>(R.id.gameModeChooser_button_ogs)
+        ogsButton = findViewById(R.id.gameModeChooser_button_ogs)
         ogsButton.setOnClickListener {
             // login
-            //changeToOgsLoginView()
+            changeToOgsLoginView(OGSCommunicatorService(VolleyOnlineService(this)))
             // TODO ask for information concerning the game if completed
 
             // startOgsOnlineGame
@@ -83,10 +81,7 @@ class GameModeChooserActivity : BaseActivity() {
      */
     private fun startOgsOnlineGame(ogsCommunicator: OGSCommunicator) {
         val game = OGSGame(
-            "game",
-            OGSGame.RuleType.JAPANESE,
-            false,
-            OGSGame.HandicapType.NONE
+            "game"
         )
         ogsCommunicator.startChallenge(
             OGSChallenge(

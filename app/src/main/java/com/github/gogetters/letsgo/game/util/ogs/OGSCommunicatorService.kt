@@ -4,8 +4,8 @@ import com.github.gogetters.letsgo.game.Move
 import com.github.gogetters.letsgo.game.util.InputDelegate
 import org.json.JSONObject
 
-class OGSCommunicatorService(private val onlineService: OnlineService) : OGSCommunicator {
-    private val CLIENT_ID: String =  // TODO
+class OGSCommunicatorService(private val onlineService: OnlineService<JSONObject>) : OGSCommunicator {
+    private val CLIENT_ID: String = "" // TODO
     private val CLIENT_SECRET: String = "" // TODO
     private val base = "http://online-go.com"
     private var gameID = 0
@@ -19,7 +19,7 @@ class OGSCommunicatorService(private val onlineService: OnlineService) : OGSComm
         body.put("username", username)
         body.put("password", password)
 
-        onlineService.post("$base/oauth2/access_token", body.toString())
+        onlineService.post("$base/oauth2/access_token", body)
             .setOnResponse { onAuthenticationAccepted() }
     }
 
