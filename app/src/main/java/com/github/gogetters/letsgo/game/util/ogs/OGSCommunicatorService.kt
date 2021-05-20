@@ -23,14 +23,14 @@ class OGSCommunicatorService(private val onlineService: OnlineService<JSONObject
     lateinit var inputDelegate: InputDelegate
 
     fun authenticate(username: String, password: String) {
-        val body = JSONObject()
-        body.put("client_id", CLIENT_ID)
-        body.put("client_secret", CLIENT_SECRET)
-        body.put("grant_type", "password")
-        body.put("username", username)
-        body.put("password", password)
+        val body = mutableMapOf<String, String>()
+        body["client_id"] = CLIENT_ID
+        body["client_secret"] = CLIENT_SECRET
+        body["grant_type"] = "password"
+        body["username"] = username
+        body["password"] = password
 
-        val header = JSONObject()
+        val header = mutableMapOf<String, String>()
         header.put("Content-Type", "application/x-www-form-urlencoded")
 
         onlineService.post("$base$auth", body, header)
@@ -39,7 +39,7 @@ class OGSCommunicatorService(private val onlineService: OnlineService<JSONObject
 
 
     fun startChallenge(challenge: OGSChallenge) {
-        val body = challenge.toJSON()
+        val body = challenge.toMap()
         onlineService.post("$base$challenges", body).setOnResponse {
             gameID = it.getInt("game")
         }
@@ -47,10 +47,11 @@ class OGSCommunicatorService(private val onlineService: OnlineService<JSONObject
 
     fun sendMove(move: Move) {
         val url = "$base$games/$gameID/move/"
-        val body = JSONObject()
         val gtpMove = move.point.toString()
         val theirMove = gtpMove[0] + (gtpMove[1].toInt() + 'a'.toInt()).toChar().toString()
-        body.put("move", theirMove)
+
+        val body = mutableMapOf<String, String>()
+        body["move"] = theirMove
         onlineService.post(url, body).setOnResponse {
             // TODO parse Move
         }
