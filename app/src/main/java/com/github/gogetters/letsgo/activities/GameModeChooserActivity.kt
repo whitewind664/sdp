@@ -9,9 +9,7 @@ import android.widget.TextView
 import com.github.gogetters.letsgo.R
 import com.github.gogetters.letsgo.game.Player
 import com.github.gogetters.letsgo.game.Stone
-import com.github.gogetters.letsgo.game.util.ogs.OGSChallenge
-import com.github.gogetters.letsgo.game.util.ogs.OGSCommunicator
-import com.github.gogetters.letsgo.game.util.ogs.OGSGame
+import com.github.gogetters.letsgo.game.util.ogs.*
 
 class GameModeChooserActivity : BaseActivity() {
 
@@ -44,10 +42,10 @@ class GameModeChooserActivity : BaseActivity() {
             startActivity(intent)
         }
 
-        ogsButton = findViewById<Button>(R.id.gameModeChooser_button_ogs)
+        ogsButton = findViewById(R.id.gameModeChooser_button_ogs)
         ogsButton.setOnClickListener {
             // login
-            //changeToOgsLoginView()
+            changeToOgsLoginView(OGSCommunicatorService(VolleyOnlineService(this)))
             // TODO ask for information concerning the game if completed
 
             // startOgsOnlineGame
@@ -65,7 +63,7 @@ class GameModeChooserActivity : BaseActivity() {
         return R.layout.activity_game_mode_chooser
     }
 
-    private fun changeToOgsLoginView(ogsCommunicator: OGSCommunicator) {
+    private fun changeToOgsLoginView(ogsCommunicator: OGSCommunicatorService) {
         titleText.text = resources.getString(R.string.gameModeChooser_loginTitle)
         localButton.visibility = View.GONE
         ogsButton.visibility = View.GONE
@@ -81,12 +79,9 @@ class GameModeChooserActivity : BaseActivity() {
     /**
      * Send the information of the new game on OGS to the interface
      */
-    private fun startOgsOnlineGame(ogsCommunicator: OGSCommunicator) {
+    private fun startOgsOnlineGame(ogsCommunicator: OGSCommunicatorService) {
         val game = OGSGame(
-            "game",
-            OGSGame.RuleType.JAPANESE,
-            false,
-            OGSGame.HandicapType.NONE
+            "game"
         )
         ogsCommunicator.startChallenge(
             OGSChallenge(

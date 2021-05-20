@@ -8,8 +8,7 @@ data class OGSGame(
     val name: String,
     val width: Int = 9,
     val height: Int = 9
-)
-{
+) {
 
     fun toJSON(): JSONObject {
         val game = JSONObject()

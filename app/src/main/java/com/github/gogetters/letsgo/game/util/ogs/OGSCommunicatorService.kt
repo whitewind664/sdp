@@ -1,5 +1,6 @@
 package com.github.gogetters.letsgo.game.util.ogs
 
+import android.util.Log
 import com.github.gogetters.letsgo.game.Move
 import com.github.gogetters.letsgo.game.util.InputDelegate
 import org.json.JSONObject
@@ -25,11 +26,12 @@ class OGSCommunicatorService(private val onlineService: OnlineService<JSONObject
         body.put("password", password)
 
         onlineService.post("$base$auth", body)
-            .setOnResponse { onAuthenticationAccepted() }
+            .setOnResponse { onAuthenticationAccepted(it) }
     }
 
-    fun onAuthenticationAccepted() {
-        TODO("Not yet implemented")
+    fun onAuthenticationAccepted(res: JSONObject) {
+        Log.i("OGS_COMM", res.toString(4))
+        //TODO("Not yet implemented")
     }
 
     fun startChallenge(challenge: OGSChallenge) {
