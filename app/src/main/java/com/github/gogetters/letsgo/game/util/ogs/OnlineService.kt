@@ -10,15 +10,15 @@ interface OnlineService<T> {
     /**
      * Sends the given POST request to the service
      */
-    fun post(url: String, body: JSONObject, headers: JSONObject = JSONObject()): ResponseListener<T>
+    fun post(url: String, body: String, headers: Map<String, String> = mutableMapOf()): ResponseListener<T>
 
     /**
      * Sends the given GET request to the service
      */
-    fun get(url: String, headers: JSONObject = JSONObject()): ResponseListener<T>
+    fun get(url: String, headers: Map<String, String> = mutableMapOf()): ResponseListener<T>
 
     /**
      * Sends the given DELETE request to the service
      */
-    fun delete(url: String, headers: JSONObject = JSONObject()): ResponseListener<T>
+    fun delete(url: String, headers: Map<String, String> = mutableMapOf()): ResponseListener<T>
 }
