@@ -25,7 +25,7 @@ class MockOnlineService : OnlineService<JSONObject> {
     private val games = "/v1/games"
 
 
-    override fun post(url: String, body: JSONObject): ResponseListener<JSONObject> {
+    override fun post(url: String, body: JSONObject, headers: JSONObject): ResponseListener<JSONObject> {
         val listener = ResponseListener<JSONObject>()
         when {
             url.startsWith("$base$auth") -> {
@@ -52,11 +52,11 @@ class MockOnlineService : OnlineService<JSONObject> {
         }
     }
 
-    override fun get(url: String): ResponseListener<JSONObject> {
+    override fun get(url: String, headers: JSONObject): ResponseListener<JSONObject> {
         TODO("Not yet implemented")
     }
 
-    override fun delete(url: String): ResponseListener<JSONObject> {
+    override fun delete(url: String, headers: JSONObject): ResponseListener<JSONObject> {
         TODO("Not yet implemented")
     }
 }
