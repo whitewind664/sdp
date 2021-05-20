@@ -33,7 +33,7 @@ class OGSCommunicatorService(private val onlineService: OnlineService) : OGSComm
     override fun startChallenge(challenge: OGSChallenge) {
         val body = challenge.toJSON()
         onlineService.responseListener = OnlineService.ResponseListener { }
-        onlineService.post("$base/v1/challenges/", body.toString(4))
+        onlineService.post("$base/v1/me/challenges/", body.toString(4))
     }
 
     override fun onChallengeAccepted(challengeData: String) {
@@ -54,7 +54,7 @@ class OGSCommunicatorService(private val onlineService: OnlineService) : OGSComm
     }
 
     override fun listActiveGames(): String {
-        val url = "$base/v1/games/"
+        val url = "$base/v1/me/games/"
         onlineService.responseListener = OnlineService.ResponseListener {  }
         onlineService.get(url)
         return "" //TODO.... not sure
