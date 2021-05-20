@@ -13,10 +13,6 @@ import java.io.IOException
 class VolleyOnlineService(context: Context) : OnlineService<JSONObject> {
     private val queue: RequestQueue = Volley.newRequestQueue(context)
 
-    //TODO: where the do I put the body for the post request???
-    fun post(url: String, body: JSONObject): ResponseListener<JSONObject> {
-        return post(url, body, JSONObject())
-    }
 
     override fun post(url: String, body: JSONObject, headers: JSONObject): ResponseListener<JSONObject> {
         val responseListener = ResponseListener<JSONObject>()
@@ -35,10 +31,6 @@ class VolleyOnlineService(context: Context) : OnlineService<JSONObject> {
 
         queue.add(jsonRequest)
         return responseListener
-    }
-
-    fun get(url: String): ResponseListener<JSONObject> {
-        return get(url, JSONObject())
     }
 
     override fun get(url: String, headers: JSONObject): ResponseListener<JSONObject> {
@@ -60,9 +52,6 @@ class VolleyOnlineService(context: Context) : OnlineService<JSONObject> {
         return responseListener
     }
 
-    fun delete(url: String): ResponseListener<JSONObject> {
-        return delete(url, JSONObject())
-    }
 
     override fun delete(url: String, headers: JSONObject): ResponseListener<JSONObject> {
         val responseListener = ResponseListener<JSONObject>()
