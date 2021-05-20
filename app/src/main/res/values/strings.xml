@@ -15,10 +15,15 @@
     <string name="go">Go</string>
     <string name="user_name">User Name</string>
     <string name="upload_your_profile_picture">Upload Your Profile Picture</string>
-    <string name="my_name">My Name</string>
-    <string name="city_country">City, Country</string>
+    <string name="my_nick">Nickname</string>
+    <string name="city_country">Country, City</string>
     <string name="profile_picture">Profile Picture</string>
     <string name="save_picture">Save Picture</string>
+
+    <string name="first_last">First, Last</string>
+    <string name="profile_noNicknameHint">Edit profile to enter a nickname!</string>
+    <string name="profile_button_edit_text">Edit</string>
+    <string name="profile_button_save_text">Save</string>
 
     <string name="title_activity_maps">Map</string>
     <string name="title_activity_game">Game</string>

@@ -16,17 +16,13 @@ import android.util.Log
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
-import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.FileProvider
-import androidx.core.net.toUri
 import com.github.gogetters.letsgo.R
-import com.github.gogetters.letsgo.database.CloudStorage
 import com.github.gogetters.letsgo.database.ImageStorageService
 import com.github.gogetters.letsgo.database.user.UserBundle
 import com.github.gogetters.letsgo.database.user.UserBundleProvider
 import com.github.gogetters.letsgo.util.PermissionUtils
-import com.google.firebase.auth.FirebaseAuth
 import java.io.File
 import java.text.SimpleDateFormat
 import java.util.*
@@ -50,12 +46,13 @@ class ProfileActivity : ActivityCompat.OnRequestPermissionsResultCallback, BaseA
 
     private lateinit var userBundleProvider: UserBundleProvider
 
-    private lateinit var uploadImageText: TextView
+    private lateinit var editSaveButton: Button
+
     private lateinit var profileImage: ImageView
-    private lateinit var nameText: TextView
+    private lateinit var nick: TextView
+    private lateinit var firstLast: TextView
     private lateinit var emailText: TextView
     private lateinit var cityCountyText: TextView
-    //private lateinit var saveButton: ImageButton
 
     private lateinit var profilePictureUri: Uri
 
@@ -67,19 +64,34 @@ class ProfileActivity : ActivityCompat.OnRequestPermissionsResultCallback, BaseA
     private var readPermissionDenied = false
     private var writePermissionDenied = false
 
+    private var editing: Boolean = false
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         userBundleProvider = intent.getSerializableExtra("UserBundleProvider") as UserBundleProvider
 
-        uploadImageText = findViewById(R.id.profile_textView_uploadImageHint)
+        editSaveButton = findViewById(R.id.profile_button_editSave)
+        editSaveButton.setOnClickListener {
+            if (!editing) {
+                editing = true
+                editSaveButton.text = getString(R.string.profile_button_save_text)
+            } else {
+                editing = false
+                editSaveButton.text = getString(R.string.profile_button_edit_text)
+
+                // TODO Save profile!
+            }
+        }
+
         profileImage = findViewById(R.id.profile_imageView_image)
-        nameText = findViewById(R.id.profile_textView_name)
+        nick = findViewById(R.id.profile_textView_nick)
+        firstLast = findViewById(R.id.profile_textView_firstLast)
         emailText = findViewById(R.id.profile_textView_email)
         cityCountyText = findViewById(R.id.profile_textView_cityCountry)
-        //saveButton = findViewById(R.id.profile_imageButton_save)
         profileImage.setOnClickListener {
-            selectImage()
+            if (editing)
+                selectImage()
         }
 
         // Open friend list with button!
@@ -123,15 +135,40 @@ class ProfileActivity : ActivityCompat.OnRequestPermissionsResultCallback, BaseA
             dispatchLoginIntent()
         } else {
             var user = userBundle.getUser()
+
             user.downloadUserData().addOnCompleteListener {
-                nameText.text = user.first
+                if (user.nick != null) {
+                    nick.text = user.nick
+                } else {
+                    nick.text = getString(R.string.profile_noNicknameHint)
+                }
+
+                if (user.first != null && user.last != null) {
+                    "${user.first}, ${user.last}".also { firstLast.text = it }
+                } else if (user.last == null) {
+                    firstLast.text = user.first
+                } else if (user.first == null) {
+                    firstLast.text = user.last
+                } else {
+                    firstLast.text = ""
+                }
+
                 emailText.text = userBundle.getEmail()
-                cityCountyText.text = "${user.city}, ${user.country}"
+
+                if (user.city != null && user.country != null) {
+                    "${user.city}, ${user.country}".also { cityCountyText.text = it }
+                } else if (user.city == null) {
+                    cityCountyText.text = user.country
+                } else if (user.country == null) {
+                    cityCountyText.text = user.city
+                } else {
+                    cityCountyText.text = ""
+                }
+
                 ImageStorageService.getProfileImageFromCloud(PROFILE_PICTURE_PREFIX_CLOUD, user.profileImageRef,getOutputImageFile(), profileImage)
             }
         }
     }
-
 
     private fun selectImage() {
         val dialogTexts = arrayOf<CharSequence>(resources.getString(R.string.profile_takePicture), resources.getString(R.string.profile_chooseFromGallery), resources.getString(R.string.profile_cancel))
