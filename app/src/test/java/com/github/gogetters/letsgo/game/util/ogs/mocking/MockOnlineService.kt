@@ -15,27 +15,10 @@ class MockOnlineService : OnlineService<JSONObject> {
     var madeMove = false
     var challenges = listOf<OGSChallenge>()
 
-    fun challengeFromJSON(challenge: JSONObject): OGSChallenge {
-
-        val color = when (challenge.getString("challenger_color")) {
-            "white" -> Stone.WHITE
-            "black" -> Stone.BLACK
-            "automatic" -> Stone.BLACK //todo :(((((((
-            else -> throw IllegalArgumentException("could not parse stone color")
-        }
-
-        val game = gameFromJSON(challenge.getJSONObject("game"))
-        return OGSChallenge(game, color,
-            challenge.getInt("min_ranking"),
-            challenge.getInt("max_ranking"))
-    }
-
-    private fun gameFromJSON(game: JSONObject): OGSGame {
-        return OGSGame(game.getString("name"), game.getInt("width"), game.getInt("height"))
-    }
-
     override fun post(url: String, body: JSONObject): ResponseListener<JSONObject> {
-        TODO("Not yet implemented")
+        when (url) {
+
+        }
     }
 
     override fun get(url: String): ResponseListener<JSONObject> {

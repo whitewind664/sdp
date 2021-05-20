@@ -4,7 +4,7 @@ import com.github.gogetters.letsgo.game.Move
 import com.github.gogetters.letsgo.game.util.InputDelegate
 import org.json.JSONObject
 
-class OGSCommunicatorService(private val onlineService: OnlineService) : OGSCommunicator {
+class OGSCommunicatorService(private val onlineService: OnlineService<JSONObject>) : OGSCommunicator {
     private val CLIENT_ID: String = "" // TODO
     private val CLIENT_SECRET: String = "" // TODO
     private val base = "http://online-go.com"
@@ -19,7 +19,7 @@ class OGSCommunicatorService(private val onlineService: OnlineService) : OGSComm
         body.put("username", username)
         body.put("password", password)
 
-        onlineService.post("$base/oauth2/access_token", body.toString())
+        onlineService.post("$base/oauth2/access_token", body)
             .setOnResponse { onAuthenticationAccepted() }
     }
 
@@ -29,11 +29,11 @@ class OGSCommunicatorService(private val onlineService: OnlineService) : OGSComm
 
     override fun startChallenge(challenge: OGSChallenge) {
         val body = challenge.toJSON()
-        onlineService.post("$base/v1/me/challenges/", body.toString(4))
-            .setOnResponse { onChallengeAccepted(it) }
+        onlineService.post("$base/v1/me/challenges/", body)
+            .setOnResponse { onChallengeAccepted(OGSChallenge.fromJSON(it)) }
     }
 
-    override fun onChallengeAccepted(challengeData: String) {
+    override fun onChallengeAccepted(challenge: OGSChallenge) {
         TODO("Not yet implemented")
     }
 
@@ -43,7 +43,7 @@ class OGSCommunicatorService(private val onlineService: OnlineService) : OGSComm
         val gtpMove = move.point.toString()
         val theirMove = gtpMove[0] + (gtpMove[1].toInt() + 'a'.toInt()).toChar().toString()
         body.put("move", theirMove)
-        onlineService.post(url, body.toString(4)).setOnResponse {
+        onlineService.post(url, body).setOnResponse {
             // TODO parse Move
         }
 
