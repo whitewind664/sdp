@@ -44,13 +44,14 @@ class OGSCommunicatorTest {
 
         val hello = JSONObject()
         val goodbye = JSONObject()
-        val test = JSONObject().put("hello", "world").put("yumy", "burgur")
 
         val service = MockOnlineService()
         val communicator = OGSCommunicatorService(service, "", "")
 
         val game = OGSGame("mygame")
+        game.toString()
         val challenge = OGSChallenge(game, Stone.BLACK)
+        challenge.toString()
 
         val existingGames = service.currentGames.size
 
