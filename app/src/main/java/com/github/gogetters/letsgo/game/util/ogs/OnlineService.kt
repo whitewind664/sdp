@@ -10,8 +10,16 @@ interface OnlineService {
      */
     fun sendRequest(url: String, body: String)
 
+
     /**
-     * Function that is called when a request is answered
+     * Defines the behavior to handle responses
      */
-    fun onRequestResult(result: String)
+    var responseListener: ResponseListener
+
+    fun interface ResponseListener {
+        /**
+         * Function that is called when a response is received
+         */
+        fun onResponse(response: String)
+    }
 }
