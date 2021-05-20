@@ -19,7 +19,8 @@ class OGSCommunicatorService(private val onlineService: OnlineService) : OGSComm
         body.put("username", username)
         body.put("password", password)
 
-        onlineService.post("$base/oauth2/access_token", body.toString()).setOnResponse { onAuthenticationAccepted() }
+        onlineService.post("$base/oauth2/access_token", body.toString())
+            .setOnResponse { onAuthenticationAccepted() }
     }
 
     override fun onAuthenticationAccepted() {
@@ -28,7 +29,8 @@ class OGSCommunicatorService(private val onlineService: OnlineService) : OGSComm
 
     override fun startChallenge(challenge: OGSChallenge) {
         val body = challenge.toJSON()
-        onlineService.post("$base/v1/me/challenges/", body.toString(4)).setOnResponse { onChallengeAccepted(it) }
+        onlineService.post("$base/v1/me/challenges/", body.toString(4))
+            .setOnResponse { onChallengeAccepted(it) }
     }
 
     override fun onChallengeAccepted(challengeData: String) {

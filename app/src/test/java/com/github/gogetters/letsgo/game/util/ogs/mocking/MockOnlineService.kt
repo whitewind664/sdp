@@ -1,11 +1,14 @@
-package com.github.gogetters.letsgo.game.util.ogs
+package com.github.gogetters.letsgo.game.util.ogs.mocking
 
 import com.github.gogetters.letsgo.game.Stone
+import com.github.gogetters.letsgo.game.util.ogs.OGSChallenge
+import com.github.gogetters.letsgo.game.util.ogs.OGSGame
+import com.github.gogetters.letsgo.game.util.ogs.OnlineService
 import org.json.JSONObject
 import java.lang.IllegalArgumentException
 import java.util.*
 
-class TestOnlineService : OnlineService {
+class MockOnlineService : OnlineService {
     var hasAuthenticated = false
     var currentGames = listOf(OGSGame("default"), OGSGame("ranked", isRanked = true))
     var madeMove = false
@@ -44,13 +47,19 @@ class TestOnlineService : OnlineService {
         val timeControlJSON = game.getJSONObject("time_control_parameters")
         val timeControl = when (timeControlJSON.getString("time_control")) {
             "none" -> OGSGame.TimeControl.None(timeControlJSON.getInt("total_time"))
-            "byoyomi" -> OGSGame.TimeControl.Byoyomi(timeControlJSON.getInt("main_time"),
-            timeControlJSON.getInt("period_time"))
-            "fischer" -> OGSGame.TimeControl.Fischer(timeControlJSON.getInt("initial_time"),
-            timeControlJSON.getInt("max_time"), timeControlJSON.getInt("time_increment"))
+            "byoyomi" -> OGSGame.TimeControl.Byoyomi(
+                timeControlJSON.getInt("main_time"),
+                timeControlJSON.getInt("period_time")
+            )
+            "fischer" -> OGSGame.TimeControl.Fischer(
+                timeControlJSON.getInt("initial_time"),
+                timeControlJSON.getInt("max_time"), timeControlJSON.getInt("time_increment")
+            )
             "simple" -> OGSGame.TimeControl.Simple(timeControlJSON.getInt("per_move"))
-            "canadian" -> OGSGame.TimeControl.Canadian(timeControlJSON.getInt("main_time"),
-            timeControlJSON.getInt("period_time"), timeControlJSON.getInt("stones_per_period"))
+            "canadian" -> OGSGame.TimeControl.Canadian(
+                timeControlJSON.getInt("main_time"),
+                timeControlJSON.getInt("period_time"), timeControlJSON.getInt("stones_per_period")
+            )
             "absolute" -> OGSGame.TimeControl.Absolute(timeControlJSON.getInt("total_time"))
             else -> throw IllegalArgumentException("could not parse time control")
         }
@@ -69,21 +78,14 @@ class TestOnlineService : OnlineService {
     }
 
     override fun post(url: String, body: String): OnlineService.ResponseListener {
-        when (url) {
-
-        }
+        TODO("Not yet implemented")
     }
 
     override fun get(url: String): OnlineService.ResponseListener {
-        when (url) {
-
-        }
+        TODO("Not yet implemented")
     }
 
     override fun delete(url: String): OnlineService.ResponseListener {
-        when (url) {
-
-        }
+        TODO("Not yet implemented")
     }
-
 }

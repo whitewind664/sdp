@@ -1,5 +1,6 @@
 package com.github.gogetters.letsgo.game.util.ogs
 
+import com.github.gogetters.letsgo.game.util.ogs.mocking.MockOnlineService
 import junit.framework.Assert.assertFalse
 import junit.framework.Assert.assertTrue
 import org.junit.Test
@@ -8,7 +9,7 @@ class OGSCommunicatorTest {
 
     @Test
     fun newChallengeAfterCreateChallenge() {
-        val service = TestOnlineService()
+        val service = MockOnlineService()
         val communicator = OGSCommunicatorService(service)
 
         assertFalse(service.hasAuthenticated)
