@@ -68,7 +68,7 @@ class TestOnlineService : OnlineService {
         )
     }
 
-    override fun post(url: String, body: String) {
+    override fun post(url: String, body: String): OnlineService.ResponseListener {
 
     }
 
