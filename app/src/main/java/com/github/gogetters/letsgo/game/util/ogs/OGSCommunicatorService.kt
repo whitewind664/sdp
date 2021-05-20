@@ -7,7 +7,7 @@ import com.github.gogetters.letsgo.game.util.InputDelegate
 import org.json.JSONObject
 import java.lang.IllegalArgumentException
 
-class OGSCommunicatorService(private val onlineService: OnlineService<JSONObject>,
+class OGSCommunicatorService(private val onlineService: OnlineService<String>,
                              private val CLIENT_ID: String,
                              private val CLIENT_SECRET: String) {
     //private val CLIENT_ID: String = "" // TODO

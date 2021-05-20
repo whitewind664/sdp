@@ -2,11 +2,12 @@ package com.github.gogetters.letsgo.game.util.ogs.mocking
 
 import com.github.gogetters.letsgo.game.Point
 import com.github.gogetters.letsgo.game.util.ogs.*
+import com.google.gson.Gson
 import org.json.JSONObject
 import java.lang.IllegalArgumentException
 import kotlin.random.Random
 
-class MockOnlineService : OnlineService<JSONObject> {
+class MockOnlineService : OnlineService<String> {
     var hasAuthenticated = false
     lateinit var username: String
     lateinit var password: String
@@ -24,32 +25,20 @@ class MockOnlineService : OnlineService<JSONObject> {
     private val games = "/v1/games"
 
 
-    override fun post(url: String, body: JSONObject, headers: JSONObject): ResponseListener<JSONObject> {
-        val listener = ResponseListener<JSONObject>()
+    override fun post(url: String, body: Map<String, String>, headers: Map<String, String>): ResponseListener<String> {
+        val listener = ResponseListener<String>()
         when {
             url.startsWith("$base$auth") -> {
                 hasAuthenticated = true
-                username = body.getString("username")
-                password = body.getString("password")
-            }
-            url.startsWith("$base$challenges") -> {
-                val challenge = OGSChallenge.fromJSON(body)
-                val game = OGSGame.fromJSON(body.getJSONObject("game"))
-                challengeList.add(challenge)
-                currentGames.add(game)
-
-                val response = JSONObject()
-                response.put("status", "ok")
-                response.put("challenge", Random.nextInt(0, 65535))
-                response.put("challenge", Random.nextInt(0, 65535))
-                listener.onResponse(response)
+                username = body["username"]!!
+                password = body["password"]!!
             }
             url.startsWith("$base$games") -> {
-                val response = JSONObject()
-                val move = OGSCommunicatorService.parseMove(body.getString("move"))
+                val response = mutableMapOf<String, String>()
+                val move = OGSCommunicatorService.parseMove(body["move"]!!)
                 lastMove = move
-                response.put("success", "Move Accepted")
-                listener.onResponse(response)
+                response["success"] = "Move Accepted"
+                listener.onResponse(Gson().toJson(response))
             }
             else -> throw IllegalArgumentException("invalid API request, url does not match: $url")
         }
@@ -57,18 +46,18 @@ class MockOnlineService : OnlineService<JSONObject> {
         return listener
     }
 
-    override fun get(url: String, headers: JSONObject): ResponseListener<JSONObject> {
-        val listener = ResponseListener<JSONObject>()
+    override fun get(url: String, headers: Map<String, String>): ResponseListener<String> {
+        val listener = ResponseListener<String>()
         when {
             else -> throw IllegalArgumentException("should never send a get request??")
         }
     }
 
-    override fun delete(url: String, headers: JSONObject): ResponseListener<JSONObject> {
-        val listener = ResponseListener<JSONObject>()
-        val response = JSONObject()
-        response.put("success", "Challenge removed")
-        listener.onResponse(response)
+    override fun delete(url: String, headers: Map<String, String>): ResponseListener<String> {
+        val listener = ResponseListener<String>()
+        val response = mutableMapOf<String, String>()
+        response["success"] = "Challenge removed"
+        listener.onResponse(Gson().toJson(response))
         return listener
     }
 }
