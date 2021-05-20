@@ -41,12 +41,16 @@ class OGSCommunicatorService(private val onlineService: OnlineService<String>,
 
 
     fun startChallenge(challenge: OGSChallenge) {
+        val url = "$base$challenges"
+        val body = challenge.toMap()
+        onlineService.post(url, body)
     }
 
     fun sendMove(move: Move) {
         val url = "$base$games/$gameID/move/"
         val gtpMove = move.point.toString()
-        val theirMove = gtpMove[0] + (gtpMove[1].toInt() + 'a'.toInt()).toChar().toString()
+        val second = (gtpMove[1].toString().toInt() + 'a'.toInt() - 1).toChar().toString()
+        val theirMove = gtpMove[0] + second
 
         val body = mutableMapOf<String, String>()
         body["move"] = theirMove

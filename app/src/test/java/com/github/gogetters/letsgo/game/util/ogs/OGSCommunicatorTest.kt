@@ -57,6 +57,6 @@ class OGSCommunicatorTest {
         assertEquals(1, service.challengeList.size)
         assertEquals(existingGames + 1, service.currentGames.size)
         communicator.sendMove(move)
-        assertEquals(move, service.lastMove)
+        assertEquals(move.point, service.lastMove)
     }
 }

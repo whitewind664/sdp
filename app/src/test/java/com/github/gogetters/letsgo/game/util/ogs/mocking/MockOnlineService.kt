@@ -33,6 +33,12 @@ class MockOnlineService : OnlineService<String> {
                 username = body["username"]!!
                 password = body["password"]!!
             }
+            url.startsWith("$base$challenges") -> {
+                //TODO use GSON to convert to map
+                val challenge = OGSChallenge.fromMap(body.toMutableMap())
+                challengeList.add(challenge)
+                currentGames.add(challenge.game)
+            }
             url.startsWith("$base$games") -> {
                 val response = mutableMapOf<String, String>()
                 val move = OGSCommunicatorService.parseMove(body["move"]!!)
