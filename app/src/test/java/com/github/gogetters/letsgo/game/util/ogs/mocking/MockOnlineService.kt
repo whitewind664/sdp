@@ -12,6 +12,8 @@ import java.util.*
 
 class MockOnlineService : OnlineService<JSONObject> {
     var hasAuthenticated = false
+    lateinit var id: String
+    lateinit var secret: String
     var currentGames = listOf(OGSGame("first"), OGSGame("second"))
     var madeMove = false
     var challengeList = listOf<OGSChallenge>()
@@ -26,11 +28,27 @@ class MockOnlineService : OnlineService<JSONObject> {
     override fun post(url: String, body: JSONObject): ResponseListener<JSONObject> {
         val listener = ResponseListener<JSONObject>()
         when {
-            url.startsWith("$base$auth") -> hasAuthenticated = true
+            url.startsWith("$base$auth") -> {
+                hasAuthenticated = true
+                id = body.getString("client_id")
+                secret = body.getString("client_secret")
+            }
             url.startsWith("$base$myChallenges") ->  {
-                val challengesJSON = JSONArray(challengeList)
+                val challengesJSON = JSONObject().put("challenges", JSONArray(challengeList))
                 listener.onResponse(challengesJSON)
             }
+            url.startsWith("$base$challenges") -> {
+                val challengesJSON = JSONObject().put("challenges", JSONArray(challengeList))
+                listener.onResponse(challengesJSON)
+            }
+            url.startsWith("$base$myGames") -> {
+                val gamesJSON = JSONObject().put("games", JSONArray(currentGames))
+                listener.onResponse(gamesJSON)
+            }
+            url.startsWith("$base$games") -> {
+                val id =
+            }
+            else -> throw IllegalArgumentException("invalid API request")
         }
     }
 

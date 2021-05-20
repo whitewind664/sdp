@@ -14,34 +14,70 @@ class VolleyOnlineService(context: Context) : OnlineService<JSONObject> {
     private val queue: RequestQueue = Volley.newRequestQueue(context)
 
     //TODO: where the do I put the body for the post request???
-    override fun post(url: String, body: JSONObject): ResponseListener<JSONObject> {
+    fun post(url: String, body: JSONObject): ResponseListener<JSONObject> {
+        return post(url, body, JSONObject())
+    }
+
+    override fun post(url: String, body: JSONObject, headers: JSONObject): ResponseListener<JSONObject> {
         val responseListener = ResponseListener<JSONObject>()
 
-        val jsonRequest = JsonObjectRequest(url, body,
+        val jsonRequest = object : JsonObjectRequest(url, body,
                 { response -> responseListener.onResponse(response) },
-                { throw it })
+                { throw it }) {
+            override fun getHeaders(): MutableMap<String, String> {
+                val map = mutableMapOf<String, String>()
+                for (key in headers.keys()) {
+                    map[key] = headers.getString(key)
+                }
+                return map
+            }
+        }
 
         queue.add(jsonRequest)
         return responseListener
     }
 
-    override fun get(url: String): ResponseListener<JSONObject> {
+    fun get(url: String): ResponseListener<JSONObject> {
+        return get(url, JSONObject())
+    }
+
+    override fun get(url: String, headers: JSONObject): ResponseListener<JSONObject> {
         val responseListener = ResponseListener<JSONObject>()
 
-        val jsonRequest = JsonObjectRequest(url, null,
+        val jsonRequest = object: JsonObjectRequest(url, null,
                 { response -> responseListener.onResponse(response) },
-                { throw it })
+                { throw it }) {
+            override fun getHeaders(): MutableMap<String, String> {
+                val map = mutableMapOf<String, String>()
+                for (key in headers.keys()) {
+                    map[key] = headers.getString(key)
+                }
+                return map
+            }
+        }
 
         queue.add(jsonRequest)
         return responseListener
     }
 
-    override fun delete(url: String): ResponseListener<JSONObject> {
+    fun delete(url: String): ResponseListener<JSONObject> {
+        return delete(url, JSONObject())
+    }
+
+    override fun delete(url: String, headers: JSONObject): ResponseListener<JSONObject> {
         val responseListener = ResponseListener<JSONObject>()
 
-        val stringRequest = StringRequest(Request.Method.DELETE, url,
-            { response -> responseListener.onResponse(JSONObject(response)) },
-            { throw it })
+        val stringRequest = object: StringRequest(Method.DELETE, url,
+                { response -> responseListener.onResponse(JSONObject(response)) },
+                { throw it }) {
+            override fun getHeaders(): MutableMap<String, String> {
+                val map = mutableMapOf<String, String>()
+                for (key in headers.keys()) {
+                    map[key] = headers.getString(key)
+                }
+                return map
+            }
+        }
 
         queue.add(stringRequest)
         return responseListener
