@@ -15,7 +15,5 @@ class OGSCommunicatorTest {
         //TODO would be nice to set here "onAuthenticationAccepted" for example
         communicator.authenticate("user", "password")
         assertTrue(service.hasAuthenticated)
-
-
     }
 }

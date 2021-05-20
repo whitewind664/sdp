@@ -51,11 +51,17 @@ abstract class VolleyOnlineService(context: Context) : OnlineService {
      */
     class VolleyResponseListener : OnlineService.ResponseListener {
         private var action: (String) -> Unit = {}
+        private var response: String? = null
+
         override fun setOnResponse(action: (String) -> Unit) {
             this.action = action
+            if (response != null) {
+                action(response!!)
+            }
         }
 
         override fun onResponse(response: String) {
+            this.response = response
             action(response)
         }
     }

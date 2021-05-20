@@ -68,18 +68,22 @@ class TestOnlineService : OnlineService {
         )
     }
 
-    override fun post(url: String, body: String) {
+    override fun post(url: String, body: String): OnlineService.ResponseListener {
+        when (url) {
 
+        }
     }
 
-    override fun get(url: String) {
-        TODO("Not yet implemented")
+    override fun get(url: String): OnlineService.ResponseListener {
+        when (url) {
+
+        }
     }
 
-    override fun delete(url: String) {
-        TODO("Not yet implemented")
-    }
+    override fun delete(url: String): OnlineService.ResponseListener {
+        when (url) {
 
-    override var responseListener =  OnlineService.ResponseListener{}
+        }
+    }
 
 }
