@@ -8,7 +8,12 @@ import org.json.JSONObject
 class OGSCommunicatorService(private val onlineService: OnlineService<JSONObject>, private val CLIENT_ID: String, private val CLIENT_SECRET: String) {
     //private val CLIENT_ID: String = "" // TODO
     //private val CLIENT_SECRET: String = "" // TODO
-    private val base = "http://online-go.com"
+    private val base = "https://online-go.com"
+    private val auth = "/api/v0/login"
+    private val myChallenges = "/v1/me/challenges/"
+    private val challenges = "/v1/challenges"
+    private val myGames = "/v1/me/games/"
+    private val games = "/v1/games"
     private var gameID = 0
 
     lateinit var inputDelegate: InputDelegate
@@ -17,35 +22,35 @@ class OGSCommunicatorService(private val onlineService: OnlineService<JSONObject
         val body = JSONObject()
         body.put("client_id", CLIENT_ID)
         body.put("client_secret", CLIENT_SECRET)
+        body.put("grant_type", "password")
         body.put("username", username)
         body.put("password", password)
 
-        onlineService.post("$base/oauth2/access_token", body)
-            .setOnResponse { res -> onAuthenticationAccepted(res.toString()) }
+        onlineService.post("$base$auth", body, JSONObject().put("Content-Type", "application/x-www-form-urlencoded"))
+            .setOnResponse { onAuthenticationAccepted(it) }
     }
 
-    fun onAuthenticationAccepted(res: String) {
-        Log.i("OGS_COMM", res)
+    fun onAuthenticationAccepted(res: JSONObject) {
+        Log.i("OGS_COMM", res.toString(4))
         //TODO("Not yet implemented")
     }
 
     fun startChallenge(challenge: OGSChallenge) {
         val body = challenge.toJSON()
-        onlineService.post("$base/v1/me/challenges/", body)
-            .setOnResponse { onChallengeAccepted(OGSChallenge.fromJSON(it)) }
+        onlineService.post("$base$myChallenges", body, JSONObject())
     }
 
-    fun onChallengeAccepted(challenge: OGSChallenge) {
+    fun onChallengeAccepted(challengeData: OGSChallenge) {
         TODO("Not yet implemented")
     }
 
     fun sendMove(move: Move) {
-        val url = "$base/v1/games/$gameID/move/"
+        val url = "$base$games/$gameID/move/"
         val body = JSONObject()
         val gtpMove = move.point.toString()
         val theirMove = gtpMove[0] + (gtpMove[1].toInt() + 'a'.toInt()).toChar().toString()
         body.put("move", theirMove)
-        onlineService.post(url, body).setOnResponse {
+        onlineService.post(url, body, JSONObject()).setOnResponse {
             // TODO parse Move
         }
 
@@ -56,17 +61,17 @@ class OGSCommunicatorService(private val onlineService: OnlineService<JSONObject
     }
 
     fun listActiveGames(): String {
-        val url = "$base/v1/me/games/"
-        onlineService.get(url).setOnResponse {
+        val url = "$base$myGames"
+        onlineService.get(url, JSONObject()).setOnResponse {
             // TODO
         }
         return "" //TODO.... not sure
     }
 
     fun cancelChallenge(challengeID: String) {
-        val url = "$base/v1/challenges/$challengeID"
+        val url = "$base$challenges/$challengeID"
 
-        onlineService.delete(url).setOnResponse {
+        onlineService.delete(url, JSONObject()).setOnResponse {
             // TODO
         }
     }
