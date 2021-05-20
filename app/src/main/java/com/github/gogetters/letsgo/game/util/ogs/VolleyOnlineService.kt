@@ -3,64 +3,49 @@ package com.github.gogetters.letsgo.game.util.ogs
 import android.content.Context
 import com.android.volley.Request
 import com.android.volley.RequestQueue
+import com.android.volley.toolbox.JsonObjectRequest
+import com.android.volley.toolbox.JsonRequest
 import com.android.volley.toolbox.StringRequest
 import com.android.volley.toolbox.Volley
+import org.json.JSONObject
 import java.io.IOException
 
-abstract class VolleyOnlineService(context: Context) : OnlineService {
+abstract class VolleyOnlineService(context: Context) : OnlineService<JSONObject> {
     private val queue: RequestQueue = Volley.newRequestQueue(context)
 
     //TODO: where the do I put the body for the post request???
-    override fun post(url: String, body: String): OnlineService.ResponseListener {
-        val responseListener: OnlineService.ResponseListener = VolleyResponseListener()
+    override fun post(url: String, body: JSONObject): ResponseListener<JSONObject> {
+        val responseListener = VolleyResponseListener<JSONObject>()
 
-        val stringRequest = StringRequest(Request.Method.POST, url,
-            { response -> responseListener.onResponse(response) },
-            { throw IOException("Could not send request to url $url") })
+        val jsonRequest = JsonObjectRequest(url, body,
+                { response -> responseListener.onResponse(response) },
+                { throw IOException("Could not send request to url $url") })
 
-        queue.add(stringRequest)
+        queue.add(jsonRequest)
         return responseListener
     }
 
-    override fun get(url: String): OnlineService.ResponseListener {
-        val responseListener: OnlineService.ResponseListener = VolleyResponseListener()
+    override fun get(url: String): ResponseListener<JSONObject> {
+        val responseListener = VolleyResponseListener<JSONObject>()
 
-        val stringRequest = StringRequest(Request.Method.GET, url,
-            { response -> responseListener.onResponse(response) },
-            { throw IOException("Could not send request to url $url") })
+        val jsonRequest = JsonObjectRequest(url, null,
+                { response -> responseListener.onResponse(response) },
+                { throw IOException("Could not send request to url $url") })
 
-        queue.add(stringRequest)
+        queue.add(jsonRequest)
         return responseListener
     }
 
-    override fun delete(url: String): OnlineService.ResponseListener {
-        val responseListener: OnlineService.ResponseListener = VolleyResponseListener()
+    override fun delete(url: String): ResponseListener<JSONObject> {
+        val responseListener = VolleyResponseListener<JSONObject>()
 
         val stringRequest = StringRequest(Request.Method.DELETE, url,
-            { response -> responseListener.onResponse(response) },
+            { response -> responseListener.onResponse(JSONObject(response)) },
             { throw IOException("Could not send request to url $url") })
 
         queue.add(stringRequest)
         return responseListener
     }
 
-    /**
-     * Listens to respond to http request
-     */
-    class VolleyResponseListener : OnlineService.ResponseListener {
-        private var action: (String) -> Unit = {}
-        private var response: String? = null
 
-        override fun setOnResponse(action: (String) -> Unit) {
-            this.action = action
-            if (response != null) {
-                action(response!!)
-            }
-        }
-
-        override fun onResponse(response: String) {
-            this.response = response
-            action(response)
-        }
-    }
 }
