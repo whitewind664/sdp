@@ -13,7 +13,7 @@ class OGSChallengeTest {
         val game = OGSGame("game")
         val challenge = OGSChallenge(game, Stone.WHITE)
 
-        assertEquals(Stone.WHITE.toString(), challenge.toMap().get("color"))
+        assertEquals(Stone.WHITE.toString(), challenge.toMap().get("challenger_color"))
     }
 
     @Test
