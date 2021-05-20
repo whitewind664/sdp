@@ -12,11 +12,14 @@ data class OGSGame(
 
     fun toJSON(): JSONObject {
         val game = JSONObject()
+        val time = JSONObject()
+        time.put("time_control", "none")
+
         game.put("name", name)
         game.put("rules", "japanese")
         game.put("ranked", "false")
         game.put("handicap", 0)
-        game.put("time_control_parameters", JSONObject().put("time_control", "none"))
+        game.put("time_control_parameters", time)
         game.put("pause_on_weekends", "false")
         game.put("width", width)
         game.put("height", height)
