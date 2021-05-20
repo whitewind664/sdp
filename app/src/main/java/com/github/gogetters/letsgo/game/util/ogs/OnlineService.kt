@@ -6,10 +6,19 @@ package com.github.gogetters.letsgo.game.util.ogs
 interface OnlineService {
 
     /**
-     * Sends the given request to the service
+     * Sends the given POST request to the service
      */
-    fun sendRequest(url: String, body: String)
+    fun post(url: String, body: String)
 
+    /**
+     * Sends the given GET request to the service
+     */
+    fun get(url: String)
+
+    /**
+     * Sends the given DELETE request to the service
+     */
+    fun delete(url: String)
 
     /**
      * Defines the behavior to handle responses

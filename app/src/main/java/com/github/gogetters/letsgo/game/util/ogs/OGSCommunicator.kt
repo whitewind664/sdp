@@ -7,7 +7,7 @@ interface OGSCommunicator {
     fun authenticate(username: String, password: String)
     fun onAuthenticationAccepted()
 
-    fun startChallenge(ogsGame: OGSGame)
+    fun startChallenge(challenge: OGSChallenge)
     fun onChallengeAccepted(challengeData: String) //Maybe we change to a custom representation, for now JSON
     fun sendMove(move: Move)
     fun onReceiveMove(move: Move)
