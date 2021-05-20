@@ -13,6 +13,7 @@ import android.os.Bundle
 import android.os.Environment
 import android.provider.MediaStore
 import android.util.Log
+import android.view.View
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
@@ -46,7 +47,7 @@ class ProfileActivity : ActivityCompat.OnRequestPermissionsResultCallback, BaseA
 
     private lateinit var userBundleProvider: UserBundleProvider
 
-    private lateinit var editSaveButton: Button
+    private lateinit var editButton: Button
 
     private lateinit var profileImage: ImageView
     private lateinit var nick: TextView
@@ -64,24 +65,15 @@ class ProfileActivity : ActivityCompat.OnRequestPermissionsResultCallback, BaseA
     private var readPermissionDenied = false
     private var writePermissionDenied = false
 
-    private var editing: Boolean = false
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         userBundleProvider = intent.getSerializableExtra("UserBundleProvider") as UserBundleProvider
 
-        editSaveButton = findViewById(R.id.profile_button_editSave)
-        editSaveButton.setOnClickListener {
-            if (!editing) {
-                editing = true
-                editSaveButton.text = getString(R.string.profile_button_save_text)
-            } else {
-                editing = false
-                editSaveButton.text = getString(R.string.profile_button_edit_text)
-
-                // TODO Save profile!
-            }
+        editButton = findViewById(R.id.profile_button_edit)
+        editButton.setOnClickListener {
+            val intent = Intent(this, ProfileEditActivity::class.java)
+            startActivity(intent)
         }
 
         profileImage = findViewById(R.id.profile_imageView_image)
@@ -90,8 +82,7 @@ class ProfileActivity : ActivityCompat.OnRequestPermissionsResultCallback, BaseA
         emailText = findViewById(R.id.profile_textView_email)
         cityCountyText = findViewById(R.id.profile_textView_cityCountry)
         profileImage.setOnClickListener {
-            if (editing)
-                selectImage()
+            selectImage()
         }
 
         // Open friend list with button!
@@ -164,6 +155,8 @@ class ProfileActivity : ActivityCompat.OnRequestPermissionsResultCallback, BaseA
                 } else {
                     cityCountyText.text = ""
                 }
+
+                editButton.visibility = View.VISIBLE
 
                 ImageStorageService.getProfileImageFromCloud(PROFILE_PICTURE_PREFIX_CLOUD, user.profileImageRef,getOutputImageFile(), profileImage)
             }

@@ -14,10 +14,11 @@
     <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
     <uses-feature android:name="android.hardware.bluetooth" />
-    <uses-feature android:name="android.hardware.camera"
+    <uses-feature
+        android:name="android.hardware.camera"
         android:required="true" />
 
     <application
@@ -27,13 +28,14 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.LetsGo">
-        <activity android:name=".activities.FriendListActivity"></activity>
+        <activity android:name=".activities.ProfileEditActivity"></activity>
+        <activity android:name=".activities.FriendListActivity" />
         <activity
             android:name=".activities.TutorialActivity"
-            android:label="@string/title_activity_tutorial"></activity>
+            android:label="@string/title_activity_tutorial" />
         <activity
             android:name=".activities.ChatActivity"
-            android:label="@string/title_activity_chat"></activity>
+            android:label="@string/title_activity_chat" />
         <activity
             android:name=".activities.BluetoothActivity"
             android:exported="true" />
@@ -65,9 +67,7 @@
 
         <meta-data
             android:name="preloaded_fonts"
-            android:resource="@array/preloaded_fonts" />
-
-        <!-- To store files (especially pictures) on the device -->
+            android:resource="@array/preloaded_fonts" /> <!-- To store files (especially pictures) on the device -->
         <provider
             android:name="androidx.core.content.FileProvider"
             android:authorities="${applicationId}.provider"
