@@ -63,7 +63,7 @@ class GameModeChooserActivity : BaseActivity() {
         return R.layout.activity_game_mode_chooser
     }
 
-    private fun changeToOgsLoginView(ogsCommunicator: OGSCommunicator) {
+    private fun changeToOgsLoginView(ogsCommunicator: OGSCommunicatorService) {
         titleText.text = resources.getString(R.string.gameModeChooser_loginTitle)
         localButton.visibility = View.GONE
         ogsButton.visibility = View.GONE
@@ -79,7 +79,7 @@ class GameModeChooserActivity : BaseActivity() {
     /**
      * Send the information of the new game on OGS to the interface
      */
-    private fun startOgsOnlineGame(ogsCommunicator: OGSCommunicator) {
+    private fun startOgsOnlineGame(ogsCommunicator: OGSCommunicatorService) {
         val game = OGSGame(
             "game"
         )
