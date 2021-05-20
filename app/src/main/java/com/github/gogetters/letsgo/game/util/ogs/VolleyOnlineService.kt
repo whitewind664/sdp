@@ -12,37 +12,31 @@ class VolleyOnlineService(context: Context) : OnlineService<String> {
     private val queue: RequestQueue = Volley.newRequestQueue(context)
 
 
-    override fun post(url: String, body: String, headers: MutableMap<String, String>): ResponseListener<String> {
-        sendRequest(Request.Method.POST, url, body, headers)
+    override fun post(url: String, body: Map<String, String>, headers: Map<String, String>): ResponseListener<String> {
+        return sendRequest(Request.Method.POST, url, body, headers)
     }
 
-    override fun get(url: String, headers: MutableMap<String, String>): ResponseListener<String> {
-        TODO("Not yet implemented")
+    override fun get(url: String, headers: Map<String, String>): ResponseListener<String> {
+        return sendRequest(Request.Method.GET, url, mapOf(), headers)
     }
 
-    override fun delete(url: String, headers: MutableMap<String, String>): ResponseListener<String> {
-        TODO("Not yet implemented")
+    override fun delete(url: String, headers: Map<String, String>): ResponseListener<String> {
+        return sendRequest(Request.Method.DELETE, url, mapOf(), headers)
     }
 
-    fun sendRequest(type: Int, url: String, body: String, headers: MutableMap<String, String>): ResponseListener<String> {
+    private fun sendRequest(type: Int, url: String, body: Map<String, String>, headers: Map<String, String>): ResponseListener<String> {
         val listener = ResponseListener<String>()
         val stringRequest = object: StringRequest (type, url, {listener.onResponse(it)}, {throw it}) {
-            override fun getBody(): ByteArray {
-                return super.getBody()
+            override fun getParams(): MutableMap<String, String> {
+                return body.toMutableMap()
             }
 
             override fun getHeaders(): MutableMap<String, String> {
-                return headers
+                return headers.toMutableMap()
             }
         }
 
-    }
-
-    private fun jsonToMap(json: JSONObject): MutableMap<String, String> {
-        val map = mutableMapOf<String, String>()
-        for (key in json.keys()) {
-            map[key] = json.getString(key)
-        }
-        return map
+        queue.add(stringRequest)
+        return listener
     }
 }

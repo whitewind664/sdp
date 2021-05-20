@@ -10,7 +10,7 @@ interface OnlineService<T> {
     /**
      * Sends the given POST request to the service
      */
-    fun post(url: String, body: String, headers: Map<String, String> = mutableMapOf()): ResponseListener<T>
+    fun post(url: String, body: Map<String, String>, headers: Map<String, String> = mutableMapOf()): ResponseListener<T>
 
     /**
      * Sends the given GET request to the service
