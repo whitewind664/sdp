@@ -27,4 +27,10 @@ data class OGSGame(
     override fun toString(): String {
         return toJSON().toString(4)
     }
+
+    companion object {
+        fun fromJSON(game: JSONObject): OGSGame {
+            return OGSGame(game.getString("name"), game.getInt("width"), game.getInt("height"))
+        }
+    }
 }

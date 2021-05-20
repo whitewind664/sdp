@@ -29,11 +29,11 @@ class OGSCommunicatorService(private val onlineService: OnlineService<JSONObject
 
     override fun startChallenge(challenge: OGSChallenge) {
         val body = challenge.toJSON()
-        onlineService.post("$base/v1/me/challenges/", body.toString(4))
-            .setOnResponse { onChallengeAccepted(it) }
+        onlineService.post("$base/v1/me/challenges/", body)
+            .setOnResponse { onChallengeAccepted(OGSChallenge.fromJSON(it)) }
     }
 
-    override fun onChallengeAccepted(challengeData: String) {
+    override fun onChallengeAccepted(challenge: OGSChallenge) {
         TODO("Not yet implemented")
     }
 
@@ -43,7 +43,7 @@ class OGSCommunicatorService(private val onlineService: OnlineService<JSONObject
         val gtpMove = move.point.toString()
         val theirMove = gtpMove[0] + (gtpMove[1].toInt() + 'a'.toInt()).toChar().toString()
         body.put("move", theirMove)
-        onlineService.post(url, body.toString(4)).setOnResponse {
+        onlineService.post(url, body).setOnResponse {
             // TODO parse Move
         }
 
