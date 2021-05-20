@@ -88,6 +88,4 @@ class MockOnlineService : OnlineService {
     override fun delete(url: String): OnlineService.ResponseListener {
         TODO("Not yet implemented")
     }
-
-
 }

@@ -40,7 +40,9 @@ class OGSCommunicatorService(private val onlineService: OnlineService) : OGSComm
     override fun sendMove(move: Move) {
         val url = "$base/v1/games/$gameID/move/"
         val body = JSONObject()
-        body.put("move", move.point.toString())
+        val gtpMove = move.point.toString()
+        val theirMove = gtpMove[0] + (gtpMove[1].toInt() + 'a'.toInt()).toChar().toString()
+        body.put("move", theirMove)
         onlineService.post(url, body.toString(4)).setOnResponse {
             // TODO parse Move
         }
