@@ -1,7 +1,9 @@
 package com.github.gogetters.letsgo.game.util.ogs
 
 import com.github.gogetters.letsgo.game.Stone
+import com.github.gogetters.letsgo.game.util.ogs.OGSChallenge.Companion.fromMap
 import junit.framework.Assert.assertEquals
+import okhttp3.Challenge
 import org.junit.Test
 
 class OGSChallengeTest {
@@ -16,6 +18,9 @@ class OGSChallengeTest {
 
     @Test
     fun fromMapWorks() {
+        val map: MutableMap<String,String> = mutableMapOf()
+        map["challenger_color"] = Stone.WHITE.toString()
 
+        assertEquals(fromMap(map).challengerColor, Stone.WHITE)
     }
 }
