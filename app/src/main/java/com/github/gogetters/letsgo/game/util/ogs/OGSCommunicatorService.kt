@@ -2,8 +2,10 @@ package com.github.gogetters.letsgo.game.util.ogs
 
 import android.util.Log
 import com.github.gogetters.letsgo.game.Move
+import com.github.gogetters.letsgo.game.Point
 import com.github.gogetters.letsgo.game.util.InputDelegate
 import org.json.JSONObject
+import java.lang.IllegalArgumentException
 
 class OGSCommunicatorService(private val onlineService: OnlineService<JSONObject>, private val CLIENT_ID: String, private val CLIENT_SECRET: String) {
     //private val CLIENT_ID: String = "" // TODO
@@ -73,6 +75,23 @@ class OGSCommunicatorService(private val onlineService: OnlineService<JSONObject
 
         onlineService.delete(url, JSONObject()).setOnResponse {
             // TODO
+        }
+    }
+
+    companion object {
+        fun parseMove(move: String): Point {
+            if (move.length != 2) {
+                throw IllegalArgumentException("could not parse move, must be 2 characters long")
+            }
+
+            val first = move[0].toInt() - 'a'.toInt() + 1
+            val second = move[1].toInt() - 'a'.toInt() + 1
+
+            if (first <= 0 || second <= 0) {
+                throw IllegalArgumentException("invalid characters used, must be lowercase")
+            }
+
+            return Point(first, second)
         }
     }
 }
