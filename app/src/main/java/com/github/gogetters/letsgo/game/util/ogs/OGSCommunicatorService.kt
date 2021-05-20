@@ -39,7 +39,7 @@ class OGSCommunicatorService(private val onlineService: OnlineService<JSONObject
 
 
     fun startChallenge(challenge: OGSChallenge) {
-        val body = challenge.toJSON()
+        val body = challenge.toMap()
         onlineService.post("$base$challenges", body).setOnResponse {
             gameID = it.getInt("game")
         }

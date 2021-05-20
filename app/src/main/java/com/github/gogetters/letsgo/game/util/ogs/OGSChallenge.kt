@@ -10,36 +10,38 @@ data class OGSChallenge(
     val minRanking: Int = 0,
     val maxRanking: Int = 0) {
 
-    fun toJSON(): JSONObject {
-        val game = game.toJSON()
-        val challenge = JSONObject()
-        challenge.put("game", game)
-        challenge.put("challenger_color", challengerColor)
-        challenge.put("min_ranking", minRanking)
-        challenge.put("max_ranking", maxRanking)
-        return challenge
+    fun toMap(): MutableMap<String, String> {
+        //val game = game.toJSON()
+        val map: MutableMap<String, String> = mutableMapOf<String, String>()
+        //map.put("game", game)
+        map["challenger_color"] = challengerColor.toString()
+        map["min_ranking"] = minRanking.toString()
+        map["max_ranking"] = maxRanking.toString()
+        return map
     }
 
 
     override fun toString(): String {
-        return toJSON().toString(4)
+        return toMap().toString()
     }
 
     companion object {
 
-        fun fromJSON(challenge: JSONObject): OGSChallenge {
+        fun fromMap(challenge: MutableMap<String, String>): OGSChallenge {
 
-            val color = when (challenge.getString("challenger_color")) {
+            val color = when (challenge.get("challenger_color")) {
                 "white" -> Stone.WHITE
                 "black" -> Stone.BLACK
                 "automatic" -> Stone.BLACK //todo :(((((((
-                else -> throw IllegalArgumentException("could not parse stone color ${challenge.getString("challenger_color")}")
+                else -> throw IllegalArgumentException("could not parse stone color ${challenge.get("challenger_color")}")
             }
 
-            val game = OGSGame.fromJSON(challenge.getJSONObject("game"))
-            return OGSChallenge(game, color,
-                    challenge.getInt("min_ranking"),
-                    challenge.getInt("max_ranking"))
+            //val game = OGSGame.fromJSON(challenge.get("game"))
+            val game = OGSGame("name")
+            /**return OGSChallenge(game, color,
+                    challenge.get("min_ranking"),
+                    challenge.get("max_ranking"))*/
+            return OGSChallenge(game, color)
         }
     }
 }

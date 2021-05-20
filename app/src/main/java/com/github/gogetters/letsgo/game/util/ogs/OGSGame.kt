@@ -10,7 +10,7 @@ data class OGSGame(
     val height: Int = 9
 ) {
 
-    fun toJSON(): JSONObject {
+    /**fun toJSON(): JSONObject {
         val game = JSONObject()
         game.put("name", name)
         game.put("rules", "japanese")
@@ -32,5 +32,5 @@ data class OGSGame(
         fun fromJSON(game: JSONObject): OGSGame {
             return OGSGame(game.getString("name"), game.getInt("width"), game.getInt("height"))
         }
-    }
+    }*/
 }
