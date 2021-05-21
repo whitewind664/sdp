@@ -41,9 +41,6 @@
             android:name=".activities.TutorialActivity"
             android:label="@string/title_activity_tutorial" />
         <activity
-            android:name=".activities.ChatActivity"
-            android:label="@string/title_activity_chat" />
-        <activity
             android:name=".activities.BluetoothActivity"
             android:exported="true" />
         <activity
@@ -77,7 +74,24 @@
 
         <meta-data
             android:name="preloaded_fonts"
-            android:resource="@array/preloaded_fonts" /> <!-- To store files (especially pictures) on the device -->
+            android:resource="@array/preloaded_fonts" />
+
+        <!-- Chat related activities -->
+        <!-- Lists the last messages of different users -->
+        <activity android:name=".activities.ChatLastMessageActivity" />
+        <!-- Fetches users from DB to chat with -->
+        <activity android:name=".activities.ChatNewMessageActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".activities.ChatLastMessageActivity" />
+        </activity>
+        <!-- Launches the chat with a specific user -->
+        <activity
+            android:name=".activities.ChatActivity"
+            android:label="@string/title_activity_chat"/>
+
+        <!-- To store files (especially pictures) on the device -->
+
         <provider
             android:name="androidx.core.content.FileProvider"
             android:authorities="${applicationId}.provider"
@@ -87,6 +101,7 @@
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/provider_paths" />
         </provider>
+
     </application>
 
 </manifest>
