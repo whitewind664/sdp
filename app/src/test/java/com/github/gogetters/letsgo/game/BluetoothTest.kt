@@ -21,7 +21,6 @@ class BluetoothTest {
 
         val client = BluetoothClient()
         val gtpService = BluetoothGTPService()
-        val probe = BluetoothProbe()
 
 
         try{
