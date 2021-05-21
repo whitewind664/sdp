@@ -62,6 +62,15 @@ class Database {
             return db.getReference(ref).removeValue()
         }
 
+        fun enableCache() {
+            Firebase.database.setPersistenceEnabled(true)
+        }
+
+        fun keepSynced(ref: String) {
+            val ref = Firebase.database.getReference(ref)
+            ref.keepSynced(true)
+        }
+
         // ---- [START} Matchmaking  ----
 
 
