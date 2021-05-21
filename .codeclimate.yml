@@ -6,6 +6,7 @@ exclude_patterns:
   - "**/*.yml"
   - "*.md"
   - "*.yml"
+  - "*.xml"
 version: "2"
 checks:
     method-lines:

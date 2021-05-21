@@ -10,6 +10,7 @@ import com.google.android.material.bottomnavigation.LabelVisibilityMode
 import kotlinx.android.synthetic.main.activity_main.*
 import com.github.gogetters.letsgo.database.user.FirebaseUserBundleProvider
 
+
 class MainActivity : BaseActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
