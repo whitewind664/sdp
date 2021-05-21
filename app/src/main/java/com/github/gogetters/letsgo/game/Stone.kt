@@ -1,5 +1,7 @@
 package com.github.gogetters.letsgo.game
 
+import java.lang.IllegalArgumentException
+
 enum class Stone {
     BLACK {
         override fun toString(): String {
@@ -24,4 +26,15 @@ enum class Stone {
     }
 
     abstract override fun toString(): String
+
+    companion object {
+        fun fromString(string: String): Stone {
+            return when(string) {
+                "black" -> BLACK
+                "white" -> WHITE
+                "pass" -> EMPTY
+                else -> throw IllegalArgumentException("color not recognized")
+            }
+        }
+    }
 }

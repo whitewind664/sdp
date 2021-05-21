@@ -1,14 +1,14 @@
 package com.github.gogetters.letsgo.game.util
 
+import com.github.gogetters.letsgo.game.BoardState
 import com.github.gogetters.letsgo.game.Point
 import java.util.concurrent.ArrayBlockingQueue
 
-/**
- * Class to delegate capturing input from UI.
- */
 class InputDelegate {
 
     private val savedInput = ArrayBlockingQueue<Point>(1)
+
+    fun getLatestInput(boardState: BoardState): Point = savedInput.take()
 
     /**
      * Saves the argument as the most recent input to the program. Only the most recent input is
@@ -16,18 +16,12 @@ class InputDelegate {
      *
      * @param input: Point input to save
      */
-    fun saveInput(input: Point) {
+    fun saveLatestInput(input: Point) {
         savedInput.clear()
         savedInput.add(input)
     }
 
-    /**
-     * Clears the last input.
-     */
     fun clearInput() {
         savedInput.clear()
     }
-
-    val latestInput: Point
-        get() = savedInput.take()
 }

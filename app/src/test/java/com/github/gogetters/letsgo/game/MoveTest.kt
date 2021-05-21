@@ -45,7 +45,7 @@ class MoveTest {
 
                     val m = Move(color, point)
 
-                    assertEquals("play $colorString $col$row", "$m")
+                    assertEquals("$colorString $col$row", "$m")
                 }
             }
         }

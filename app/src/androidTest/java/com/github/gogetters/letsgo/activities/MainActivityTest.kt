@@ -1,8 +1,8 @@
 package com.github.gogetters.letsgo.activities
 
 import androidx.test.espresso.Espresso.onView
-import androidx.test.espresso.action.ViewActions.*
 import androidx.test.espresso.assertion.ViewAssertions.matches
+import androidx.test.espresso.action.ViewActions.click
 import androidx.test.espresso.intent.Intents
 import androidx.test.espresso.intent.matcher.IntentMatchers
 import androidx.test.espresso.matcher.ViewMatchers.isEnabled
@@ -13,15 +13,14 @@ import androidx.test.platform.app.InstrumentationRegistry.getInstrumentation
 import androidx.test.uiautomator.UiDevice
 import androidx.test.uiautomator.UiSelector
 import com.github.gogetters.letsgo.R
-import com.github.gogetters.letsgo.database.Database
+import com.github.gogetters.letsgo.database.EmulatedFirebaseTest
 import org.hamcrest.Matchers
-import org.hamcrest.Matchers.not
 import org.junit.*
 import org.junit.runner.RunWith
 
 
 @RunWith(AndroidJUnit4::class)
-class MainActivityTest {
+class MainActivityTest: EmulatedFirebaseTest() {
     @get:Rule
     var activityRule = ActivityScenarioRule(MainActivity::class.java)
 
@@ -72,16 +71,5 @@ class MainActivityTest {
     fun tutorialButtonOpensTutorial() {
         onView(withId(R.id.item2)).perform(click())
         Intents.intended(Matchers.allOf(IntentMatchers.hasComponent(TutorialActivity::class.java.name)))
-    }
-
-    @Test
-    fun findMatchButtonDisablesItself() {
-        Database.goOffline()
-
-        val findMatchButton = withId(R.id.main_button_findMatch)
-        onView(findMatchButton).perform(click()).check(matches(not(isEnabled())))
-
-        Database.purgeOutstandingWrites()
-        Database.goOnline()
     }
 }

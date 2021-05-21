@@ -152,7 +152,7 @@ open class GoView(context: Context, private val boardSize: Board.Size) : View(co
         when (event.action) {
             MotionEvent.ACTION_DOWN -> {
                 val closestPoint = coordToPoint(x, y)
-                inputDelegate.saveInput(closestPoint)
+                inputDelegate.saveLatestInput(closestPoint)
             }
         }
 

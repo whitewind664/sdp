@@ -2,26 +2,20 @@ package com.github.gogetters.letsgo.activities
 
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import android.widget.Button
 import android.widget.FrameLayout
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import com.github.gogetters.letsgo.R
-import com.github.gogetters.letsgo.game.Board
 import com.github.gogetters.letsgo.game.BoardState
-import com.github.gogetters.letsgo.game.Game
-import com.github.gogetters.letsgo.game.Stone
 import com.github.gogetters.letsgo.game.util.InputDelegate
-import com.github.gogetters.letsgo.game.view.GoView
 import com.github.gogetters.letsgo.tutorial.TutorialGame
 import com.github.gogetters.letsgo.tutorial.TutorialGoView
 import com.github.gogetters.letsgo.tutorial.TutorialLocalPlayer
 import com.github.gogetters.letsgo.tutorial.TutorialPlayer
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
-import kotlin.math.exp
 
 class TutorialActivity : AppCompatActivity() {
     private var textProgressIndex: Int = 0

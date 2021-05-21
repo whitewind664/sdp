@@ -26,22 +26,22 @@
             android:id="@+id/main_button_profile"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/my_profile"
+            android:text="@string/main_profileButtonText"
             tools:ignore="MissingConstraints" />
 
         <Button
             android:id="@+id/main_button_map"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/openMapButtonText"
+            android:layout_marginBottom="240dp"
+            android:text="@string/main_openMapButtonText"
             app:layout_constraintTop_toBottomOf="@+id/main_button_profile" />
 
         <Button
-            android:id="@+id/main_button_findMatch"
+            android:id="@+id/main_button_play"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/main_findMatch"
-            app:layout_constraintTop_toBottomOf="@+id/main_button_map" />
+            android:text="@string/main_openGameChooserText" />
 
     </LinearLayout>
 

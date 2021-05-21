@@ -1,18 +1,16 @@
 package com.github.gogetters.letsgo.game
 
-import android.util.Log
-import com.github.gogetters.letsgo.game.util.InputDelegate
 import com.github.gogetters.letsgo.game.exceptions.IllegalMoveException
+import com.github.gogetters.letsgo.game.util.InputDelegate
 
-open class LocalPlayer(color: Stone, private val inputDelegate: InputDelegate): Player(color) {
+open class LocalPlayer(override val color: Stone, private val inputDelegate: InputDelegate): Player {
 
     override fun requestMove(board: BoardState): Move {
-        return Move(color, inputDelegate.latestInput)
+        return Move(color, inputDelegate.getLatestInput(board))
     }
 
     override fun notifyIllegalMove(illegalMove: IllegalMoveException) {
-        Log.d("LOCAL_PLAYER", "PLAYER HAS PLAYED ILLEGAL MOVE", illegalMove)
-
+        return
     }
 
 }

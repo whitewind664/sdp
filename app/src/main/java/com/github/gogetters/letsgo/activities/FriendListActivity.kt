@@ -5,7 +5,7 @@ import android.widget.ArrayAdapter
 import android.widget.ListView
 import androidx.appcompat.app.AppCompatActivity
 import com.github.gogetters.letsgo.R
-import com.github.gogetters.letsgo.database.LetsGoUser
+import com.github.gogetters.letsgo.database.user.LetsGoUser
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 

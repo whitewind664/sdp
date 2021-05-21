@@ -14,16 +14,17 @@ import android.os.Environment
 import android.provider.MediaStore
 import android.util.Log
 import android.widget.Button
-import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.FileProvider
+import androidx.core.net.toUri
 import com.github.gogetters.letsgo.R
-import com.github.gogetters.letsgo.database.FirebaseUserBundleProvider
-import com.github.gogetters.letsgo.database.UserBundle
-import com.github.gogetters.letsgo.database.UserBundleProvider
+import com.github.gogetters.letsgo.database.CloudStorage
+import com.github.gogetters.letsgo.database.ImageStorageService
+import com.github.gogetters.letsgo.database.user.UserBundle
+import com.github.gogetters.letsgo.database.user.UserBundleProvider
 import com.github.gogetters.letsgo.util.PermissionUtils
 import com.google.firebase.auth.FirebaseAuth
 import java.io.File
@@ -31,8 +32,10 @@ import java.text.SimpleDateFormat
 import java.util.*
 
 
-class ProfileActivity() : ActivityCompat.OnRequestPermissionsResultCallback, AppCompatActivity() {
+class ProfileActivity : ActivityCompat.OnRequestPermissionsResultCallback, BaseActivity() {
     companion object {
+        const val PROFILE_PICTURE_PREFIX_CLOUD = "profileImage/"
+
         // Codes used when creating a permission request. Used in the onRequestPermissionResult handler.
         private const val READ_EXTERNAL_STORAGE_PERMISSION_REQUEST_CODE: Int = 2
         private const val WRITE_EXTERNAL_STORAGE_PERMISSION_REQUEST_CODE: Int = 3
@@ -66,7 +69,6 @@ class ProfileActivity() : ActivityCompat.OnRequestPermissionsResultCallback, App
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_profile)
 
         userBundleProvider = intent.getSerializableExtra("UserBundleProvider") as UserBundleProvider
 
@@ -83,21 +85,24 @@ class ProfileActivity() : ActivityCompat.OnRequestPermissionsResultCallback, App
         // Open friend list with button!
         val friendListButton = findViewById<Button>(R.id.profile_show_friend_list_button)
         friendListButton.setOnClickListener {
-            val firebaseUser = FirebaseAuth.getInstance().currentUser
+            val userBundle = userBundleProvider.getUserBundle()
 
-            if (firebaseUser != null) {
+            if (userBundle != null) {
+                val user = userBundle.getUser()
                 val intent = Intent(this, FriendListActivity::class.java)
 //                    .apply {
-////                    putExtra(FriendListActivity.EXTRA_USER_UID, firebaseUser.uid)
+////                    putExtra(FriendListActivity.EXTRA_USER_UID, user.uid)
 //                }
                 startActivity(intent)
             }
         }
 
-
         updateUI()
     }
 
+    override fun getLayoutResource(): Int {
+        return R.layout.activity_profile
+    }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
@@ -117,11 +122,12 @@ class ProfileActivity() : ActivityCompat.OnRequestPermissionsResultCallback, App
             // Don't let the user see this screen without having successfully completed sign-in.
             dispatchLoginIntent()
         } else {
-            val user = userBundle.getUser()
+            var user = userBundle.getUser()
             user.downloadUserData().addOnCompleteListener {
                 nameText.text = user.first
                 emailText.text = userBundle.getEmail()
                 cityCountyText.text = "${user.city}, ${user.country}"
+                ImageStorageService.getProfileImageFromCloud(PROFILE_PICTURE_PREFIX_CLOUD, user.profileImageRef,getOutputImageFile(), profileImage)
             }
         }
     }
@@ -207,6 +213,8 @@ class ProfileActivity() : ActivityCompat.OnRequestPermissionsResultCallback, App
 
     private fun onCameraResult(data: Intent?) {
         profileImage.setImageURI(profilePictureUri)
+        // store the uri for the user
+        ImageStorageService.storeProfileImageOnCloud(userBundleProvider.getUserBundle()!!.getUser(), profilePictureUri, PROFILE_PICTURE_PREFIX_CLOUD)
     }
 
     private fun getOutputImageFile(): File {
@@ -228,6 +236,8 @@ class ProfileActivity() : ActivityCompat.OnRequestPermissionsResultCallback, App
                         val bitmap = ImageDecoder.decodeBitmap(source)
                         profileImage.setImageBitmap(bitmap)
                     }
+                    // store the uri for the user
+                    ImageStorageService.storeProfileImageOnCloud(userBundleProvider.getUserBundle()!!.getUser(), it, PROFILE_PICTURE_PREFIX_CLOUD)
                 }
             } catch (e: Exception) {
                 e.printStackTrace()

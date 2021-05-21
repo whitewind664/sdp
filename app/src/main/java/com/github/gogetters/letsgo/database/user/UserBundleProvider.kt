@@ -1,4 +1,4 @@
-package com.github.gogetters.letsgo.database
+package com.github.gogetters.letsgo.database.user
 
 import java.io.Serializable
 
