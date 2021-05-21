@@ -18,7 +18,7 @@ class Database {
     companion object {
 
         init {
-//            Firebase.database.setPersistenceEnabled(true)
+            Firebase.database.setPersistenceEnabled(true)
         }
 
         private val db = Firebase.database
@@ -248,7 +248,7 @@ class Database {
             databaseReference.removeEventListener(listener)
         }
 
-        private fun getCurrentUserId(): String? {
+        fun getCurrentUserId(): String? {
             val user = FirebaseAuth.getInstance().currentUser ?: return null
             return user.uid
         }

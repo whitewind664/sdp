@@ -64,7 +64,7 @@ class MainActivityTest: EmulatedFirebaseTest() {
     @Test
     fun chatButtonOpensChat() {
         onView(withId(R.id.item3)).perform(click())
-        Intents.intended(Matchers.allOf(IntentMatchers.hasComponent(ChatActivity::class.java.name)))
+        Intents.intended(Matchers.allOf(IntentMatchers.hasComponent(ChatLastMessageActivity::class.java.name)))
     }
 
     @Test
