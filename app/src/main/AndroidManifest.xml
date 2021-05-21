@@ -28,7 +28,9 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.LetsGo">
-        <activity android:name=".activities.ProfileEditActivity"></activity>
+        <activity
+            android:name=".activities.ProfileEditActivity"
+            android:noHistory="true" />
         <activity android:name=".activities.FriendListActivity" />
         <activity
             android:name=".activities.TutorialActivity"

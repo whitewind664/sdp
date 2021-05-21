@@ -22,7 +22,7 @@
     <string name="profile_show_friends">Show friends</string>
 
     <string name="first_last">First, Last</string>
-    <string name="profile_noNicknameHint">Edit profile to enter a nickname!</string>
+    <string name="profile_noNicknameHint">To add your nickname click Edit</string>
     <string name="profile_button_edit_text">Edit</string>
 
     <string name="profile_edit_button_save_text">Save</string>

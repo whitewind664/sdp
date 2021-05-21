@@ -21,6 +21,7 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.FileProvider
 import com.github.gogetters.letsgo.R
 import com.github.gogetters.letsgo.database.ImageStorageService
+import com.github.gogetters.letsgo.database.user.FirebaseUserBundleProvider
 import com.github.gogetters.letsgo.database.user.UserBundle
 import com.github.gogetters.letsgo.database.user.UserBundleProvider
 import com.github.gogetters.letsgo.util.PermissionUtils
@@ -73,6 +74,7 @@ class ProfileActivity : ActivityCompat.OnRequestPermissionsResultCallback, BaseA
         editButton = findViewById(R.id.profile_button_edit)
         editButton.setOnClickListener {
             val intent = Intent(this, ProfileEditActivity::class.java)
+            intent.putExtra("UserBundleProvider", userBundleProvider)
             startActivity(intent)
         }
 
@@ -128,14 +130,14 @@ class ProfileActivity : ActivityCompat.OnRequestPermissionsResultCallback, BaseA
             var user = userBundle.getUser()
 
             user.downloadUserData().addOnCompleteListener {
-                if (user.nick != null) {
+                if (user.nick != null && user.nick!!.isNotEmpty()) {
                     nick.text = user.nick
                 } else {
                     nick.text = getString(R.string.profile_noNicknameHint)
                 }
 
                 if (user.first != null && user.last != null) {
-                    "${user.first}, ${user.last}".also { firstLast.text = it }
+                    "${user.first} ${user.last}".also { firstLast.text = it }
                 } else if (user.last == null) {
                     firstLast.text = user.first
                 } else if (user.first == null) {
