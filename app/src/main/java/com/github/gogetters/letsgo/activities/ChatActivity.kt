@@ -1,150 +1,111 @@
 package com.github.gogetters.letsgo.activities
 
 import android.os.Bundle
-import android.util.Log
-import android.view.View
-import android.widget.EditText
-import android.widget.ListView
-import android.widget.Toast
+import android.provider.ContactsContract
 import androidx.appcompat.app.AppCompatActivity
 import com.github.gogetters.letsgo.R
-import com.github.gogetters.letsgo.chat.ChatMessage
-import com.github.gogetters.letsgo.chat.MessageAdapter
+import com.github.gogetters.letsgo.chat.model.ChatMessageData
+import com.github.gogetters.letsgo.chat.model.UserData
+import com.github.gogetters.letsgo.chat.views.ChatMyMessageItem
+import com.github.gogetters.letsgo.chat.views.ChatTheirMessageItem
 import com.github.gogetters.letsgo.database.Database
-import com.github.gogetters.letsgo.database.types.MessageData
-import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.ChildEventListener
-import com.google.firebase.database.ktx.getValue
-import java.util.*
-
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.FirebaseDatabase
+import com.xwray.groupie.GroupAdapter
+import com.xwray.groupie.ViewHolder
+import kotlinx.android.synthetic.main.activity_chat.*
 
 class ChatActivity : AppCompatActivity() {
 
-    private val _defaultUsername = "Default User"
-    private val _testingChatId = "testingChatId"
+    val adapter = GroupAdapter<ViewHolder>()
+    var userId: String? = null
+    var toUser: UserData? = null
 
-    // current user of the chatApp
-    private lateinit var userName: String
-    // current user id of the chatApp
-    private var userId: String? = null
-    // placeholder for chat bubbles
-    private lateinit var listView: ListView
-    // text message to send
-    private lateinit var entryText: EditText
-    // update connection to listview
-    private lateinit var adapter: MessageAdapter
-    private lateinit var messageListener: ChildEventListener
-
-    // connect to the Chat Collection's Message Document in Firestore
-//    private val firestoreChat by lazy {
-//        FirebaseFirestore.getInstance().collection(COLLECTION_KEY).document(DOCUMENT_KEY)
-//    }
-
-    // data structure in Firestore
     companion object {
-        const val COLLECTION_KEY = "Chat"
-        const val DOCUMENT_KEY = "Message"
-        const val NAME_FIELD = "Name"
-        const val TEXT_FIELD = "Text"
+        val UNKNOWN = "Unknown"
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_chat)
 
-        // get the current user info
-        val authInstance = FirebaseAuth.getInstance().currentUser
-        if (authInstance != null && authInstance.displayName != null) {
-            userName = authInstance.displayName!!
-            userId = authInstance.uid
-        } else {
-            userName = _defaultUsername
-        }
+        chat_recyclerview_messages.adapter = adapter
+        userId = Database.getCurrentUserId() ?: UNKNOWN
+        toUser = intent.getParcelableExtra<UserData>(ChatNewMessageActivity.KEY)
 
-        entryText = findViewById(R.id.chat_editText_input)
-        listView = findViewById(R.id.chat_listView_messages)
-        adapter = MessageAdapter(this)
-        listView.adapter = adapter
+        listenForMessages()
 
-        // define listener for message update (chat bubbles) in listview
-        realtimeUpdateListener()
-
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        Database.removeMessagesListener(_testingChatId, messageListener)
-    }
-
-    /**
-     * Called when the ImageButton is clicked in the corresponding layout
-     */
-    fun sendMessage(view: View?) {
-        // get the text message to send when the button is clicked
-        val messageText: String = entryText.text.toString()
-
-        if (messageText.isNotEmpty()) {
-
-            // clear the text field
-            entryText.text.clear()
-
-            // create the message by matching the Firebase data structure
-//            val newMessage = mapOf(
-//                NAME_FIELD to userName,
-//                TEXT_FIELD to messageText
-//            )
-            userId ?: return
-
-            // send the message to the database
-            Database.sendMessage(userId!!, _testingChatId, messageText, {
-                Log.i("INFO", "message sent")
-                Toast.makeText(this@ChatActivity, "Message Sent", Toast.LENGTH_SHORT).show()
-            }, { e ->
-                Log.e("ERROR", e.toString())
-            })
-
+        chat_send_button.setOnClickListener {
+            sendMessage()
         }
     }
 
-    /**
-     * Listener for the message update. Updates the message bubbles.
-     */
-    private fun realtimeUpdateListener() {
+    private fun listenForMessages() {
+        val fromId = userId
+        val toId = toUser?.id
+        val ref = FirebaseDatabase.getInstance().getReference("/messages-node/$fromId/$toId")
+        ref.keepSynced(true)
 
-        messageListener = Database.addMessagesListener(_testingChatId) { snapshot ->
-            val messageData = snapshot.getValue<MessageData>()
+        ref.addChildEventListener(object: ChildEventListener {
+            override fun onChildAdded(snapshot: DataSnapshot, previousChildName: String?) {
+                val chatMessage = snapshot.getValue(ChatMessageData::class.java)
+                // ADD to the adapter the text messages
+                if (chatMessage != null) {
+                    if (chatMessage.fromId == userId) {
+                        adapter.add(ChatMyMessageItem(chatMessage.text))
+                    } else {
+                        adapter.add(ChatTheirMessageItem(chatMessage.text))
+                    }
+                }
+                chat_recyclerview_messages.scrollToPosition(adapter.itemCount - 1)
+            }
 
-            messageData!!
+            override fun onChildChanged(snapshot: DataSnapshot, previousChildName: String?) {}
+            override fun onChildRemoved(snapshot: DataSnapshot) {}
+            override fun onChildMoved(snapshot: DataSnapshot, previousChildName: String?) {}
+            override fun onCancelled(error: DatabaseError) {}
+        })
+    }
 
-            val belongsToUser = messageData.senderId == userId
+    fun sendMessage() {
 
-            val message = ChatMessage(messageData.messageText, belongsToUser, Date(messageData.timestamp), if (belongsToUser) userName else "other guy")
-            adapter.addMessage(message)
-            listView.setSelection(listView.count + 1)
+        val text = chat_editText_input.text.toString()
+
+        if (text.isNotEmpty()) {
+            val fromId = userId!!
+            var toId: String?
+            if (toUser?.id == null) {
+                toId = UNKNOWN
+            } else {
+                toId = toUser?.id
+            }
+            val ref = FirebaseDatabase.getInstance().getReference("/messages-node/$fromId/$toId").push()
+            ref.keepSynced(true)
+            val toRef = FirebaseDatabase.getInstance().getReference("/messages-node/$toId/$fromId").push()
+            toRef.keepSynced(true)
+            val lastMessageRef = FirebaseDatabase.getInstance().getReference("/last-messages-node/$fromId/$toId")
+            lastMessageRef.keepSynced(true)
+            val lastMessageToRef = FirebaseDatabase.getInstance().getReference("/last-messages-node/$toId/$fromId")
+            lastMessageToRef.keepSynced(true)
+
+            val chatMessage =
+                ChatMessageData(ref.key!!, text, fromId, toId!!, System.currentTimeMillis() / 1000)
+
+            ref.setValue(chatMessage).addOnSuccessListener {
+                chat_editText_input.text.clear()
+                chat_recyclerview_messages.scrollToPosition(adapter.itemCount - 1)
+            }
+
+            toRef.setValue(chatMessage).addOnSuccessListener {
+                chat_recyclerview_messages.scrollToPosition(adapter.itemCount - 1)
+            }
+
+            lastMessageRef.setValue(chatMessage)
+
+            lastMessageToRef.setValue(chatMessage)
         }
-//
-//        firestoreChat.addSnapshotListener { documentSnapshot, e ->
-//
-//            when {
-//                e != null -> e.message?.let { Log.e("ERROR", it) }
-//                documentSnapshot != null && documentSnapshot.exists() -> {
-//                    with(documentSnapshot) {
-//                        // check whether incoming or outgoing message should be presented on screen based on userName
-//                        var message: ChatMessage
-//                        if (data?.get(NAME_FIELD).toString() != userName) {
-//                            message = ChatMessage(data?.get(TEXT_FIELD).toString(), false, Calendar.getInstance().time, data?.get(NAME_FIELD).toString())
-//                        } else {
-//                            message = ChatMessage(data?.get(TEXT_FIELD).toString(), true, Calendar.getInstance().time, data?.get(NAME_FIELD).toString())
-//                        }
-//                        // present the message in the chat bubbles of the listview
-//                        adapter.addMessage(message)
-//                        listView.setSelection(listView.getCount() - 1)
-//
-//                    }
-//                }
-//            }
-//
-//        }
 
     }
 

@@ -10,7 +10,6 @@ import com.github.gogetters.letsgo.R
 import com.github.gogetters.letsgo.game.Player
 import com.google.android.material.bottomnavigation.LabelVisibilityMode
 import kotlinx.android.synthetic.main.activity_base.*
-import kotlinx.android.synthetic.main.activity_main.*
 
 
 abstract class BaseActivity : AppCompatActivity() {
@@ -61,7 +60,7 @@ abstract class BaseActivity : AppCompatActivity() {
                     true
                 }
                 R.id.item3 -> {
-                    val intent = Intent(this, ChatActivity::class.java)
+                    val intent = Intent(this, ChatLastMessageActivity::class.java)
                     startActivity(intent)
                     true
                 }
