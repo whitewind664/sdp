@@ -5,7 +5,7 @@ import android.bluetooth.BluetoothDevice
 import android.bluetooth.BluetoothSocket
 import android.util.Log
 import com.github.gogetters.letsgo.game.GTPCommand.GENMOVE
-import com.github.gogetters.letsgo.game.util.BluetoothInputDelegate
+import com.github.gogetters.letsgo.game.util.InputDelegate
 import com.github.gogetters.letsgo.util.BluetoothClient
 import com.github.gogetters.letsgo.util.BluetoothGTPService
 import com.github.gogetters.letsgo.util.BluetoothProbe
@@ -41,9 +41,5 @@ class BluetoothTest {
         try{gtpService.sendCommand(GENMOVE(Stone.BLACK))} catch(e: Exception) {Log.d("Test", "doesn't work...")}
 
 
-
-        val btInput = BluetoothInputDelegate(gtpService)
-        val local = LocalPlayer(Stone.BLACK, btInput)
-        val btLocal = BluetoothLocalPlayer(local, gtpService)
     }
 }
