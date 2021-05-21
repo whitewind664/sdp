@@ -4,15 +4,8 @@ import android.content.Intent
 import android.os.Bundle
 import android.widget.Button
 import com.github.gogetters.letsgo.R
-<<<<<<< HEAD
-
-import com.github.gogetters.letsgo.matchmaking.Matchmaking
-
-import com.github.gogetters.letsgo.database.FirebaseUserBundleProvider
-=======
 import com.github.gogetters.letsgo.database.Database
 import com.github.gogetters.letsgo.game.Player
->>>>>>> main
 import com.google.android.material.bottomnavigation.LabelVisibilityMode
 import kotlinx.android.synthetic.main.activity_main.*
 import com.github.gogetters.letsgo.database.user.FirebaseUserBundleProvider
@@ -38,23 +31,10 @@ class MainActivity : BaseActivity() {
             startActivity(intent)
         }
 
-<<<<<<< HEAD
-        val findMatchButton = findViewById<Button>(R.id.main_button_findMatch)
-        findMatchButton.setOnClickListener {
-            mapButton.isEnabled = false
-            profileButton.isEnabled = false
-            findMatchButton.isEnabled = false
-            Matchmaking.findMatch { gameId ->
-                val intent = Intent(this, OnlineGameActivity::class.java)
-                intent.putExtra(OnlineGameActivity.GAME_ID, gameId)
-                startActivity(intent)
-            }
-=======
         val playButton = findViewById<Button>(R.id.main_button_play)
         playButton.setOnClickListener {
             val intent = Intent(this, GameModeChooserActivity::class.java)
             startActivity(intent)
->>>>>>> main
         }
 
     }
