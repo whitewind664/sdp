@@ -14,10 +14,7 @@ import androidx.test.uiautomator.UiObject
 import androidx.test.uiautomator.UiSelector
 import com.github.gogetters.letsgo.R
 import com.github.gogetters.letsgo.map.mocking.MockLocationSharingService
-import androidx.test.platform.app.InstrumentationRegistry.getInstrumentation
-import androidx.test.uiautomator.UiObject
 import com.github.gogetters.letsgo.database.EmulatedFirebaseTest
-import com.github.gogetters.letsgo.util.MockLocationSharingService
 import org.junit.After
 import org.junit.Before
 import org.junit.Rule
