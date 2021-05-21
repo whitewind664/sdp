@@ -37,7 +37,7 @@ class Matchmaking {
             return Pair(newRating1, newRating2)
         }
 
-        fun findMatch(onMatchFound: (String) -> Unit) {
+        fun findMatch(onMatchFound: (String) -> Unit, playerRating: Int) {
             val user = FirebaseAuth.getInstance().currentUser
             if (user != null) {
                 val onDataChange: (DataSnapshot) -> Unit = { dataSnapshot: DataSnapshot ->
@@ -52,7 +52,9 @@ class Matchmaking {
 
                 Database.addEventListener("/matchmaking/currentGamesPerUser/${user.uid}", onDataChange, onCancelled)
 
-                Database.findMatch(user.uid)
+                Database.findMatch(user.uid, playerRating) { _, _, _ ->
+                    TODO()
+                }
             }
         }
     }
