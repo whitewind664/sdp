@@ -4,7 +4,7 @@ import android.os.Handler
 import android.os.Looper
 import android.util.Log
 import com.github.gogetters.letsgo.game.GTPCommand
-import com.github.gogetters.letsgo.game.util.BluetoothInputDelegate
+import com.github.gogetters.letsgo.game.util.InputDelegate
 
 
 class BluetoothGTPService: BluetoothService() {
@@ -17,7 +17,7 @@ class BluetoothGTPService: BluetoothService() {
         }
     }
 
-    lateinit var inputDelegate: BluetoothInputDelegate
+    lateinit var inputDelegate: InputDelegate
 
 
     fun sendCommand(gtpCommand: GTPCommand) {
