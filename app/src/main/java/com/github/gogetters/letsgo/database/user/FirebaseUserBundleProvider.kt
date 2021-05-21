@@ -3,13 +3,18 @@ package com.github.gogetters.letsgo.database.user
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 
-class FirebaseUserBundleProvider: UserBundleProvider() {
+object FirebaseUserBundleProvider: UserBundleProvider() {
+
+    private var cachedUserBundle : UserBundle? = null
+
     override fun getUserBundle(): UserBundle? {
+        if (cachedUserBundle != null) return cachedUserBundle
         val firebaseUser: FirebaseUser? = FirebaseAuth.getInstance().currentUser
         return if (firebaseUser == null) {
             null
         } else {
-            return FirebaseUserBundle(firebaseUser)
+            cachedUserBundle = FirebaseUserBundle(firebaseUser)
+            return cachedUserBundle
         }
     }
 }
