@@ -136,33 +136,21 @@ class ProfileActivity : ActivityCompat.OnRequestPermissionsResultCallback, BaseA
                     nick.text = getString(R.string.profile_noNicknameHint)
                 }
 
-                if (user.first != null && user.last != null) {
-                    "${user.first} ${user.last}".also { firstLast.text = it }
-                } else if (user.last == null) {
-                    firstLast.text = user.first
-                } else if (user.first == null) {
-                    firstLast.text = user.last
-                } else {
-                    firstLast.text = ""
-                }
-
+                firstLast.text = combineTwoTextFields(user.first, user.last)
                 emailText.text = userBundle.getEmail()
-
-                if (user.city != null && user.country != null) {
-                    "${user.city}, ${user.country}".also { cityCountyText.text = it }
-                } else if (user.city == null) {
-                    cityCountyText.text = user.country
-                } else if (user.country == null) {
-                    cityCountyText.text = user.city
-                } else {
-                    cityCountyText.text = ""
-                }
+                cityCountyText.text = combineTwoTextFields(user.city, user.country)
 
                 editButton.visibility = View.VISIBLE
 
                 ImageStorageService.getProfileImageFromCloud(PROFILE_PICTURE_PREFIX_CLOUD, user.profileImageRef,getOutputImageFile(), profileImage)
             }
         }
+    }
+
+    private fun combineTwoTextFields(one : String?, two : String?) : String {
+        return if (one != null && two != null) {
+            "$one, $two"
+        } else two ?: (one ?: "")
     }
 
     private fun selectImage() {
