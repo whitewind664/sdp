@@ -32,6 +32,7 @@
 
     <string name="title_activity_maps">Map</string>
     <string name="title_activity_game">Game</string>
+    <string name="title_activity_onlineGame">Online Game</string>
     <string name="title_activity_chat">Chat</string>
     <string name="title_activity_tutorial">Tutorial</string>
     <string name="title_activity_profile">Profile</string>

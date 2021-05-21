@@ -35,7 +35,7 @@
         <activity
             android:name=".activities.GameModeChooserActivity"
             android:label="@string/title_activity_game_mode_chooser"
-            android:theme="@style/Theme.LetsGo.NoActionBar"></activity>
+            android:theme="@style/Theme.LetsGo.NoActionBar" />
         <activity android:name=".activities.FriendListActivity" />
         <activity
             android:name=".activities.TutorialActivity"
@@ -47,7 +47,10 @@
             android:name=".activities.GameActivity"
             android:label="@string/title_activity_game" />
         <activity
-            android:name=".activities.ProfileActivity"
+
+            android:name=".activities.OnlineGameActivity"
+            android:label="@string/title_activity_onlineGame" />
+        <activity android:name=".activities.ProfileActivity"
             android:label="@string/title_activity_profile" />
         <activity
             android:name=".activities.FirebaseUIActivity"

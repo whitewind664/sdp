@@ -93,6 +93,8 @@ class Database {
                             currentData.child("currentlyWaiting").value = null
                             val gameId = database.child("matchmaking").child("games").push().key
                             currentData.child("games").child("$gameId").value = gameData
+                            currentData.child("currentGamesPerUser").child(gameData.player1).value = gameId
+                            currentData.child("currentGamesPerUser").child(gameData.player2).value = gameId
                         }
                         return Transaction.success(currentData)
                     }
@@ -102,6 +104,9 @@ class Database {
                         committed: Boolean,
                         currentData: DataSnapshot?
                     ) {
+                        if (error != null) {
+                            Log.d("Database::findMatch", error.toString())
+                        }
                         onComplete(error, committed, currentData)
                     }
                 })
@@ -180,7 +185,8 @@ class Database {
             }
         }
 
-        fun addEventListener(databaseReference: DatabaseReference, onDataChange: (DataSnapshot) -> Unit, onCancelled: (DatabaseError) -> Unit): ValueEventListener {
+        fun addEventListener(path: String, onDataChange: (DataSnapshot) -> Unit, onCancelled: (DatabaseError) -> Unit): ValueEventListener {
+            val databaseReference = db.getReference(path)
             val listener = object : ValueEventListener {
                 override fun onDataChange(snapshot: DataSnapshot) {
                     onDataChange(snapshot)

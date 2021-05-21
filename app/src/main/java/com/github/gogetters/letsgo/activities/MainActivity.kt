@@ -7,6 +7,7 @@ import com.github.gogetters.letsgo.R
 import com.github.gogetters.letsgo.database.Database
 import com.github.gogetters.letsgo.database.user.FirebaseUserBundleProvider
 
+
 class MainActivity : BaseActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
