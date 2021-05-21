@@ -32,7 +32,7 @@
         <activity
             android:name=".activities.GameModeChooserActivity"
             android:label="@string/title_activity_game_mode_chooser"
-            android:theme="@style/Theme.LetsGo.NoActionBar"></activity>
+            android:theme="@style/Theme.LetsGo.NoActionBar" />
         <activity android:name=".activities.FriendListActivity" />
         <activity
             android:name=".activities.TutorialActivity"
@@ -50,14 +50,11 @@
 
             android:name=".activities.OnlineGameActivity"
             android:label="@string/title_activity_onlineGame" />
-        <activity android:name=".activities.ProfileActivity" />
-
-            android:name=".activities.ProfileActivity"
+        <activity android:name=".activities.ProfileActivity"
             android:label="@string/title_activity_profile" />
         <activity
             android:name=".activities.FirebaseUIActivity"
             android:label="@string/title_activity_firebaseui" />
-
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"
