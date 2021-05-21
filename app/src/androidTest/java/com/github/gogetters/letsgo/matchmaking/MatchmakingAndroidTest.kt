@@ -1,4 +1,4 @@
-package com.github.gogetters.letsgo.activities;
+package com.github.gogetters.letsgo.matchmaking;
 
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
@@ -13,20 +13,20 @@ import org.junit.runner.RunWith
 
 
 @RunWith(AndroidJUnit4::class)
-public class MatchmakingTest: EmulatedFirebaseTest() {
+public class MatchmakingAndroidTest: EmulatedFirebaseTest() {
 
     init {
         val appContext = InstrumentationRegistry.getInstrumentation().targetContext
         FirebaseApp.initializeApp(appContext)
     }
 
-//    @Test
-//    fun findMatchWorks() {
-//        val auth = Firebase.auth
+    @Test
+    fun findMatchWorks() {
+        val auth = Firebase.auth
 //        auth.signInWithEmailAndPassword("test@test.com", "password")
 //                .addOnCompleteListener {
 //                    Matchmaking.findMatch() {  }
 //
 //                }
-//    }
+    }
 }
