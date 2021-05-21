@@ -13,10 +13,22 @@
     <string name="go">Go</string>
     <string name="user_name">User Name</string>
     <string name="upload_your_profile_picture">Upload Your Profile Picture</string>
-    <string name="my_name">My Name</string>
-    <string name="city_country">City, Country</string>
+    <string name="my_nick">Nickname</string>
+    <string name="city_country">Country, City</string>
     <string name="profile_picture">Profile Picture</string>
     <string name="save_picture">Save Picture</string>
+    <string name="profile_show_friends">Show friends</string>
+
+    <string name="first_last">First, Last</string>
+    <string name="profile_noNicknameHint">To add your nickname click Edit</string>
+    <string name="profile_button_edit_text">Edit</string>
+
+    <string name="profile_edit_button_save_text">Save</string>
+    <string name="profile_edit_nickname">Nickname</string>
+    <string name="profile_edit_first">First</string>
+    <string name="profile_edit_last">Last</string>
+    <string name="profile_edit_country">Country</string>
+    <string name="profile_edit_city">City</string>
 
     <string name="title_activity_maps">Map</string>
     <string name="title_activity_game">Game</string>
@@ -107,11 +119,10 @@
     <string name="connection_start">Establishing Connection...</string>
     <string name="connection_error">Error while connecting device</string>
     <string name="title_activity_bluetooth">Bluetooth</string>
-    <string name="profile_show_friends">Show friends</string>
+
     <string name="title_activity_game_mode_chooser">GameModeChooserActivity</string>
     <!-- Strings used for fragments for navigation -->
     <string name="first_fragment_label">First Fragment</string>
     <string name="second_fragment_label">Second Fragment</string>
-
 
 </resources>

@@ -13,20 +13,18 @@ import android.os.Bundle
 import android.os.Environment
 import android.provider.MediaStore
 import android.util.Log
+import android.view.View
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
-import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.FileProvider
-import androidx.core.net.toUri
 import com.github.gogetters.letsgo.R
-import com.github.gogetters.letsgo.database.CloudStorage
 import com.github.gogetters.letsgo.database.ImageStorageService
+import com.github.gogetters.letsgo.database.user.FirebaseUserBundleProvider
 import com.github.gogetters.letsgo.database.user.UserBundle
 import com.github.gogetters.letsgo.database.user.UserBundleProvider
 import com.github.gogetters.letsgo.util.PermissionUtils
-import com.google.firebase.auth.FirebaseAuth
 import java.io.File
 import java.text.SimpleDateFormat
 import java.util.*
@@ -50,12 +48,13 @@ class ProfileActivity : ActivityCompat.OnRequestPermissionsResultCallback, BaseA
 
     private lateinit var userBundleProvider: UserBundleProvider
 
-    private lateinit var uploadImageText: TextView
+    private lateinit var editButton: Button
+
     private lateinit var profileImage: ImageView
-    private lateinit var nameText: TextView
+    private lateinit var nick: TextView
+    private lateinit var firstLast: TextView
     private lateinit var emailText: TextView
     private lateinit var cityCountyText: TextView
-    //private lateinit var saveButton: ImageButton
 
     private lateinit var profilePictureUri: Uri
 
@@ -72,12 +71,18 @@ class ProfileActivity : ActivityCompat.OnRequestPermissionsResultCallback, BaseA
 
         userBundleProvider = intent.getSerializableExtra("UserBundleProvider") as UserBundleProvider
 
-        uploadImageText = findViewById(R.id.profile_textView_uploadImageHint)
+        editButton = findViewById(R.id.profile_button_edit)
+        editButton.setOnClickListener {
+            val intent = Intent(this, ProfileEditActivity::class.java)
+            intent.putExtra("UserBundleProvider", userBundleProvider)
+            startActivity(intent)
+        }
+
         profileImage = findViewById(R.id.profile_imageView_image)
-        nameText = findViewById(R.id.profile_textView_name)
+        nick = findViewById(R.id.profile_textView_nick)
+        firstLast = findViewById(R.id.profile_textView_firstLast)
         emailText = findViewById(R.id.profile_textView_email)
         cityCountyText = findViewById(R.id.profile_textView_cityCountry)
-        //saveButton = findViewById(R.id.profile_imageButton_save)
         profileImage.setOnClickListener {
             selectImage()
         }
@@ -123,15 +128,30 @@ class ProfileActivity : ActivityCompat.OnRequestPermissionsResultCallback, BaseA
             dispatchLoginIntent()
         } else {
             var user = userBundle.getUser()
+
             user.downloadUserData().addOnCompleteListener {
-                nameText.text = user.first
+                if (user.nick != null && user.nick!!.isNotEmpty()) {
+                    nick.text = user.nick
+                } else {
+                    nick.text = getString(R.string.profile_noNicknameHint)
+                }
+
+                firstLast.text = combineTwoTextFields(user.first, user.last)
                 emailText.text = userBundle.getEmail()
-                cityCountyText.text = "${user.city}, ${user.country}"
+                cityCountyText.text = combineTwoTextFields(user.city, user.country)
+
+                editButton.visibility = View.VISIBLE
+
                 ImageStorageService.getProfileImageFromCloud(PROFILE_PICTURE_PREFIX_CLOUD, user.profileImageRef,getOutputImageFile(), profileImage)
             }
         }
     }
 
+    private fun combineTwoTextFields(one : String?, two : String?) : String {
+        return if (one != null && two != null) {
+            "$one, $two"
+        } else two ?: (one ?: "")
+    }
 
     private fun selectImage() {
         val dialogTexts = arrayOf<CharSequence>(resources.getString(R.string.profile_takePicture), resources.getString(R.string.profile_chooseFromGallery), resources.getString(R.string.profile_cancel))
