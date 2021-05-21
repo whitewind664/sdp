@@ -4,6 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.widget.Button
 import com.github.gogetters.letsgo.R
+import com.github.gogetters.letsgo.database.Database
 import com.github.gogetters.letsgo.game.Player
 import com.google.android.material.bottomnavigation.LabelVisibilityMode
 import kotlinx.android.synthetic.main.activity_main.*
@@ -13,6 +14,8 @@ class MainActivity : BaseActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        Database.enableCache()
 
         val mapButton = findViewById<Button>(R.id.main_button_map)
         mapButton.setOnClickListener {
@@ -27,9 +30,9 @@ class MainActivity : BaseActivity() {
             startActivity(intent)
         }
 
-        val btButton = findViewById<Button>(R.id.main_button_bt)
-        btButton.setOnClickListener {
-            val intent = Intent(this, BluetoothActivity::class.java)
+        val playButton = findViewById<Button>(R.id.main_button_play)
+        playButton.setOnClickListener {
+            val intent = Intent(this, GameModeChooserActivity::class.java)
             startActivity(intent)
         }
 

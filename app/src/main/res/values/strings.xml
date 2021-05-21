@@ -1,17 +1,15 @@
 <resources>
     <string name="app_name">Let\'s Go</string>
+
     <string name="game_buttonTextPass">Pass</string>
 
-    <string name="startGameButtonText">Start Game</string>
-    <string name="openMapButtonText">Open Map</string>
+    <string name="main_openMapButtonText">Open Map</string>
+    <string name="main_openGameChooserText">Play</string>
+    <string name="main_profileButtonText">My Profile</string>
 
-    <string name="openBTButtonText">Bluetooth</string>
-
-    <string name="openTutorialButtonText">Tutorial</string>
     <string name="scoreTitleText">Score</string>
     <string name="scoreDefaultText">0</string>
 
-    <string name="my_profile">My Profile</string>
     <string name="go">Go</string>
     <string name="user_name">User Name</string>
     <string name="upload_your_profile_picture">Upload Your Profile Picture</string>
@@ -83,6 +81,15 @@
     <string name="profile_cancel">Cancel</string>
     <string name="profile_gallerySelectionTitle">Select Profile Picture</string>
 
+    <string name="gameModeChooser_buttonLocal">Local</string>
+    <string name="gameModeChooser_buttonOGS">Online via Online-Go</string>
+    <string name="gameModeChooser_buttonBluetooth">Bluetooth</string>
+    <string name="gameModeChooser_title">Choose the Game Mode</string>
+    <string name="gameModeChooser_loginTitle">Please log in with existing credentials for online-go.com</string>
+    <string name="gameModeChooser_loginUsername">Your Username</string>
+    <string name="gameModeChooser_loginPassword">Your password</string>
+    <string name="gameModeChooser_buttonLoginSubmit">Submit</string>
+
     <!--
     This string is used for square devices and overridden by hello_world in
     values-round/strings.xml for round devices.
@@ -109,5 +116,10 @@
     <string name="connection_start">Establishing Connection...</string>
     <string name="connection_error">Error while connecting device</string>
     <string name="title_activity_bluetooth">Bluetooth</string>
+
+    <string name="title_activity_game_mode_chooser">GameModeChooserActivity</string>
+    <!-- Strings used for fragments for navigation -->
+    <string name="first_fragment_label">First Fragment</string>
+    <string name="second_fragment_label">Second Fragment</string>
 
 </resources>

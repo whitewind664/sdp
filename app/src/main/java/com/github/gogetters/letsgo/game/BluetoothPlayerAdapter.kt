@@ -2,8 +2,8 @@ package com.github.gogetters.letsgo.game
 
 import com.github.gogetters.letsgo.util.BluetoothGTPService
 
-class BluetoothLocalPlayer(private val underlyingPlayer: Player,
-                           private val service: BluetoothGTPService): Player by underlyingPlayer {
+class BluetoothPlayerAdapter(private val underlyingPlayer: Player,
+                             private val service: BluetoothGTPService): Player by underlyingPlayer {
 
     private fun notifyRemote(move: Move) {
         service.sendCommand(GTPCommand.PLAY(move))
