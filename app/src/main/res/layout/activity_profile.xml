@@ -5,6 +5,7 @@
     android:id="@+id/game_constraintLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:visibility="visible"
     tools:context=".activities.ProfileActivity">
 
     <include
@@ -12,41 +13,31 @@
         layout="@layout/activity_base"
         app:layout_constraintBottom_toBottomOf="@+id/profile_show_friend_list_button"
         app:layout_constraintTop_toTopOf="parent"
-        tools:layout_editor_absoluteX="46dp" />
-
-    <TextView
-        android:id="@+id/profile_textView_uploadImageHint"
-        android:layout_width="match_parent"
-        android:layout_height="99dp"
-        android:layout_marginTop="32dp"
-        android:lineSpacingExtra="10dp"
-        android:text="@string/upload_your_profile_picture"
-        android:textAlignment="center"
-        android:textColor="@color/color5"
-        android:textSize="22sp"
-        app:layout_constraintBottom_toTopOf="@+id/profile_imageView_image"/>
+        app:layout_constraintVertical_bias="0.0"
+        tools:layout_editor_absoluteX="-61dp" />
 
     <ImageView
         android:id="@+id/profile_imageView_image"
         android:layout_width="145dp"
         android:layout_height="145dp"
-        android:src="@drawable/profile"
         android:layout_gravity="center"
         android:contentDescription="@string/profile_picture"
+        android:src="@drawable/profile"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintDimensionRatio="1:1"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent"/>
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.262" />
 
     <TextView
-        android:id="@+id/profile_textView_name"
+        android:id="@+id/profile_textView_nick"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_gravity="center"
         android:layout_marginTop="24dp"
         android:fontFamily="@font/montserrat_bold"
-        android:text="@string/my_name"
-        android:layout_gravity="center"
+        android:text="@string/my_nick"
         android:textColor="@color/color5"
         android:textSize="24sp"
         app:layout_constraintEnd_toEndOf="parent"
@@ -58,12 +49,24 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="16dp"
         android:text="@string/email"
         android:textColor="@color/color3"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/profile_textView_name" />
+        app:layout_constraintTop_toBottomOf="@+id/profile_textView_firstLast" />
+
+    <TextView
+        android:id="@+id/profile_textView_firstLast"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="16dp"
+        android:text="@string/first_last"
+        android:textColor="@color/color3"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/profile_textView_nick" />
 
     <TextView
         android:id="@+id/profile_textView_cityCountry"
@@ -87,6 +90,18 @@
         app:layout_constraintEnd_toEndOf="@+id/include"
         app:layout_constraintStart_toStartOf="@+id/include"
         app:layout_constraintTop_toBottomOf="@+id/profile_textView_cityCountry" />
+
+    <Button
+        android:id="@+id/profile_button_edit"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="76dp"
+        android:text="@string/profile_button_edit_text"
+        android:visibility="invisible"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.916"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/include" />
 
     <!-- MAY BE HIDING STUFF
     <ImageButton
