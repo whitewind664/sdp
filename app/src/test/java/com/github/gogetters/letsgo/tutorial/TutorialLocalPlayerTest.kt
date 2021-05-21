@@ -1,7 +1,7 @@
 package com.github.gogetters.letsgo.tutorial
 
 import com.github.gogetters.letsgo.game.*
-import com.github.gogetters.letsgo.game.util.TouchInputDelegate
+import com.github.gogetters.letsgo.game.util.InputDelegate
 import org.junit.Assert.assertEquals
 import org.junit.Test
 
@@ -12,7 +12,7 @@ class TutorialLocalPlayerTest {
         val move = Move(Stone.BLACK, Point(2, 2))
         val boardState = BoardState(BoardState.emptyBoard(Board.Size.SMALL), null, 0, 0)
 
-        val inputDelegate = TouchInputDelegate()
+        val inputDelegate = InputDelegate()
         inputDelegate.saveLatestInput(move.point)
 
         val player = TutorialLocalPlayer(inputDelegate)

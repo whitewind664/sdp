@@ -4,7 +4,7 @@ import android.os.Bundle
 import android.widget.FrameLayout
 import com.github.gogetters.letsgo.R
 import com.github.gogetters.letsgo.game.*
-import com.github.gogetters.letsgo.game.util.TouchInputDelegate
+import com.github.gogetters.letsgo.game.util.InputDelegate
 import com.github.gogetters.letsgo.game.view.GoView
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
@@ -29,14 +29,15 @@ class GameActivity : BaseActivity() {
         val blackType = intent.getIntExtra(EXTRA_PLAYER_BLACK, 0)
         val whiteType = intent.getIntExtra(EXTRA_PLAYER_WHITE, 0)
 
+        //TODO: unify "input providers???"
         val bluetoothService = BluetoothActivity.service
+        bluetoothService.inputDelegate = InputDelegate()
 
         val boardSize = Board.Size.withSize(gameSizeInput)
         goView = GoView(this, boardSize)
 
-        val touchInputDelegate = TouchInputDelegate()
-
-        goView.touchInputDelegate = touchInputDelegate
+        val touchInputDelegate = InputDelegate()
+        goView.inputDelegate = touchInputDelegate
 
 
         val boardFrame = findViewById<FrameLayout>(R.id.game_frameLayout_boardFrame)
@@ -59,6 +60,7 @@ class GameActivity : BaseActivity() {
     override fun getLayoutResource(): Int {
         return R.layout.activity_game
     }
+
 
     private fun drawBoard(boardState: BoardState) {
         goView.updateBoardState(boardState)
