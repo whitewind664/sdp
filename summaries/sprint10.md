@@ -28,9 +28,9 @@
 - To improve: I'm very happy with my work this week. Despite being overworked in several other projects including this one I managed to get everything done this week, unlike last week! If I'm nitpicky I would say starting to work earlier but I never had the possibility to do that.
 
 ## Wengle, Erik Alessandro
-- Done:
-- Went well:
-- To improve:
+- Done: The bluetooth branch was finally merged, but it lacked tests which I started writing.
+- Went well: The bluetooth branch was finally merged!
+- To improve: I need to tackle smaller features so I can merge at the end of the week.
 
 ## Overall team (Scrum Master)
 - Done: Held two short meetings, coordinated about current and future tasks.
