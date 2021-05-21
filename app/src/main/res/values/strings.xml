@@ -72,6 +72,9 @@
 
     <!-- Strings for the map activity -->
     <string name="map_buttonTextShowPlayers">Show other players</string>
+    <string name="map_noPlayersFound">No other players found.</string>
+    <string name="map_permissionDeniedError">You did not permit location sharing…</string>
+    <string name="map_permissionSharingFailed">Permission could not be shared</string>
 
     <string name="tutorial_buttonTextGoBack">Back to main menu</string>
 
