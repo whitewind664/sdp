@@ -7,7 +7,7 @@ import com.android.volley.toolbox.StringRequest
 import com.android.volley.toolbox.Volley
 import org.json.JSONObject
 
-class VolleyOnlineService(context: Context) : OnlineService<JSONObject> {
+class VolleyOnlineService(context: Context) : OnlineService<JSONObject>  {
     private val queue: RequestQueue = Volley.newRequestQueue(context)
 
     override fun post(url: String, body: JSONObject, headers: JSONObject): ResponseListener<JSONObject> { return getOrPost(url, body, headers) }
@@ -15,6 +15,7 @@ class VolleyOnlineService(context: Context) : OnlineService<JSONObject> {
     override fun get(url: String, headers: JSONObject): ResponseListener<JSONObject> { return getOrPost(url, null, headers) }
 
     private fun getOrPost(url: String, jsonRequest: JSONObject?, headers: JSONObject): ResponseListener<JSONObject> {
+
         val responseListener = ResponseListener<JSONObject>()
 
         val jsonRequest = object: JsonObjectRequest(url, jsonRequest, { response -> responseListener.onResponse(response) }, { throw it }) {
