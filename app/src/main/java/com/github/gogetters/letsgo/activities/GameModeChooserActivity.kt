@@ -46,10 +46,10 @@ class GameModeChooserActivity : BaseActivity() {
         ogsButton.setOnClickListener {
             // login
             changeToOgsLoginView()
-            /**submitButton.setOnClickListener {
-                val ogsCommunicator = OGSCommunicatorService(VolleyOnlineService(this), resources.getString(R.string.ogs_client_id), resources.getString(R.string.ogs_client_secret))
-                ogsCommunicator.authenticate(usernameEditText.toString(), passwordEditText.toString())
-            }*/
+            submitButton.setOnClickListener {
+                //val ogsCommunicator = OGSCommunicatorService(VolleyOnlineService(this), resources.getString(R.string.ogs_client_id), resources.getString(R.string.ogs_client_secret))
+                //ogsCommunicator.authenticate(usernameEditText.text.toString(), passwordEditText.text.toString())
+            }
 
             // TODO ask for information concerning the game if completed
 

@@ -30,6 +30,8 @@ class OGSCommunicatorService(private val onlineService: OnlineService<JSONObject
         body.put("username", username)
         body.put("password", password)
 
+        Log.i("JSONTEST", body.toString())
+
         onlineService.post("$base$auth", body, JSONObject().put("Content-Type", "application/x-www-form-urlencoded"))
             .setOnResponse { onAuthenticationAccepted(it) }
     }
