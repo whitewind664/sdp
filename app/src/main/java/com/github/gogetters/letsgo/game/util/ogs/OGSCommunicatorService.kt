@@ -13,7 +13,7 @@ class OGSCommunicatorService(private val onlineService: OnlineService<JSONObject
     //private val CLIENT_ID: String = "" // TODO
     //private val CLIENT_SECRET: String = "" // TODO
     private val base = "https://online-go.com"
-    private val auth = "/api/v0/login"
+    private val auth = "/oauth2/token/"
     private val challenges = "/v1/challenges"
     private val games = "/v1/games"
     private var gameID = 0
@@ -30,7 +30,7 @@ class OGSCommunicatorService(private val onlineService: OnlineService<JSONObject
 
         Log.i("JSONTEST", body.toString())
 
-        onlineService.post("$base$auth", body, JSONObject()/*.put("Content-Type", "application/x-www-form-urlencoded")*/)
+        onlineService.post("$base$auth", body, JSONObject().put("Content-Type", "application/x-www-form-urlencoded"))
             .setOnResponse { onAuthenticationAccepted(it) }
     }
 
