@@ -38,8 +38,8 @@ data class OGSChallenge(
 
             val game = OGSGame.fromJSON(challenge.getJSONObject("game"))
             return OGSChallenge(game, color,
-                    challenge.getInt("min_ranking"),
-                    challenge.getInt("max_ranking"))
+                challenge.getInt("min_ranking"),
+                challenge.getInt("max_ranking"))
         }
     }
 }

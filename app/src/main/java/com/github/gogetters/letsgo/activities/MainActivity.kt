@@ -4,7 +4,9 @@ import android.content.Intent
 import android.os.Bundle
 import android.widget.Button
 import com.github.gogetters.letsgo.R
+import com.github.gogetters.letsgo.database.Database
 import com.github.gogetters.letsgo.database.user.FirebaseUserBundleProvider
+
 
 class MainActivity : BaseActivity() {
 
@@ -20,7 +22,7 @@ class MainActivity : BaseActivity() {
         val profileButton = findViewById<Button>(R.id.main_button_profile)
         profileButton.setOnClickListener {
             val intent = Intent(this, ProfileActivity::class.java)
-            intent.putExtra("UserBundleProvider", FirebaseUserBundleProvider())
+            intent.putExtra("UserBundleProvider", FirebaseUserBundleProvider)
             startActivity(intent)
         }
 

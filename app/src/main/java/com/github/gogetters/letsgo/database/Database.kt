@@ -18,7 +18,7 @@ class Database {
     companion object {
 
         init {
-//            Firebase.database.setPersistenceEnabled(true)
+            Firebase.database.setPersistenceEnabled(true)
         }
 
         private val db = Firebase.database
@@ -62,6 +62,15 @@ class Database {
             return db.getReference(ref).removeValue()
         }
 
+        fun enableCache() {
+            Firebase.database.setPersistenceEnabled(true)
+        }
+
+        fun keepSynced(ref: String) {
+            val ref = Firebase.database.getReference(ref)
+            ref.keepSynced(true)
+        }
+
         // ---- [START} Matchmaking  ----
 
 
@@ -84,6 +93,8 @@ class Database {
                             currentData.child("currentlyWaiting").value = null
                             val gameId = database.child("matchmaking").child("games").push().key
                             currentData.child("games").child("$gameId").value = gameData
+                            currentData.child("currentGamesPerUser").child(gameData.player1).value = gameId
+                            currentData.child("currentGamesPerUser").child(gameData.player2).value = gameId
                         }
                         return Transaction.success(currentData)
                     }
@@ -93,6 +104,9 @@ class Database {
                         committed: Boolean,
                         currentData: DataSnapshot?
                     ) {
+                        if (error != null) {
+                            Log.d("Database::findMatch", error.toString())
+                        }
                         onComplete(error, committed, currentData)
                     }
                 })
@@ -171,7 +185,8 @@ class Database {
             }
         }
 
-        fun addEventListener(databaseReference: DatabaseReference, onDataChange: (DataSnapshot) -> Unit, onCancelled: (DatabaseError) -> Unit): ValueEventListener {
+        fun addEventListener(path: String, onDataChange: (DataSnapshot) -> Unit, onCancelled: (DatabaseError) -> Unit): ValueEventListener {
+            val databaseReference = db.getReference(path)
             val listener = object : ValueEventListener {
                 override fun onDataChange(snapshot: DataSnapshot) {
                     onDataChange(snapshot)
@@ -233,7 +248,7 @@ class Database {
             databaseReference.removeEventListener(listener)
         }
 
-        private fun getCurrentUserId(): String? {
+        fun getCurrentUserId(): String? {
             val user = FirebaseAuth.getInstance().currentUser ?: return null
             return user.uid
         }

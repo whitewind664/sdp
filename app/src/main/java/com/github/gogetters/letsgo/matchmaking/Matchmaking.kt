@@ -1,5 +1,9 @@
 package com.github.gogetters.letsgo.matchmaking
 
+import com.github.gogetters.letsgo.database.Database
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
 import kotlin.math.pow
 
 class Matchmaking {
@@ -31,6 +35,27 @@ class Matchmaking {
 
 
             return Pair(newRating1, newRating2)
+        }
+
+        fun findMatch(onMatchFound: (String) -> Unit, playerRating: Int) {
+            val user = FirebaseAuth.getInstance().currentUser
+            if (user != null) {
+                val onDataChange: (DataSnapshot) -> Unit = { dataSnapshot: DataSnapshot ->
+                    val gameId = dataSnapshot.value
+                    if (gameId is String) {
+                        onMatchFound(gameId)
+                    }
+                }
+                val onCancelled = { databaseError: DatabaseError ->
+                    TODO("no idea what this should do")
+                }
+
+                Database.addEventListener("/matchmaking/currentGamesPerUser/${user.uid}", onDataChange, onCancelled)
+
+                Database.findMatch(user.uid, playerRating) { _, _, _ ->
+                    TODO()
+                }
+            }
         }
     }
 

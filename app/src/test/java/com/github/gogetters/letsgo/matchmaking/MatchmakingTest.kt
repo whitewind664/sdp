@@ -1,5 +1,8 @@
 package com.github.gogetters.letsgo.matchmaking
 
+import com.github.gogetters.letsgo.database.Database
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.ktx.Firebase
 import org.junit.Test
 import org.junit.Assert.assertTrue
 import kotlin.math.abs
