@@ -14,7 +14,7 @@ data class OGSChallenge(
         val game = game.toJSON()
         val challenge = JSONObject()
         challenge.put("game", game)
-        challenge.put("challenger_color", challengerColor)
+        challenge.put("challenger_color", challengerColor.toString())
         challenge.put("min_ranking", minRanking)
         challenge.put("max_ranking", maxRanking)
         return challenge
@@ -28,7 +28,6 @@ data class OGSChallenge(
     companion object {
 
         fun fromJSON(challenge: JSONObject): OGSChallenge {
-
             val color = when (challenge.getString("challenger_color")) {
                 "white" -> Stone.WHITE
                 "black" -> Stone.BLACK

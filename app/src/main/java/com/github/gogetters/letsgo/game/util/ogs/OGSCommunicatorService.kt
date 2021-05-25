@@ -14,9 +14,7 @@ class OGSCommunicatorService(private val onlineService: OnlineService<JSONObject
     //private val CLIENT_SECRET: String = "" // TODO
     private val base = "https://online-go.com"
     private val auth = "/api/v0/login"
-    private val myChallenges = "/v1/me/challenges/"
     private val challenges = "/v1/challenges"
-    private val myGames = "/v1/me/games/"
     private val games = "/v1/games"
     private var gameID = 0
 
@@ -32,7 +30,7 @@ class OGSCommunicatorService(private val onlineService: OnlineService<JSONObject
 
         Log.i("JSONTEST", body.toString())
 
-        onlineService.post("$base$auth", body, JSONObject().put("Content-Type", "application/x-www-form-urlencoded"))
+        onlineService.post("$base$auth", body, JSONObject()/*.put("Content-Type", "application/x-www-form-urlencoded")*/)
             .setOnResponse { onAuthenticationAccepted(it) }
     }
 
@@ -40,7 +38,7 @@ class OGSCommunicatorService(private val onlineService: OnlineService<JSONObject
     fun startChallenge(challenge: OGSChallenge) {
         val body = challenge.toJSON()
         onlineService.post("$base$challenges", body).setOnResponse {
-            gameID = it.getInt("game")
+            val game = OGSGame.fromJSON(body.getJSONObject("game"))
         }
     }
 
