@@ -17,6 +17,7 @@ import com.github.gogetters.letsgo.database.Database
 import com.github.gogetters.letsgo.database.EmulatedFirebaseTest
 import com.github.gogetters.letsgo.map.mocking.MockLocationSharingService
 import com.google.android.gms.maps.model.LatLng
+import junit.framework.Assert.assertFalse
 import junit.framework.Assert.assertTrue
 import org.junit.After
 import org.junit.Before
@@ -67,7 +68,10 @@ class MapsActivityTest : EmulatedFirebaseTest() {
 
     @Test
     fun messageIsDisplayedWhenNoPlayersFound() {
-
+        onView(withId(R.id.map_button_showPlayers)).perform(click())
+        val device = UiDevice.getInstance(getInstrumentation())
+        val marker = device.findObject(UiSelector().descriptionContains(testId))
+        assertFalse(marker.isClickable)
     }
 
     @Test
@@ -83,11 +87,36 @@ class MapsActivityTest : EmulatedFirebaseTest() {
         val device = UiDevice.getInstance(getInstrumentation())
         val marker = device.findObject(UiSelector().descriptionContains(testId))
         assertTrue(marker.isClickable)
+
+        Database.deleteData("$userPath/$testId")
     }
 
     @Test
     fun otherPlayersAreUpdatedOnSecondClick() {
+        val testId = "mapTestId"
+        Database.writeData("$userPath/$testId$isActivePath$testId", true)
+        Database.writeData("$userPath/$testId$lngPath", EPFL.longitude)
+        Database.writeData("$userPath/$testId$latPath", EPFL.latitude)
 
+        // First demand
+        onView(withId(R.id.map_button_showPlayers)).perform(click())
+
+        // replace user
+        Database.deleteData("$userPath/$testId")
+        val testId2 = "mapTestId2"
+        Database.writeData("$userPath/$testId2$isActivePath$testId", true)
+        Database.writeData("$userPath/$testId2$lngPath", EPFL.longitude + 1)
+        Database.writeData("$userPath/$testId2$latPath", EPFL.latitude + 1)
+        onView(withId(R.id.map_button_showPlayers)).perform(click())
+
+        // check if everything was updated  
+        val device = UiDevice.getInstance(getInstrumentation())
+        val marker1 = device.findObject(UiSelector().descriptionContains(testId))
+        assertFalse(marker1.isClickable)
+        val marker2 = device.findObject(UiSelector().descriptionContains(testId))
+        assertTrue(marker2.isClickable)
+
+        Database.deleteData("$userPath/$testId2")
     }
 
     @Test
