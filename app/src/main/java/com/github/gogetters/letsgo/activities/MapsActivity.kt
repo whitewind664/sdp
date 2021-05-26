@@ -22,18 +22,21 @@ import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
+import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.Marker
 import com.google.android.gms.maps.model.MarkerOptions
 
-class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMyLocationButtonClickListener,
-        GoogleMap.OnMyLocationClickListener, ActivityCompat.OnRequestPermissionsResultCallback {
+class MapsActivity : AppCompatActivity(), OnMapReadyCallback,
+    GoogleMap.OnMyLocationButtonClickListener,
+    GoogleMap.OnMyLocationClickListener, ActivityCompat.OnRequestPermissionsResultCallback {
     companion object {
         private const val LOCATION_PERMISSION_REQUEST_CODE: Int = 1
         private val EPFL: LatLng = LatLng(46.51899505106699, 6.563449219980816)
         private const val INIT_ZOOM = 10f
         private const val TOAST_DURATION = Toast.LENGTH_SHORT
     }
+
     private var permissionDenied = false
     private lateinit var mMap: GoogleMap
     private lateinit var fusedLocationClient: FusedLocationProviderClient
@@ -94,12 +97,14 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMyLoca
             return
 
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
-                == PackageManager.PERMISSION_GRANTED) {
+            == PackageManager.PERMISSION_GRANTED
+        ) {
             mMap.isMyLocationEnabled = true
         } else {
             // Permission to access the location is missing. Show rationale and request permission
-            requestPermission(this, LOCATION_PERMISSION_REQUEST_CODE,
-                    Manifest.permission.ACCESS_FINE_LOCATION
+            requestPermission(
+                this, LOCATION_PERMISSION_REQUEST_CODE,
+                Manifest.permission.ACCESS_FINE_LOCATION
             )
         }
     }
@@ -109,16 +114,25 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMyLoca
             if (!permissionDenied) {
                 Log.i("MapsActivity", "Create request")
                 fusedLocationClient.lastLocation
-                        .addOnSuccessListener { location: Location? ->
-                            // Got last known location. In some rare situations this can be null.
-                            if (!::locationSharingService.isInitialized || location == null) {
-                                Toast.makeText(this, resources.getString(R.string.map_permissionSharingFailed), TOAST_DURATION).show()
-                                Log.v("MapsActivity", "Location could not be shared")
-                            } else {
-                                // share the location with other users
-                                locationSharingService.shareMyLocation(LatLng(location.latitude, location.longitude))
-                            }
+                    .addOnSuccessListener { location: Location? ->
+                        // Got last known location. In some rare situations this can be null.
+                        if (!::locationSharingService.isInitialized || location == null) {
+                            Toast.makeText(
+                                this,
+                                resources.getString(R.string.map_permissionSharingFailed),
+                                TOAST_DURATION
+                            ).show()
+                            Log.v("MapsActivity", "Location could not be shared")
+                        } else {
+                            // share the location with other users
+                            locationSharingService.shareMyLocation(
+                                LatLng(
+                                    location.latitude,
+                                    location.longitude
+                                )
+                            )
                         }
+                    }
             }
         } catch (e: SecurityException) {
             Log.e("Exception: %s", e.message, e)
@@ -136,7 +150,11 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMyLoca
 
         locationSharingService.getSharedLocations().thenApply {
             if (it == null || it.isEmpty()) {
-                Toast.makeText(this, resources.getString(R.string.map_noPlayersFound), TOAST_DURATION).show()
+                Toast.makeText(
+                    this,
+                    resources.getString(R.string.map_noPlayersFound),
+                    TOAST_DURATION
+                ).show()
             } else {
                 setOtherPlayers(it)
             }
@@ -148,7 +166,9 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMyLoca
         if (otherUsersActivated) {
             removeAllOtherPlayers()
             for ((playerPosition, id) in updatedUsers.entries) {
-                val marker = mMap.addMarker(MarkerOptions().position(playerPosition).title("User $id"))
+                val marker =
+                    mMap.addMarker(MarkerOptions().position(playerPosition).title("User $id")
+                        .icon(BitmapDescriptorFactory.fromResource(R.drawable.person_pin)))
                 userMarkers = userMarkers + Pair(marker, id)
             }
         }
@@ -174,11 +194,20 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMyLoca
         // TODO display information about my user when clicking on own position
     }
 
-    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<String>,
+        grantResults: IntArray
+    ) {
         if (requestCode != LOCATION_PERMISSION_REQUEST_CODE) {
             return
         }
-        if (isPermissionGranted(permissions, grantResults, Manifest.permission.ACCESS_FINE_LOCATION)) {
+        if (isPermissionGranted(
+                permissions,
+                grantResults,
+                Manifest.permission.ACCESS_FINE_LOCATION
+            )
+        ) {
             // Enable the my location layer if the permission has been granted.
             enableLocation()
         } else {
@@ -194,7 +223,11 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMyLoca
         super.onResumeFragments()
         if (permissionDenied) {
             // Permission was not granted, display error dialog.
-            Toast.makeText(this, resources.getString(R.string.map_permissionDeniedError), TOAST_DURATION).show()
+            Toast.makeText(
+                this,
+                resources.getString(R.string.map_permissionDeniedError),
+                TOAST_DURATION
+            ).show()
             permissionDenied = false
         }
     }
