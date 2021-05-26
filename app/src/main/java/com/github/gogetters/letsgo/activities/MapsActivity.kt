@@ -178,7 +178,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback,
                 val marker =
                     mMap.addMarker(
                         MarkerOptions().position(playerPosition)
-                            .title("User $id") //  TODO change to username
+                            .title("$id") //  TODO change to username
                             .icon(BitmapDescriptorFactory.fromResource(R.drawable.person_pin))
                     )
                 marker.tag = id  // the userId needs to be stored
