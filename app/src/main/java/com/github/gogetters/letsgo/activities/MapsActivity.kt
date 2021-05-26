@@ -173,6 +173,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback,
                 userMarkers = userMarkers + Pair(marker, id)
                 allPositions.include(marker.position)
             }
+            // update the camera zoom
             val cu = CameraUpdateFactory.newLatLngBounds(allPositions.build(), MARKER_DISPLAY_PADDING)
             mMap.moveCamera(cu)
         }
