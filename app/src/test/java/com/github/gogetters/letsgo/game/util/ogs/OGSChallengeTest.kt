@@ -1,35 +1,50 @@
 package com.github.gogetters.letsgo.game.util.ogs
 
 import com.github.gogetters.letsgo.game.Stone
-import junit.framework.Assert.assertEquals
 import org.json.JSONObject
+import org.junit.Assert.assertEquals
+import org.junit.Rule
 import org.junit.Test
+import org.junit.rules.ExpectedException
+import java.lang.IllegalArgumentException
+
 
 class OGSChallengeTest {
+
+    @get:Rule
+    val exception: ExpectedException = ExpectedException.none()
 
     @Test
     fun toJsonWorks() {
         val game = OGSGame("game")
-        val min = 5
-        val challenge = OGSChallenge(game, Stone.WHITE, minRanking = min)
+        val challenge = OGSChallenge(game, Stone.WHITE, 999, 382)
+
         val json = challenge.toJSON()
 
-        assertEquals(Stone.WHITE.toString(), json["challenger_color"])
-        assertEquals(min, json["min_ranking"])
+        assertEquals(challenge.challengerColor.toString(), json.getString("challenger_color"))
+        assertEquals(challenge.game, OGSGame.fromJSON(json.getJSONObject("game")))
+        assertEquals(challenge.minRanking, json.getInt("min_ranking"))
+        assertEquals(challenge.maxRanking, json.getInt("max_ranking"))
     }
 
     @Test
-    fun fromJsonWorks() {
-        var json = JSONObject()
-        json.put("challenger_color", Stone.WHITE.toString())
-        json.put("game", OGSGame("mygame").toJSON())
+    fun encodingAndDecodingReturnsSameChallenge() {
+        val game = OGSGame("game")
+        val challenge = OGSChallenge(game, Stone.WHITE)
 
-        assertEquals(OGSChallenge.fromJSON(json).challengerColor, Stone.WHITE)
+        assertEquals(challenge, OGSChallenge.fromJSON(challenge.toJSON()))
+    }
 
-        json = JSONObject()
-        json.put("challenger_color", Stone.BLACK.toString())
-        json.put("game", OGSGame("mygame").toJSON())
+    @Test
+    fun fromJSONThrowsOnInvalidStoneValue() {
+        exception.expect(IllegalArgumentException::class.java)
 
-        assertEquals(OGSChallenge.fromJSON(json).challengerColor, Stone.BLACK)
+        val game = OGSGame("name")
+        val json = JSONObject()
+        json.put("game", game)
+        json.put("challenger_color", "invalidColor")
+        json.put("min_ranking", 0)
+        json.put("max_ranking", 0)
+        OGSChallenge.fromJSON(json)
     }
 }

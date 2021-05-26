@@ -17,7 +17,7 @@ class MockOnlineService : OnlineService<JSONObject> {
 
 
     private val base = "https://online-go.com"
-    private val auth = "/api/v0/login"
+    private val auth = "/oauth2/token/"
     private val myChallenges = "/v1/me/challenges/"
     private val challenges = "/v1/challenges"
     private val myGames = "/v1/me/games/"
