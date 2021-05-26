@@ -16,10 +16,10 @@ class OGSChallengeTest {
     }
 
     @Test
-    fun fromMapWorks() {
-        val json = JSONObject()
-        json.put("challenger_color", Stone.WHITE.toString())
+    fun encodingAndDecodingReturnsSameChallenge() {
+        val game = OGSGame("game")
+        val challenge = OGSChallenge(game, Stone.WHITE)
 
-        assertEquals(OGSChallenge.fromJSON(json).challengerColor, Stone.WHITE)
+        assertEquals(challenge, OGSChallenge.fromJSON(challenge.toJSON()))
     }
 }

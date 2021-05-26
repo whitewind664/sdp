@@ -11,6 +11,11 @@ class OGSGameTest {
         val game = OGSGame("mygame")
         assertTrue(game.toJSON() != null)
         assertEquals("mygame", game.toJSON().getString("name"))
-        assertEquals("null", game.toJSON().toString(4))
+    }
+
+    @Test
+    fun encodingAndDecodingResultsInSameGame() {
+        val game = OGSGame("agame")
+        assertEquals(game, OGSGame.fromJSON(game.toJSON()))
     }
 }
