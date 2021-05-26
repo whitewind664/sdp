@@ -1,6 +1,8 @@
 package com.github.gogetters.letsgo.activities
 
 import android.Manifest
+import android.app.AlertDialog
+import android.content.DialogInterface
 import android.content.pm.PackageManager
 import android.location.Location
 import android.os.Bundle
@@ -33,6 +35,10 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback,
         private const val INIT_ZOOM = 10f
         private const val TOAST_DURATION = Toast.LENGTH_SHORT
         private const val MARKER_DISPLAY_PADDING = 0
+
+        // indices in the dialog
+        private const val DIALOG_CANCEL_IDX = 1
+        private const val DIALOG_CHAT_IDX = 0
     }
 
     private var permissionDenied = false
@@ -75,6 +81,10 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback,
 
         // Move the camera to EPFL
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(EPFL, INIT_ZOOM))
+        mMap.setOnMarkerClickListener { marker ->
+            displayUserInfo(marker.tag as String)
+            true
+        }
 
         googleMap.setOnMyLocationButtonClickListener(this)
         googleMap.setOnMyLocationClickListener(this)
@@ -167,14 +177,17 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback,
             for ((playerPosition, id) in updatedUsers.entries) {
                 val marker =
                     mMap.addMarker(
-                        MarkerOptions().position(playerPosition).title("User $id")
+                        MarkerOptions().position(playerPosition)
+                            .title("User $id") //  TODO change to username
                             .icon(BitmapDescriptorFactory.fromResource(R.drawable.person_pin))
                     )
+                marker.tag = id  // the userId needs to be stored
                 userMarkers = userMarkers + Pair(marker, id)
                 allPositions.include(marker.position)
             }
             // update the camera zoom
-            val cu = CameraUpdateFactory.newLatLngBounds(allPositions.build(), MARKER_DISPLAY_PADDING)
+            val cu =
+                CameraUpdateFactory.newLatLngBounds(allPositions.build(), MARKER_DISPLAY_PADDING)
             mMap.moveCamera(cu)
         }
     }
@@ -237,4 +250,23 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback,
         }
     }
 
+    /**
+     * Called when clicked on a marker on the map. Displays a dialog that allows to open a chat with a found user.
+     */
+    private fun displayUserInfo(username: String) {
+        val dialogTexts = arrayOf<CharSequence>(
+            resources.getString(R.string.map_dialogOpenChat),
+            resources.getString(R.string.map_dialogCancel)
+        )
+        val builder: AlertDialog.Builder = AlertDialog.Builder(this)
+        builder.setTitle(resources.getString(R.string.map_dialogTitlePrefix) + username)
+        builder.setItems(dialogTexts, DialogInterface.OnClickListener { dialog, clickedIndex ->
+            if (clickedIndex == DIALOG_CANCEL_IDX) {
+                dialog.dismiss()
+                return@OnClickListener
+            }
+            // TODO open chat with the user
+        })
+        builder.show()
+    }
 }
