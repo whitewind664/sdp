@@ -13,8 +13,11 @@ import androidx.test.uiautomator.UiDevice
 import androidx.test.uiautomator.UiObject
 import androidx.test.uiautomator.UiSelector
 import com.github.gogetters.letsgo.R
-import com.github.gogetters.letsgo.map.mocking.MockLocationSharingService
+import com.github.gogetters.letsgo.database.Database
 import com.github.gogetters.letsgo.database.EmulatedFirebaseTest
+import com.github.gogetters.letsgo.map.mocking.MockLocationSharingService
+import com.google.android.gms.maps.model.LatLng
+import junit.framework.Assert.assertTrue
 import org.junit.After
 import org.junit.Before
 import org.junit.Rule
@@ -26,6 +29,12 @@ import org.junit.runner.RunWith
 class MapsActivityTest : EmulatedFirebaseTest() {
     val GRANT_PERMISSION_BUTTON_INDEX = 0
     val PERMISSIONS_DELAY = 5000L
+
+    val userPath = "users/"
+    val isActivePath = "/isLookingForPlayers"
+    val latPath = "/lastPositionLatitude"
+    val lngPath = "/lastPositionLongitude"
+    val EPFL: LatLng = LatLng(46.51899505106699, 6.563449219980816)
 
     private fun sleep() {
         try {
@@ -57,10 +66,28 @@ class MapsActivityTest : EmulatedFirebaseTest() {
     }
 
     @Test
-    fun otherPlayersAreDisplayedOnButtonClick() {
-        onView(withId(R.id.map_button_showPlayers)).perform(click())
+    fun messageIsDisplayedWhenNoPlayersFound() {
 
-        // TODO
+    }
+
+    @Test
+    fun otherPlayersAreDisplayedOnButtonClick() {
+        // add a dummy player to database
+        val testId = "mapTestId"
+        Database.writeData("$userPath/$testId$isActivePath$testId", true)
+        Database.writeData("$userPath/$testId$lngPath", EPFL.longitude)
+        Database.writeData("$userPath/$testId$latPath", EPFL.latitude)
+
+        // test that this is retrieved
+        onView(withId(R.id.map_button_showPlayers)).perform(click())
+        val device = UiDevice.getInstance(getInstrumentation())
+        val marker = device.findObject(UiSelector().descriptionContains(testId))
+        assertTrue(marker.isClickable)
+    }
+
+    @Test
+    fun otherPlayersAreUpdatedOnSecondClick() {
+
     }
 
     @Test

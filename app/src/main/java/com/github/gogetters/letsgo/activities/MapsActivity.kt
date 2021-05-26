@@ -217,9 +217,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback,
         permissions: Array<String>,
         grantResults: IntArray
     ) {
-        if (requestCode != LOCATION_PERMISSION_REQUEST_CODE) {
-            return
-        }
+        if (requestCode != LOCATION_PERMISSION_REQUEST_CODE) return
         if (isPermissionGranted(
                 permissions,
                 grantResults,
