@@ -10,6 +10,8 @@ data class OGSChallenge(
     val minRanking: Int = 0,
     val maxRanking: Int = 0) {
 
+    //TODO change string literals to "const"
+
     fun toJSON(): JSONObject {
         val game = game.toJSON()
         val challenge = JSONObject()
@@ -35,10 +37,12 @@ data class OGSChallenge(
                 else -> throw IllegalArgumentException("could not parse stone color ${challenge.getString("challenger_color")}")
             }
 
+            val min = if (challenge.has("min_ranking")) challenge.getInt("min_ranking") else 0
+            val max = if (challenge.has("max_ranking")) challenge.getInt("max_ranking") else 0
+
             val game = OGSGame.fromJSON(challenge.getJSONObject("game"))
-            return OGSChallenge(game, color,
-                challenge.getInt("min_ranking"),
-                challenge.getInt("max_ranking"))
+
+            return OGSChallenge(game, color, min, max)
         }
     }
 }
