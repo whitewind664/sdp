@@ -3,11 +3,11 @@ package com.github.gogetters.letsgo.activities
 import android.Manifest
 import android.content.pm.PackageManager
 import android.location.Location
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.widget.Button
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.github.gogetters.letsgo.R
@@ -17,15 +17,12 @@ import com.github.gogetters.letsgo.util.PermissionUtils.isPermissionGranted
 import com.github.gogetters.letsgo.util.PermissionUtils.requestPermission
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
-
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
-import com.google.android.gms.maps.model.BitmapDescriptorFactory
-import com.google.android.gms.maps.model.LatLng
-import com.google.android.gms.maps.model.Marker
-import com.google.android.gms.maps.model.MarkerOptions
+import com.google.android.gms.maps.model.*
+
 
 class MapsActivity : AppCompatActivity(), OnMapReadyCallback,
     GoogleMap.OnMyLocationButtonClickListener,
@@ -35,6 +32,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback,
         private val EPFL: LatLng = LatLng(46.51899505106699, 6.563449219980816)
         private const val INIT_ZOOM = 10f
         private const val TOAST_DURATION = Toast.LENGTH_SHORT
+        private const val MARKER_DISPLAY_PADDING = 0
     }
 
     private var permissionDenied = false
@@ -165,12 +163,18 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback,
     private fun setOtherPlayers(updatedUsers: Map<LatLng, String>) {
         if (otherUsersActivated) {
             removeAllOtherPlayers()
+            var allPositions: LatLngBounds.Builder = LatLngBounds.Builder()
             for ((playerPosition, id) in updatedUsers.entries) {
                 val marker =
-                    mMap.addMarker(MarkerOptions().position(playerPosition).title("User $id")
-                        .icon(BitmapDescriptorFactory.fromResource(R.drawable.person_pin)))
+                    mMap.addMarker(
+                        MarkerOptions().position(playerPosition).title("User $id")
+                            .icon(BitmapDescriptorFactory.fromResource(R.drawable.person_pin))
+                    )
                 userMarkers = userMarkers + Pair(marker, id)
+                allPositions.include(marker.position)
             }
+            val cu = CameraUpdateFactory.newLatLngBounds(allPositions.build(), MARKER_DISPLAY_PADDING)
+            mMap.moveCamera(cu)
         }
     }
 
