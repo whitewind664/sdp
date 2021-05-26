@@ -70,7 +70,7 @@ class MapsActivityTest : EmulatedFirebaseTest() {
     fun messageIsDisplayedWhenNoPlayersFound() {
         onView(withId(R.id.map_button_showPlayers)).perform(click())
         val device = UiDevice.getInstance(getInstrumentation())
-        val marker = device.findObject(UiSelector().descriptionContains(testId))
+        val marker = device.findObject(UiSelector().descriptionContains("User"))
         assertFalse(marker.isClickable)
     }
 
@@ -109,7 +109,7 @@ class MapsActivityTest : EmulatedFirebaseTest() {
         Database.writeData("$userPath/$testId2$latPath", EPFL.latitude + 1)
         onView(withId(R.id.map_button_showPlayers)).perform(click())
 
-        // check if everything was updated  
+        // check if everything was updated
         val device = UiDevice.getInstance(getInstrumentation())
         val marker1 = device.findObject(UiSelector().descriptionContains(testId))
         assertFalse(marker1.isClickable)
