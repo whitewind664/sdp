@@ -13,8 +13,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.github.gogetters.letsgo.R
-import com.github.gogetters.letsgo.map.DatabaseLocationSharingService
-import com.github.gogetters.letsgo.map.LocationSharingService
+import com.github.gogetters.letsgo.database.Database
 import com.github.gogetters.letsgo.util.PermissionUtils.isPermissionGranted
 import com.github.gogetters.letsgo.util.PermissionUtils.requestPermission
 import com.google.android.gms.location.FusedLocationProviderClient
@@ -34,7 +33,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback,
         private val EPFL: LatLng = LatLng(46.51899505106699, 6.563449219980816)
         private const val INIT_ZOOM = 10f
         private const val TOAST_DURATION = Toast.LENGTH_SHORT
-        private const val MARKER_DISPLAY_PADDING = 0
+        private const val MARKER_DISPLAY_PADDING = 250
 
         // indices in the dialog
         private const val DIALOG_CANCEL_IDX = 1
@@ -44,7 +43,6 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback,
     private var permissionDenied = false
     private lateinit var mMap: GoogleMap
     private lateinit var fusedLocationClient: FusedLocationProviderClient
-    private lateinit var locationSharingService: LocationSharingService
     private var userMarkers: Map<Marker, String> = emptyMap()
     private var otherUsersActivated: Boolean = false
 
@@ -58,7 +56,6 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback,
         mapFragment.getMapAsync(this)
 
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
-        locationSharingService = DatabaseLocationSharingService()
 
         // set listeners for buttons
         val showPlayersButton = findViewById<Button>(R.id.map_button_showPlayers)
@@ -92,13 +89,6 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback,
         sendLocation()
     }
 
-    /**
-     * Allows to set a locationSharingService that is used to share and retrieve locations of users
-     */
-    fun setLocationSharingService(locationSharingService: LocationSharingService) {
-        this.locationSharingService = locationSharingService
-    }
-
 
     private fun enableLocation() {
         if (!::mMap.isInitialized)
@@ -124,7 +114,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback,
                 fusedLocationClient.lastLocation
                     .addOnSuccessListener { location: Location? ->
                         // Got last known location. In some rare situations this can be null.
-                        if (!::locationSharingService.isInitialized || location == null) {
+                        if (location == null) {
                             Toast.makeText(
                                 this,
                                 resources.getString(R.string.map_permissionSharingFailed),
@@ -133,7 +123,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback,
                             Log.v("MapsActivity", "Location could not be shared")
                         } else {
                             // share the location with other users
-                            locationSharingService.shareMyLocation(
+                            Database.shareLocation(
                                 LatLng(
                                     location.latitude,
                                     location.longitude
@@ -151,12 +141,9 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback,
      *  Gets the positions of other users and displays them on the map
      */
     private fun activateAndUpdateOtherPlayers() {
-        if (!::locationSharingService.isInitialized)
-            return
-
         otherUsersActivated = true
 
-        locationSharingService.getSharedLocations().thenApply {
+        Database.getAllLocations().thenApply {
             if (it == null || it.isEmpty()) {
                 Toast.makeText(
                     this,
@@ -173,8 +160,10 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback,
     private fun setOtherPlayers(updatedUsers: Map<LatLng, String>) {
         if (otherUsersActivated) {
             removeAllOtherPlayers()
+            userMarkers = emptyMap()
             var allPositions: LatLngBounds.Builder = LatLngBounds.Builder()
             for ((playerPosition, id) in updatedUsers.entries) {
+                Log.d("TEST MAP", "fetched id $id")
                 val marker =
                     mMap.addMarker(
                         MarkerOptions().position(playerPosition)

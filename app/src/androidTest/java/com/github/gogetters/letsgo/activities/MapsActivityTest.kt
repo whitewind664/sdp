@@ -9,10 +9,7 @@ import androidx.test.ext.junit.rules.ActivityScenarioRule
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.platform.app.InstrumentationRegistry.getInstrumentation
-import androidx.test.uiautomator.UiDevice
-import androidx.test.uiautomator.UiObject
-import androidx.test.uiautomator.UiObjectNotFoundException
-import androidx.test.uiautomator.UiSelector
+import androidx.test.uiautomator.*
 import com.github.gogetters.letsgo.R
 import com.github.gogetters.letsgo.database.Database
 import com.github.gogetters.letsgo.database.EmulatedFirebaseTest
@@ -33,8 +30,9 @@ import org.junit.runner.RunWith
 class MapsActivityTest : EmulatedFirebaseTest() {
     val GRANT_PERMISSION_BUTTON_INDEX = 0
     val PERMISSIONS_DELAY = 5000L
+    private val PACKAGE_NAME = "com.github.gogetters.letsgo"
 
-    val userPath = "users/"
+    val userPath = "users"
     val isActivePath = "/isLookingForPlayers"
     val latPath = "/lastPositionLatitude"
     val lngPath = "/lastPositionLongitude"
@@ -61,10 +59,6 @@ class MapsActivityTest : EmulatedFirebaseTest() {
         if (waitButton.exists()) {
             waitButton.click()
         }
-        // set locationSharingService
-        activityRule.scenario.onActivity { activity ->
-            activity.setLocationSharingService(MockLocationSharingService())
-        }
     }
 
     @After
@@ -87,15 +81,16 @@ class MapsActivityTest : EmulatedFirebaseTest() {
 
         // add a dummy player to database
         val testId = "mapTestId"
-        Database.writeData("$userPath/$testId$isActivePath$testId", true)
+        Database.writeData("$userPath/$testId$isActivePath", true)
         Database.writeData("$userPath/$testId$lngPath", EPFL.longitude)
         Database.writeData("$userPath/$testId$latPath", EPFL.latitude)
 
         // test that this is retrieved
-        val button = device.findObject(UiSelector().descriptionContains("Show"))
+        val button = device.findObject(By.res(PACKAGE_NAME, "map_button_showPlayers"))
         button.click()
+        sleep()
 
-        val marker = device.findObject(UiSelector().descriptionContains(testId))
+        val marker = device.findObject(UiSelector().descriptionContains("1"))
         assertTrue(marker.isClickable)
 
         Database.deleteData("$userPath/$testId")
@@ -103,24 +98,26 @@ class MapsActivityTest : EmulatedFirebaseTest() {
 
     @Test
     fun otherPlayersAreUpdatedOnSecondClick() {
+        val device = UiDevice.getInstance(getInstrumentation())
         val testId = "mapTestId"
-        Database.writeData("$userPath/$testId$isActivePath$testId", true)
+        Database.writeData("$userPath/$testId$isActivePath", true)
         Database.writeData("$userPath/$testId$lngPath", EPFL.longitude)
         Database.writeData("$userPath/$testId$latPath", EPFL.latitude)
 
         // First demand
-        onView(withId(R.id.map_button_showPlayers)).perform(click())
+        val button = device.findObject(By.res(PACKAGE_NAME, "map_button_showPlayers"))
+        button.click()
 
         // replace user
         Database.deleteData("$userPath/$testId")
         val testId2 = "mapTestId2"
-        Database.writeData("$userPath/$testId2$isActivePath$testId", true)
+        Database.writeData("$userPath/$testId2$isActivePath", true)
         Database.writeData("$userPath/$testId2$lngPath", EPFL.longitude + 1)
         Database.writeData("$userPath/$testId2$latPath", EPFL.latitude + 1)
-        onView(withId(R.id.map_button_showPlayers)).perform(click())
-
+        sleep()
+        button.click()
+        sleep()
         // check if everything was updated
-        val device = UiDevice.getInstance(getInstrumentation())
         val marker1 = device.findObject(UiSelector().descriptionContains(testId))
         assertFalse(marker1.isClickable)
         val marker2 = device.findObject(UiSelector().descriptionContains(testId))
