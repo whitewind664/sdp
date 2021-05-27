@@ -24,7 +24,7 @@ class LetsGoUser(val uid: String, val db: Database.Companion = Database, val clo
     // The reference (== address) of the profile picture on cloud storage
     var profileImageRef: String? = null
 
-    private var friends: EnumMap<FriendStatus, MutableList<LetsGoUser>>? = null
+    public var friends: EnumMap<FriendStatus, MutableList<LetsGoUser>>? = null
 
     // Be very careful if changing path values!
     private val tag = "FirestoreTest"
