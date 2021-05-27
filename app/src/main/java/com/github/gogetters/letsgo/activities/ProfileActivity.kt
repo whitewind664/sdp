@@ -44,6 +44,12 @@ class ProfileActivity : ActivityCompat.OnRequestPermissionsResultCallback, BaseA
         private const val DIALOG_CAMERA_IDX = 0
         private const val DIALOG_GALLERY_IDX = 1
         private const val DIALOG_CANCEL_IDX = 2
+
+        fun combineTwoTextFields(one : String?, two : String?, separator: String) : String {
+            return if (one != null && two != null) {
+                "$one$separator$two"
+            } else two ?: (one ?: "")
+        }
     }
 
     private lateinit var userBundleProvider: UserBundleProvider
@@ -90,16 +96,15 @@ class ProfileActivity : ActivityCompat.OnRequestPermissionsResultCallback, BaseA
         // Open friend list with button!
         val friendListButton = findViewById<Button>(R.id.profile_show_friend_list_button)
         friendListButton.setOnClickListener {
-            val userBundle = userBundleProvider.getUserBundle()
-
-            if (userBundle != null) {
-                val user = userBundle.getUser()
-                val intent = Intent(this, FriendListActivity::class.java)
-//                    .apply {
-////                    putExtra(FriendListActivity.EXTRA_USER_UID, user.uid)
-//                }
-                startActivity(intent)
+            if (userBundleProvider.getUserBundle() != null) {
+                startActivity(Intent(this, FriendListActivity::class.java))
             }
+        }
+
+        val searchUsersButton = findViewById<Button>(R.id.profile_search_users)
+        searchUsersButton.setOnClickListener {
+            if (userBundleProvider.getUserBundle() != null)
+                startActivity(Intent(this, UserSearchActivity::class.java))
         }
 
         updateUI()
@@ -136,21 +141,15 @@ class ProfileActivity : ActivityCompat.OnRequestPermissionsResultCallback, BaseA
                     nick.text = getString(R.string.profile_noNicknameHint)
                 }
 
-                firstLast.text = combineTwoTextFields(user.first, user.last)
+                firstLast.text = combineTwoTextFields(user.first, user.last, " ")
                 emailText.text = userBundle.getEmail()
-                cityCountyText.text = combineTwoTextFields(user.city, user.country)
+                cityCountyText.text = combineTwoTextFields(user.city, user.country, ", ")
 
                 editButton.visibility = View.VISIBLE
 
                 ImageStorageService.getProfileImageFromCloud(PROFILE_PICTURE_PREFIX_CLOUD, user.profileImageRef,getOutputImageFile(), profileImage)
             }
         }
-    }
-
-    private fun combineTwoTextFields(one : String?, two : String?) : String {
-        return if (one != null && two != null) {
-            "$one, $two"
-        } else two ?: (one ?: "")
     }
 
     private fun selectImage() {
