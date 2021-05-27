@@ -1,15 +1,20 @@
 package com.github.gogetters.letsgo.database
 
 import android.net.Uri
+import android.os.Environment
 import android.util.Log
 import android.widget.ImageView
 import androidx.core.net.toUri
 import com.github.gogetters.letsgo.activities.ProfileActivity
 import com.github.gogetters.letsgo.database.user.LetsGoUser
 import java.io.File
+import java.text.SimpleDateFormat
+import java.util.*
 
 class ImageStorageService {
     companion object {
+        const val PROFILE_PICTURE_PREFIX_CLOUD = "profileImage/"
+
         /**
          * Stores a profile image on the cloud.
          */
@@ -36,6 +41,12 @@ class ImageStorageService {
                     profileImage.setImageURI(file.toUri())
                 }
             }
+        }
+
+        public fun getOutputImageFile(storageDir:File?): File {
+//        val storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES)
+            val timeStamp: String = SimpleDateFormat("yyyyMMdd_HHmmss").format(Date())
+            return File.createTempFile("IMG_$timeStamp", ".jpg", storageDir)
         }
     }
 }
