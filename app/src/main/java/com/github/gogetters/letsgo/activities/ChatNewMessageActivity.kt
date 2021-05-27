@@ -35,8 +35,7 @@ class ChatNewMessageActivity : AppCompatActivity() {
     }
 
     private fun listUsers() {
-        val uid = FirebaseAuth.getInstance().uid!!
-        val user = LetsGoUser(uid)
+        val user = LetsGoUser(FirebaseAuth.getInstance().uid!!)
 
         user.downloadFriends().addOnSuccessListener {
             val friends = user.friends!![LetsGoUser.FriendStatus.ACCEPTED]!!
