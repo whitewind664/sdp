@@ -3,12 +3,14 @@ package com.github.gogetters.letsgo.activities
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import androidx.recyclerview.widget.DividerItemDecoration
 import com.github.gogetters.letsgo.R
 import com.github.gogetters.letsgo.chat.model.ChatMessageData
 import com.github.gogetters.letsgo.chat.views.ChatLastMessageItem
 import com.github.gogetters.letsgo.database.Database
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.ChildEventListener
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
@@ -22,6 +24,8 @@ import kotlinx.android.synthetic.main.activity_chat_last_message.*
  * Redirects to ChatNewMessageActivity
  */
 class ChatLastMessageActivity : AppCompatActivity() {
+
+    private val TAG = "Chat"
 
     private val adapter = GroupAdapter<ViewHolder>()
     // hashmap to store last messages of the users
@@ -62,7 +66,7 @@ class ChatLastMessageActivity : AppCompatActivity() {
      * and request the adapter to refresh the view
      */
     private fun listenForLastMessages() {
-        val fromId = Database.getCurrentUserId() ?: ChatActivity.UNKNOWN
+        val fromId = FirebaseAuth.getInstance().currentUser!!.uid
         val ref = FirebaseDatabase.getInstance().getReference("/last-messages-node/$fromId")
         ref.keepSynced(true)
 
@@ -71,6 +75,8 @@ class ChatLastMessageActivity : AppCompatActivity() {
         ref.addChildEventListener(object: ChildEventListener {
             // When new chat starts
             override fun onChildAdded(snapshot: DataSnapshot, previousChildName: String?) {
+                Log.d(TAG, "WOW - onChildAdded\t$snapshot")
+
                 val chatMessage = snapshot.getValue(ChatMessageData::class.java) ?: return
                 lastMessages[snapshot.key!!] = chatMessage
                 updateMessageList()
