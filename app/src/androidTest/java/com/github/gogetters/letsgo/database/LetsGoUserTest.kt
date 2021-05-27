@@ -170,4 +170,11 @@ class LetsGoUserTest: EmulatedFirebaseTest() {
         )
     }
 
+    @Ignore("Make this test work later")
+    @Test
+    fun zTestSearchUser() {
+        // TODO Add some users with nicknames starting with tester and check that we indeed get them all (use users.length)
+        val users = Tasks.await(user.downloadUsersByNick("tester"))
+        Log.d(TAG, "Found Users : $users")
+    }
 }
