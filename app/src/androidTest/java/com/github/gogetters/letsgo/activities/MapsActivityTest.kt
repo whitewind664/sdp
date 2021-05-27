@@ -90,7 +90,7 @@ class MapsActivityTest : EmulatedFirebaseTest() {
         sleep()
 
         val marker = device.findObject(UiSelector().descriptionContains(testId))
-
+        assertTrue(marker.exists())
         marker.click() // would throw an exception if it was not displayed
 
         Database.deleteData("$userPath/$testId")
@@ -123,7 +123,7 @@ class MapsActivityTest : EmulatedFirebaseTest() {
         val marker1 = device.findObject(UiSelector().descriptionContains(testId))
         assertFalse(marker1.isClickable)
         val marker2 = device.findObject(UiSelector().descriptionContains(testId2))
-
+        assertTrue(marker2.exists())
         marker2.click() // would throw an exception if it was not displayed
 
         Database.deleteData("$userPath/$testId2")
