@@ -1,6 +1,8 @@
-package com.github.gogetters.letsgo.activities
+ package com.github.gogetters.letsgo.activities
 
 import android.Manifest
+import android.Manifest.permission.READ_EXTERNAL_STORAGE
+import android.Manifest.permission.WRITE_EXTERNAL_STORAGE
 import android.app.Activity
 import android.app.AlertDialog
 import android.content.ActivityNotFoundException
@@ -151,12 +153,12 @@ class ProfileEditActivity : ActivityCompat.OnRequestPermissionsResultCallback, A
             PermissionUtils.requestPermission(
                 this,
                 WRITE_EXTERNAL_STORAGE_PERMISSION_REQUEST_CODE,
-                Manifest.permission.WRITE_EXTERNAL_STORAGE
+                WRITE_EXTERNAL_STORAGE
             )
             PermissionUtils.requestPermission(
                 this,
                 READ_EXTERNAL_STORAGE_PERMISSION_REQUEST_CODE,
-                Manifest.permission.READ_EXTERNAL_STORAGE
+                READ_EXTERNAL_STORAGE
             )
             choosePictureFromCamera = clickedIndex == DIALOG_CAMERA_IDX
         })
