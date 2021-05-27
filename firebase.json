@@ -10,7 +10,7 @@
       "port": 9099
     },
     "database": {
-      "port": 9090
+      "port": 9000
     },
     "ui": {
       "enabled": true

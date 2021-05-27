@@ -93,7 +93,7 @@ class MapsActivityTest : EmulatedFirebaseTest() {
         // test that this is retrieved
         val button = device.findObject(UiSelector().descriptionContains("Show"))
         button.click()
-        
+
         val marker = device.findObject(UiSelector().descriptionContains(testId))
         assertTrue(marker.isClickable)
 
