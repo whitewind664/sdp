@@ -107,28 +107,8 @@ class ProfileActivityTest: EmulatedFirebaseTest() {
         onView(withText("Sign in"))!!.perform(click())
     }
 
-    private fun acceptPermissions() {
-        // in case the permission hasn't been requested
-        val device: UiDevice = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation())
-        val allowPermissionsButton: UiObject = device.findObject(UiSelector()
-                .clickable(true)
-                .checkable(false)
-                .index(GRANT_PERMISSION_BUTTON_INDEX))
-        if (allowPermissionsButton.exists()) {
-            allowPermissionsButton.click();
-        }
+    @Test
+    fun testIt() {
+        // TODO test with database info
     }
-
-    private fun clickAtIndex(i: Int, text: String) {
-        val device: UiDevice = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation())
-        val button: UiObject = device.findObject(UiSelector()
-                .clickable(true)
-                .checkable(false)
-                .index(i)
-                .text(text))
-        if (button.exists()) {
-            button.click();
-        }
-    }
-
 }
