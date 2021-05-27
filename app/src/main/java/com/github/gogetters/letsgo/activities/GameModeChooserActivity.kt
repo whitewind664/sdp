@@ -63,8 +63,6 @@ class GameModeChooserActivity : BaseActivity() {
             val intent = Intent(this, BluetoothActivity::class.java)
             startActivity(intent)
         }
-
-        testAuth()
     }
 
     override fun getLayoutResource(): Int {
@@ -89,40 +87,5 @@ class GameModeChooserActivity : BaseActivity() {
         ogsCommunicator.startChallenge(OGSChallenge(game, Stone.BLACK))
 
         // TODO display waiting screen until confirmed
-    }
-
-    private fun testAuth() {
-        val service = VolleyOnlineService(this)
-
-        val button = findViewById<Button>(R.id.gameModeChooser_button__authenticate)
-        val text = findViewById<TextView>(R.id.gameModeChooser_text_authResult)
-
-        val url = "https://online-go.com/"
-        val auth = "api/v0/login"
-
-        val clientID = "iwEQK38MjhLnudkiY6vJkrk6roGXks4iSA6fE6ln"
-        val clientSecret = "8L9EX4cFGKyylq9a5rw4aBo4G0vzCtaWdszQdcAex8xr9dMJ46xSLuKqUf" +
-                "ieKnQydYldq9PgwYeOSsET6XbPLbomniIWh4Bixa5OrIDpfQrpkL7veUiRWz9GFN4NQVRW"
-
-        val username = "kimonroxd" //Don't laugh, this is from my spam email i made when i was 12...
-        val password = "online-go.com" //very secure I know...
-
-        button.setOnClickListener {
-            val body = JSONObject()
-
-            body.put("client_id", clientID)
-            body.put("client_secret", clientSecret)
-            body.put("grant_type", "password")
-            body.put("username", username)
-            body.put("password", password)
-
-
-            Log.d("TEST TEST TEST", "SENDING REQUEST TO URL ${url + auth}")
-            val listener = service.post(url + auth, body)
-            listener.setOnResponse {
-                Log.d("RESPONSE RESPONSE RESPONSE", "$it")
-                text.text = it.getJSONObject("user").getString("username")
-            }
-        }
     }
 }
