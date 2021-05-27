@@ -82,6 +82,8 @@ class MapsActivityTest : EmulatedFirebaseTest() {
 
     @Test
     fun otherPlayersAreDisplayedOnButtonClick() {
+        val device = UiDevice.getInstance(getInstrumentation())
+
         // add a dummy player to database
         val testId = "mapTestId"
         Database.writeData("$userPath/$testId$isActivePath$testId", true)
@@ -89,8 +91,9 @@ class MapsActivityTest : EmulatedFirebaseTest() {
         Database.writeData("$userPath/$testId$latPath", EPFL.latitude)
 
         // test that this is retrieved
-        onView(withId(R.id.map_button_showPlayers)).perform(click())
-        val device = UiDevice.getInstance(getInstrumentation())
+        val button = device.findObject(UiSelector().descriptionContains("Show"))
+        button.click()
+        
         val marker = device.findObject(UiSelector().descriptionContains(testId))
         assertTrue(marker.isClickable)
 
