@@ -92,6 +92,18 @@
             android:text="@string/gameModeChooser_buttonOGS"
             app:layout_constraintTop_toBottomOf="@+id/gameModeChooser_button_bluetooth"/>
 
+        <TextView
+            android:id="@+id/gameModeChooser_text_authResult"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="result" />
+
+        <Button
+            android:id="@+id/gameModeChooser_button__authenticate"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Authenticate" />
+
     </LinearLayout>
 
 </FrameLayout>

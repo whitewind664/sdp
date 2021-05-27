@@ -55,6 +55,8 @@
         <activity
             android:name=".activities.FirebaseUIActivity"
             android:label="@string/title_activity_firebaseui" />
+        <activity android:name=".activities.FuckTests"
+            android:exported="true"/>
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"
