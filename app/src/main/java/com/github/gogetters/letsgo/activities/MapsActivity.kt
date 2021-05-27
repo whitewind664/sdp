@@ -14,6 +14,7 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.github.gogetters.letsgo.R
 import com.github.gogetters.letsgo.database.Database
+import com.github.gogetters.letsgo.database.user.FirebaseUserBundleProvider
 import com.github.gogetters.letsgo.util.PermissionUtils.isPermissionGranted
 import com.github.gogetters.letsgo.util.PermissionUtils.requestPermission
 import com.google.android.gms.location.FusedLocationProviderClient
@@ -30,7 +31,9 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback,
     GoogleMap.OnMyLocationClickListener, ActivityCompat.OnRequestPermissionsResultCallback {
     companion object {
         private const val LOCATION_PERMISSION_REQUEST_CODE: Int = 1
-        private val EPFL: LatLng = LatLng(46.51899505106699, 6.563449219980816)
+        private val EPFL_LAT = 46.51899505106699
+        private val EPFL_LNG = 6.563449219980816
+        private val EPFL: LatLng = LatLng(EPFL_LAT, EPFL_LNG)
         private const val INIT_ZOOM = 10f
         private const val TOAST_DURATION = Toast.LENGTH_SHORT
         private const val MARKER_DISPLAY_PADDING = 250
@@ -40,6 +43,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback,
         private const val DIALOG_CHAT_IDX = 0
     }
 
+    private val userBundleProvider = FirebaseUserBundleProvider
     private var permissionDenied = false
     private lateinit var mMap: GoogleMap
     private lateinit var fusedLocationClient: FusedLocationProviderClient
@@ -56,12 +60,6 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback,
         mapFragment.getMapAsync(this)
 
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
-
-        // set listeners for buttons
-        val showPlayersButton = findViewById<Button>(R.id.map_button_showPlayers)
-        showPlayersButton.setOnClickListener {
-            this.activateAndUpdateOtherPlayers()
-        }
     }
 
     /**
@@ -81,6 +79,12 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback,
         mMap.setOnMarkerClickListener { marker ->
             displayUserInfo(marker.tag as String)
             true
+        }
+
+        // set listeners for buttons
+        val showPlayersButton = findViewById<Button>(R.id.map_button_showPlayers)
+        showPlayersButton.setOnClickListener {
+            this.activateAndUpdateOtherPlayers()
         }
 
         googleMap.setOnMyLocationButtonClickListener(this)
@@ -109,7 +113,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback,
 
     private fun sendLocation() {
         try {
-            if (!permissionDenied) {
+            if (!permissionDenied && userBundleProvider.getUserBundle() != null) {
                 Log.i("MapsActivity", "Create request")
                 fusedLocationClient.lastLocation
                     .addOnSuccessListener { location: Location? ->
