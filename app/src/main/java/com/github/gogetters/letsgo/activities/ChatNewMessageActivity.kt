@@ -35,7 +35,7 @@ class ChatNewMessageActivity : AppCompatActivity() {
     private fun listUsers() {
 
         val ref = FirebaseDatabase.getInstance().getReference("/users")
-        ref.keepSynced(true)
+        //ref.keepSynced(true)
 
         ref.addListenerForSingleValueEvent(object: ValueEventListener {
 
