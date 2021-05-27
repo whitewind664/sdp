@@ -29,9 +29,10 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.LetsGo"
         android:usesCleartextTraffic="true">
+        <activity android:name=".activities.UserSearchActivity"></activity>
         <activity
             android:name=".activities.ProfileEditActivity"
-            android:noHistory="true" />        
+            android:noHistory="true" />
         <activity
             android:name=".activities.GameModeChooserActivity"
             android:label="@string/title_activity_game_mode_chooser"
@@ -47,10 +48,10 @@
             android:name=".activities.GameActivity"
             android:label="@string/title_activity_game" />
         <activity
-
             android:name=".activities.OnlineGameActivity"
             android:label="@string/title_activity_onlineGame" />
-        <activity android:name=".activities.ProfileActivity"
+        <activity
+            android:name=".activities.ProfileActivity"
             android:label="@string/title_activity_profile" />
         <activity
             android:name=".activities.FirebaseUIActivity"
@@ -74,24 +75,17 @@
 
         <meta-data
             android:name="preloaded_fonts"
-            android:resource="@array/preloaded_fonts" />
-
-        <!-- Chat related activities -->
+            android:resource="@array/preloaded_fonts" /> <!-- Chat related activities -->
         <!-- Lists the last messages of different users -->
-        <activity android:name=".activities.ChatLastMessageActivity" />
-        <!-- Fetches users from DB to chat with -->
+        <activity android:name=".activities.ChatLastMessageActivity" /> <!-- Fetches users from DB to chat with -->
         <activity android:name=".activities.ChatNewMessageActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".activities.ChatLastMessageActivity" />
-        </activity>
-        <!-- Launches the chat with a specific user -->
+        </activity> <!-- Launches the chat with a specific user -->
         <activity
             android:name=".activities.ChatActivity"
-            android:label="@string/title_activity_chat"/>
-
-        <!-- To store files (especially pictures) on the device -->
-
+            android:label="@string/title_activity_chat" /> <!-- To store files (especially pictures) on the device -->
         <provider
             android:name="androidx.core.content.FileProvider"
             android:authorities="${applicationId}.provider"
@@ -101,7 +95,6 @@
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/provider_paths" />
         </provider>
-
     </application>
 
 </manifest>
