@@ -70,7 +70,7 @@ class ProfileEditActivityTest : EmulatedFirebaseTest() {
     @Test
     fun testProfileEditForMockUser() {
         scenario = ActivityScenario.launch(intent)
-        Espresso.onView(ViewMatchers.withId(R.id.profile_edit_button_save)).perform(ViewActions.click())
+        Espresso.onView(ViewMatchers.withId(R.id.profile_edit_imageView_image)).perform(ViewActions.click())
     }
 
     @Test
@@ -78,7 +78,7 @@ class ProfileEditActivityTest : EmulatedFirebaseTest() {
         scenario = ActivityScenario.launch(intent)
         clickWaitButton()
         sleep()
-        Espresso.onView(ViewMatchers.withId(R.id.profile_imageView_image))
+        Espresso.onView(ViewMatchers.withId(R.id.profile_edit_imageView_image))
             .perform(ViewActions.click())
         Espresso.onView(ViewMatchers.withText(R.string.profile_dialogTitle))
             .check(ViewAssertions.matches(ViewMatchers.isDisplayed()))
@@ -89,7 +89,7 @@ class ProfileEditActivityTest : EmulatedFirebaseTest() {
         scenario = ActivityScenario.launch(intent)
         clickWaitButton()
         sleep()
-        Espresso.onView(ViewMatchers.withId(R.id.profile_imageView_image))
+        Espresso.onView(ViewMatchers.withId(R.id.profile_edit_imageView_image))
             .perform(ViewActions.click())
         clickAtIndex(0, "Take Picture")
         acceptPermissions()
@@ -102,7 +102,7 @@ class ProfileEditActivityTest : EmulatedFirebaseTest() {
         scenario = ActivityScenario.launch(intent)
         clickWaitButton()
         sleep()
-        Espresso.onView(ViewMatchers.withId(R.id.profile_imageView_image))
+        Espresso.onView(ViewMatchers.withId(R.id.profile_edit_imageView_image))
             .perform(ViewActions.click())
 
         //onView(withText(R.string.profile_chooseFromGallery)).perform(click())
@@ -117,7 +117,7 @@ class ProfileEditActivityTest : EmulatedFirebaseTest() {
         scenario = ActivityScenario.launch(intent)
         clickWaitButton()
         sleep()
-        Espresso.onView(ViewMatchers.withId(R.id.profile_imageView_image))
+        Espresso.onView(ViewMatchers.withId(R.id.profile_edit_imageView_image))
             .perform(ViewActions.click())
         clickAtIndex(2, "Cancel")
     }
@@ -134,11 +134,11 @@ class ProfileEditActivityTest : EmulatedFirebaseTest() {
                 Intents.intending(IntentMatchers.hasAction(Intent.ACTION_CHOOSER)).respondWith(imgGalleryResult)
             }
             //auctionPhotos_CreationInitialUI()
-            Espresso.onView(ViewMatchers.withId(R.id.profile_imageView_image))
+            Espresso.onView(ViewMatchers.withId(R.id.profile_edit_imageView_image))
                 .perform(ViewActions.click())
             clickAtIndex(1, "Choose from Gallery")
             acceptPermissions()
-            Espresso.onView(ViewMatchers.withId(R.id.profile_imageView_image))
+            Espresso.onView(ViewMatchers.withId(R.id.profile_edit_imageView_image))
                 .check(ViewAssertions.matches(hasImageSet()))
         }
     }
@@ -151,11 +151,11 @@ class ProfileEditActivityTest : EmulatedFirebaseTest() {
             val imgCaptureResult = createImageCaptureActivityResultStub(it)
             Intents.intending(IntentMatchers.hasAction(MediaStore.ACTION_IMAGE_CAPTURE)).respondWith(imgCaptureResult)
 
-            Espresso.onView(ViewMatchers.withId(R.id.profile_imageView_image))
+            Espresso.onView(ViewMatchers.withId(R.id.profile_edit_imageView_image))
                 .perform(ViewActions.click())
             clickAtIndex(0, "Take Picture")
             acceptPermissions()
-            Espresso.onView(ViewMatchers.withId(R.id.profile_imageView_image))
+            Espresso.onView(ViewMatchers.withId(R.id.profile_edit_imageView_image))
                 .check(ViewAssertions.matches(hasImageSet()))
         }
     }
@@ -167,7 +167,7 @@ class ProfileEditActivityTest : EmulatedFirebaseTest() {
             waitButton.click()
         }
     }
-    
+
     private fun acceptPermissions() {
         // in case the permission hasn't been requested
         val device: UiDevice = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation())
