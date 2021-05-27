@@ -160,7 +160,6 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback,
     private fun setOtherPlayers(updatedUsers: Map<LatLng, String>) {
         if (otherUsersActivated) {
             removeAllOtherPlayers()
-            userMarkers = emptyMap()
             var allPositions: LatLngBounds.Builder = LatLngBounds.Builder()
             for ((playerPosition, id) in updatedUsers.entries) {
                 Log.d("TEST MAP", "fetched id $id")

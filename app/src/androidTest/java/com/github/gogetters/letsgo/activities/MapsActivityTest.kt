@@ -13,7 +13,6 @@ import androidx.test.uiautomator.*
 import com.github.gogetters.letsgo.R
 import com.github.gogetters.letsgo.database.Database
 import com.github.gogetters.letsgo.database.EmulatedFirebaseTest
-import com.github.gogetters.letsgo.map.mocking.MockLocationSharingService
 import com.google.android.gms.maps.model.LatLng
 import junit.framework.Assert.assertFalse
 import junit.framework.Assert.assertTrue
@@ -50,11 +49,11 @@ class MapsActivityTest : EmulatedFirebaseTest() {
     }
 
     @get:Rule
-    var activityRule = ActivityScenarioRule<MapsActivity>(MapsActivity::class.java)
+    var activityRule = ActivityScenarioRule(MapsActivity::class.java)
 
     @Before
     fun init() {
-        val device = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation())
+        val device = UiDevice.getInstance(getInstrumentation())
         var waitButton = device.findObject(UiSelector().textContains("wait"))
         if (waitButton.exists()) {
             waitButton.click()
@@ -90,8 +89,9 @@ class MapsActivityTest : EmulatedFirebaseTest() {
         button.click()
         sleep()
 
-        val marker = device.findObject(UiSelector().descriptionContains("1"))
-        assertTrue(marker.isClickable)
+        val marker = device.findObject(UiSelector().descriptionContains(testId))
+
+        marker.click() // would throw an exception if it was not displayed
 
         Database.deleteData("$userPath/$testId")
     }
@@ -109,19 +109,22 @@ class MapsActivityTest : EmulatedFirebaseTest() {
         button.click()
 
         // replace user
+        sleep()
         Database.deleteData("$userPath/$testId")
         val testId2 = "mapTestId2"
         Database.writeData("$userPath/$testId2$isActivePath", true)
         Database.writeData("$userPath/$testId2$lngPath", EPFL.longitude + 1)
         Database.writeData("$userPath/$testId2$latPath", EPFL.latitude + 1)
         sleep()
-        button.click()
+        val button2 = device.findObject(By.res(PACKAGE_NAME, "map_button_showPlayers"))
+        button2.click()
         sleep()
         // check if everything was updated
         val marker1 = device.findObject(UiSelector().descriptionContains(testId))
         assertFalse(marker1.isClickable)
-        val marker2 = device.findObject(UiSelector().descriptionContains(testId))
-        assertTrue(marker2.isClickable)
+        val marker2 = device.findObject(UiSelector().descriptionContains(testId2))
+
+        marker2.click() // would throw an exception if it was not displayed
 
         Database.deleteData("$userPath/$testId2")
     }
