@@ -97,12 +97,12 @@ class ProfileActivity : BaseActivity() {
 
                 editButton.visibility = View.VISIBLE
 
-//                ImageStorageService.getProfileImageFromCloud(
-//                    PROFILE_PICTURE_PREFIX_CLOUD,
-//                    user.profileImageRef,
-//                    ImageStorageService.getOutputImageFile(getExternalFilesDir(Environment.DIRECTORY_PICTURES)),
-//                    profileImage
-//                )
+                ImageStorageService.getProfileImageFromCloud(
+                    PROFILE_PICTURE_PREFIX_CLOUD,
+                    user.profileImageRef,
+                    ImageStorageService.getOutputImageFile(getExternalFilesDir(Environment.DIRECTORY_PICTURES)),
+                    profileImage
+                )
             }
         }
     }
