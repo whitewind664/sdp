@@ -78,6 +78,7 @@ class MapsActivityTest : EmulatedFirebaseTest() {
         onView(withId(R.id.map_button_showPlayers)).perform(click())
         val device = UiDevice.getInstance(getInstrumentation())
         val marker = device.findObject(UiSelector().descriptionContains("user"))
+        marker.click()
     }
 
     @Test
