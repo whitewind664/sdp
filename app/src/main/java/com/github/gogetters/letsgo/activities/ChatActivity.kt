@@ -43,7 +43,7 @@ class ChatActivity : AppCompatActivity() {
         val fromId = userId
         val toId = toUser?.id
         val ref = FirebaseDatabase.getInstance().getReference("/messages-node/$fromId/$toId")
-        ref.keepSynced(true)
+        //ref.keepSynced(true)
 
         ref.addChildEventListener(object: ChildEventListener {
             override fun onChildAdded(snapshot: DataSnapshot, previousChildName: String?) {
@@ -79,13 +79,13 @@ class ChatActivity : AppCompatActivity() {
 //                toId = toUser?.id
 //            }
             val ref = FirebaseDatabase.getInstance().getReference("/messages-node/$fromId/$toId").push()
-            ref.keepSynced(true)
+            //ref.keepSynced(true)
             val toRef = FirebaseDatabase.getInstance().getReference("/messages-node/$toId/$fromId").push()
-            toRef.keepSynced(true)
+            //toRef.keepSynced(true)
             val lastMessageRef = FirebaseDatabase.getInstance().getReference("/last-messages-node/$fromId/$toId")
-            lastMessageRef.keepSynced(true)
+            //lastMessageRef.keepSynced(true)
             val lastMessageToRef = FirebaseDatabase.getInstance().getReference("/last-messages-node/$toId/$fromId")
-            lastMessageToRef.keepSynced(true)
+            //lastMessageToRef.keepSynced(true)
 
             val chatMessage =
                 ChatMessageData(ref.key!!, text, fromId, toId, System.currentTimeMillis() / 1000)

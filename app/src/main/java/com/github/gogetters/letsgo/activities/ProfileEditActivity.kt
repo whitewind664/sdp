@@ -22,6 +22,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.FileProvider
 import com.github.gogetters.letsgo.R
+import com.github.gogetters.letsgo.cache.Cache
 import com.github.gogetters.letsgo.database.ImageStorageService
 import com.github.gogetters.letsgo.database.ImageStorageService.Companion.PROFILE_PICTURE_PREFIX_CLOUD
 import com.github.gogetters.letsgo.database.user.LetsGoUser
@@ -87,6 +88,7 @@ class ProfileEditActivity : ActivityCompat.OnRequestPermissionsResultCallback, A
             user.country = countryEditText.text.toString()
             user.city = cityEditText.text.toString()
 
+            Cache.saveUserProfile(this, user)
             user.uploadUserData().continueWith { returnToProfile() }
         }
 

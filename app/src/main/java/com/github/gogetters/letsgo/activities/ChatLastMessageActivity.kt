@@ -68,7 +68,7 @@ class ChatLastMessageActivity : AppCompatActivity() {
     private fun listenForLastMessages() {
         val fromId = FirebaseAuth.getInstance().currentUser!!.uid
         val ref = FirebaseDatabase.getInstance().getReference("/last-messages-node/$fromId")
-        ref.keepSynced(true)
+        //ref.keepSynced(true)
 
         // whenever a new message is sent and saved as last message in database,
         // store it in the hashmap and refresh the adapter with the new content
