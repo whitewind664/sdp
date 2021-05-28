@@ -72,6 +72,10 @@ class ProfileActivity : BaseActivity() {
         updateUI()
     }
 
+    override fun onBackPressed() {
+        startActivity(Intent(this, MainActivity::class.java))
+    }
+
     override fun getLayoutResource(): Int {
         return R.layout.activity_profile
     }
