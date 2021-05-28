@@ -70,7 +70,6 @@ class MoveTest {
 
     @Test
     fun fromSGFIsInverseOfToSGF() {
-        val columns = "abcdefghijklmnopqrst".toList()
         for (stone in setOf(Stone.BLACK, Stone.WHITE)) {
             for (col in 1..19) {
                 for (row in 1..19) {

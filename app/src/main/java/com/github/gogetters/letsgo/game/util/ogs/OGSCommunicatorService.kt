@@ -13,14 +13,17 @@ class OGSCommunicatorService(private val onlineService: OnlineService<JSONObject
     //private val CLIENT_ID: String = "" // TODO
     //private val CLIENT_SECRET: String = "" // TODO
     private val base = "https://online-go.com"
-    private val auth = "/oauth2/token/"
+    private val auth = "/api/v0/login/"
     private val challenges = "/v1/challenges"
     private val games = "/v1/games"
     private var gameID = 0
+    lateinit var accessToken: String
+    lateinit var refreshToken: String
+
 
     lateinit var inputDelegate: InputDelegate
 
-    fun authenticate(username: String, password: String) {
+    fun authenticate(username: String, password: String): ResponseListener<JSONObject> {
         val body = JSONObject()
         body.put("client_id", CLIENT_ID)
         body.put("client_secret", CLIENT_SECRET)
@@ -28,10 +31,7 @@ class OGSCommunicatorService(private val onlineService: OnlineService<JSONObject
         body.put("username", username)
         body.put("password", password)
 
-        Log.i("JSONTEST", body.toString())
-
-        onlineService.post("$base$auth", body, JSONObject().put("Content-Type", "application/x-www-form-urlencoded"))
-            .setOnResponse { onAuthenticationAccepted(it) }
+        return onlineService.post("$base$auth", body)
     }
 
 
@@ -60,11 +60,6 @@ class OGSCommunicatorService(private val onlineService: OnlineService<JSONObject
         onlineService.delete(url).setOnResponse {
             // TODO
         }
-    }
-
-    fun onAuthenticationAccepted(res: JSONObject) {
-        Log.i("OGS_COMM", res.toString(4))
-        //TODO("Not yet implemented")
     }
 
     fun onReceiveMove(move: Move) {

@@ -93,6 +93,8 @@
     <string name="gameModeChooser_loginUsername">Your Username</string>
     <string name="gameModeChooser_loginPassword">Your password</string>
     <string name="gameModeChooser_buttonLoginSubmit">Submit</string>
+    <string name="ogs_client_id">iwEQK38MjhLnudkiY6vJkrk6roGXks4iSA6fE6ln</string>
+    <string name="ogs_client_secret">8L9EX4cFGKyylq9a5rw4aBo4G0vzCtaWdszQdcAex8xr9dMJ46xSLuKqUfieKnQydYldq9PgwYeOSsET6XbPLbomniIWh4Bixa5OrIDpfQrpkL7veUiRWz9GFN4NQVRW</string>
 
     <!--
     This string is used for square devices and overridden by hello_world in

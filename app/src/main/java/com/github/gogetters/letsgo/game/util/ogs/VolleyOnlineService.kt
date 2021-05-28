@@ -1,6 +1,7 @@
 package com.github.gogetters.letsgo.game.util.ogs
 
 import android.content.Context
+import android.util.Log
 import com.android.volley.RequestQueue
 import com.android.volley.toolbox.JsonObjectRequest
 import com.android.volley.toolbox.StringRequest
@@ -21,6 +22,8 @@ class VolleyOnlineService(context: Context) : OnlineService<JSONObject>  {
         val jsonRequest = object: JsonObjectRequest(url, jsonRequest, { response -> responseListener.onResponse(response) }, { throw it }) {
             override fun getHeaders(): MutableMap<String, String> { return jsonToMap(headers) }
         }
+
+        Log.d("SDSADF", jsonRequest.toString())
 
         queue.add(jsonRequest)
         return responseListener
