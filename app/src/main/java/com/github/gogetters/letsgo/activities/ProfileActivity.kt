@@ -15,7 +15,6 @@ import com.github.gogetters.letsgo.database.ImageStorageService
 import com.github.gogetters.letsgo.database.ImageStorageService.Companion.PROFILE_PICTURE_PREFIX_CLOUD
 import com.github.gogetters.letsgo.database.user.UserBundle
 import com.github.gogetters.letsgo.database.user.UserBundleProvider
-import java.util.*
 
 
 class ProfileActivity : BaseActivity() {
@@ -100,9 +99,9 @@ class ProfileActivity : BaseActivity() {
                 nick.text = getString(R.string.profile_noNicknameHint)
             }
 
-            firstLast.text = combineTwoTextFields(cachedUser?.first, cachedUser?.last)
+            firstLast.text = combineTwoTextFields(cachedUser?.first, cachedUser?.last, " ")
 
-            cityCountyText.text = combineTwoTextFields(cachedUser?.city, cachedUser?.country)
+            cityCountyText.text = combineTwoTextFields(cachedUser?.city, cachedUser?.country, ", ")
 
             editButton.visibility = View.VISIBLE
 
@@ -110,7 +109,13 @@ class ProfileActivity : BaseActivity() {
             emailText.text = userBundle.getEmail()
             // not cached yet
             user.downloadUserData().addOnCompleteListener {
-                ImageStorageService.getProfileImageFromCloud(PROFILE_PICTURE_PREFIX_CLOUD, user.profileImageRef,getOutputImageFile(), profileImage)
+                ImageStorageService.getProfileImageFromCloud(
+                    PROFILE_PICTURE_PREFIX_CLOUD,
+                    user.profileImageRef,
+                    ImageStorageService.getOutputImageFile(
+                        getExternalFilesDir(Environment.DIRECTORY_PICTURES)
+                    ),
+                    profileImage)
             }
         }
     }

@@ -44,7 +44,6 @@ class ImageStorageService {
         }
 
         public fun getOutputImageFile(storageDir:File?): File {
-//        val storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES)
             val timeStamp: String = SimpleDateFormat("yyyyMMdd_HHmmss").format(Date())
             return File.createTempFile("IMG_$timeStamp", ".jpg", storageDir)
         }
