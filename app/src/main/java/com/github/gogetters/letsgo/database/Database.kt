@@ -62,6 +62,10 @@ class Database {
             return db.getReference(ref).removeValue()
         }
 
+        fun readSearchByChild(ref: String, childName: String, queryText: String): Task<DataSnapshot> {
+            return db.getReference(ref).orderByChild(childName).startAt(queryText).endAt(queryText+"\uf8ff").get()
+        }
+
         fun enableCache() {
             Firebase.database.setPersistenceEnabled(true)
         }

@@ -50,16 +50,15 @@ class ProfileActivity : BaseActivity() {
         // Open friend list with button!
         val friendListButton = findViewById<Button>(R.id.profile_show_friend_list_button)
         friendListButton.setOnClickListener {
-            val userBundle = userBundleProvider.getUserBundle()
-
-            if (userBundle != null) {
-                val user = userBundle.getUser()
-                val intent = Intent(this, FriendListActivity::class.java)
-//                    .apply {
-////                    putExtra(FriendListActivity.EXTRA_USER_UID, user.uid)
-//                }
-                startActivity(intent)
+            if (userBundleProvider.getUserBundle() != null) {
+                startActivity(Intent(this, FriendListActivity::class.java))
             }
+        }
+
+        val searchUsersButton = findViewById<Button>(R.id.profile_search_users)
+        searchUsersButton.setOnClickListener {
+            if (userBundleProvider.getUserBundle() != null)
+                startActivity(Intent(this, UserSearchActivity::class.java))
         }
 
         updateUI()
