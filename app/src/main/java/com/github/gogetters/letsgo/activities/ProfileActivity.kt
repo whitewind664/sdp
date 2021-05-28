@@ -19,6 +19,14 @@ import java.util.*
 
 class ProfileActivity : BaseActivity() {
 
+    companion object {
+        public fun combineTwoTextFields(one: String?, two: String?, separator: String): String {
+            return if (one != null && two != null) {
+                "$one$separator$two"
+            } else two ?: (one ?: "")
+        }
+    }
+
     private lateinit var userBundleProvider: UserBundleProvider
 
     private lateinit var editButton: Button
@@ -109,12 +117,5 @@ class ProfileActivity : BaseActivity() {
     private fun dispatchLoginIntent() {
         val intent = Intent(this, FirebaseUIActivity::class.java)
         startActivity(intent)
-    }
-
-    // TODO editable separator
-    private fun combineTwoTextFields(one: String?, two: String?, separator: String): String {
-        return if (one != null && two != null) {
-            "$one$separator$two"
-        } else two ?: (one ?: "")
     }
 }
