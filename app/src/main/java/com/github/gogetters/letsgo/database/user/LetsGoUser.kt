@@ -52,6 +52,7 @@ class LetsGoUser(val uid: String, val db: Database.Companion = Database, val clo
      */
     fun uploadUserData(): Task<Void> {
         val userData = hashMapOf(
+            "id" to uid,
             "nick" to nick,
             "first" to first,
             "last" to last,
