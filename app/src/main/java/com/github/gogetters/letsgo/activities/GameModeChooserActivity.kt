@@ -27,6 +27,9 @@ class GameModeChooserActivity : BaseActivity() {
     private lateinit var passwordEditText: EditText
     private lateinit var submitButton: Button
 
+    private val service = VolleyOnlineService(this)
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         initButtons()
@@ -47,24 +50,17 @@ class GameModeChooserActivity : BaseActivity() {
 
         val toggleButton = findViewById<ToggleButton>(R.id.gameModeChooser_toggle)
         toggleButton.visibility = View.VISIBLE
+
+
         submitButton.setOnClickListener {
             val id = resources.getString(R.string.ogs_client_id)
             val secret = resources.getString(R.string.ogs_client_secret)
 
-            val service = VolleyOnlineService(this@GameModeChooserActivity)
-            val ogsCommunicator = OGSCommunicatorService(service, id, secret)
-
-
-            //val response = ogsCommunicator.authenticate(usernameEditText.text.toString(), passwordEditText.text.toString())
-
-            val url = if (toggleButton.isChecked) "https://www.online-go.com/oauth2/token/"
-            else "https://www.online-go.com/api/v0/login/"
-
+            val url = "https://online-go.com/oauth2/token/"
             val username = "kimonroxd"
             val password = "online-go.com"
 
             val body = JSONObject()
-
 
             body.put("client_id", id)
             body.put("client_secret", secret)
@@ -72,11 +68,31 @@ class GameModeChooserActivity : BaseActivity() {
             body.put("username", username)
             body.put("password", password)
 
+            val jsonRequest = object: StringRequest(Method.POST, url,
+                    { Toast.makeText(this@GameModeChooserActivity, it, Toast.LENGTH_LONG).show() },
+                    {
+                        val response = it.networkResponse.data.decodeToString()
+                        Log.d("VOLLEY ERROR", response)
+                    })
+            {
+                override fun getBodyContentType(): String {
+                    return "application/x-www-form-urlencoded; charset=UTF-8"
+                }
 
-            val listener = service.post(url, body)
-            listener.setOnResponse {
-                Toast.makeText(this@GameModeChooserActivity, "$it", Toast.LENGTH_LONG).show()
+                override fun getHeaders(): MutableMap<String, String> {
+                    return mutableMapOf("Content-Type" to "application/x-www-form-urlencoded")
+                }
+
+                override fun getBody(): ByteArray {
+                    val bodyBuilder = StringJoiner("&")
+                    for (key in body.keys()) {
+                        bodyBuilder.add("$key=${body.getString(key)}")
+                    }
+                    return bodyBuilder.toString().toByteArray()
+                }
             }
+
+            queue.add(jsonRequest)
 
         }
     }

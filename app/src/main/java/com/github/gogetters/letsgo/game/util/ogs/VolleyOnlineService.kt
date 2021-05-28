@@ -2,11 +2,14 @@ package com.github.gogetters.letsgo.game.util.ogs
 
 import android.content.Context
 import android.util.Log
+import android.widget.Toast
+import com.android.volley.Request
 import com.android.volley.RequestQueue
 import com.android.volley.toolbox.JsonObjectRequest
 import com.android.volley.toolbox.StringRequest
 import com.android.volley.toolbox.Volley
 import org.json.JSONObject
+import java.util.*
 
 class VolleyOnlineService(context: Context) : OnlineService<JSONObject>  {
     private val queue: RequestQueue = Volley.newRequestQueue(context)
@@ -19,13 +22,43 @@ class VolleyOnlineService(context: Context) : OnlineService<JSONObject>  {
 
         val responseListener = ResponseListener<JSONObject>()
 
-        val jsonRequest = object: JsonObjectRequest(url, jsonRequest, { response -> responseListener.onResponse(response) }, { throw it }) {
-            override fun getHeaders(): MutableMap<String, String> { return jsonToMap(headers) }
+        val method = if (jsonRequest != null) Request.Method.POST  else Request.Method.GET
+
+        val request = object: StringRequest(method, url,
+                { responseListener.onResponse(JSONObject(it)) },
+                {
+                    val response = it.networkResponse.data.decodeToString()
+                    Log.d("VOLLEY ERROR", response)
+                })
+        {
+            override fun getBodyContentType(): String {
+                return "application/x-www-form-urlencoded; charset=UTF-8"
+            }
+
+            override fun getHeaders(): MutableMap<String, String> {
+                headers.put("Content-Type", "application/x-www-form-urlencoded")
+                val map = mutableMapOf<String, String>()
+                for (key in headers.keys()) {
+                    map[key] = headers.getString(key)
+                }
+
+                return map
+            }
+
+            override fun getBody(): ByteArray {
+                return if (jsonRequest != null) {
+                    val bodyBuilder = StringJoiner("&")
+                    for (key in jsonRequest.keys()) {
+                        bodyBuilder.add("$key=${jsonRequest.getString(key)}")
+                    }
+                    bodyBuilder.toString().toByteArray()
+                } else {
+                    "".toByteArray()
+                }
+            }
         }
 
-        Log.d("SDSADF", jsonRequest.toString())
-
-        queue.add(jsonRequest)
+        queue.add(request)
         return responseListener
     }
 
