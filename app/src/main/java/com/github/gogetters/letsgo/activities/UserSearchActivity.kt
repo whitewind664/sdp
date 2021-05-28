@@ -20,25 +20,6 @@ class UserSearchActivity : AppCompatActivity() {
         const val TAG = "UserSearch"
     }
 
-    class UserListItem(val user: LetsGoUser) : Item<ViewHolder>() {
-        override fun bind(viewHolder: ViewHolder, position: Int) {
-            viewHolder.itemView.apply {
-//                Log.d(TAG, user.toString())
-//                item_user_nick.text = user.nick
-//                item_user_firstlast.text = ProfileActivity.combineTwoTextFields(user.first, user.last, " ")
-                chat_textView_username.text = user.nick
-                chat_textView_firstlast.visibility = View.VISIBLE
-                chat_textView_firstlast.text =
-                    ProfileActivity.combineTwoTextFields(user.first, user.last, " ")
-            }
-        }
-
-        override fun getLayout(): Int {
-//            return R.layout.item_user_list_user
-            return R.layout.item_chat_new_message
-        }
-    }
-
     lateinit var searchView: SearchView
     lateinit var recyclerView: RecyclerView
 
@@ -53,7 +34,7 @@ class UserSearchActivity : AppCompatActivity() {
         Log.d(TAG, "================================================================")
 
         searchView = findViewById<SearchView>(R.id.user_search_search_view)
-        searchView.setOnQueryTextListener(MyListener(this))
+        searchView.setOnQueryTextListener(LetsGoUserSearchViewListerner(this))
 
         recyclerView = findViewById<RecyclerView>(R.id.user_search_recycler_view)
         adapter = GroupAdapter<ViewHolder>()
@@ -77,8 +58,22 @@ class UserSearchActivity : AppCompatActivity() {
             }
     }
 
+    private class UserListItem(val user: LetsGoUser) : Item<ViewHolder>() {
+        override fun bind(viewHolder: ViewHolder, position: Int) {
+            viewHolder.itemView.apply {
+                chat_textView_username.text = user.nick
+                chat_textView_firstlast.visibility = View.VISIBLE
+                chat_textView_firstlast.text =
+                    ProfileActivity.combineTwoTextFields(user.first, user.last, " ")
+            }
+        }
 
-    class MyListener(val userSearchActivity: UserSearchActivity) : SearchView.OnQueryTextListener {
+        override fun getLayout(): Int {
+            return R.layout.item_chat_new_message
+        }
+    }
+
+    private class LetsGoUserSearchViewListerner(val userSearchActivity: UserSearchActivity) : SearchView.OnQueryTextListener {
         override fun onQueryTextSubmit(query: String?): Boolean {
             if (query != null) {
                 userSearchActivity.searchUsersOutputToRecycler(query)
@@ -89,7 +84,6 @@ class UserSearchActivity : AppCompatActivity() {
         override fun onQueryTextChange(newText: String?): Boolean {
             return false
         }
-
     }
 }
 
