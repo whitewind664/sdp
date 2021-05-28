@@ -16,7 +16,7 @@ import org.junit.runners.MethodSorters
 
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 @RunWith(AndroidJUnit4::class)
-class LetsGoUserTest: EmulatedFirebaseTest() {
+class LetsGoUserTest : EmulatedFirebaseTest() {
 
     private val TAG = "FirestoreTest"
     private val TEST_UID = "tESTuID"
@@ -170,4 +170,11 @@ class LetsGoUserTest: EmulatedFirebaseTest() {
         )
     }
 
+    @Ignore("Make this test work later")
+    @Test
+    fun zTestSearchUser() {
+        // TODO Add some users with nicknames starting with tester and check that we indeed get them all (use users.length)
+        val users = Tasks.await(user.downloadUsersByNick("tester"))
+        Log.d(TAG, "Found Users : $users")
+    }
 }

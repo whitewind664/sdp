@@ -6,6 +6,8 @@ import android.os.Bundle
 import com.github.gogetters.letsgo.R
 import com.github.gogetters.letsgo.chat.model.UserData
 import com.github.gogetters.letsgo.chat.views.ChatNewMessageItem
+import com.github.gogetters.letsgo.database.user.LetsGoUser
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
@@ -33,42 +35,74 @@ class ChatNewMessageActivity : AppCompatActivity() {
     }
 
     private fun listUsers() {
+        val user = LetsGoUser(FirebaseAuth.getInstance().uid!!)
 
-        val ref = FirebaseDatabase.getInstance().getReference("/users")
-        //ref.keepSynced(true)
+        user.downloadFriends().addOnSuccessListener {
+            val friends = user.friends!![LetsGoUser.FriendStatus.ACCEPTED]!!
 
-        ref.addListenerForSingleValueEvent(object: ValueEventListener {
+            friends.forEach{
+                it.uid
+            }
+        }
 
-            override fun onDataChange(snapshot: DataSnapshot) {
-                // pick the groupie adapter
-                val adapter = GroupAdapter<ViewHolder>()
-                // and fill it in with all the users
-                snapshot.children.forEach {
-                    val user = it.getValue(UserData::class.java)
-                    if (user != null) {
-                        adapter.add(ChatNewMessageItem(user))
-                    }
-                }
 
-                // whenever you click on any of the items in the recycler view list
-                // start a new activity based on the user info
-                adapter.setOnItemClickListener { item, view ->
-                    // cast item to the actual object to retrieve info from it later on
-                    val newMessageItem = item as ChatNewMessageItem
-                    val intent = Intent(view.context, ChatActivity::class.java)
-                    // pass object from one activity to the other
-                    intent.putExtra(KEY, newMessageItem.user)
-                    startActivity(intent)
-                    // finish the current activity in order to navigate back to last message chat activity
-                    finish()
-                }
+        user.downloadFriends().addOnSuccessListener {
+            val friends = user.friends!![LetsGoUser.FriendStatus.ACCEPTED]!!
 
-                // link the groupie adapter to the recycler view
-                chat_recyclerview_new_message.adapter = adapter
+            val adapter = GroupAdapter<ViewHolder>()
+
+            friends.forEach {
+                val ud = UserData(it.uid, it.nick, it.first, it.last, it.city, it.country)
+                adapter.add(ChatNewMessageItem(ud))
             }
 
-            override fun onCancelled(error: DatabaseError) {}
+            adapter.setOnItemClickListener { item, view ->
+                // cast item to the actual object to retrieve info from it later on
+                val newMessageItem = item as ChatNewMessageItem
+                val intent = Intent(view.context, ChatActivity::class.java)
+                // pass object from one activity to the other
+                intent.putExtra(KEY, newMessageItem.user)
+                startActivity(intent)
+                // finish the current activity in order to navigate back to last message chat activity
+                finish()
+            }
 
-        })
+            chat_recyclerview_new_message.adapter = adapter
+        }
+
+
+//        ref.addListenerForSingleValueEvent(object: ValueEventListener {
+//
+//            override fun onDataChange(snapshot: DataSnapshot) {
+//                // pick the groupie adapter
+//                val adapter = GroupAdapter<ViewHolder>()
+//                // and fill it in with all the users
+//                snapshot.children.forEach {
+//                    val user = it.getValue(UserData::class.java)
+//                    if (user != null) {
+//                        adapter.add(ChatNewMessageItem(user))
+//                    }
+//                }
+//
+//                // whenever you click on any of the items in the recycler view list
+//                // start a new activity based on the user info
+//                adapter.setOnItemClickListener { item, view ->
+//                    // cast item to the actual object to retrieve info from it later on
+//                    val newMessageItem = item as ChatNewMessageItem
+//                    val intent = Intent(view.context, ChatActivity::class.java)
+//                    // pass object from one activity to the other
+//                    intent.putExtra(KEY, newMessageItem.user)
+//                    startActivity(intent)
+//                    // finish the current activity in order to navigate back to last message chat activity
+//                    finish()
+//                }
+//
+//                // link the groupie adapter to the recycler view
+//                chat_recyclerview_new_message.adapter = adapter
+//            }
+//
+//            override fun onCancelled(error: DatabaseError) {}
+//
+//        })
     }
 }
