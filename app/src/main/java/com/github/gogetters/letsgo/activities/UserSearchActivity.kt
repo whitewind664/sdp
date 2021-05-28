@@ -52,7 +52,7 @@ class UserSearchActivity : AppCompatActivity() {
      * Defines text and order of Options when clicking on a user in search!
      */
     private enum class ShowUserDialogOptions(val dialogText: CharSequence) {
-        // ViewProfile("View profile (wip)"),
+        // ViewProfile("View profile (WIP)"),
         SendFriendRequest("Send Friend Request"),
         AcceptFriend("Accept Friend Request"),
         DeleteFriend("Ignore Friend Request / Delete Friend"),
@@ -66,7 +66,7 @@ class UserSearchActivity : AppCompatActivity() {
         val dialogTexts = ShowUserDialogOptions.values().map { it.dialogText }.toTypedArray()
 
         val builder: AlertDialog.Builder = AlertDialog.Builder(this)
-        builder.setTitle("Blah the title")
+        builder.setTitle(user.nick)
         builder.setItems(dialogTexts) { dialog: DialogInterface, clickedIndex: Int ->
             when (clickedIndex) {
                 ShowUserDialogOptions.Cancel.ordinal -> {

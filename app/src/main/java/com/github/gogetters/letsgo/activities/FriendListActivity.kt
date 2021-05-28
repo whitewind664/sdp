@@ -9,12 +9,13 @@ import com.github.gogetters.letsgo.R
 import com.github.gogetters.letsgo.database.user.LetsGoUser
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
+import java.util.*
 
 // This is all quite rushed code but its main reason is to show functionality!
 // TODO Make this pretty!
 class FriendListActivity : AppCompatActivity() {
 
-    lateinit var searchView : SearchView
+    lateinit var searchView: SearchView
     lateinit var usersListView: ListView
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -31,12 +32,13 @@ class FriendListActivity : AppCompatActivity() {
 
             val friendList = listOf("FRIENDS") +
                     user.listFriendsByStatus(LetsGoUser.FriendStatus.ACCEPTED)
-                        .map { it.toString() } +
+                        .map { formatUserInfo(it) } +
                     "SENT FRIEND REQUESTS" +
-                    user.listFriendsByStatus(LetsGoUser.FriendStatus.SENT).map { it.toString() } +
+                    user.listFriendsByStatus(LetsGoUser.FriendStatus.SENT)
+                        .map { formatUserInfo(it) } +
                     "PENDING FRIEND REQUESTS" +
                     user.listFriendsByStatus(LetsGoUser.FriendStatus.REQUESTED)
-                        .map { it.toString() }
+                        .map { formatUserInfo(it) }
 
             val arrayAdapter: ArrayAdapter<String> = ArrayAdapter(
                 this,
@@ -45,5 +47,9 @@ class FriendListActivity : AppCompatActivity() {
             )
             usersListView.adapter = arrayAdapter
         }
+    }
+
+    private fun formatUserInfo(user: LetsGoUser): String {
+        return "${user.nick} - ${user.first} ${user.last} - ${user.country}, ${user.city}"
     }
 }
