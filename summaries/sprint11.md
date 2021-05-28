@@ -3,9 +3,9 @@
 ---
 
 ## Bajraktarov, Dimitar
-- Done:
-- Went well:
-- To improve:
+- Done: Found some bugs and/or minor design flaws.
+- Went well: The bugs I found aren't extremely big and should be easy to fix.
+- To improve: Didn't feel well (allergies) so I couldn't finish my work, will make up for it next week.
 
 ## Horvath-Mikulas, Szabina
 - Done: This week I implemented caching for string values with shared preferences.
@@ -39,6 +39,6 @@ to bring the social system of our application to a functional and useful level. 
 
 ## Overall team (Scrum Master)
 - Done: Everyone advancing steadily on work. We have good efficient meetings and work well together. Each member of the team has their areas of
-expertise and when needer we help each other out!
+expertise and when needed we help each other out!
 - Went well: Good coordination, hard work! Everything as it should be.
 - To improve: A few issues with CI we should figure it out very soon. More TESTS (Our team will handle it, we're confident about that)!
