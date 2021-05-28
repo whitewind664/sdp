@@ -80,9 +80,7 @@ abstract class BluetoothService {
             }
         }
 
-        fun sendNick(){
-            write("hallo".toByteArray())
-        }
+
 
         // Call this from the main activity to send data to the remote device.
         fun write(bytes: ByteArray) {
