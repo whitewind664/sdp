@@ -11,14 +11,14 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/profile_edit_button_save_text"
-        app:layout_constraintBottom_toTopOf="@+id/profile_imageView_image2"
+        app:layout_constraintBottom_toTopOf="@+id/profile_edit_imageView_image"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.922"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <ImageView
-        android:id="@+id/profile_imageView_image2"
+        android:id="@+id/profile_edit_imageView_image"
         android:layout_width="145dp"
         android:layout_height="145dp"
         android:layout_gravity="center"
@@ -41,7 +41,7 @@
         android:inputType="textPersonName"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/profile_imageView_image2"
+        app:layout_constraintTop_toBottomOf="@+id/profile_edit_imageView_image"
         android:autofillHints="" />
 
     <EditText

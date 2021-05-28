@@ -1,12 +1,11 @@
 package com.github.gogetters.letsgo.database.user
 
-import android.graphics.Bitmap
-import android.net.Uri
 import android.util.Log
 import com.github.gogetters.letsgo.database.CloudStorage
 import com.github.gogetters.letsgo.database.Database
 import com.google.android.gms.tasks.Task
 import com.google.android.gms.tasks.Tasks
+import com.google.firebase.database.DataSnapshot
 import java.util.*
 import kotlin.collections.ArrayList
 
@@ -24,7 +23,7 @@ class LetsGoUser(val uid: String, val db: Database.Companion = Database, val clo
     // The reference (== address) of the profile picture on cloud storage
     var profileImageRef: String? = null
 
-    private var friends: EnumMap<FriendStatus, MutableList<LetsGoUser>>? = null
+    public var friends: EnumMap<FriendStatus, MutableList<LetsGoUser>>? = null
 
     // Be very careful if changing path values!
     private val tag = "FirestoreTest"
@@ -53,6 +52,7 @@ class LetsGoUser(val uid: String, val db: Database.Companion = Database, val clo
      */
     fun uploadUserData(): Task<Void> {
         val userData = hashMapOf(
+            "id" to uid,
             "nick" to nick,
             "first" to first,
             "last" to last,
@@ -77,16 +77,7 @@ class LetsGoUser(val uid: String, val db: Database.Companion = Database, val clo
     fun downloadUserData(): Task<Unit> {
         return db.readData(userPath)
             .continueWith {
-                for (attribute in it.result.children) {
-                    when (attribute.key) {
-                        "nick" -> nick = attribute.value as String
-                        "first" -> first = attribute.value as String
-                        "last" -> last = attribute.value as String
-                        "city" -> city = attribute.value as String
-                        "country" -> country = attribute.value as String
-                        "profilePictureRef" -> profileImageRef = attribute.value as String
-                    }
-                }
+                extractUserData(it.result)
             }
             .addOnSuccessListener {
                 Log.d(tag, "LetsGoUser successfully downloaded: ${toString()}")
@@ -94,6 +85,19 @@ class LetsGoUser(val uid: String, val db: Database.Companion = Database, val clo
             .addOnFailureListener { e ->
                 Log.w(tag, "Error downloading LetsGoUser for uid: $uid", e)
             }
+    }
+
+    fun extractUserData(userData: DataSnapshot){
+        for (attribute in userData.children) {
+            when (attribute.key) {
+                "nick" -> nick = attribute.value as String
+                "first" -> first = attribute.value as String
+                "last" -> last = attribute.value as String
+                "city" -> city = attribute.value as String
+                "country" -> country = attribute.value as String
+                "profilePictureRef" -> profileImageRef = attribute.value as String
+            }
+        }
     }
 
     /**
@@ -251,7 +255,7 @@ class LetsGoUser(val uid: String, val db: Database.Companion = Database, val clo
     /**
      * Given a list of uids. Creates a list of LetsGoUsers and downloads their data
      */
-    private fun downloadUserList(uids: List<String>): Task<MutableList<LetsGoUser>> {
+    fun downloadUserList(uids: List<String>): Task<MutableList<LetsGoUser>> {
         val tasks = ArrayList<Task<LetsGoUser>>()
 
         for (uid in uids) {
@@ -260,5 +264,17 @@ class LetsGoUser(val uid: String, val db: Database.Companion = Database, val clo
         }
 
         return Tasks.whenAllSuccess(tasks)
+    }
+
+
+    //-------------------------------------------------------------------------------------------
+    // User Search
+
+    fun downloadUsersByNick(nick : String): Task<MutableList<LetsGoUser>> {
+        return Database.readSearchByChild(usersPath, "nick", nick).continueWithTask {
+            val uids = mutableListOf<String>()
+            it.result.children.forEach { uids.add(it.key!!) }
+            downloadUserList(uids)
+        }
     }
 }
