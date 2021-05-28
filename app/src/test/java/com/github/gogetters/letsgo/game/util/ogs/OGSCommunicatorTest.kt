@@ -15,7 +15,7 @@ class OGSCommunicatorTest {
         val service = MockOnlineService()
         val communicator = OGSCommunicatorService(service, "", "")
         val username = "john"
-        val password = "burgur"
+        val password = "doe"
 
         assertFalse(service.hasAuthenticated)
         //TODO would be nice to set here "onAuthenticationAccepted" for example
@@ -30,7 +30,7 @@ class OGSCommunicatorTest {
     fun createChallengeSendsChallengeInfo() {
         val service = MockOnlineService()
         val communicator = OGSCommunicatorService(service, "", "")
-        val challenge = OGSChallenge(OGSGame("mygame"), Stone.BLACK)
+        val challenge = OGSChallenge("0", OGSGame("0", "mygame"), Stone.BLACK)
 
         val existingGames = service.currentGames.size
 
@@ -41,16 +41,12 @@ class OGSCommunicatorTest {
 
     @Test
     fun sendMoveUpdatesGame() {
-
-        val hello = JSONObject()
-        val goodbye = JSONObject()
-
         val service = MockOnlineService()
         val communicator = OGSCommunicatorService(service, "", "")
 
-        val game = OGSGame("mygame")
+        val game = OGSGame("0", "mygame")
         game.toString()
-        val challenge = OGSChallenge(game, Stone.BLACK)
+        val challenge = OGSChallenge("0", game, Stone.BLACK)
         challenge.toString()
 
         val existingGames = service.currentGames.size
@@ -60,7 +56,7 @@ class OGSCommunicatorTest {
         communicator.startChallenge(challenge)
         assertEquals(1, service.challengeList.size)
         assertEquals(existingGames + 1, service.currentGames.size)
-        communicator.sendMove(move)
+        communicator.sendMove(move, "0")
         // assertEquals(move, service.lastMove)
         // TODO encoding of move is not yet correct
     }

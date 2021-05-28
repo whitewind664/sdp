@@ -24,6 +24,7 @@ class OGSCommunicatorService(private val onlineService: OnlineService<JSONObject
     lateinit var accessToken: String
     lateinit var refreshToken: String
 
+    //TODO separate into mockable realtime
     private val socket: Socket = IO.socket("")
 
     lateinit var activeChallenge: OGSChallenge
@@ -75,6 +76,7 @@ class OGSCommunicatorService(private val onlineService: OnlineService<JSONObject
 
             activeChallenge = OGSChallenge(challengeID, OGSGame("bot_challenge", gameID),
             Stone.WHITE, -1000, 1000)
+            //TODO isolate socket
             socket.emit("game/connect", JSONObject())
             socket.on("game/$gameID/move", onMove)
         }
@@ -92,20 +94,15 @@ class OGSCommunicatorService(private val onlineService: OnlineService<JSONObject
         TODO("Not yet implemented")
     }
 
-    companion object {
-        fun parseMove(move: String): Point {
-            if (move.length != 2) {
-                throw IllegalArgumentException("could not parse move, must be 2 characters long")
-            }
+    fun sendMove(move: Move, gameID: String) {
+        val point = move.point.toSGF()
+        val body = JSONObject()
+        //TODO finish
+        body.put("auth", accessToken)
+        body.put("game_id", gameID)
+        body.put("player_id", "ourid...")
+        body.put("move", point)
 
-            val first = move[0].toInt() - 'a'.toInt() + 1
-            val second = move[1].toInt() - 'a'.toInt() + 1
-
-            if (first <= 0 || second <= 0) {
-                throw IllegalArgumentException("invalid characters used, must be lowercase")
-            }
-
-            return Point(first, second)
-        }
+        socket.emit("game/move", body)
     }
 }

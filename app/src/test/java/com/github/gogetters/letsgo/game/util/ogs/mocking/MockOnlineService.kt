@@ -11,7 +11,7 @@ class MockOnlineService : OnlineService<JSONObject> {
     lateinit var username: String
     lateinit var password: String
     val challengeList = mutableListOf<OGSChallenge>()
-    var currentGames = mutableListOf(OGSGame("first"), OGSGame("second"))
+    var currentGames = mutableListOf(OGSGame("0", "first"), OGSGame("1", "second"))
     var madeMove = false
     lateinit var lastMove: Point
 
@@ -50,7 +50,7 @@ class MockOnlineService : OnlineService<JSONObject> {
             }
             url.startsWith("$base$games") -> {
                 val response = JSONObject()
-                val move = OGSCommunicatorService.parseMove(body.getString("move"))
+                val move = Point.fromSGF(body.getString("move"))
                 lastMove = move
                 response.put("success", "Move Accepted")
                 listener.onResponse(response)
