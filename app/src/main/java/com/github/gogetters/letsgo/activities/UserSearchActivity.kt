@@ -1,5 +1,7 @@
 package com.github.gogetters.letsgo.activities
 
+import android.app.AlertDialog
+import android.content.DialogInterface
 import android.os.Bundle
 import android.util.Log
 import android.view.View
@@ -31,19 +33,65 @@ class UserSearchActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_user_search)
 
-        Log.d(TAG, "================================================================")
+        searchView = findViewById(R.id.user_search_search_view)
+        searchView.setOnQueryTextListener(LetsGoUserSearchViewListener(this))
 
-        searchView = findViewById<SearchView>(R.id.user_search_search_view)
-        searchView.setOnQueryTextListener(LetsGoUserSearchViewListerner(this))
-
-        recyclerView = findViewById<RecyclerView>(R.id.user_search_recycler_view)
+        recyclerView = findViewById(R.id.user_search_recycler_view)
         adapter = GroupAdapter<ViewHolder>()
+        adapter.setOnItemClickListener { item, _ ->
+            val user = (item as UserListItem).user
+            Log.d(TAG, "REGISTERED CLICK on user : $user")
+            showUserOptions(user)
+        }
         recyclerView.adapter = adapter
 
         user = FirebaseUserBundleProvider.getUserBundle()!!.getUser()
     }
 
+    /**
+     * Defines text and order of Options when clicking on a user in search!
+     */
+    private enum class ShowUserDialogOptions(val dialogText: CharSequence) {
+        // ViewProfile("View profile (wip)"),
+        SendFriendRequest("Send Friend Request"),
+        AcceptFriend("Accept Friend Request"),
+        DeleteFriend("Ignore Friend Request / Delete Friend"),
+        Cancel("Cancel")
+    }
 
+    /**
+     * Shows dialog when clicking on a user in search and binds behaviour to each option
+     */
+    private fun showUserOptions(user: LetsGoUser) {
+        val dialogTexts = ShowUserDialogOptions.values().map { it.dialogText }.toTypedArray()
+
+        val builder: AlertDialog.Builder = AlertDialog.Builder(this)
+        builder.setTitle("Blah the title")
+        builder.setItems(dialogTexts) { dialog: DialogInterface, clickedIndex: Int ->
+            when (clickedIndex) {
+                ShowUserDialogOptions.Cancel.ordinal -> {
+                    dialog.dismiss()
+                }
+                ShowUserDialogOptions.SendFriendRequest.ordinal -> {
+                    this.user.requestFriend(user)
+                    Log.d(TAG, "Sent friend request to : $user")
+                }
+                ShowUserDialogOptions.AcceptFriend.ordinal -> {
+                    this.user.acceptFriend(user)
+                    Log.d(TAG, "Accepted friend request of : $user")
+                }
+                ShowUserDialogOptions.DeleteFriend.ordinal -> {
+                    this.user.deleteFriend(user)
+                    Log.d(TAG, "Deleted friendship data of : $user")
+                }
+            }
+        }
+        builder.show()
+    }
+
+    /**
+     * Displays all users that have a nickname starting with "query"
+     */
     private fun searchUsersOutputToRecycler(query: String) {
         user.downloadUsersByNick(query)
             .addOnSuccessListener { users ->
@@ -58,6 +106,9 @@ class UserSearchActivity : AppCompatActivity() {
             }
     }
 
+    /**
+     * Used to display User Info in the RecyclerView
+     */
     private class UserListItem(val user: LetsGoUser) : Item<ViewHolder>() {
         override fun bind(viewHolder: ViewHolder, position: Int) {
             viewHolder.itemView.apply {
@@ -73,7 +124,11 @@ class UserSearchActivity : AppCompatActivity() {
         }
     }
 
-    private class LetsGoUserSearchViewListerner(val userSearchActivity: UserSearchActivity) : SearchView.OnQueryTextListener {
+    /**
+     * Processes Search Bar "Events"
+     */
+    private class LetsGoUserSearchViewListener(val userSearchActivity: UserSearchActivity) :
+        SearchView.OnQueryTextListener {
         override fun onQueryTextSubmit(query: String?): Boolean {
             if (query != null) {
                 userSearchActivity.searchUsersOutputToRecycler(query)
