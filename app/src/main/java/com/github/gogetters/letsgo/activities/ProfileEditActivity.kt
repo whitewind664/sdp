@@ -7,7 +7,7 @@ import android.util.Log
 import android.widget.Button
 import android.widget.EditText
 import com.github.gogetters.letsgo.R
-import com.github.gogetters.letsgo.database.user.FirebaseUserBundleProvider
+import com.github.gogetters.letsgo.cache.Cache
 import com.github.gogetters.letsgo.database.user.LetsGoUser
 import com.github.gogetters.letsgo.database.user.UserBundle
 import com.github.gogetters.letsgo.database.user.UserBundleProvider
@@ -44,6 +44,7 @@ class ProfileEditActivity : AppCompatActivity() {
             user.country = countryEditText.text.toString()
             user.city = cityEditText.text.toString()
 
+            Cache.saveUserProfile(this, user)
             user.uploadUserData().continueWith { returnToProfile() }
         }
 

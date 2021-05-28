@@ -20,6 +20,7 @@ import android.widget.TextView
 import androidx.core.app.ActivityCompat
 import androidx.core.content.FileProvider
 import com.github.gogetters.letsgo.R
+import com.github.gogetters.letsgo.cache.Cache
 import com.github.gogetters.letsgo.database.ImageStorageService
 import com.github.gogetters.letsgo.database.user.FirebaseUserBundleProvider
 import com.github.gogetters.letsgo.database.user.UserBundle
@@ -134,19 +135,23 @@ class ProfileActivity : ActivityCompat.OnRequestPermissionsResultCallback, BaseA
         } else {
             var user = userBundle.getUser()
 
+            val cachedUser = Cache.loadUserProfile(this)
+
+            if (cachedUser?.nick != null && cachedUser.nick!!.isNotEmpty()) {
+                nick.text = cachedUser.nick
+            } else {
+                nick.text = getString(R.string.profile_noNicknameHint)
+            }
+
+            firstLast.text = combineTwoTextFields(cachedUser?.first, cachedUser?.last, " ")
+            cityCountyText.text = combineTwoTextFields(cachedUser?.city, cachedUser?.country, ", ")
+
+            editButton.visibility = View.VISIBLE
+
+            // cached by Firebase
+            emailText.text = userBundle.getEmail()
+            // not cached yet
             user.downloadUserData().addOnCompleteListener {
-                if (user.nick != null && user.nick!!.isNotEmpty()) {
-                    nick.text = user.nick
-                } else {
-                    nick.text = getString(R.string.profile_noNicknameHint)
-                }
-
-                firstLast.text = combineTwoTextFields(user.first, user.last, " ")
-                emailText.text = userBundle.getEmail()
-                cityCountyText.text = combineTwoTextFields(user.city, user.country, ", ")
-
-                editButton.visibility = View.VISIBLE
-
                 ImageStorageService.getProfileImageFromCloud(PROFILE_PICTURE_PREFIX_CLOUD, user.profileImageRef,getOutputImageFile(), profileImage)
             }
         }
