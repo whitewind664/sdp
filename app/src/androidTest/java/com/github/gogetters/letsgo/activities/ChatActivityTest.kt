@@ -35,6 +35,7 @@ class ChatActivityTest: EmulatedFirebaseTest() {
         activityRule.scenario.close()
     }
 
+    @Ignore
     @Test
     fun test_isItemsVisible_onAppLaunch() {
         onView(withId(R.id.chat_recyclerview_messages)).check(

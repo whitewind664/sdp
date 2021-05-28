@@ -61,6 +61,7 @@ class MainActivityTest: EmulatedFirebaseTest() {
         Intents.intended(Matchers.allOf(IntentMatchers.hasComponent(MapsActivity::class.java.name)))
     }
 
+    @Ignore
     @Test
     fun chatButtonOpensChat() {
         onView(withId(R.id.item3)).perform(click())
