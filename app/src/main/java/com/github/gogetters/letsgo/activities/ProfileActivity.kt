@@ -10,6 +10,7 @@ import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
 import com.github.gogetters.letsgo.R
+import com.github.gogetters.letsgo.cache.Cache
 import com.github.gogetters.letsgo.database.ImageStorageService
 import com.github.gogetters.letsgo.database.ImageStorageService.Companion.PROFILE_PICTURE_PREFIX_CLOUD
 import com.github.gogetters.letsgo.database.user.UserBundle
@@ -84,25 +85,30 @@ class ProfileActivity : BaseActivity() {
         } else {
             var user = userBundle.getUser()
 
+            val cachedUser = Cache.loadUserProfile(this)
+
+            if (cachedUser?.nick != null && cachedUser.nick!!.isNotEmpty()) {
+                nick.text = cachedUser.nick
+            } else {
+                nick.text = getString(R.string.profile_noNicknameHint)
+            }
+
+            firstLast.text = combineTwoTextFields(cachedUser?.first, cachedUser?.last, " ")
+            cityCountyText.text = combineTwoTextFields(cachedUser?.city, cachedUser?.country, ", ")
+            
+            editButton.visibility = View.VISIBLE
+
+            ImageStorageService.getProfileImageFromCloud(
+                PROFILE_PICTURE_PREFIX_CLOUD,
+                user.profileImageRef,
+                ImageStorageService.getOutputImageFile(getExternalFilesDir(Environment.DIRECTORY_PICTURES)),
+                profileImage
+            )
+            // cached by Firebase
+            emailText.text = userBundle.getEmail()
+            // not cached yet
             user.downloadUserData().addOnCompleteListener {
-                if (user.nick != null && user.nick!!.isNotEmpty()) {
-                    nick.text = user.nick
-                } else {
-                    nick.text = getString(R.string.profile_noNicknameHint)
-                }
-
-                firstLast.text = combineTwoTextFields(user.first, user.last, " ")
-                emailText.text = userBundle.getEmail()
-                cityCountyText.text = combineTwoTextFields(user.city, user.country, ", ")
-
-                editButton.visibility = View.VISIBLE
-
-                ImageStorageService.getProfileImageFromCloud(
-                    PROFILE_PICTURE_PREFIX_CLOUD,
-                    user.profileImageRef,
-                    ImageStorageService.getOutputImageFile(getExternalFilesDir(Environment.DIRECTORY_PICTURES)),
-                    profileImage
-                )
+                ImageStorageService.getProfileImageFromCloud(PROFILE_PICTURE_PREFIX_CLOUD, user.profileImageRef,getOutputImageFile(), profileImage)
             }
         }
     }
