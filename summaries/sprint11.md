@@ -18,9 +18,9 @@
 - To improve: We need to focus on the testing and get that done. As I have a lot of experience of testing this semester, I have to take some responsibility for this.
 
 ## Protopapas, Kimon Dimitrios
-- Done:
-- Went well:
-- To improve:
+- Done: Fixed OGS communication
+- Went well: Was patient this time and slowly tested as I added code, which avoided annoying problems
+- To improve: Need to improve debugging skills
 
 ## Roust, Michael Murad (Scrum Master)
 - Done: A lot of things
