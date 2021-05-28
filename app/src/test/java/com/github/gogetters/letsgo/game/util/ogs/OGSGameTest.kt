@@ -12,8 +12,8 @@ class OGSGameTest {
         val json = game.toJSON()
 
         assertEquals(game.name, json.getString("name"))
-        assertEquals(game.height, json.getString("height"))
-        assertEquals(game.width, json.getString("width"))
+        assertEquals(game.height, json.getInt("height"))
+        assertEquals(game.width, json.getInt("width"))
     }
 
     @Test
