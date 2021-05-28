@@ -4,6 +4,8 @@ import android.bluetooth.BluetoothSocket
 import android.os.Bundle
 import android.os.Handler
 import android.util.Log
+import com.github.gogetters.letsgo.database.user.FirebaseUserBundle
+import com.google.firebase.auth.FirebaseAuth
 import java.io.IOException
 import java.io.InputStream
 import java.io.OutputStream
@@ -31,6 +33,22 @@ abstract class BluetoothService {
 
     fun ping() {
         write(PING.toByteArray())
+    }
+
+    fun sendNick(){
+        val user = FirebaseAuth.getInstance().currentUser
+        if(user != null){
+            val letsGoUser = FirebaseUserBundle(user).getUser()
+            val task = letsGoUser.downloadUserData()
+
+            while(!task.isComplete){}
+
+            if (letsGoUser.nick != null && letsGoUser.nick!!.isNotEmpty())
+                write(letsGoUser.nick!!.toByteArray())
+            else
+                write("Let's Go Player".toByteArray())
+        } else
+            write("Let's Go Player".toByteArray())
     }
 
 
@@ -62,6 +80,8 @@ abstract class BluetoothService {
             }
         }
 
+
+
         // Call this from the main activity to send data to the remote device.
         fun write(bytes: ByteArray) {
             try {
@@ -85,6 +105,8 @@ abstract class BluetoothService {
             )
             writtenMsg.sendToTarget()
         }
+
+
 
         // Call this method from the main activity to shut down the connection.
         fun cancel() {
