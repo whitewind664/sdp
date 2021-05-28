@@ -5,6 +5,7 @@ import org.json.JSONObject
 import java.lang.IllegalArgumentException
 
 data class OGSChallenge(
+    val id: String,
     val game: OGSGame,
     val challengerColor: Stone,
     val minRanking: Int = 0,
@@ -42,7 +43,9 @@ data class OGSChallenge(
 
             val game = OGSGame.fromJSON(challenge.getJSONObject("game"))
 
-            return OGSChallenge(game, color, min, max)
+            val id = challenge.getString("id")
+
+            return OGSChallenge(id, game, color, min, max)
         }
     }
 }

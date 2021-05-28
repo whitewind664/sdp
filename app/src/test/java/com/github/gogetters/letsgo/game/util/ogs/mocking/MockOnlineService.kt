@@ -31,6 +31,10 @@ class MockOnlineService : OnlineService<JSONObject> {
                 hasAuthenticated = true
                 username = body.getString("username")
                 password = body.getString("password")
+                val response = JSONObject()
+                response.put("access_token", "asdfszdv7sfv9asvnfasnvas7af7ds")
+                response.put("refresh_token", "as9d8fsdfjasdcnsdcnsa98a9sg8nasg")
+                listener.onResponse(response)
             }
             url.startsWith("$base$challenges") -> {
                 val challenge = OGSChallenge.fromJSON(body)

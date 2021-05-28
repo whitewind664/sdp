@@ -9,10 +9,16 @@ import com.android.volley.toolbox.JsonObjectRequest
 import com.android.volley.toolbox.StringRequest
 import com.android.volley.toolbox.Volley
 import org.json.JSONObject
+import java.net.CookieHandler
+import java.net.CookieManager
 import java.util.*
 
 class VolleyOnlineService(context: Context) : OnlineService<JSONObject>  {
     private val queue: RequestQueue = Volley.newRequestQueue(context)
+
+    init {
+        CookieHandler.setDefault(CookieManager())
+    }
 
     override fun post(url: String, body: JSONObject, headers: JSONObject): ResponseListener<JSONObject> { return getOrPost(url, body, headers) }
 
@@ -29,6 +35,7 @@ class VolleyOnlineService(context: Context) : OnlineService<JSONObject>  {
                 {
                     val response = it.networkResponse.data.decodeToString()
                     Log.d("VOLLEY ERROR", response)
+                    responseListener.onResponse(JSONObject().put("error", "error")) //TODO make more expressive
                 })
         {
             override fun getBodyContentType(): String {

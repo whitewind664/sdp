@@ -1,29 +1,45 @@
 package com.github.gogetters.letsgo.game.util.ogs
 
-import android.util.Log
 import com.github.gogetters.letsgo.game.Move
 import com.github.gogetters.letsgo.game.Point
+import com.github.gogetters.letsgo.game.Stone
 import com.github.gogetters.letsgo.game.util.InputDelegate
+import org.json.JSONException
 import org.json.JSONObject
-import java.lang.IllegalArgumentException
+import io.socket.client.IO
+import io.socket.client.Socket
+import io.socket.emitter.Emitter
 
 class OGSCommunicatorService(private val onlineService: OnlineService<JSONObject>,
                              private val CLIENT_ID: String,
                              private val CLIENT_SECRET: String) {
-    //private val CLIENT_ID: String = "" // TODO
-    //private val CLIENT_SECRET: String = "" // TODO
+
+
     private val base = "https://online-go.com"
-    private val auth = "/api/v0/login/"
-    private val challenges = "/v1/challenges"
+    private val auth = "/oauth2/token/"
+    //private val challenges = "/v1/challenges" //TODO
+    private val challenges = "api/v1/players/800307/challenge/"
     private val games = "/v1/games"
     private var gameID = 0
     lateinit var accessToken: String
     lateinit var refreshToken: String
 
+    private val socket: Socket = IO.socket("")
+
+    lateinit var activeChallenge: OGSChallenge
+    var authenticated = false
 
     lateinit var inputDelegate: InputDelegate
 
-    fun authenticate(username: String, password: String): ResponseListener<JSONObject> {
+    private val onMove = Emitter.Listener {
+        val data = it[0] as JSONObject
+        val move = data.getString("move")
+        inputDelegate.saveLatestInput(Point.fromSGF(move))
+    }
+
+
+
+    fun authenticate(username: String, password: String): ResponseListener<Boolean> {
         val body = JSONObject()
         body.put("client_id", CLIENT_ID)
         body.put("client_secret", CLIENT_SECRET)
@@ -31,27 +47,37 @@ class OGSCommunicatorService(private val onlineService: OnlineService<JSONObject
         body.put("username", username)
         body.put("password", password)
 
-        return onlineService.post("$base$auth", body)
+        val response =  onlineService.post("$base$auth", body)
+        val after = ResponseListener<Boolean>()
+        response.setOnResponse {
+            try {
+                accessToken = it.getString("access_token")
+                refreshToken = it.getString("refresh_token")
+                after.onResponse(true)
+                authenticated = true
+
+            } catch (e: JSONException) {
+                after.onResponse(false)
+            }
+        }
+
+        socket.connect()
+
+        return after
     }
 
 
     fun startChallenge(challenge: OGSChallenge) {
         val body = challenge.toJSON()
         onlineService.post("$base$challenges", body).setOnResponse {
-            val game = OGSGame.fromJSON(body.getJSONObject("game"))
-        }
-    }
+            val gameID = it.getString("game")
+            val challengeID = it.getString("challenge")
 
-    fun sendMove(move: Move) {
-        val url = "$base$games/$gameID/move/"
-        val body = JSONObject()
-        val gtpMove = move.point.toString()
-        val theirMove = gtpMove[0] + (gtpMove[1].toInt() + 'a'.toInt()).toChar().toString()
-        body.put("move", theirMove)
-        onlineService.post(url, body).setOnResponse {
-            // TODO parse Move
+            activeChallenge = OGSChallenge(challengeID, OGSGame("bot_challenge", gameID),
+            Stone.WHITE, -1000, 1000)
+            socket.emit("game/connect", JSONObject())
+            socket.on("game/$gameID/move", onMove)
         }
-
     }
 
     fun cancelChallenge(challengeID: String) {
@@ -61,11 +87,6 @@ class OGSCommunicatorService(private val onlineService: OnlineService<JSONObject
             // TODO
         }
     }
-
-    fun onReceiveMove(move: Move) {
-        TODO("Not yet implemented")
-    }
-
 
     fun onChallengeAccepted(challengeData: OGSChallenge) {
         TODO("Not yet implemented")

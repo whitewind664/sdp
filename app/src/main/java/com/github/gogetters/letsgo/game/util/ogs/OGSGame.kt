@@ -5,9 +5,10 @@ import java.util.*
 
 
 data class OGSGame(
-    val name: String,
-    val width: Int = 9,
-    val height: Int = 9
+        val id: String,
+        val name: String,
+        val width: Int = 9,
+        val height: Int = 9
 ) {
 
     fun toJSON(): JSONObject {
@@ -15,6 +16,7 @@ data class OGSGame(
         val time = JSONObject()
         time.put("time_control", "none")
 
+        game.put("id", id)
         game.put("name", name)
         game.put("rules", "japanese")
         game.put("ranked", "false")
@@ -33,7 +35,8 @@ data class OGSGame(
 
     companion object {
         fun fromJSON(game: JSONObject): OGSGame {
-            return OGSGame(game.getString("name"), game.getInt("width"), game.getInt("height"))
+            return OGSGame(game.getString("id"), game.getString("name"),
+                    game.getInt("width"), game.getInt("height"))
         }
     }
 }

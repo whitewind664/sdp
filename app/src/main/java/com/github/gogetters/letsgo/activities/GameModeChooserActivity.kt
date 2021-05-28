@@ -27,7 +27,7 @@ class GameModeChooserActivity : BaseActivity() {
     private lateinit var passwordEditText: EditText
     private lateinit var submitButton: Button
 
-    private val service = VolleyOnlineService(this)
+    private lateinit var ogs: OGSCommunicatorService
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -37,74 +37,6 @@ class GameModeChooserActivity : BaseActivity() {
 
     override fun getLayoutResource(): Int {
         return R.layout.activity_game_mode_chooser
-    }
-
-    private fun initOGS() {
-        titleText.text = resources.getString(R.string.gameModeChooser_loginTitle)
-        localButton.visibility = View.GONE
-        ogsButton.visibility = View.GONE
-        btButton.visibility = View.GONE
-        usernameEditText.visibility = View.VISIBLE
-        passwordEditText.visibility = View.VISIBLE
-        submitButton.visibility = View.VISIBLE
-
-        val toggleButton = findViewById<ToggleButton>(R.id.gameModeChooser_toggle)
-        toggleButton.visibility = View.VISIBLE
-
-
-        submitButton.setOnClickListener {
-            val id = resources.getString(R.string.ogs_client_id)
-            val secret = resources.getString(R.string.ogs_client_secret)
-
-            val url = "https://online-go.com/oauth2/token/"
-            val username = "kimonroxd"
-            val password = "online-go.com"
-
-            val body = JSONObject()
-
-            body.put("client_id", id)
-            body.put("client_secret", secret)
-            body.put("grant_type", "password")
-            body.put("username", username)
-            body.put("password", password)
-
-            val jsonRequest = object: StringRequest(Method.POST, url,
-                    { Toast.makeText(this@GameModeChooserActivity, it, Toast.LENGTH_LONG).show() },
-                    {
-                        val response = it.networkResponse.data.decodeToString()
-                        Log.d("VOLLEY ERROR", response)
-                    })
-            {
-                override fun getBodyContentType(): String {
-                    return "application/x-www-form-urlencoded; charset=UTF-8"
-                }
-
-                override fun getHeaders(): MutableMap<String, String> {
-                    return mutableMapOf("Content-Type" to "application/x-www-form-urlencoded")
-                }
-
-                override fun getBody(): ByteArray {
-                    val bodyBuilder = StringJoiner("&")
-                    for (key in body.keys()) {
-                        bodyBuilder.add("$key=${body.getString(key)}")
-                    }
-                    return bodyBuilder.toString().toByteArray()
-                }
-            }
-
-            queue.add(jsonRequest)
-
-        }
-    }
-
-    /**
-     * Send the information of the new game on OGS to the interface
-     */
-    private fun startOgsOnlineGame(ogsCommunicator: OGSCommunicatorService) {
-        val game = OGSGame("game")
-        ogsCommunicator.startChallenge(OGSChallenge(game, Stone.BLACK))
-
-        // TODO display waiting screen until confirmed
     }
 
     private fun initButtons() {
@@ -128,9 +60,6 @@ class GameModeChooserActivity : BaseActivity() {
 
         ogsButton = findViewById(R.id.gameModeChooser_button_ogs)
         ogsButton.setOnClickListener {
-            // TODO finalize
-
-            // login
             initOGS()
         }
 
@@ -140,4 +69,43 @@ class GameModeChooserActivity : BaseActivity() {
             startActivity(intent)
         }
     }
+
+    private fun initOGS() {
+        titleText.text = resources.getString(R.string.gameModeChooser_loginTitle)
+        localButton.visibility = View.GONE
+        ogsButton.visibility = View.GONE
+        btButton.visibility = View.GONE
+        usernameEditText.visibility = View.VISIBLE
+        passwordEditText.visibility = View.VISIBLE
+        submitButton.visibility = View.VISIBLE
+
+        val toggleButton = findViewById<ToggleButton>(R.id.gameModeChooser_toggle)
+        toggleButton.visibility = View.VISIBLE
+
+        ogs = OGSCommunicatorService(
+                VolleyOnlineService(this),
+                resources.getString(R.string.ogs_client_id),
+                resources.getString(R.string.ogs_client_secret))
+
+        submitButton.setOnClickListener {
+            val username = usernameEditText.text.toString()
+            val password = passwordEditText.text.toString()
+            ogs.authenticate(username, password).setOnResponse {
+                val result = if (it) "Successful" else "Failed"
+                Toast.makeText(this@GameModeChooserActivity,
+                        "Authentication $result", Toast.LENGTH_LONG).show()
+            }
+        }
+    }
+
+    /**
+     * Send the information of the new game on OGS to the interface
+     */
+    private fun startOgsOnlineGame() {
+        val game = OGSGame("game")
+        ogs.startChallenge(OGSChallenge(game, Stone.BLACK))
+        //TODO go to game and make socket.io link...
+    }
+
+
 }
