@@ -51,26 +51,33 @@ class GameModeChooserActivity : BaseActivity() {
             val id = resources.getString(R.string.ogs_client_id)
             val secret = resources.getString(R.string.ogs_client_secret)
 
-            val service = VolleyOnlineService(this)
+            val service = VolleyOnlineService(this@GameModeChooserActivity)
             val ogsCommunicator = OGSCommunicatorService(service, id, secret)
 
 
             //val response = ogsCommunicator.authenticate(usernameEditText.text.toString(), passwordEditText.text.toString())
 
-
             val url = if (toggleButton.isChecked) "https://www.online-go.com/oauth2/token/"
             else "https://www.online-go.com/api/v0/login/"
 
-            val body = mutableMapOf(
-                    "client_id" to id,
-                    "client_secret" to secret,
-                    "grant_type" to "password",
-                    "username" to "kimonroxd",
-                    "password" to "online-go.com")
+            val username = "kimonroxd"
+            val password = "online-go.com"
 
-            service.post(url, JSONObject(body as Map<*, *>)).setOnResponse {
-                Toast.makeText(this, "$it", Toast.LENGTH_LONG).show()
+            val body = JSONObject()
+
+
+            body.put("client_id", id)
+            body.put("client_secret", secret)
+            body.put("grant_type", "password")
+            body.put("username", username)
+            body.put("password", password)
+
+
+            val listener = service.post(url, body)
+            listener.setOnResponse {
+                Toast.makeText(this@GameModeChooserActivity, "$it", Toast.LENGTH_LONG).show()
             }
+
         }
     }
 
