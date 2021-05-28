@@ -57,10 +57,9 @@ class GameModeChooserActivity : BaseActivity() {
 
             //val response = ogsCommunicator.authenticate(usernameEditText.text.toString(), passwordEditText.text.toString())
 
-            val requestQueue = Volley.newRequestQueue(this)
 
             val url = if (toggleButton.isChecked) "https://www.online-go.com/oauth2/token/"
-            else "https://www.online-go.com/api/v0/login"
+            else "https://www.online-go.com/api/v0/login/"
 
             val body = mutableMapOf(
                     "client_id" to id,
@@ -69,20 +68,9 @@ class GameModeChooserActivity : BaseActivity() {
                     "username" to "kimonroxd",
                     "password" to "online-go.com")
 
-            val request = object : JsonObjectRequest(Method.POST, url, JSONObject(body as Map<*, *>),
-                    {
-                        Toast.makeText(this, "$it", Toast.LENGTH_LONG).show()
-                    },
-                    {
-                        Toast.makeText(this, "${it.networkResponse.headers}", Toast.LENGTH_LONG).show()
-                    }) {
-
-                override fun getBodyContentType(): String {
-                    return "application/x-www-form-urlencoded; charset=UTF-8"
-                }
+            service.post(url, JSONObject(body as Map<*, *>)).setOnResponse {
+                Toast.makeText(this, "$it", Toast.LENGTH_LONG).show()
             }
-
-            requestQueue.add(request)
         }
     }
 
