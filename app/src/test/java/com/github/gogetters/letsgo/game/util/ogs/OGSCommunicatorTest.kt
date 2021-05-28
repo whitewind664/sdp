@@ -1,11 +1,10 @@
 package com.github.gogetters.letsgo.game.util.ogs
 
-import com.github.gogetters.letsgo.game.Move
 import com.github.gogetters.letsgo.game.Point
 import com.github.gogetters.letsgo.game.Stone
 import com.github.gogetters.letsgo.game.util.ogs.mocking.MockOnlineService
+import com.github.gogetters.letsgo.game.util.ogs.mocking.MockRealtimeService
 import junit.framework.Assert.*
-import org.json.JSONObject
 import org.junit.Test
 
 class OGSCommunicatorTest {
@@ -13,7 +12,7 @@ class OGSCommunicatorTest {
     @Test
     fun authenticationSendsUsernameAndPassword() {
         val service = MockOnlineService()
-        val communicator = OGSCommunicatorService(service, "", "")
+        val communicator = OGSCommunicatorService(service, MockRealtimeService(), "", "")
         val username = "john"
         val password = "doe"
 
@@ -29,7 +28,7 @@ class OGSCommunicatorTest {
     @Test
     fun createChallengeSendsChallengeInfo() {
         val service = MockOnlineService()
-        val communicator = OGSCommunicatorService(service, "", "")
+        val communicator = OGSCommunicatorService(service, MockRealtimeService(),"", "")
         val challenge = OGSChallenge("0", OGSGame("0", "mygame"), Stone.BLACK)
 
         val existingGames = service.currentGames.size
@@ -42,7 +41,7 @@ class OGSCommunicatorTest {
     @Test
     fun sendMoveUpdatesGame() {
         val service = MockOnlineService()
-        val communicator = OGSCommunicatorService(service, "", "")
+        val communicator = OGSCommunicatorService(service, MockRealtimeService(),"", "")
 
         val game = OGSGame("0", "mygame")
         game.toString()
@@ -51,7 +50,7 @@ class OGSCommunicatorTest {
 
         val existingGames = service.currentGames.size
 
-        val move = Move(Stone.BLACK, Point(4,5))
+        val move = Point(4,5)
 
         communicator.startChallenge(challenge)
         assertEquals(1, service.challengeList.size)

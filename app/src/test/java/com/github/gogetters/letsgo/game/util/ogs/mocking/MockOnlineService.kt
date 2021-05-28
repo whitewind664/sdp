@@ -19,7 +19,8 @@ class MockOnlineService : OnlineService<JSONObject> {
     private val base = "https://online-go.com"
     private val auth = "/oauth2/token/"
     private val myChallenges = "/v1/me/challenges/"
-    private val challenges = "/v1/challenges"
+    //private val challenges = "/v1/challenges"
+    private val challenges = "/api/v1/players/800307/challenge/"
     private val myGames = "/v1/me/games/"
     private val games = "/v1/games"
 
@@ -44,8 +45,8 @@ class MockOnlineService : OnlineService<JSONObject> {
 
                 val response = JSONObject()
                 response.put("status", "ok")
-                response.put("challenge", Random.nextInt(0, 65535))
-                response.put("challenge", Random.nextInt(0, 65535))
+                response.put("challenge", Random.nextInt(0, 65535).toString())
+                response.put("game", Random.nextInt(0, 65535).toString())
                 listener.onResponse(response)
             }
             url.startsWith("$base$games") -> {

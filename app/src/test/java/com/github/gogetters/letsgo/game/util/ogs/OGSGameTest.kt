@@ -8,9 +8,9 @@ class OGSGameTest {
 
     @Test
     fun gameSerializesCorrectly() {
-        val game = OGSGame("mygame")
+        val game = OGSGame("0", "mygame")
         val json = game.toJSON()
-        assertTrue(json != null)
+
         assertEquals(game.name, json.getString("name"))
         assertEquals(game.height, json.getString("height"))
         assertEquals(game.width, json.getString("width"))
@@ -18,7 +18,7 @@ class OGSGameTest {
 
     @Test
     fun encodingAndDecodingResultsInSameGame() {
-        val game = OGSGame("agame")
+        val game = OGSGame("0", "agame")
         assertEquals(game, OGSGame.fromJSON(game.toJSON()))
     }
 }

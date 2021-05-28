@@ -26,6 +26,7 @@ data class OGSGame(
         game.put("width", width)
         game.put("height", height)
         game.put("disable_analysis", "false")
+        game.put("id", id)
         return game
     }
 

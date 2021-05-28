@@ -79,11 +79,9 @@ class GameModeChooserActivity : BaseActivity() {
         passwordEditText.visibility = View.VISIBLE
         submitButton.visibility = View.VISIBLE
 
-        val toggleButton = findViewById<ToggleButton>(R.id.gameModeChooser_toggle)
-        toggleButton.visibility = View.VISIBLE
-
         ogs = OGSCommunicatorService(
                 VolleyOnlineService(this),
+                SocketIOService(),
                 resources.getString(R.string.ogs_client_id),
                 resources.getString(R.string.ogs_client_secret))
 
@@ -101,11 +99,8 @@ class GameModeChooserActivity : BaseActivity() {
     /**
      * Send the information of the new game on OGS to the interface
      */
-    private fun startOgsOnlineGame() {
-        val game = OGSGame("game")
-        ogs.startChallenge(OGSChallenge(game, Stone.BLACK))
-        //TODO go to game and make socket.io link...
+    private fun startOgsOnlineGame(ogsChallenge: OGSChallenge) {
+        ogs.startChallenge(ogsChallenge)
+        //TODO go to game activity...
     }
-
-
 }

@@ -16,8 +16,8 @@ class OGSChallengeTest {
 
     @Test
     fun toJsonWorks() {
-        val game = OGSGame("game")
-        val challenge = OGSChallenge(game, Stone.WHITE, 999, 382)
+        val game = OGSGame("0", "game")
+        val challenge = OGSChallenge("0", game, Stone.WHITE, 999, 382)
 
         val json = challenge.toJSON()
 
@@ -29,8 +29,8 @@ class OGSChallengeTest {
 
     @Test
     fun encodingAndDecodingReturnsSameChallenge() {
-        val game = OGSGame("game")
-        val challenge = OGSChallenge(game, Stone.WHITE)
+        val game = OGSGame("0","game")
+        val challenge = OGSChallenge("0", game, Stone.WHITE)
 
         assertEquals(challenge, OGSChallenge.fromJSON(challenge.toJSON()))
     }
@@ -39,7 +39,7 @@ class OGSChallengeTest {
     fun fromJSONThrowsOnInvalidStoneValue() {
         exception.expect(IllegalArgumentException::class.java)
 
-        val game = OGSGame("name")
+        val game = OGSGame("0", "name")
         val json = JSONObject()
         json.put("game", game)
         json.put("challenger_color", "invalidColor")
