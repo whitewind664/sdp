@@ -8,7 +8,7 @@ import com.firebase.ui.auth.AuthUI
 import com.firebase.ui.auth.IdpResponse
 import com.google.firebase.auth.FirebaseAuth
 
-class FirebaseUIActivity : AppCompatActivity() {
+class LoginActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -46,12 +46,11 @@ class FirebaseUIActivity : AppCompatActivity() {
             val response = IdpResponse.fromResultIntent(data)
 
             if (resultCode == Activity.RESULT_OK) {
-                // Successfully signed in
-//                val user = FirebaseAuth.getInstance().currentUser
-                startActivity(Intent(this, ProfileActivity::class.java))
-                // ...
-            } else {
+                // Successfully signed in -> store it correctly on realtime database
+                val user = FirebaseAuth.getInstance().currentUser
 
+                startActivity(Intent(this, ProfileActivity::class.java))
+            } else {
                 startActivity(Intent(this, MainActivity::class.java))
                 // Sign in failed. If response is null the user canceled the
                 // sign-in flow using the back button. Otherwise check

@@ -53,7 +53,7 @@
             android:name=".activities.ProfileActivity"
             android:label="@string/title_activity_profile" />
         <activity
-            android:name=".activities.FirebaseUIActivity"
+            android:name=".activities.LoginActivity"
             android:label="@string/title_activity_firebaseui" />
 
         <meta-data

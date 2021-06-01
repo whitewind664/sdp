@@ -10,9 +10,10 @@ import java.util.*
 import kotlin.collections.ArrayList
 
 
-// I know we could use a data class or something but LetsGoUser's functioning is complex and this
-// approach just works so I will stick to it!
-// Db is an optional argument to allow for testing!
+/**
+ * Class that represents a user of the app and coordinates the communication of user data with the
+ * database. The optional parameters are for testing purposes
+ */
 class LetsGoUser(val uid: String, val db: Database.Companion = Database, val cloud: CloudStorage.Companion = CloudStorage) {
     var nick: String? = null
     var first: String? = null
@@ -23,7 +24,12 @@ class LetsGoUser(val uid: String, val db: Database.Companion = Database, val clo
     // The reference (== address) of the profile picture on cloud storage
     var profileImageRef: String? = null
 
-    public var friends: EnumMap<FriendStatus, MutableList<LetsGoUser>>? = null
+    var friends: EnumMap<FriendStatus, MutableList<LetsGoUser>>? = null
+
+    // map related values
+    var isLookingForPlayers: Boolean? = null
+    var lastPositionLatitude: Double? = null
+    var lastPositionLongitude: Double? = null
 
     // Be very careful if changing path values!
     private val tag = "FirestoreTest"
@@ -58,7 +64,10 @@ class LetsGoUser(val uid: String, val db: Database.Companion = Database, val clo
             "last" to last,
             "city" to city,
             "country" to country,
-            "profilePictureRef" to profileImageRef
+            "profilePictureRef" to profileImageRef,
+            "isLookingForPlayers" to isLookingForPlayers,
+            "lastPositionLatitude" to lastPositionLatitude,
+            "lastPositionLongitude" to lastPositionLongitude
         )
 
         // Add a new document with user's uid
