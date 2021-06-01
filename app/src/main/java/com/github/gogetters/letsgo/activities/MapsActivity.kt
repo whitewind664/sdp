@@ -38,7 +38,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback,
         private val EPFL: LatLng = LatLng(EPFL_LAT, EPFL_LNG)
         private const val INIT_ZOOM = 10f
         private const val TOAST_DURATION = Toast.LENGTH_SHORT
-        private const val MARKER_DISPLAY_PADDING = 10
+        private const val MARKER_DISPLAY_PADDING = 0
 
         // indices in the dialog
         private const val DIALOG_CANCEL_IDX = 1
