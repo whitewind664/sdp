@@ -8,7 +8,7 @@ import com.firebase.ui.auth.AuthUI
 import com.firebase.ui.auth.IdpResponse
 import com.google.firebase.auth.FirebaseAuth
 
-class FirebaseUIActivity : AppCompatActivity() {
+class LoginActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -46,8 +46,9 @@ class FirebaseUIActivity : AppCompatActivity() {
             val response = IdpResponse.fromResultIntent(data)
 
             if (resultCode == Activity.RESULT_OK) {
-                // Successfully signed in
-//                val user = FirebaseAuth.getInstance().currentUser
+                // Successfully signed in -> store it properly on firebase
+                val user = FirebaseAuth.getInstance().currentUser
+                g
                 startActivity(Intent(this, ProfileActivity::class.java))
                 // ...
             } else {

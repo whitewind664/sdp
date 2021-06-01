@@ -1,6 +1,5 @@
 package com.github.gogetters.letsgo.activities
 
-import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.os.Environment
@@ -125,7 +124,7 @@ class ProfileActivity : BaseActivity() {
     }
 
     private fun dispatchLoginIntent() {
-        val intent = Intent(this, FirebaseUIActivity::class.java)
+        val intent = Intent(this, LoginActivity::class.java)
         startActivity(intent)
     }
 }

@@ -11,7 +11,7 @@ import org.junit.runner.RunWith
 class FirebaseUIActivityTest: EmulatedFirebaseTest() {
 
     @get:Rule
-    var activityScenarioRule = ActivityScenarioRule(FirebaseUIActivity::class.java)
+    var activityScenarioRule = ActivityScenarioRule(LoginActivity::class.java)
 
     /**
      * Note that testing this activity is hard as it's directly linked to firebase
