@@ -168,14 +168,6 @@ class ProfileEditActivityTest : EmulatedFirebaseTest() {
         }
     }
 
-    private fun clickWaitButton() {
-        val device = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation())
-        var waitButton = device.findObject(UiSelector().textContains("wait"))
-        if (waitButton.exists()) {
-            waitButton.click()
-        }
-    }
-
     private fun acceptPermissions() {
         // in case the permission hasn't been requested
         val device: UiDevice = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation())

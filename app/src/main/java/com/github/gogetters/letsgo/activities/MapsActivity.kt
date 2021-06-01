@@ -24,6 +24,8 @@ import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.*
+import kotlin.math.max
+import kotlin.math.min
 
 
 class MapsActivity : AppCompatActivity(), OnMapReadyCallback,
@@ -36,7 +38,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback,
         private val EPFL: LatLng = LatLng(EPFL_LAT, EPFL_LNG)
         private const val INIT_ZOOM = 10f
         private const val TOAST_DURATION = Toast.LENGTH_SHORT
-        private const val MARKER_DISPLAY_PADDING = 250
+        private const val MARKER_DISPLAY_PADDING = 10
 
         // indices in the dialog
         private const val DIALOG_CANCEL_IDX = 1
@@ -64,9 +66,6 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback,
 
     /**
      * Manipulates the map once available.
-     * This callback is triggered when the map is ready to be used.
-     * This is where we can add markers or lines, add listeners or move the camera. In this case,
-     * we just add a marker near Sydney, Australia.
      * If Google Play services is not installed on the device, the user will be prompted to install
      * it inside the SupportMapFragment. This method will only be triggered once the user has
      * installed Google Play services and returned to the app.
@@ -165,6 +164,10 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback,
         if (otherUsersActivated) {
             removeAllOtherPlayers()
             var allPositions: LatLngBounds.Builder = LatLngBounds.Builder()
+            var maxLat: Double = Double.MIN_VALUE
+            var minLat: Double = Double.MAX_VALUE
+            var maxLng: Double = Double.MIN_VALUE
+            var minLng: Double = Double.MAX_VALUE
             for ((playerPosition, id) in updatedUsers.entries) {
                 Log.d("TEST MAP", "fetched id $id")
                 val marker =
@@ -176,6 +179,10 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback,
                 marker.tag = id  // the userId needs to be stored
                 userMarkers = userMarkers + Pair(marker, id)
                 allPositions.include(marker.position)
+                maxLat = max(maxLat, playerPosition.latitude)
+                maxLng = max(maxLng, playerPosition.longitude)
+                minLat = min(minLat, playerPosition.latitude)
+                minLng = min(minLng, playerPosition.longitude)
             }
             // update the camera zoom
             val cu =

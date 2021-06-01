@@ -90,7 +90,7 @@ class MapsActivityTest : EmulatedFirebaseTest() {
         sleep()
 
         val marker = device.findObject(UiSelector().descriptionContains(testId))
-        // assertTrue(marker.exists()) // somehow doesn't pass on cirrus
+        assertTrue(marker.exists()) // somehow doesn't pass on cirrus
         marker.click() // would throw an exception if it was not displayed
 
         Database.deleteData("$userPath/$testId")
