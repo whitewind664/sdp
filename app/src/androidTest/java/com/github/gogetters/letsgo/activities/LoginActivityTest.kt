@@ -59,7 +59,7 @@ class LoginActivityTest: EmulatedFirebaseTest() {
     fun returnsToProfileActivityAfterRegister() {
         FirebaseAuth.getInstance().signOut()
         Thread.sleep(5000)
-        val testEmail = "test@letsgo.com"
+        val testEmail = "test4@letsgo.com"
         val testName = "name"
         val testPwd = "VJDKFjdkfjisljfie233"
         val device: UiDevice = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation())
@@ -97,7 +97,7 @@ class LoginActivityTest: EmulatedFirebaseTest() {
             val userBundle = FirebaseUserBundle(user)
             userBundle.deleteUser()
         }
-
+        Thread.sleep(5000)
         Intents.intended(IntentMatchers.hasComponent(ProfileActivity::class.java.name))
     }
 }
