@@ -6,6 +6,7 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.firebase.ui.auth.AuthUI
 import com.firebase.ui.auth.IdpResponse
+import com.github.gogetters.letsgo.database.user.FirebaseUserBundle
 import com.google.firebase.auth.FirebaseAuth
 
 class LoginActivity : AppCompatActivity() {
@@ -40,19 +41,17 @@ class LoginActivity : AppCompatActivity() {
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-
-
+        
         if (requestCode == RC_SIGN_IN) {
             val response = IdpResponse.fromResultIntent(data)
 
             if (resultCode == Activity.RESULT_OK) {
                 // Successfully signed in -> store it properly on firebase
                 val user = FirebaseAuth.getInstance().currentUser
-                g
+                val userBundle = FirebaseUserBundle(user)
+                userBundle.getUser().uploadUserData()
                 startActivity(Intent(this, ProfileActivity::class.java))
-                // ...
             } else {
-
                 startActivity(Intent(this, MainActivity::class.java))
                 // Sign in failed. If response is null the user canceled the
                 // sign-in flow using the back button. Otherwise check

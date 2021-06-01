@@ -96,7 +96,7 @@ class LetsGoUser(val uid: String, val db: Database.Companion = Database, val clo
             }
     }
 
-    fun extractUserData(userData: DataSnapshot){
+     private fun extractUserData(userData: DataSnapshot){
         for (attribute in userData.children) {
             when (attribute.key) {
                 "nick" -> nick = attribute.value as String
@@ -105,6 +105,9 @@ class LetsGoUser(val uid: String, val db: Database.Companion = Database, val clo
                 "city" -> city = attribute.value as String
                 "country" -> country = attribute.value as String
                 "profilePictureRef" -> profileImageRef = attribute.value as String
+                "isLookingForPlayers" -> isLookingForPlayers = attribute.value as Boolean
+                "lastPositionLatitude" -> lastPositionLatitude = attribute.value as Double
+                "lastPositionLongitude" -> lastPositionLongitude = attribute.value as Double
             }
         }
     }
@@ -127,8 +130,8 @@ class LetsGoUser(val uid: String, val db: Database.Companion = Database, val clo
     }
 
     override fun toString(): String {
-        // TODO Maybe improve this?
-        return "LetsGoUser(uid=$uid, nick=$nick, first=$first, last=$last, city=$city, country=$country, profileImageRef=$profileImageRef)"
+        return "LetsGoUser(uid=$uid, nick=$nick, first=$first, last=$last, city=$city, country=$country, profileImageRef=$profileImageRef, isLookingForPlayers=$isLookingForPlayers," +
+                "lastPositionLatitude=$lastPositionLatitude, lastPositionLongitude=$lastPositionLongitude)"
     }
 
     //===========================================================================================
