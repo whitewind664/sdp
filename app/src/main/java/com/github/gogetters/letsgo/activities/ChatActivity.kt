@@ -1,9 +1,11 @@
 package com.github.gogetters.letsgo.activities
 
+import android.content.Context
 import android.os.Bundle
-import android.provider.ContactsContract
+import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import com.github.gogetters.letsgo.R
+import com.github.gogetters.letsgo.cache.Cache
 import com.github.gogetters.letsgo.chat.model.ChatMessageData
 import com.github.gogetters.letsgo.chat.model.UserData
 import com.github.gogetters.letsgo.chat.views.ChatMyMessageItem
@@ -15,11 +17,15 @@ import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.xwray.groupie.GroupAdapter
+import com.xwray.groupie.Item
 import com.xwray.groupie.ViewHolder
 import kotlinx.android.synthetic.main.activity_chat.*
 
 class ChatActivity : AppCompatActivity() {
 
+    // Stores last messages of the chat
+    private var lastMessages = ArrayList<Item<ViewHolder>>()
+    private val activity = this
     val adapter = GroupAdapter<ViewHolder>()
     lateinit var userId: String
     var toUser: UserData? = null
@@ -32,10 +38,20 @@ class ChatActivity : AppCompatActivity() {
         userId = FirebaseAuth.getInstance().currentUser!!.uid
         toUser = intent.getParcelableExtra<UserData>(ChatNewMessageActivity.KEY)
 
+        // Without checking database connection
         listenForMessages()
+        // With checking database connection
+        /*
+        if (Database.isConnected) {
+            listenForMessages()
+        } else {
+            lastMessages = Cache.loadChatData(activity)
+            updateMessageList()
+        }
+        */
 
         chat_send_button.setOnClickListener {
-            sendMessage()
+            if (Database.isConnected) { sendMessage() }
         }
     }
 
@@ -43,22 +59,25 @@ class ChatActivity : AppCompatActivity() {
         val fromId = userId
         val toId = toUser?.id
         val ref = FirebaseDatabase.getInstance().getReference("/messages-node/$fromId/$toId")
-        //ref.keepSynced(true)
 
         ref.addChildEventListener(object: ChildEventListener {
             override fun onChildAdded(snapshot: DataSnapshot, previousChildName: String?) {
                 val chatMessage = snapshot.getValue(ChatMessageData::class.java)
-                // ADD to the adapter the text messages
                 if (chatMessage != null) {
                     if (chatMessage.fromId == userId) {
                         adapter.add(ChatMyMessageItem(chatMessage.text))
+                        lastMessages.add(ChatMyMessageItem(chatMessage.text))
+                        Cache.saveChatData(activity, lastMessages)
+                        Log.d("CACHE", getSharedPreferences("sharedPrefs", Context.MODE_PRIVATE).getString("chatMessageList", "")!!)
                     } else {
                         adapter.add(ChatTheirMessageItem(chatMessage.text))
+                        lastMessages.add(ChatTheirMessageItem(chatMessage.text))
+                        Cache.saveChatData(activity, lastMessages)
+                        Log.d("CACHE", getSharedPreferences("sharedPrefs", Context.MODE_PRIVATE).getString("chatMessageList", "")!!)
                     }
                 }
                 chat_recyclerview_messages.scrollToPosition(adapter.itemCount - 1)
             }
-
             override fun onChildChanged(snapshot: DataSnapshot, previousChildName: String?) {}
             override fun onChildRemoved(snapshot: DataSnapshot) {}
             override fun onChildMoved(snapshot: DataSnapshot, previousChildName: String?) {}
@@ -66,26 +85,17 @@ class ChatActivity : AppCompatActivity() {
         })
     }
 
-    fun sendMessage() {
+    private fun sendMessage() {
 
         val text = chat_editText_input.text.toString()
 
         if (text.isNotEmpty()) {
-            val fromId = userId!!
-            val toId = toUser!!.id!! // This might work?
-//            if (toUser?.id == null) {
-//                toId = UNKNOWN
-//            } else {
-//                toId = toUser?.id
-//            }
+            val fromId = userId
+            val toId = toUser!!.id!!
+
+            // Store chat message in messages node both under from and to ids
             val ref = FirebaseDatabase.getInstance().getReference("/messages-node/$fromId/$toId").push()
-            //ref.keepSynced(true)
             val toRef = FirebaseDatabase.getInstance().getReference("/messages-node/$toId/$fromId").push()
-            //toRef.keepSynced(true)
-            val lastMessageRef = FirebaseDatabase.getInstance().getReference("/last-messages-node/$fromId/$toId")
-            //lastMessageRef.keepSynced(true)
-            val lastMessageToRef = FirebaseDatabase.getInstance().getReference("/last-messages-node/$toId/$fromId")
-            //lastMessageToRef.keepSynced(true)
 
             val chatMessage =
                 ChatMessageData(ref.key!!, text, fromId, toId, System.currentTimeMillis() / 1000)
@@ -99,11 +109,26 @@ class ChatActivity : AppCompatActivity() {
                 chat_recyclerview_messages.scrollToPosition(adapter.itemCount - 1)
             }
 
+            // Update last messages nodes
+            val lastMessageRef = FirebaseDatabase.getInstance().getReference("/last-messages-node/$fromId/$toId")
+            val lastMessageToRef = FirebaseDatabase.getInstance().getReference("/last-messages-node/$toId/$fromId")
             lastMessageRef.setValue(chatMessage)
-
             lastMessageToRef.setValue(chatMessage)
         }
+    }
 
+    /**
+     * Link the content from the hashmap to the UI
+     */
+    private fun updateMessageList() {
+        adapter.clear()
+        lastMessages.forEach {
+            if (it is ChatMyMessageItem) {
+                adapter.add(it)
+            } else {
+                adapter.add(it as ChatTheirMessageItem)
+            }
+        }
     }
 
 }

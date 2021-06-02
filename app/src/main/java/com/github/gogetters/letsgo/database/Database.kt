@@ -13,12 +13,13 @@ import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
 import java.util.concurrent.CompletableFuture
 
-
 class Database {
+
     companion object {
 
         init {
-            //Firebase.database.setPersistenceEnabled(true)
+            // Set up listener for the .info/connected path
+            setUpIsConnected()
         }
 
         private val db = Firebase.database
@@ -27,6 +28,10 @@ class Database {
         }
 
         var isEmulated = false
+            get() = field
+
+        // Stores info about connection status
+        var isConnected: Boolean = false
             get() = field
 
         // TODO write database functions here
@@ -64,15 +69,6 @@ class Database {
 
         fun readSearchByChild(ref: String, childName: String, queryText: String): Task<DataSnapshot> {
             return db.getReference(ref).orderByChild(childName).startAt(queryText).endAt(queryText+"\uf8ff").get()
-        }
-
-        fun enableCache() {
-            Firebase.database.setPersistenceEnabled(true)
-        }
-
-        fun keepSynced(ref: String) {
-            val ref = Firebase.database.getReference(ref)
-            ref.keepSynced(true)
         }
 
         // ---- [START} Matchmaking  ----
@@ -256,6 +252,24 @@ class Database {
             val user = FirebaseAuth.getInstance().currentUser ?: return null
             return user.uid
         }
+
+        /**
+         * Set up listener for the .info/connected path
+         * The function adjust the Database.isConnected field based on the connection
+         */
+        private fun setUpIsConnected() {
+            val connectedRef = Firebase.database.getReference(".info/connected")
+            connectedRef.addValueEventListener(object: ValueEventListener {
+                override fun onDataChange(snapshot: DataSnapshot) {
+                    isConnected = snapshot.getValue(Boolean::class.java) ?: false
+                    if (isConnected) { Log.d("TAG", " connected") }
+                    else { Log.d("TAG", " not connected") }
+                }
+
+                override fun onCancelled(error: DatabaseError) {}
+            })
+        }
+
     }
 
 }
