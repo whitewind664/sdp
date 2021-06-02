@@ -48,14 +48,6 @@ class LoginActivityTest: EmulatedFirebaseTest() {
     }
 
     @Test
-    fun createsIntentForFirebase() {
-        // doesn't work....
-        /*scenario = ActivityScenario.launch(intent)
-        Intents.intended(IntentMatchers.hasComponent("com.github.gogetters.letsgo/com.firebase.ui.auth.KickoffActivity"))*/
-    }
-
-
-    @Test
     fun returnsToProfileActivityAfterRegister() {
         FirebaseAuth.getInstance().signOut()
         Thread.sleep(5000)

@@ -37,7 +37,6 @@ class LoginActivity : AppCompatActivity() {
             .setIsSmartLockEnabled(false)
             .setAlwaysShowSignInMethodScreen(true)
             .build()
-        Log.i("LOGIN", intent.toString())
         startActivityForResult(
                 intent,
                 RC_SIGN_IN)
@@ -53,7 +52,11 @@ class LoginActivity : AppCompatActivity() {
                 // Successfully signed in -> store it properly on firebase
                 val user = FirebaseAuth.getInstance().currentUser
                 val userBundle = FirebaseUserBundle(user)
-                userBundle.getUser().uploadUserData()
+                val letsGoUser = userBundle.getUser()
+                letsGoUser.requireUserExists().addOnFailureListener {
+                    // this means that the user does not yet exist
+                    letsGoUser.uploadUserData()
+                }
 
                 val intent = Intent(this, ProfileActivity::class.java)
                 intent.putExtra("UserBundleProvider", FirebaseUserBundleProvider)
