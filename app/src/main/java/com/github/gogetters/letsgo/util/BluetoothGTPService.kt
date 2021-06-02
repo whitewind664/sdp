@@ -4,10 +4,12 @@ import android.os.Handler
 import android.os.Looper
 import android.util.Log
 import com.github.gogetters.letsgo.game.GTPCommand
+import com.github.gogetters.letsgo.game.Move
 import com.github.gogetters.letsgo.game.util.InputDelegate
+import com.github.gogetters.letsgo.game.util.RemoteService
 
 
-class BluetoothGTPService: BluetoothService() {
+class BluetoothGTPService: BluetoothService(), RemoteService {
 
     override val handler = Handler(Looper.getMainLooper()) {
         if (it.what == MESSAGE_READ) {
@@ -17,7 +19,11 @@ class BluetoothGTPService: BluetoothService() {
         }
     }
 
-    lateinit var inputDelegate: InputDelegate
+    override lateinit var inputDelegate: InputDelegate
+
+    override fun notify(move: Move) {
+        sendCommand(GTPCommand.PLAY(move))
+    }
 
 
     fun sendCommand(gtpCommand: GTPCommand) {

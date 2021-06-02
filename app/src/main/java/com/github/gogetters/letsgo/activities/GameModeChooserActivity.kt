@@ -44,9 +44,8 @@ class GameModeChooserActivity : BaseActivity() {
             val intent = Intent(this, GameActivity::class.java).apply {
                 putExtra(GameActivity.EXTRA_GAME_SIZE, 9)
                 putExtra(GameActivity.EXTRA_KOMI, 5.5)
-                val localType = Player.PlayerTypes.LOCAL.ordinal
-                putExtra(GameActivity.EXTRA_PLAYER_BLACK, localType)
-                putExtra(GameActivity.EXTRA_PLAYER_WHITE, localType)
+                putExtra(GameActivity.EXTRA_LOCAL_COLOR, Stone.BLACK.toString())
+                putExtra(GameActivity.EXTRA_GAME_TYPE, "LOCAL")
             }
             startActivity(intent)
         }
@@ -63,25 +62,7 @@ class GameModeChooserActivity : BaseActivity() {
         }
     }
 
-    private fun initChallengeButton() {
-        val challengeButton = findViewById<Button>(R.id.gameModeChooser_button_challenge)
 
-        challengeButton.setOnClickListener {
-            ogs.startChallenge()
-            localButton = findViewById(R.id.gameModeChooser_button_local)
-            localButton.setOnClickListener {
-                // start a local game
-                val intent = Intent(this, GameActivity::class.java).apply {
-                    putExtra(GameActivity.EXTRA_GAME_SIZE, 9)
-                    putExtra(GameActivity.EXTRA_KOMI, 5.5)
-                    val localType = Player.PlayerTypes.LOCAL.ordinal
-                    putExtra(GameActivity.EXTRA_PLAYER_BLACK, localType)
-                    putExtra(GameActivity.EXTRA_PLAYER_WHITE, localType)
-                }
-                startActivity(intent)
-            }
-        }
-    }
 
     private fun initOGS() {
         titleText.text = resources.getString(R.string.gameModeChooser_loginTitle)
@@ -112,6 +93,16 @@ class GameModeChooserActivity : BaseActivity() {
             }
         }
 
-        initChallengeButton()
+        challengeButton.setOnClickListener {
+            ogs.startChallenge().setOnResponse {
+                val intent = Intent(this, GameActivity::class.java).apply {
+                    putExtra(GameActivity.EXTRA_GAME_SIZE, 9)
+                    putExtra(GameActivity.EXTRA_KOMI, 5.5)
+                    putExtra(GameActivity.EXTRA_LOCAL_COLOR, Stone.BLACK.toString())
+                    putExtra(GameActivity.EXTRA_GAME_TYPE, "OGS")
+                }
+                startActivity(intent)
+            }
+        }
     }
 }

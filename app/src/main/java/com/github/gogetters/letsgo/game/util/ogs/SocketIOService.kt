@@ -1,20 +1,35 @@
 package com.github.gogetters.letsgo.game.util.ogs
 
+import android.util.Log
 import com.github.gogetters.letsgo.game.Point
 import io.socket.client.IO
 import io.socket.client.Socket
 import io.socket.emitter.Emitter
 import org.json.JSONObject
 
+//TODO can easily add more tests by isolating the calls to "socket" under another interface
 class SocketIOService : RealtimeService {
 
     private val socket: Socket = IO.socket("https://online-go.com/socket.io/?EIO=3")
 
     private lateinit var accessToken: String
 
+    override fun awaitGame(gameID: String): ResponseListener<Boolean> {
+
+        val responseListener = ResponseListener<Boolean>()
+        val game = JSONObject()
+        game.put("game_id", gameID)
+        socket.emit("game/wait", game)
+        socket.on("game/$gameID/reset") {
+            Log.d("SOCKET SOCKET", "we got handshake from game")
+            responseListener.onResponse(true)
+        }
+        return responseListener
+    }
+
     override fun connectToGame(playerID: String, gameID: String, onMove: (Point) -> Unit) {
         val gameDetails = JSONObject()
-        gameDetails.put("player_id", "our_id...")
+        gameDetails.put("player_id", playerID)
         gameDetails.put("game_id", gameID)
         gameDetails.put("chat", false)
 
@@ -31,7 +46,9 @@ class SocketIOService : RealtimeService {
 
     override fun connect(accessToken: String) {
         this.accessToken = accessToken
+        socket.auth
         socket.connect()
+        Log.d("SOCKET CONNECTED", socket.connected().toString())
     }
 
     override fun sendMove(move: Point, gameID: String) {

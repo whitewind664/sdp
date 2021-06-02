@@ -1,12 +1,10 @@
 package com.github.gogetters.letsgo.game.util.ogs
 
-import android.app.Instrumentation
-import android.content.res.Resources
 import android.util.Log
-import com.github.gogetters.letsgo.R
+import com.github.gogetters.letsgo.game.Move
 import com.github.gogetters.letsgo.game.Point
-import com.github.gogetters.letsgo.game.Stone
 import com.github.gogetters.letsgo.game.util.InputDelegate
+import com.github.gogetters.letsgo.game.util.RemoteService
 import org.json.JSONException
 import org.json.JSONObject
 import java.net.CookieManager
@@ -15,7 +13,7 @@ import java.net.URI
 class OGSCommunicatorService(private val onlineService: OnlineService<JSONObject>,
                              private val realtimeService: RealtimeService,
                              private val CLIENT_ID: String,
-                             private val CLIENT_SECRET: String) {
+                             private val CLIENT_SECRET: String): RemoteService {
 
 
     private val base = "https://online-go.com"
@@ -25,14 +23,21 @@ class OGSCommunicatorService(private val onlineService: OnlineService<JSONObject
     private val challenges = "/api/v1/challenges"
     private val botChallenges = "/api/v1/players/800307/challenge/"
     private val games = "/v1/games"
-    private var gameID = 0
+
     lateinit var accessToken: String
     lateinit var refreshToken: String
 
-    lateinit var activeChallenge: String
+    lateinit var currentChallenge: String
+    lateinit var currentGame: String
+    lateinit var playerID: String
+
     var authenticated = false
 
-    lateinit var inputDelegate: InputDelegate
+    override lateinit var inputDelegate: InputDelegate
+
+    override fun notify(move: Move) {
+        sendMove(move.point, currentGame)
+    }
 
     private fun login(username: String, password: String): ResponseListener<Boolean> {
         val body = JSONObject()
@@ -42,16 +47,20 @@ class OGSCommunicatorService(private val onlineService: OnlineService<JSONObject
         body.put("username", username)
         body.put("password", password)
 
-        val response =  onlineService.post("$base$login", onlineService.urlEncode(body))
         val after = ResponseListener<Boolean>()
-        response.setOnResponse {
+        onlineService.post("$base$login", onlineService.urlEncode(body))
+                .setOnResponse {
             try {
                 val testUsername = it.getJSONObject("user").getString("username")
-                after.onResponse(testUsername == username)
-                Log.d("TEST TEST", testUsername)
+                if (testUsername == username) {
+                    playerID = it.getJSONObject("user").getString("id")
+                    after.onResponse(true)
+                } else {
+                    after.onResponse(false)
+                }
+
             } catch (e: JSONException) {
                 after.onResponse(false)
-                Log.d("LOGIN FAILED", it.toString())
             }
         }
 
@@ -93,7 +102,7 @@ class OGSCommunicatorService(private val onlineService: OnlineService<JSONObject
     }
 
 
-    fun startChallenge() {
+    fun startChallenge(): ResponseListener<Boolean> {
         if (!authenticated) throw IllegalStateException("user has not authenticated yet")
 
         val body = "{\"initialized\":false,\"min_ranking\":-1000,\"max_ranking\":1000,\"" +
@@ -104,7 +113,7 @@ class OGSCommunicatorService(private val onlineService: OnlineService<JSONObject
                 "\"time_control_parameters\":{\"system\":\"simple\",\"speed\":\"blitz\",\"per_move\":5," +
                 "\"pause_on_weekends\":false,\"time_control\":\"simple\"}},\"aga_ranked\":false}"
 
-        //TODO change to real challenges
+
         val cookies = CookieManager.getDefault().get(URI(base), mapOf())
         val cookieString = cookies["Cookie"]!![0]
         val token = cookieString.subSequence(
@@ -115,25 +124,45 @@ class OGSCommunicatorService(private val onlineService: OnlineService<JSONObject
         headers.put("x-csrftoken", token)
         headers.put("referer", base)
         headers.put("content-type", "application/json")
+
+        val afterGameStart = ResponseListener<Boolean>()
+
         onlineService.post("$base$botChallenges", body, headers).setOnResponse { response ->
             val gameID = response.getString("game")
             val challengeID = response.getString("challenge")
 
-            activeChallenge = challengeID
+            service = this
+            currentChallenge = challengeID
+            currentGame = gameID
+            /*
+            realtimeService.awaitGame(currentGame).setOnResponse { gameStatus ->
+                realtimeService.connectToGame(playerID, gameID) { inputDelegate.saveLatestInput(it)}
+                afterGameStart.onResponse(gameStatus)
 
-            realtimeService.connectToGame("ourid...", gameID) { inputDelegate.saveLatestInput(it) }
+            }*/
+            realtimeService.connect(accessToken)
+            realtimeService.connectToGame(playerID, gameID) {
+                Log.d("RECEIVED MOVE", "we received the move: $it")
+            }
         }
+
+        return afterGameStart
     }
 
-    fun cancelChallenge(challengeID: String) {
-        val url = "$base$challenges/$challengeID"
+    fun cancelChallenge() {
+        val url = "$base$challenges/$currentChallenge"
 
         onlineService.delete(url).setOnResponse {
             // TODO
         }
+
     }
 
     fun sendMove(move: Point, gameID: String) {
         realtimeService.sendMove(move, gameID)
+    }
+
+    companion object {
+        lateinit var service: RemoteService
     }
 }

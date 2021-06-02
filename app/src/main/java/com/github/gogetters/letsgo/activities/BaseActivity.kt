@@ -8,6 +8,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import com.github.gogetters.letsgo.R
 import com.github.gogetters.letsgo.game.Player
+import com.github.gogetters.letsgo.game.Stone
 import com.google.android.material.bottomnavigation.LabelVisibilityMode
 import kotlinx.android.synthetic.main.activity_base.*
 
@@ -47,9 +48,8 @@ abstract class BaseActivity : AppCompatActivity() {
                     val intent = Intent(this, GameActivity::class.java).apply {
                         putExtra(GameActivity.EXTRA_GAME_SIZE, 9)
                         putExtra(GameActivity.EXTRA_KOMI, 5.5)
-                        val localType = Player.PlayerTypes.LOCAL.ordinal
-                        putExtra(GameActivity.EXTRA_PLAYER_BLACK, localType)
-                        putExtra(GameActivity.EXTRA_PLAYER_WHITE, localType)
+                        putExtra(GameActivity.EXTRA_LOCAL_COLOR, Stone.BLACK)
+                        putExtra(GameActivity.EXTRA_GAME_TYPE, "LOCAL")
                     }
                     startActivity(intent)
                     true

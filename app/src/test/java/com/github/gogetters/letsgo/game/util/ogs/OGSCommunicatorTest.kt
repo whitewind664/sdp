@@ -29,11 +29,10 @@ class OGSCommunicatorTest {
     fun createChallengeSendsChallengeInfo() {
         val service = MockOnlineService()
         val communicator = OGSCommunicatorService(service, MockRealtimeService(),"", "")
-        val challenge = OGSChallenge("0", OGSGame("0", "mygame"), Stone.BLACK)
 
         val existingGames = service.currentGames.size
 
-        communicator.startChallenge(challenge)
+        communicator.startChallenge()
         assertEquals(1, service.challengeList.size)
         assertEquals(existingGames + 1, service.currentGames.size)
     }
@@ -43,16 +42,11 @@ class OGSCommunicatorTest {
         val service = MockOnlineService()
         val communicator = OGSCommunicatorService(service, MockRealtimeService(),"", "")
 
-        val game = OGSGame("0", "mygame")
-        game.toString()
-        val challenge = OGSChallenge("0", game, Stone.BLACK)
-        challenge.toString()
-
         val existingGames = service.currentGames.size
 
         val move = Point(4,5)
 
-        communicator.startChallenge(challenge)
+        communicator.startChallenge()
         assertEquals(1, service.challengeList.size)
         assertEquals(existingGames + 1, service.currentGames.size)
         communicator.sendMove(move, "0")
