@@ -8,6 +8,7 @@ import com.github.gogetters.letsgo.chat.model.ChatMessageData
 import com.github.gogetters.letsgo.chat.model.UserData
 import com.github.gogetters.letsgo.chat.views.ChatMyMessageItem
 import com.github.gogetters.letsgo.chat.views.ChatTheirMessageItem
+import com.github.gogetters.letsgo.database.Authentication
 import com.github.gogetters.letsgo.database.Database
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.ChildEventListener
@@ -29,7 +30,7 @@ class ChatActivity : AppCompatActivity() {
         setContentView(R.layout.activity_chat)
 
         chat_recyclerview_messages.adapter = adapter
-        userId = FirebaseAuth.getInstance().currentUser!!.uid
+        userId = Authentication.getCurrentUser()!!.uid
         toUser = intent.getParcelableExtra<UserData>(ChatNewMessageActivity.KEY)
 
         listenForMessages()

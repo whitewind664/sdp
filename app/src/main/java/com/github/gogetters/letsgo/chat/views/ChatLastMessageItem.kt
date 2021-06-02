@@ -3,6 +3,7 @@ package com.github.gogetters.letsgo.chat.views
 import com.github.gogetters.letsgo.R
 import com.github.gogetters.letsgo.chat.model.ChatMessageData
 import com.github.gogetters.letsgo.chat.model.UserData
+import com.github.gogetters.letsgo.database.Authentication
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
@@ -20,7 +21,7 @@ class ChatLastMessageItem(val chatMessage: ChatMessageData): Item<ViewHolder>() 
         viewHolder.itemView.chat_textView_last_message.text = chatMessage.text
 
         val chatId: String
-        if (chatMessage.fromId == FirebaseAuth.getInstance().uid) {
+        if (chatMessage.fromId == Authentication.getUid()) {
             chatId = chatMessage.toId
         } else {
             chatId = chatMessage.fromId

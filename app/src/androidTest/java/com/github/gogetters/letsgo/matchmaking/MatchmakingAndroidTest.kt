@@ -22,11 +22,6 @@ public class MatchmakingAndroidTest: EmulatedFirebaseTest() {
 
     @Test
     fun findMatchWorks() {
-        val auth = Firebase.auth
-//        auth.signInWithEmailAndPassword("test@test.com", "password")
-//                .addOnCompleteListener {
-//                    Matchmaking.findMatch() {  }
-//
-//                }
+
     }
 }

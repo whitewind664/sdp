@@ -12,6 +12,7 @@ import androidx.test.uiautomator.UiDevice
 import androidx.test.uiautomator.UiObject
 import androidx.test.uiautomator.UiSelector
 import com.firebase.ui.auth.KickoffActivity
+import com.github.gogetters.letsgo.database.Authentication
 import com.github.gogetters.letsgo.database.EmulatedFirebaseTest
 import com.github.gogetters.letsgo.database.user.FirebaseUserBundle
 import com.google.firebase.auth.FirebaseAuth
@@ -32,7 +33,7 @@ class LoginActivityTest: EmulatedFirebaseTest() {
         Intents.init()
         scenario = ActivityScenario.launch(intent)
 
-        FirebaseAuth.getInstance().signOut()
+        Authentication.signOut()
 
         val device = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation())
         var waitButton = device.findObject(UiSelector().textContains("wait"))
@@ -49,7 +50,7 @@ class LoginActivityTest: EmulatedFirebaseTest() {
 
     @Test
     fun returnsToProfileActivityAfterRegister() {
-        FirebaseAuth.getInstance().signOut()
+        Authentication.signOut()
         Thread.sleep(5000)
         val testEmail = "test4@letsgo.com"
         val testName = "name"
@@ -84,7 +85,7 @@ class LoginActivityTest: EmulatedFirebaseTest() {
             saveButton.click()
         }
 
-        val user = FirebaseAuth.getInstance().currentUser
+        val user = Authentication.getCurrentUser()
         if (user != null) {
             val userBundle = FirebaseUserBundle(user)
             userBundle.deleteUser()
