@@ -13,6 +13,7 @@ abstract class EmulatedFirebaseTest {
                 val appContext = InstrumentationRegistry.getInstrumentation().targetContext
                 FirebaseApp.initializeApp(appContext)
                 Database.emulatorSettings()
+                Authentication.emulatorSettings()
             }
         }
     }

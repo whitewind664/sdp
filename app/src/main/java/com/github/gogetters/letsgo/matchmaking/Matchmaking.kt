@@ -1,5 +1,6 @@
 package com.github.gogetters.letsgo.matchmaking
 
+import com.github.gogetters.letsgo.database.Authentication
 import com.github.gogetters.letsgo.database.Database
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot
@@ -38,7 +39,7 @@ class Matchmaking {
         }
 
         fun findMatch(onMatchFound: (String) -> Unit, playerRating: Int) {
-            val user = FirebaseAuth.getInstance().currentUser
+            val user = Authentication.getCurrentUser()
             if (user != null) {
                 val onDataChange: (DataSnapshot) -> Unit = { dataSnapshot: DataSnapshot ->
                     val gameId = dataSnapshot.value

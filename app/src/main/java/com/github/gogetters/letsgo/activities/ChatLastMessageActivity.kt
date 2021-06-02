@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.DividerItemDecoration
 import com.github.gogetters.letsgo.R
 import com.github.gogetters.letsgo.chat.model.ChatMessageData
 import com.github.gogetters.letsgo.chat.views.ChatLastMessageItem
+import com.github.gogetters.letsgo.database.Authentication
 import com.github.gogetters.letsgo.database.Database
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.ChildEventListener
@@ -72,7 +73,7 @@ class ChatLastMessageActivity : AppCompatActivity() {
      * and request the adapter to refresh the view
      */
     private fun listenForLastMessages() {
-        val fromId = FirebaseAuth.getInstance().currentUser!!.uid
+        val fromId = Authentication.getCurrentUser()!!.uid
         val ref = FirebaseDatabase.getInstance().getReference("/last-messages-node/$fromId")
         //ref.keepSynced(true)
 
