@@ -6,6 +6,7 @@ import android.content.DialogInterface
 import android.content.pm.PackageManager
 import android.location.Location
 import android.os.Bundle
+import java.lang.IllegalStateException
 import android.util.Log
 import android.widget.Button
 import android.widget.Toast
@@ -45,6 +46,8 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback,
         private const val DIALOG_CHAT_IDX = 0
     }
 
+    private var isMapReady = false
+
     private val userBundleProvider = FirebaseUserBundleProvider
     private var permissionDenied = false
     private lateinit var mMap: GoogleMap
@@ -72,6 +75,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback,
      */
     override fun onMapReady(googleMap: GoogleMap) {
         mMap = googleMap
+        isMapReady = true
 
         // Move the camera to EPFL
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(EPFL, INIT_ZOOM))
@@ -144,6 +148,9 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback,
      *  Gets the positions of other users and displays them on the map
      */
     private fun activateAndUpdateOtherPlayers() {
+        if (!::mMap.isInitialized)
+            throw IllegalStateException("Map not initialized")
+
         otherUsersActivated = true
 
         Database.getAllLocations().thenApply {
