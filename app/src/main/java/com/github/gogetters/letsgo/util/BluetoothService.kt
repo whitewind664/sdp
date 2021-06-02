@@ -4,6 +4,7 @@ import android.bluetooth.BluetoothSocket
 import android.os.Bundle
 import android.os.Handler
 import android.util.Log
+import com.github.gogetters.letsgo.database.Authentication
 import com.github.gogetters.letsgo.database.user.FirebaseUserBundle
 import com.google.firebase.auth.FirebaseAuth
 import java.io.IOException
@@ -36,7 +37,7 @@ abstract class BluetoothService {
     }
 
     fun sendNick(){
-        val user = FirebaseAuth.getInstance().currentUser
+        val user = Authentication.getCurrentUser()
         if(user != null){
             val letsGoUser = FirebaseUserBundle(user).getUser()
             val task = letsGoUser.downloadUserData()

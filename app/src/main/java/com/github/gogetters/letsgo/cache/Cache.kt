@@ -6,6 +6,7 @@ import androidx.appcompat.app.AppCompatActivity
 import com.github.gogetters.letsgo.chat.model.ChatMessageData
 import com.github.gogetters.letsgo.chat.views.ChatNewMessageItem
 import com.github.gogetters.letsgo.database.user.LetsGoUser
+import com.google.firebase.auth.FirebaseAuth
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import com.xwray.groupie.Item
@@ -23,6 +24,7 @@ class Cache {
         private const val CHAT_MESSAGE_LIST_ID = "chatMessageList"
 
         // User attributes
+        private const val USER_UID = "userUid"
         private const val USER_NICK = "userNick"
         private const val USER_FIRST = "userFirst"
         private const val USER_LAST = "userLast"
@@ -42,6 +44,7 @@ class Cache {
             val editor: SharedPreferences.Editor = sharedPreferences.edit()
             editor.apply {
 
+                putString(USER_UID, user.uid)
                 putString(USER_NICK, user.nick)
                 putString(USER_FIRST, user.first)
                 putString(USER_LAST, user.last)
@@ -62,12 +65,19 @@ class Cache {
                 Context.MODE_PRIVATE
             )
 
-            val user = LetsGoUser("0")
-            user.nick = sharedPreferences.getString(USER_NICK, "")
-            user.first = sharedPreferences.getString(USER_FIRST, "")
-            user.last = sharedPreferences.getString(USER_LAST, "")
-            user.country = sharedPreferences.getString(USER_COUNTRY, "")
-            user.city = sharedPreferences.getString(USER_CITY, "")
+            val loggedInUid = FirebaseAuth.getInstance().uid!!
+
+            val cachedUid = sharedPreferences.getString(USER_UID, null)
+            if (cachedUid == null || loggedInUid != cachedUid) {
+                return null
+            }
+
+            val user = LetsGoUser(cachedUid)
+            user.nick = sharedPreferences.getString(USER_NICK, null)
+            user.first = sharedPreferences.getString(USER_FIRST, null)
+            user.last = sharedPreferences.getString(USER_LAST, null)
+            user.country = sharedPreferences.getString(USER_COUNTRY, null)
+            user.city = sharedPreferences.getString(USER_CITY, null)
 
             return user
         }

@@ -11,6 +11,7 @@ import com.github.gogetters.letsgo.R
 import com.github.gogetters.letsgo.cache.Cache
 import com.github.gogetters.letsgo.chat.model.ChatMessageData
 import com.github.gogetters.letsgo.chat.views.ChatLastMessageItem
+import com.github.gogetters.letsgo.database.Authentication
 import com.github.gogetters.letsgo.database.Database
 import com.github.gogetters.letsgo.database.user.LetsGoUser
 import com.google.firebase.auth.FirebaseAuth
@@ -34,35 +35,41 @@ class ChatLastMessageActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_chat_last_message)
 
-        // Link the groupie adapter and decorate with horizontal line
-        chat_recyclerview_last_message.adapter = adapter
-        chat_recyclerview_last_message.addItemDecoration(DividerItemDecoration(this, DividerItemDecoration.VERTICAL))
-
-        // Start a new chat history given the user you clicked on
-        adapter.setOnItemClickListener { item, view ->
-            val intent = Intent(this, ChatActivity::class.java)
-            val msgItem = item as ChatLastMessageItem
-            intent.putExtra(ChatNewMessageActivity.KEY, msgItem.chatUser)
+        // if not logged in -> go to login activity
+        if (FirebaseAuth.getInstance().currentUser == null) {
+            val intent = Intent(this, LoginActivity::class.java)
             startActivity(intent)
+        } else {
+            setContentView(R.layout.activity_chat_last_message)
+
+            // Link the groupie adapter and decorate with horizontal line
+            chat_recyclerview_last_message.adapter = adapter
+            chat_recyclerview_last_message.addItemDecoration(DividerItemDecoration(this, DividerItemDecoration.VERTICAL))
+
+            // Start a new chat history given the user you clicked on
+            adapter.setOnItemClickListener { item, view ->
+                val intent = Intent(this, ChatActivity::class.java)
+                val msgItem = item as ChatLastMessageItem
+                intent.putExtra(ChatNewMessageActivity.KEY, msgItem.chatUser)
+                startActivity(intent)
+            }
+
+            // Without checking database connection
+            listenForLastMessages()
+            // With checking database connection
+            /*
+            if (Database.isConnected) { listenForLastMessages() }
+            else { updateMessageList() }
+            */
+
+            // Floating button to launch the ChatNewMessageActivity
+            val fab: View = findViewById(R.id.chat_button_fab)
+            fab.setOnClickListener {
+                val intent = Intent(this, ChatNewMessageActivity::class.java)
+                startActivity(intent)
+            }
         }
-
-        // Without checking database connection
-        listenForLastMessages()
-        // With checking database connection
-        /*
-        if (Database.isConnected) { listenForLastMessages() }
-        else { updateMessageList() }
-        */
-
-        // Floating button to launch the ChatNewMessageActivity
-        val fab: View = findViewById(R.id.chat_button_fab)
-        fab.setOnClickListener {
-            val intent = Intent(this, ChatNewMessageActivity::class.java)
-            startActivity(intent)
-        }
-
     }
 
     /**
@@ -70,7 +77,7 @@ class ChatLastMessageActivity : AppCompatActivity() {
      * and request the adapter to refresh the view
      */
     private fun listenForLastMessages() {
-        val fromId = FirebaseAuth.getInstance().currentUser!!.uid
+        val fromId = Authentication.getCurrentUser()!!.uid
         val ref = FirebaseDatabase.getInstance().getReference("/last-messages-node/$fromId")
 
         // Whenever a new message is sent and saved as last message in database,

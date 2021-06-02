@@ -7,11 +7,11 @@ import androidx.appcompat.app.AppCompatActivity
 import com.github.gogetters.letsgo.R
 import com.github.gogetters.letsgo.cache.Cache
 import com.github.gogetters.letsgo.chat.model.ChatMessageData
-import com.github.gogetters.letsgo.chat.model.UserData
 import com.github.gogetters.letsgo.chat.views.ChatMyMessageItem
 import com.github.gogetters.letsgo.chat.views.ChatTheirMessageItem
+import com.github.gogetters.letsgo.database.user.LetsGoUser
+import com.github.gogetters.letsgo.database.Authentication
 import com.github.gogetters.letsgo.database.Database
-import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.ChildEventListener
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
@@ -28,15 +28,15 @@ class ChatActivity : AppCompatActivity() {
     private val activity = this
     val adapter = GroupAdapter<ViewHolder>()
     lateinit var userId: String
-    var toUser: UserData? = null
+    var toUser: LetsGoUser? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_chat)
 
         chat_recyclerview_messages.adapter = adapter
-        userId = FirebaseAuth.getInstance().currentUser!!.uid
-        toUser = intent.getParcelableExtra<UserData>(ChatNewMessageActivity.KEY)
+        userId = Authentication.getCurrentUser()!!.uid
+        toUser = intent.getSerializableExtra(ChatNewMessageActivity.KEY) as LetsGoUser
 
         // Without checking database connection
         listenForMessages()
@@ -57,7 +57,7 @@ class ChatActivity : AppCompatActivity() {
 
     private fun listenForMessages() {
         val fromId = userId
-        val toId = toUser?.id
+        val toId = toUser?.uid
         val ref = FirebaseDatabase.getInstance().getReference("/messages-node/$fromId/$toId")
 
         ref.addChildEventListener(object: ChildEventListener {
@@ -85,13 +85,13 @@ class ChatActivity : AppCompatActivity() {
         })
     }
 
-    private fun sendMessage() {
+    fun sendMessage() {
 
         val text = chat_editText_input.text.toString()
 
         if (text.isNotEmpty()) {
             val fromId = userId
-            val toId = toUser!!.id!!
+            val toId = toUser!!.uid!!
 
             // Store chat message in messages node both under from and to ids
             val ref = FirebaseDatabase.getInstance().getReference("/messages-node/$fromId/$toId").push()

@@ -1,6 +1,5 @@
 package com.github.gogetters.letsgo.activities
 
-import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.os.Environment
@@ -63,7 +62,7 @@ class ProfileActivity : BaseActivity() {
             }
         }
 
-        val searchUsersButton = findViewById<Button>(R.id.profile_search_users)
+        val searchUsersButton = findViewById<Button>(R.id.profile_search_users_button)
         searchUsersButton.setOnClickListener {
             if (userBundleProvider.getUserBundle() != null)
                 startActivity(Intent(this, UserSearchActivity::class.java))
@@ -93,39 +92,60 @@ class ProfileActivity : BaseActivity() {
             // Don't let the user see this screen without having successfully completed sign-in.
             dispatchLoginIntent()
         } else {
-            var user = userBundle.getUser()
+            val user = userBundle.getUser()
 
-            val cachedUser = Cache.loadUserProfile(this)
+            user.downloadUserData()
+                .addOnFailureListener {
+                    // If user is offline then get user from cache
+                    val cachedUser = Cache.loadUserProfile(this)
 
-            if (cachedUser?.nick != null && cachedUser.nick!!.isNotEmpty()) {
-                nick.text = cachedUser.nick
-            } else {
-                nick.text = getString(R.string.profile_noNicknameHint)
-            }
+                    if (cachedUser != null) {
+                        user.nick = cachedUser.nick
+                        user.first = cachedUser.first
+                        user.last = cachedUser.last
+                        user.country = cachedUser.country
+                        user.city = cachedUser.city
+                    }
 
-            firstLast.text = combineTwoTextFields(cachedUser?.first, cachedUser?.last, " ")
+                    displayUser(userBundle)
+                }
+                .addOnSuccessListener {
+                    displayUser(userBundle)
+                }
+        }
+    }
 
-            cityCountyText.text = combineTwoTextFields(cachedUser?.city, cachedUser?.country, ", ")
+    private fun displayUser(userBundle : UserBundle) {
+        val user = userBundle.getUser()
 
-            editButton.visibility = View.VISIBLE
+        if (user.nick != null && user.nick!!.isNotEmpty()) {
+            nick.text = user.nick
+        } else {
+            nick.text = getString(R.string.profile_noNicknameHint)
+        }
 
-            // cached by Firebase
-            emailText.text = userBundle.getEmail()
-            // not cached yet
-            user.downloadUserData().addOnCompleteListener {
-                ImageStorageService.getProfileImageFromCloud(
-                    PROFILE_PICTURE_PREFIX_CLOUD,
-                    user.profileImageRef,
-                    ImageStorageService.getOutputImageFile(
-                        getExternalFilesDir(Environment.DIRECTORY_PICTURES)
-                    ),
-                    profileImage)
-            }
+        firstLast.text = combineTwoTextFields(user.first, user.last, " ")
+
+        cityCountyText.text = combineTwoTextFields(user.city, user.country, ", ")
+
+        editButton.visibility = View.VISIBLE
+
+        // cached by Firebase
+        emailText.text = userBundle.getEmail()
+        // not cached yet
+        user.downloadUserData().addOnCompleteListener {
+            ImageStorageService.getProfileImageFromCloud(
+                PROFILE_PICTURE_PREFIX_CLOUD,
+                user.profileImageRef,
+                ImageStorageService.getOutputImageFile(
+                    getExternalFilesDir(Environment.DIRECTORY_PICTURES)
+                ),
+                profileImage)
         }
     }
 
     private fun dispatchLoginIntent() {
-        val intent = Intent(this, FirebaseUIActivity::class.java)
+        val intent = Intent(this, LoginActivity::class.java)
         startActivity(intent)
     }
 }

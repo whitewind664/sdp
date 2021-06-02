@@ -7,13 +7,15 @@ import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import com.github.gogetters.letsgo.R
 import com.github.gogetters.letsgo.cache.Cache
-import com.github.gogetters.letsgo.chat.model.UserData
-import com.github.gogetters.letsgo.chat.views.ChatNewMessageItem
 import com.github.gogetters.letsgo.database.Database
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
+import com.github.gogetters.letsgo.chat.views.ChatNewMessageItem
+import com.github.gogetters.letsgo.database.Authentication
+import com.github.gogetters.letsgo.database.user.LetsGoUser
+import com.google.firebase.auth.FirebaseAuth
 import com.xwray.groupie.GroupAdapter
 import com.xwray.groupie.ViewHolder
 import kotlinx.android.synthetic.main.activity_chat_new_message.*
@@ -50,7 +52,7 @@ class ChatNewMessageActivity : AppCompatActivity() {
 
                 override fun onDataChange(snapshot: DataSnapshot) {
                     snapshot.children.forEach {
-                        val user = it.getValue(UserData::class.java)
+                        val user = it.getValue(LetsGoUser::class.java)
                         if (user != null) {
                             //adapter.add(ChatNewMessageItem(user))
                             cachedUsers.add(ChatNewMessageItem(user))

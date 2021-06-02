@@ -11,6 +11,7 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
+import java.io.Serializable
 import java.util.concurrent.CompletableFuture
 
 class Database {
@@ -121,7 +122,7 @@ class Database {
          * Returns true when the data has been sent to the database
          */
         fun shareLocation(location: LatLng): Boolean {
-            val uid = getCurrentUserId() ?: return false
+            val uid = Authentication.getUid() ?: return false
             val userRef = database.child("users").child(uid)
             userRef.child("isLookingForPlayers").setValue(true)
             userRef.child("lastPositionLatitude").setValue(location.latitude)
@@ -134,7 +135,7 @@ class Database {
          * Stops the displaying of the position with other users (not looking for a new game anymore)
          */
         fun disableLocationSharing(): Boolean {
-            val uid = getCurrentUserId() ?: return false
+            val uid = Authentication.getUid() ?: return false
             database.child("users").child(uid).child("isLookingForPlayers").setValue(false)
             return true
         }
@@ -147,6 +148,7 @@ class Database {
             database.child("users").get().addOnSuccessListener {
                 // unpack the values
                 var map: Map<LatLng, String> = emptyMap()
+                val myUserId = Authentication.getUid()
                 for(user: DataSnapshot in it.children) {
                     val userId: String = user.key as String
 
@@ -161,7 +163,7 @@ class Database {
                         }
                     }
                     Log.i("DB", "Values: $userId, $isActive, $lat, $lng")
-                    if (isActive) {
+                    if (isActive && userId != myUserId) {
                         // TODO check that its not me
                         map = map + Pair(LatLng(lat, lng), userId)
                     }
@@ -269,7 +271,6 @@ class Database {
                 override fun onCancelled(error: DatabaseError) {}
             })
         }
-
     }
 
 }

@@ -1,6 +1,7 @@
 {
   "users": {
     "$userId": {
+      "id": "value",
       "nick": "value",
       "first": "value",
       "last": "value",

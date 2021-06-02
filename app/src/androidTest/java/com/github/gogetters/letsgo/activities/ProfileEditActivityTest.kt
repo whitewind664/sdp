@@ -27,8 +27,9 @@ import androidx.test.uiautomator.UiDevice
 import androidx.test.uiautomator.UiObject
 import androidx.test.uiautomator.UiSelector
 import com.github.gogetters.letsgo.R
-import com.github.gogetters.letsgo.activities.mocking.MockUserBundleProvider
 import com.github.gogetters.letsgo.database.EmulatedFirebaseTest
+import com.github.gogetters.letsgo.database.user.FirebaseUserBundleProvider
+import com.github.gogetters.letsgo.testUtil.TestUtils
 import org.hamcrest.Description
 import org.junit.After
 import org.junit.Before
@@ -44,7 +45,7 @@ class ProfileEditActivityTest : EmulatedFirebaseTest() {
     val DELAY = 5000L
     val GRANT_PERMISSION_BUTTON_INDEX = 0
 
-    val intent = Intent(ApplicationProvider.getApplicationContext(), ProfileEditActivity::class.java).putExtra("UserBundleProvider", MockUserBundleProvider())
+    val intent = Intent(ApplicationProvider.getApplicationContext(), ProfileEditActivity::class.java).putExtra("UserBundleProvider", FirebaseUserBundleProvider)
     lateinit var scenario: ActivityScenario<ProfileEditActivity>
 
     private fun sleep() {
@@ -55,8 +56,17 @@ class ProfileEditActivityTest : EmulatedFirebaseTest() {
         }
     }
 
+    private fun clickWaitButton() {
+        val device = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation())
+        var waitButton = device.findObject(UiSelector().textContains("wait"))
+        if (waitButton.exists()) {
+            waitButton.click()
+        }
+    }
+
     @Before
     fun init() {
+        TestUtils.makeSureTestUserAuthentitcated()
         Intents.init()
         scenario = ActivityScenario.launch(intent)
     }
@@ -157,14 +167,6 @@ class ProfileEditActivityTest : EmulatedFirebaseTest() {
             acceptPermissions()
             Espresso.onView(ViewMatchers.withId(R.id.profile_edit_imageView_image))
                 .check(ViewAssertions.matches(hasImageSet()))
-        }
-    }
-
-    private fun clickWaitButton() {
-        val device = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation())
-        var waitButton = device.findObject(UiSelector().textContains("wait"))
-        if (waitButton.exists()) {
-            waitButton.click()
         }
     }
 

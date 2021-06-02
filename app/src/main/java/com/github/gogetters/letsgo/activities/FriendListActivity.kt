@@ -6,6 +6,7 @@ import android.widget.ListView
 import android.widget.SearchView
 import androidx.appcompat.app.AppCompatActivity
 import com.github.gogetters.letsgo.R
+import com.github.gogetters.letsgo.database.Authentication
 import com.github.gogetters.letsgo.database.user.LetsGoUser
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
@@ -25,7 +26,7 @@ class FriendListActivity : AppCompatActivity() {
         searchView = findViewById(R.id.friend_list_search)
         usersListView = findViewById(R.id.friend_list_users_list)
 
-        val currentUser = Firebase.auth.currentUser
+        val currentUser = Authentication.getCurrentUser()
 
         val user = if (currentUser != null) LetsGoUser(currentUser.uid) else LetsGoUser("tESTuID")
         user.downloadFriends().addOnSuccessListener {

@@ -1,57 +1,43 @@
 package com.github.gogetters.letsgo.activities
 
-import android.app.Activity
-import android.app.Instrumentation
 import android.content.Intent
-import android.graphics.Bitmap
-import android.graphics.BitmapFactory
-import android.net.Uri
-import android.os.Bundle
-import android.os.Parcelable
-import android.provider.MediaStore
-import android.view.View
-import android.widget.ImageView
-import androidx.test.annotation.UiThreadTest
 import androidx.test.core.app.ActivityScenario
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.action.ViewActions
 import androidx.test.espresso.action.ViewActions.click
-import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.intent.Intents
-import androidx.test.espresso.intent.Intents.intending
-import androidx.test.espresso.intent.matcher.IntentMatchers.hasAction
-import androidx.test.espresso.matcher.BoundedMatcher
-import androidx.test.espresso.matcher.ViewMatchers
+import androidx.test.espresso.intent.matcher.IntentMatchers
 import androidx.test.espresso.matcher.ViewMatchers.*
 import androidx.test.ext.junit.runners.AndroidJUnit4
-import androidx.test.internal.runner.junit4.statement.UiThreadStatement
 import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.uiautomator.UiDevice
-import androidx.test.uiautomator.UiObject
 import androidx.test.uiautomator.UiSelector
 import com.github.gogetters.letsgo.R
-import com.github.gogetters.letsgo.activities.mocking.MockUserBundleProvider
+import com.github.gogetters.letsgo.database.Authentication
 import com.github.gogetters.letsgo.database.EmulatedFirebaseTest
-import kotlinx.android.synthetic.main.activity_profile.view.*
-import org.hamcrest.Description
+import com.github.gogetters.letsgo.database.user.FirebaseUserBundleProvider
+import com.github.gogetters.letsgo.database.user.LetsGoUser
+import com.github.gogetters.letsgo.testUtil.TestUtils
+import com.google.android.gms.tasks.Tasks
+import com.google.firebase.database.ktx.database
+import com.google.firebase.ktx.Firebase
 import org.junit.After
 import org.junit.Before
-import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
-import java.io.File
-import java.io.FileNotFoundException
-import java.io.FileOutputStream
-import java.io.IOException
 
 
 @RunWith(AndroidJUnit4::class)
-class ProfileActivityTest: EmulatedFirebaseTest() {
+class ProfileActivityTest : EmulatedFirebaseTest() {
+
     val GRANT_PERMISSION_BUTTON_INDEX = 0
     val DELAY = 5000L
 
-    val intent = Intent(ApplicationProvider.getApplicationContext(), ProfileActivity::class.java).putExtra("UserBundleProvider", MockUserBundleProvider())
+    val intent = Intent(
+        ApplicationProvider.getApplicationContext(),
+        ProfileActivity::class.java
+    ).putExtra("UserBundleProvider", FirebaseUserBundleProvider)
 
     lateinit var scenario: ActivityScenario<ProfileActivity>
 
@@ -66,6 +52,10 @@ class ProfileActivityTest: EmulatedFirebaseTest() {
     @Before
     fun init() {
         Intents.init()
+    }
+
+    private fun lateInit() {
+        TestUtils.makeSureTestUserAuthentitcated()
         scenario = ActivityScenario.launch(intent)
         clickWaitButton()
     }
@@ -81,13 +71,68 @@ class ProfileActivityTest: EmulatedFirebaseTest() {
     @After
     fun cleanUp() {
         Intents.release()
-        scenario.close()
+        try {
+            scenario.close()
+        } catch (e:UninitializedPropertyAccessException) {}
     }
 
+    @Test
+    fun testIt() {
+        lateInit()
+        sleep()
+    }
 
+    @Test
+    fun testItOffline() {
+        Firebase.database.goOffline()
+        try {
+            lateInit()
+            sleep()
+        } finally {
+            Firebase.database.goOnline()
+        }
+    }
 
-    // @Test
-    // Do not test uses firebase
+    @Test
+    fun editButtonOpenProfileEdit() {
+        lateInit()
+
+        onView(withId(R.id.profile_button_edit)).perform(click())
+        Intents.intended(IntentMatchers.hasComponent(ProfileEditActivity::class.java.name))
+    }
+
+    @Test
+    fun friendsButtonOpensFriends() {
+        lateInit()
+
+        onView(withId(R.id.profile_show_friend_list_button)).perform(click())
+        Intents.intended(IntentMatchers.hasComponent(FriendListActivity::class.java.name))
+    }
+
+    @Test
+    fun searchButtonOpensUserSearch() {
+        lateInit()
+
+        onView(withId(R.id.profile_search_users_button)).perform(click())
+        Intents.intended(IntentMatchers.hasComponent(UserSearchActivity::class.java.name))
+    }
+
+    @Test
+    fun testDisplayUser() {
+        val user = LetsGoUser(Authentication.getUid()!!)
+        user.nick = "a_nick"
+        user.first = "b_first"
+        user.last = "c_last"
+        user.country = "d_country"
+        user.city = "e_city"
+        Tasks.await(user.uploadUserData())
+
+        lateInit()
+
+        // TODO Check that the actual fields are written to UI
+    }
+
+    // TODO Remove later
     fun testEmailLogin() {
 
         val testEmail = ""
@@ -105,10 +150,5 @@ class ProfileActivityTest: EmulatedFirebaseTest() {
         passwordField!!.perform(ViewActions.typeText(testPassword), ViewActions.closeSoftKeyboard())
 
         onView(withText("Sign in"))!!.perform(click())
-    }
-
-    @Test
-    fun testIt() {
-        // TODO test with database info
     }
 }

@@ -3,16 +3,18 @@ package com.github.gogetters.letsgo.database
 import android.util.Log
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.github.gogetters.letsgo.database.user.LetsGoUser
+import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.tasks.Tasks
 import io.mockk.every
 import io.mockk.mockkObject
 import io.mockk.verify
-import org.junit.Before
-import org.junit.FixMethodOrder
-import org.junit.Ignore
-import org.junit.Test
+import org.junit.*
+import org.junit.Assert.assertEquals
+import org.junit.Assert.assertNull
+import org.junit.rules.ExpectedException
 import org.junit.runner.RunWith
 import org.junit.runners.MethodSorters
+
 
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 @RunWith(AndroidJUnit4::class)
@@ -27,40 +29,93 @@ class LetsGoUserTest : EmulatedFirebaseTest() {
     private var user2 = LetsGoUser("")
     private var user3 = LetsGoUser("")
 
+    @get:Rule
+    var exceptionRule: ExpectedException = ExpectedException.none()
+
     @Before
     fun initialize() {
         user = LetsGoUser(TEST_UID)
         user2 = LetsGoUser(TEST_UID2)
         user3 = LetsGoUser(TEST_UID3)
-
-        // Once mock database is implemented we can use this!
-        // val user = LetsGoUser(TEST_UID, <MockDatabase>)
     }
 
     @Test
-    fun aTestUploadUserData() {
-        user.nick = "testerDude"
-        user.first = "John"
-        user.last = "Donut"
-        user.city = "Springfield"
-        user.country = "USA"
+    fun aUploadedUserDataIsDownloadedCorrectly() {
+        val nick = "testerDude"
+        val first = "John"
+        val last = "Donut"
+        val city = "Springfield"
+        val country = "USA"
+        val isLookingForPlayers = true
+        val picRef = "picture1234"
+        val lastPosition = LatLng(2.333, 4.3543)
+        user.nick = nick
+        user.first = first
+        user.last = last
+        user.city = city
+        user.country = country
+        user.profileImageRef = picRef
+        user.isLookingForPlayers = isLookingForPlayers
+        user.lastPositionLongitude = lastPosition.longitude
+        user.lastPositionLatitude = lastPosition.latitude
 
         Tasks.await(user.uploadUserData())
+        Tasks.await(user.downloadUserData())
+
+        assertEquals(nick, user.nick)
+        assertEquals(first, user.first)
+        assertEquals(last, user.last)
+        assertEquals(city, user.city)
+        assertEquals(country, user.country)
+        assertEquals(isLookingForPlayers, user.isLookingForPlayers)
+        assertEquals(lastPosition.latitude, user.lastPositionLatitude)
+        assertEquals(lastPosition.longitude, user.lastPositionLongitude)
+        assertEquals(picRef, user.profileImageRef)
     }
 
     @Test
-    fun aTestUploadUserData2() {
-        user2.nick = "testerGirl"
-        user2.first = "Mary"
-        user2.last = "Pretzel"
-        user2.city = "DoesntExist"
-        user2.country = "Australia"
+    fun aDataChangeIsDownloadedCorrectly() {
+        val nick = "testerDude"
+        val nick2 = "newTesterDudley"
+        val first = "John"
+        val last = "Donut"
+        val city = "Springfield"
+        val country = "USA"
+        val isLookingForPlayers = true
+        val isLookingForPlayers2 = false
+        val picRef = "picture1234"
+        val lastPosition = LatLng(2.333, 4.3543)
+        val lastPosition2 = LatLng(1.22, 3.23334)
+        user2.nick = nick
+        user2.first = first
+        user2.last = last
+        user2.city = city
+        user2.country = country
+        user2.profileImageRef = picRef
+        user2.isLookingForPlayers = isLookingForPlayers
+        user2.lastPositionLongitude = lastPosition.longitude
+        user2.lastPositionLatitude = lastPosition.latitude
 
         Tasks.await(user2.uploadUserData())
+        Tasks.await(user2.downloadUserData())
+
+        // change some data
+        user2.nick = nick2
+        user2.isLookingForPlayers = isLookingForPlayers2
+        user2.lastPositionLatitude = lastPosition2.latitude
+        user2.lastPositionLongitude = lastPosition2.longitude
+
+        Tasks.await(user2.uploadUserData())
+        Tasks.await(user2.downloadUserData())
+
+        assertEquals(nick2, user2.nick)
+        assertEquals(isLookingForPlayers2, user2.isLookingForPlayers)
+        assertEquals(lastPosition2.latitude, user2.lastPositionLatitude)
+        assertEquals(lastPosition2.longitude, user2.lastPositionLongitude)
     }
 
-    @Test
-    fun aTestUploadUserData3() {
+
+    private fun uploadUserData3() {
         user3.nick = "testerMonkey"
         user3.first = "Marcel"
         user3.last = "Banana"
@@ -71,15 +126,18 @@ class LetsGoUserTest : EmulatedFirebaseTest() {
     }
 
     @Test
-    fun bTestDownloadUserData() {
-        Tasks.await(user.downloadUserData())
+    fun aUserIsActuallyDeleted() {
+        user3.profileImageRef = null
+        Tasks.await(user3.deleteUserData())
+        assertNull(user3.nick)
+        assertNull(user3.lastPositionLatitude)
     }
 
     @Test
-    fun bDeleteUserData() {
-        Tasks.await(user.deleteUserData())
-
-        aTestUploadUserData() // Reupload after delete
+    fun aListFriendsByStatusThrowsOnNullFriends() {
+        exceptionRule.expect(IllegalStateException::class.java)
+        user.friends = null
+        user.listFriendsByStatus(LetsGoUser.FriendStatus.ACCEPTED)
     }
 
     @Test
@@ -89,6 +147,7 @@ class LetsGoUserTest : EmulatedFirebaseTest() {
 
     @Test
     fun cTestAcceptFriend() {
+        uploadUserData3()
         Tasks.await(user2.acceptFriend(user3))
         Tasks.await(user3.acceptFriend(user))
     }
@@ -98,10 +157,6 @@ class LetsGoUserTest : EmulatedFirebaseTest() {
         Tasks.await(user3.deleteFriend(user))
     }
 
-//    @Test
-//    fun eTestCheckUserExists() {
-//        Tasks.await(user.requireUserExists())
-//    }
 
     @Test
     fun eTestDownloadFriends() {
@@ -119,9 +174,8 @@ class LetsGoUserTest : EmulatedFirebaseTest() {
     fun aaDeleteUserNotCallingStorageOnNull() {
         mockkObject(Database)
         mockkObject(CloudStorage)
-        // TO SET THE RETURN VALUE OF A METHOD (not used here)
+
         every { Database.disableLocationSharing() } returns true
-        //every { Database.readData("") } returns Task() how to create Task?
 
         val uid = "0"
         val user = LetsGoUser(uid)
