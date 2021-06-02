@@ -55,6 +55,14 @@ class ProfileEditActivityTest : EmulatedFirebaseTest() {
         }
     }
 
+    private fun clickWaitButton() {
+        val device = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation())
+        var waitButton = device.findObject(UiSelector().textContains("wait"))
+        if (waitButton.exists()) {
+            waitButton.click()
+        }
+    }
+
     @Before
     fun init() {
         Intents.init()
@@ -157,14 +165,6 @@ class ProfileEditActivityTest : EmulatedFirebaseTest() {
             acceptPermissions()
             Espresso.onView(ViewMatchers.withId(R.id.profile_edit_imageView_image))
                 .check(ViewAssertions.matches(hasImageSet()))
-        }
-    }
-
-    private fun clickWaitButton() {
-        val device = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation())
-        var waitButton = device.findObject(UiSelector().textContains("wait"))
-        if (waitButton.exists()) {
-            waitButton.click()
         }
     }
 

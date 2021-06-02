@@ -151,6 +151,7 @@ class Database {
             database.child("users").get().addOnSuccessListener {
                 // unpack the values
                 var map: Map<LatLng, String> = emptyMap()
+                val myUserId = getCurrentUserId()
                 for(user: DataSnapshot in it.children) {
                     val userId: String = user.key as String
 
@@ -165,7 +166,7 @@ class Database {
                         }
                     }
                     Log.i("DB", "Values: $userId, $isActive, $lat, $lng")
-                    if (isActive) {
+                    if (isActive && userId != myUserId) {
                         // TODO check that its not me
                         map = map + Pair(LatLng(lat, lng), userId)
                     }
