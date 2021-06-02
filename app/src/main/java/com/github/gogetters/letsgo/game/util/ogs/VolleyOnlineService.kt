@@ -2,10 +2,8 @@ package com.github.gogetters.letsgo.game.util.ogs
 
 import android.content.Context
 import android.util.Log
-import android.widget.Toast
 import com.android.volley.Request
 import com.android.volley.RequestQueue
-import com.android.volley.toolbox.JsonObjectRequest
 import com.android.volley.toolbox.StringRequest
 import com.android.volley.toolbox.Volley
 import org.json.JSONObject
@@ -20,15 +18,15 @@ class VolleyOnlineService(context: Context) : OnlineService<JSONObject>  {
         CookieHandler.setDefault(CookieManager())
     }
 
-    override fun post(url: String, body: JSONObject, headers: JSONObject): ResponseListener<JSONObject> { return getOrPost(url, body, headers) }
+    override fun post(url: String, body: String, headers: JSONObject): ResponseListener<JSONObject> { return getOrPost(url, body, headers) }
 
     override fun get(url: String, headers: JSONObject): ResponseListener<JSONObject> { return getOrPost(url, null, headers) }
 
-    private fun getOrPost(url: String, jsonRequest: JSONObject?, headers: JSONObject): ResponseListener<JSONObject> {
+    private fun getOrPost(url: String, body: String?, headers: JSONObject): ResponseListener<JSONObject> {
 
         val responseListener = ResponseListener<JSONObject>()
 
-        val method = if (jsonRequest != null) Request.Method.POST  else Request.Method.GET
+        val method = if (body != null) Request.Method.POST  else Request.Method.GET
 
         val request = object: StringRequest(method, url,
                 { responseListener.onResponse(JSONObject(it)) },
@@ -53,15 +51,8 @@ class VolleyOnlineService(context: Context) : OnlineService<JSONObject>  {
             }
 
             override fun getBody(): ByteArray {
-                return if (jsonRequest != null) {
-                    val bodyBuilder = StringJoiner("&")
-                    for (key in jsonRequest.keys()) {
-                        bodyBuilder.add("$key=${jsonRequest.getString(key)}")
-                    }
-                    bodyBuilder.toString().toByteArray()
-                } else {
-                    "".toByteArray()
-                }
+                if (body == null) return "".toByteArray()
+                return body.toByteArray()
             }
         }
 

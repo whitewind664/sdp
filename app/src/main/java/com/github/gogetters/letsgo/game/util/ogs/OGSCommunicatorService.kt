@@ -39,7 +39,7 @@ class OGSCommunicatorService(private val onlineService: OnlineService<JSONObject
         body.put("username", username)
         body.put("password", password)
 
-        val response =  onlineService.post("$base$login", body)
+        val response =  onlineService.post("$base$login", onlineService.urlEncode(body))
         val after = ResponseListener<Boolean>()
         response.setOnResponse {
             try {
@@ -69,7 +69,7 @@ class OGSCommunicatorService(private val onlineService: OnlineService<JSONObject
                 body.put("username", usernameTest)
                 body.put("password", passwordTest)
 
-                val response =  onlineService.post("$base$auth", body)
+                val response =  onlineService.post("$base$auth", onlineService.urlEncode(body))
                 response.setOnResponse {
                     try {
                         accessToken = it.getString("access_token")
@@ -105,8 +105,7 @@ class OGSCommunicatorService(private val onlineService: OnlineService<JSONObject
         headers.put("x-csrftoken", token)
         headers.put("referer", base)
         headers.put("content-type", "application/json")
-        val temp = "http://127.0.0.1"
-        onlineService.post("$base$botChallenges", body, headers).setOnResponse { response ->
+        onlineService.post("$base$botChallenges", body.toString(), headers).setOnResponse { response ->
             val gameID = response.getString("game")
             val challengeID = response.getString("challenge")
 

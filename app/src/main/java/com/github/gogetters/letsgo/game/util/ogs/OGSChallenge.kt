@@ -20,7 +20,12 @@ data class OGSChallenge(
         challenge.put("challenger_color", challengerColor.toString())
         challenge.put("min_ranking", minRanking)
         challenge.put("max_ranking", maxRanking)
-        challenge.put("id", id)
+        challenge.put("ranked", "false")
+        challenge.put("aga_ranked", "false")
+
+        if (id != "") {
+            challenge.put("id", id)
+        }
         return challenge
     }
 
