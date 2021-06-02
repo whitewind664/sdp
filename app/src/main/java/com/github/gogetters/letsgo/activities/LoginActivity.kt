@@ -7,6 +7,7 @@ import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import com.firebase.ui.auth.AuthUI
 import com.firebase.ui.auth.IdpResponse
+import com.github.gogetters.letsgo.database.Authentication
 import com.github.gogetters.letsgo.database.user.FirebaseUserBundle
 import com.github.gogetters.letsgo.database.user.FirebaseUserBundleProvider
 import com.google.firebase.auth.FirebaseAuth
@@ -15,7 +16,7 @@ class LoginActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        if (FirebaseAuth.getInstance().currentUser == null) {
+        if (Authentication.getCurrentUser() == null) {
             createSignInIntent()
         }
     }
@@ -50,7 +51,7 @@ class LoginActivity : AppCompatActivity() {
 
             if (resultCode == Activity.RESULT_OK) {
                 // Successfully signed in -> store it properly on firebase
-                val user = FirebaseAuth.getInstance().currentUser
+                val user = Authentication.getCurrentUser()!!
                 val userBundle = FirebaseUserBundle(user)
                 val letsGoUser = userBundle.getUser()
                 letsGoUser.requireUserExists().addOnFailureListener {

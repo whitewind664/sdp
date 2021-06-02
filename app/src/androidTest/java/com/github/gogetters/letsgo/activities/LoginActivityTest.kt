@@ -10,6 +10,7 @@ import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.uiautomator.UiDevice
 import androidx.test.uiautomator.UiObject
 import androidx.test.uiautomator.UiSelector
+import com.github.gogetters.letsgo.database.Authentication
 import com.github.gogetters.letsgo.database.EmulatedFirebaseTest
 import com.github.gogetters.letsgo.database.user.FirebaseUserBundle
 import com.github.gogetters.letsgo.testUtil.TestUtils.Companion.clickWaitButton
@@ -29,9 +30,8 @@ class LoginActivityTest : EmulatedFirebaseTest() {
     @Before
     fun init() {
         Intents.init()
-        FirebaseAuth.getInstance().signOut()
+        Authentication.signOut()
         scenario = ActivityScenario.launch(intent)
-
         clickWaitButton()
     }
 
@@ -79,7 +79,7 @@ class LoginActivityTest : EmulatedFirebaseTest() {
         }
 
         sleep()
-        val user = FirebaseAuth.getInstance().currentUser
+        val user = Authentication.getCurrentUser()
         if (user != null) {
             val userBundle = FirebaseUserBundle(user)
             userBundle.deleteUser()

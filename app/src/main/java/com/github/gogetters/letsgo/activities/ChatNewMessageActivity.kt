@@ -6,6 +6,7 @@ import android.os.Bundle
 import com.github.gogetters.letsgo.R
 import com.github.gogetters.letsgo.chat.model.UserData
 import com.github.gogetters.letsgo.chat.views.ChatNewMessageItem
+import com.github.gogetters.letsgo.database.Authentication
 import com.github.gogetters.letsgo.database.user.LetsGoUser
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot
@@ -35,7 +36,7 @@ class ChatNewMessageActivity : AppCompatActivity() {
     }
 
     private fun listUsers() {
-        val user = LetsGoUser(FirebaseAuth.getInstance().uid!!)
+        val user = LetsGoUser(Authentication.getUid()!!)
 
         user.downloadFriends().addOnSuccessListener {
             val friends = user.friends!![LetsGoUser.FriendStatus.ACCEPTED]!!
