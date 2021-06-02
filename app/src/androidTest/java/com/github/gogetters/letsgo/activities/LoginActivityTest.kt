@@ -15,7 +15,6 @@ import com.github.gogetters.letsgo.database.EmulatedFirebaseTest
 import com.github.gogetters.letsgo.database.user.FirebaseUserBundle
 import com.github.gogetters.letsgo.testUtil.TestUtils.Companion.clickWaitButton
 import com.github.gogetters.letsgo.testUtil.TestUtils.Companion.sleep
-import com.google.firebase.auth.FirebaseAuth
 import org.junit.After
 import org.junit.Before
 import org.junit.Test
@@ -76,6 +75,11 @@ class LoginActivityTest : EmulatedFirebaseTest() {
         val saveButton = device.findObject(UiSelector().clickable(true).textContains("SAVE"))
         if (saveButton.exists()) {
             saveButton.click()
+        }
+
+        val dontSavePasswordButton = device.findObject(UiSelector().clickable(true).textContains("Not now"))
+        if (dontSavePasswordButton.exists()) {
+            dontSavePasswordButton.click()
         }
 
         sleep()
