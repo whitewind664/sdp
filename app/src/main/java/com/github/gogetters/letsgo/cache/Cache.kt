@@ -23,6 +23,7 @@ class Cache {
             val editor: SharedPreferences.Editor = sharedPreferences.edit()
             editor.apply {
 
+                putString("userUid", user.uid)
                 putString("userNick", user.nick)
                 putString("userFirst", user.first)
                 putString("userLast", user.last)
@@ -40,15 +41,21 @@ class Cache {
 
             val sharedPreferences: SharedPreferences = act.applicationContext.getSharedPreferences(PREF_ID, Context.MODE_PRIVATE)
 
-            val user = LetsGoUser("0")
-            user.nick = sharedPreferences.getString("userNick", "")
-            user.first = sharedPreferences.getString("userFirst", "")
-            user.last = sharedPreferences.getString("userLast", "")
-            user.country = sharedPreferences.getString("userCountry", "")
-            user.city = sharedPreferences.getString("userCity", "")
+            val loggedInUid = FirebaseAuth.getInstance().uid!!
+
+            val cachedUid = sharedPreferences.getString("userUid", null)
+            if (cachedUid == null || loggedInUid != cachedUid) {
+                return null
+            }
+
+            val user = LetsGoUser(cachedUid)
+            user.nick = sharedPreferences.getString("userNick", null)
+            user.first = sharedPreferences.getString("userFirst", null)
+            user.last = sharedPreferences.getString("userLast", null)
+            user.country = sharedPreferences.getString("userCountry", null)
+            user.city = sharedPreferences.getString("userCity", null)
 
             return user
-
         }
 
     }

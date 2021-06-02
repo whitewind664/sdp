@@ -12,8 +12,11 @@ import com.github.gogetters.letsgo.R
 import com.github.gogetters.letsgo.cache.Cache
 import com.github.gogetters.letsgo.database.ImageStorageService
 import com.github.gogetters.letsgo.database.ImageStorageService.Companion.PROFILE_PICTURE_PREFIX_CLOUD
+import com.github.gogetters.letsgo.database.user.LetsGoUser
 import com.github.gogetters.letsgo.database.user.UserBundle
 import com.github.gogetters.letsgo.database.user.UserBundleProvider
+import com.google.android.gms.tasks.Task
+import java.util.concurrent.ExecutionException
 
 
 class ProfileActivity : BaseActivity() {
@@ -92,34 +95,55 @@ class ProfileActivity : BaseActivity() {
             // Don't let the user see this screen without having successfully completed sign-in.
             dispatchLoginIntent()
         } else {
-            var user = userBundle.getUser()
+            val user = userBundle.getUser()
 
-            val cachedUser = Cache.loadUserProfile(this)
+            user.downloadUserData()
+                .addOnFailureListener {
+                    // If user is offline then get user from cache
+                    val cachedUser = Cache.loadUserProfile(this)
 
-            if (cachedUser?.nick != null && cachedUser.nick!!.isNotEmpty()) {
-                nick.text = cachedUser.nick
-            } else {
-                nick.text = getString(R.string.profile_noNicknameHint)
-            }
+                    if (cachedUser != null) {
+                        user.nick = cachedUser.nick
+                        user.first = cachedUser.first
+                        user.last = cachedUser.last
+                        user.country = cachedUser.country
+                        user.city = cachedUser.city
+                    }
 
-            firstLast.text = combineTwoTextFields(cachedUser?.first, cachedUser?.last, " ")
+                    displayUser(userBundle)
+                }
+                .addOnSuccessListener {
+                    displayUser(userBundle)
+                }
+        }
+    }
 
-            cityCountyText.text = combineTwoTextFields(cachedUser?.city, cachedUser?.country, ", ")
+    private fun displayUser(userBundle : UserBundle) {
+        val user = userBundle.getUser()
 
-            editButton.visibility = View.VISIBLE
+        if (user.nick != null && user.nick!!.isNotEmpty()) {
+            nick.text = user.nick
+        } else {
+            nick.text = getString(R.string.profile_noNicknameHint)
+        }
 
-            // cached by Firebase
-            emailText.text = userBundle.getEmail()
-            // not cached yet
-            user.downloadUserData().addOnCompleteListener {
-                ImageStorageService.getProfileImageFromCloud(
-                    PROFILE_PICTURE_PREFIX_CLOUD,
-                    user.profileImageRef,
-                    ImageStorageService.getOutputImageFile(
-                        getExternalFilesDir(Environment.DIRECTORY_PICTURES)
-                    ),
-                    profileImage)
-            }
+        firstLast.text = combineTwoTextFields(user.first, user.last, " ")
+
+        cityCountyText.text = combineTwoTextFields(user.city, user.country, ", ")
+
+        editButton.visibility = View.VISIBLE
+
+        // cached by Firebase
+        emailText.text = userBundle.getEmail()
+        // not cached yet
+        user.downloadUserData().addOnCompleteListener {
+            ImageStorageService.getProfileImageFromCloud(
+                PROFILE_PICTURE_PREFIX_CLOUD,
+                user.profileImageRef,
+                ImageStorageService.getOutputImageFile(
+                    getExternalFilesDir(Environment.DIRECTORY_PICTURES)
+                ),
+                profileImage)
         }
     }
 
