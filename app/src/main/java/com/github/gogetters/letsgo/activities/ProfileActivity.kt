@@ -12,11 +12,8 @@ import com.github.gogetters.letsgo.R
 import com.github.gogetters.letsgo.cache.Cache
 import com.github.gogetters.letsgo.database.ImageStorageService
 import com.github.gogetters.letsgo.database.ImageStorageService.Companion.PROFILE_PICTURE_PREFIX_CLOUD
-import com.github.gogetters.letsgo.database.user.LetsGoUser
 import com.github.gogetters.letsgo.database.user.UserBundle
 import com.github.gogetters.letsgo.database.user.UserBundleProvider
-import com.google.android.gms.tasks.Task
-import java.util.concurrent.ExecutionException
 
 
 class ProfileActivity : BaseActivity() {
@@ -65,7 +62,7 @@ class ProfileActivity : BaseActivity() {
             }
         }
 
-        val searchUsersButton = findViewById<Button>(R.id.profile_search_users)
+        val searchUsersButton = findViewById<Button>(R.id.profile_search_users_button)
         searchUsersButton.setOnClickListener {
             if (userBundleProvider.getUserBundle() != null)
                 startActivity(Intent(this, UserSearchActivity::class.java))
