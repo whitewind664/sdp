@@ -106,7 +106,7 @@ class OGSCommunicatorService(private val onlineService: OnlineService<JSONObject
         headers.put("referer", base)
         headers.put("content-type", "application/json")
         val temp = "http://127.0.0.1"
-        onlineService.post("$temp$botChallenges", body, headers).setOnResponse { response ->
+        onlineService.post("$base$botChallenges", body, headers).setOnResponse { response ->
             val gameID = response.getString("game")
             val challengeID = response.getString("challenge")
 
