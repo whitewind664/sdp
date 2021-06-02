@@ -26,12 +26,15 @@ class ChatLastMessageItem(val chatMessage: ChatMessageData) : Item<ViewHolder>()
             chatId = chatMessage.fromId
         }
 
+        chatUser = LetsGoUser(chatId)
+
         val ref = FirebaseDatabase.getInstance().getReference("/users/$chatId")
         ref.addListenerForSingleValueEvent(object : ValueEventListener {
 
             override fun onDataChange(snapshot: DataSnapshot) {
-                chatUser = snapshot.getValue(LetsGoUser::class.java)
-                viewHolder.itemView.chat_textView_last_username.text = chatUser?.nick
+                chatUser?.downloadUserData()?.continueWith {
+                    viewHolder.itemView.chat_textView_last_username.text = chatUser?.nick
+                }
             }
 
             override fun onCancelled(error: DatabaseError) {}

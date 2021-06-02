@@ -7,6 +7,7 @@ import com.google.firebase.storage.FileDownloadTask
 import com.google.firebase.storage.UploadTask
 import com.google.firebase.storage.ktx.storage
 import java.io.File
+import java.io.Serializable
 import java.util.concurrent.CompletableFuture
 
 
