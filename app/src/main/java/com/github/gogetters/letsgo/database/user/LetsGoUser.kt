@@ -6,6 +6,7 @@ import com.github.gogetters.letsgo.database.Database
 import com.google.android.gms.tasks.Task
 import com.google.android.gms.tasks.Tasks
 import com.google.firebase.database.DataSnapshot
+import java.io.Serializable
 import java.util.*
 import kotlin.collections.ArrayList
 
@@ -14,11 +15,7 @@ import kotlin.collections.ArrayList
  * Class that represents a user of the app and coordinates the communication of user data with the
  * database. The optional parameters are for testing purposes
  */
-class LetsGoUser(
-    val uid: String,
-    val db: Database.Companion = Database,
-    val cloud: CloudStorage.Companion = CloudStorage
-) {
+class LetsGoUser (val uid: String) : Serializable {
     var nick: String? = null
     var first: String? = null
     var last: String? = null
@@ -88,7 +85,7 @@ class LetsGoUser(
      * Downloads this User's data to the DB. Returns a task to track progress and etc.
      */
     fun downloadUserData(): Task<Unit> {
-        return db.readData(userPath)
+        return Database.readData(userPath)
             .continueWith {
                 extractUserData(it.result)
             }
@@ -122,9 +119,9 @@ class LetsGoUser(
     fun deleteUserData(): Task<Void> {
         // delete the profile picture
         if (profileImageRef != null) {
-            cloud.deleteFile(profileImageRef!!)
+            CloudStorage.deleteFile(profileImageRef!!)
         }
-        return db.deleteData(userPath)
+        return Database.deleteData(userPath)
             .addOnSuccessListener {
                 Log.d(tag, "LetsGoUser successfully deleted!")
                 nick = null

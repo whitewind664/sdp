@@ -3,10 +3,10 @@ package com.github.gogetters.letsgo.activities
 import android.Manifest
 import android.app.AlertDialog
 import android.content.DialogInterface
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.location.Location
 import android.os.Bundle
-import java.lang.IllegalStateException
 import android.util.Log
 import android.widget.Button
 import android.widget.Toast
@@ -16,6 +16,7 @@ import androidx.core.content.ContextCompat
 import com.github.gogetters.letsgo.R
 import com.github.gogetters.letsgo.database.Database
 import com.github.gogetters.letsgo.database.user.FirebaseUserBundleProvider
+import com.github.gogetters.letsgo.database.user.LetsGoUser
 import com.github.gogetters.letsgo.util.PermissionUtils.isPermissionGranted
 import com.github.gogetters.letsgo.util.PermissionUtils.requestPermission
 import com.google.android.gms.location.FusedLocationProviderClient
@@ -180,7 +181,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback,
                 val marker =
                     mMap.addMarker(
                         MarkerOptions().position(playerPosition)
-                            .title("$id") //  TODO change to username
+                            .title("$id")
                             .icon(BitmapDescriptorFactory.fromResource(R.drawable.person_pin))
                     )
                 marker.tag = id  // the userId needs to be stored
@@ -257,19 +258,29 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback,
     /**
      * Called when clicked on a marker on the map. Displays a dialog that allows to open a chat with a found user.
      */
-    private fun displayUserInfo(username: String) {
+    private fun displayUserInfo(otherId: String) {
         val dialogTexts = arrayOf<CharSequence>(
             resources.getString(R.string.map_dialogOpenChat),
             resources.getString(R.string.map_dialogCancel)
         )
         val builder: AlertDialog.Builder = AlertDialog.Builder(this)
-        builder.setTitle(resources.getString(R.string.map_dialogTitlePrefix) + username)
+        builder.setTitle(resources.getString(R.string.map_dialogTitlePrefix))
         builder.setItems(dialogTexts, DialogInterface.OnClickListener { dialog, clickedIndex ->
             if (clickedIndex == DIALOG_CANCEL_IDX) {
                 dialog.dismiss()
                 return@OnClickListener
+            } else {
+                if (userBundleProvider.getUserBundle() == null) {
+                    // open login
+                    val intent = Intent(this, LoginActivity::class.java)
+                    startActivity(intent)
+                } else {
+                    // open chat with the user
+                    val intent = Intent(this, ChatActivity::class.java)
+                    intent.putExtra(ChatNewMessageActivity.KEY, LetsGoUser(otherId))
+                    startActivity(intent)
+                }
             }
-            // TODO open chat with the user
         })
         builder.show()
     }
