@@ -1,6 +1,9 @@
 package com.github.gogetters.letsgo.game.util.ogs
 
+import android.app.Instrumentation
+import android.content.res.Resources
 import android.util.Log
+import com.github.gogetters.letsgo.R
 import com.github.gogetters.letsgo.game.Point
 import com.github.gogetters.letsgo.game.Stone
 import com.github.gogetters.letsgo.game.util.InputDelegate
@@ -26,7 +29,7 @@ class OGSCommunicatorService(private val onlineService: OnlineService<JSONObject
     lateinit var accessToken: String
     lateinit var refreshToken: String
 
-    lateinit var activeChallenge: OGSChallenge
+    lateinit var activeChallenge: String
     var authenticated = false
 
     lateinit var inputDelegate: InputDelegate
@@ -90,10 +93,17 @@ class OGSCommunicatorService(private val onlineService: OnlineService<JSONObject
     }
 
 
-    fun startChallenge(challenge: OGSChallenge) {
+    fun startChallenge() {
         if (!authenticated) throw IllegalStateException("user has not authenticated yet")
 
-        val body = challenge.toJSON()
+        val body = "{\"initialized\":false,\"min_ranking\":-1000,\"max_ranking\":1000,\"" +
+                "challenger_color\":\"black\",\"game\":{\"handicap\":0,\"time_control\":\"simple\"," +
+                "\"challenger_color\":\"white\",\"rules\":\"chinese\",\"ranked\":false,\"width\":9," +
+                "\"height\":9,\"komi_auto\":\"automatic\",\"komi\":null,\"disable_analysis\":false," +
+                "\"pause_on_weekends\":false,\"initial_state\":null,\"private\":false,\"name\":\"Friendly Match\"," +
+                "\"time_control_parameters\":{\"system\":\"simple\",\"speed\":\"blitz\",\"per_move\":5," +
+                "\"pause_on_weekends\":false,\"time_control\":\"simple\"}},\"aga_ranked\":false}"
+
         //TODO change to real challenges
         val cookies = CookieManager.getDefault().get(URI(base), mapOf())
         val cookieString = cookies["Cookie"]!![0]
@@ -105,12 +115,11 @@ class OGSCommunicatorService(private val onlineService: OnlineService<JSONObject
         headers.put("x-csrftoken", token)
         headers.put("referer", base)
         headers.put("content-type", "application/json")
-        onlineService.post("$base$botChallenges", body.toString(), headers).setOnResponse { response ->
+        onlineService.post("$base$botChallenges", body, headers).setOnResponse { response ->
             val gameID = response.getString("game")
             val challengeID = response.getString("challenge")
 
-            activeChallenge = OGSChallenge(challengeID, OGSGame("bot_challenge", gameID),
-                    Stone.BLACK, -1000, 1000)
+            activeChallenge = challengeID
 
             realtimeService.connectToGame("ourid...", gameID) { inputDelegate.saveLatestInput(it) }
         }

@@ -67,7 +67,7 @@ class GameModeChooserActivity : BaseActivity() {
         val challengeButton = findViewById<Button>(R.id.gameModeChooser_button_challenge)
 
         challengeButton.setOnClickListener {
-            ogs.startChallenge(OGSChallenge("", OGSGame("", "mygame"), Stone.BLACK))
+            ogs.startChallenge()
             localButton = findViewById(R.id.gameModeChooser_button_local)
             localButton.setOnClickListener {
                 // start a local game
@@ -113,13 +113,5 @@ class GameModeChooserActivity : BaseActivity() {
         }
 
         initChallengeButton()
-    }
-
-    /**
-     * Send the information of the new game on OGS to the interface
-     */
-    private fun startOgsOnlineGame(ogsChallenge: OGSChallenge) {
-        ogs.startChallenge(ogsChallenge)
-        //TODO go to game activity...
     }
 }
