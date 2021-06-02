@@ -14,12 +14,11 @@ import org.junit.Assert.assertNull
 import org.junit.rules.ExpectedException
 import org.junit.runner.RunWith
 import org.junit.runners.MethodSorters
-import java.util.concurrent.ExecutionException
 
 
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 @RunWith(AndroidJUnit4::class)
-class LetsGoUserTest /*: EmulatedFirebaseTest()*/ {
+class LetsGoUserTest : EmulatedFirebaseTest() {
 
     private val TAG = "FirestoreTest"
     private val TEST_UID = "tESTuID"
@@ -231,18 +230,5 @@ class LetsGoUserTest /*: EmulatedFirebaseTest()*/ {
         // TODO Add some users with nicknames starting with tester and check that we indeed get them all (use users.length)
         val users = Tasks.await(user.downloadUsersByNick("tester"))
         Log.d(TAG, "Found Users : $users")
-    }
-
-    @Test
-    fun scratch() {
-        val my_user = LetsGoUser("WOs2S7EDiHRrXZrmvEAr7zV8Awk2")
-
-        try {
-            Tasks.await(my_user.downloadUserData())
-        } catch (e:ExecutionException) {
-            e.printStackTrace()
-        }
-
-        Log.d(TAG, "Me : $my_user")
     }
 }
