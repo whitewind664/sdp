@@ -131,6 +131,7 @@ class UserSearchActivity : AppCompatActivity() {
         SearchView.OnQueryTextListener {
         override fun onQueryTextSubmit(query: String?): Boolean {
             if (query != null) {
+                Log.d(TAG, "Searching for '$query...'")
                 userSearchActivity.searchUsersOutputToRecycler(query)
             }
             return true
