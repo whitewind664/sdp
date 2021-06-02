@@ -11,6 +11,8 @@ import java.io.Serializable
 import java.text.SimpleDateFormat
 import java.time.LocalDateTime
 import java.util.*
+import com.github.gogetters.letsgo.R
+import androidx.core.content.ContextCompat
 
 class BluetoothServer {
 
@@ -41,14 +43,18 @@ class BluetoothServer {
             while (shouldLoop) {
                 val socket: BluetoothSocket? = try {
                     mmServerSocket?.accept()
+
                 } catch (e: IOException) {
                     Log.e("Bluetooth Server", "Socket's accept() method failed", e)
                     shouldLoop = false
                     null
                 }
                 socket?.also {
-
                     service.connect(it)
+
+                    service.sendNick()
+
+
                     // Wait for ping
                     val time = Calendar.getInstance().time
                     while (!service.receivedPing) {

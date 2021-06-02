@@ -36,7 +36,6 @@ class BluetoothActivity : AppCompatActivity() {
     private lateinit var client: BluetoothClient
     private lateinit var server: BluetoothServer
     private lateinit var btProbe: BluetoothProbe
-
     private val foundDevices: MutableSet<BluetoothDevice> = mutableSetOf()
     private val deviceInfo: MutableMap<BluetoothDevice, String> = mutableMapOf()
     private var isServer = false
@@ -82,11 +81,12 @@ class BluetoothActivity : AppCompatActivity() {
 
                     if (deviceName != null) {
                         CompletableFuture.supplyAsync {
-                            Log.d("FUTURES FUTURES FUTURES", "first part starting: $deviceName")
-                            btProbe.connect(device)
+                            btProbe.connect(device,service)
                         }.thenAcceptAsync {
-                            Log.d("FUTURES FUTURES FUTURES", "second part starting: $deviceName")
-                            deviceInfo[device] = it!!
+                            if(it.isEmpty())
+                                deviceInfo[device] = "Anonymous Go player"
+                            else
+                                deviceInfo[device] = it
                             foundDevices.add(device)
                             this@BluetoothActivity.runOnUiThread { listFound() }
                             Log.d("Futures", "done")
@@ -98,7 +98,6 @@ class BluetoothActivity : AppCompatActivity() {
         }
     }
 
-    //no idea how to add this via xml
     private fun implementListeners() {
         listView.onItemClickListener =
             OnItemClickListener { adapterView, _, i, _ ->
@@ -289,6 +288,8 @@ class BluetoothActivity : AppCompatActivity() {
         const val REQUEST_ENABLE_BLUETOOTH = 1
 
         val service = BluetoothGTPService()
+
+
 
 
 //        private val MY_UUID = UUID.fromString("8ce255c0-223a-11e0-ac64-0803450c9a66")
