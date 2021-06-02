@@ -3,20 +3,18 @@ package com.github.gogetters.letsgo.database
 import android.util.Log
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.github.gogetters.letsgo.database.user.LetsGoUser
-import com.google.android.gms.tasks.Tasks
 import com.google.android.gms.maps.model.LatLng
+import com.google.android.gms.tasks.Tasks
 import io.mockk.every
-import io.mockk.isMockKMock
 import io.mockk.mockkObject
 import io.mockk.verify
+import org.junit.*
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNull
-import org.junit.Before
-import org.junit.FixMethodOrder
-import org.junit.Ignore
-import org.junit.Test
+import org.junit.rules.ExpectedException
 import org.junit.runner.RunWith
 import org.junit.runners.MethodSorters
+
 
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 @RunWith(AndroidJUnit4::class)
@@ -30,6 +28,9 @@ class LetsGoUserTest : EmulatedFirebaseTest() {
     private var user = LetsGoUser("")
     private var user2 = LetsGoUser("")
     private var user3 = LetsGoUser("")
+
+    @get:Rule
+    var exceptionRule: ExpectedException = ExpectedException.none()
 
     @Before
     fun initialize() {
@@ -130,6 +131,13 @@ class LetsGoUserTest : EmulatedFirebaseTest() {
         Tasks.await(user3.deleteUserData())
         assertNull(user3.nick)
         assertNull(user3.lastPositionLatitude)
+    }
+
+    @Test
+    fun aListFriendsByStatusThrowsOnNullFriends() {
+        exceptionRule.expect(IllegalStateException::class.java)
+        user.friends = null
+        user.listFriendsByStatus(LetsGoUser.FriendStatus.ACCEPTED)
     }
 
     @Test
