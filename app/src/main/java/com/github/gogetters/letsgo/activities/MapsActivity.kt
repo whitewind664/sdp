@@ -78,7 +78,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback,
         isMapReady = true
 
         // Move the camera to EPFL
-        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(EPFL, INIT_ZOOM))
+        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(EPFL, INIT_ZOOM))
         mMap.setOnMarkerClickListener { marker ->
             displayUserInfo(marker.tag as String)
             true
@@ -194,7 +194,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback,
             // update the camera zoom
             val cu =
                 CameraUpdateFactory.newLatLngBounds(allPositions.build(), MARKER_DISPLAY_PADDING)
-            mMap.moveCamera(cu)
+            mMap.animateCamera(cu)
         }
     }
 
