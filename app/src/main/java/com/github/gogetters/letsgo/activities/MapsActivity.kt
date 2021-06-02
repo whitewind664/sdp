@@ -149,7 +149,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback,
      */
     private fun activateAndUpdateOtherPlayers() {
         if (!::mMap.isInitialized)
-            throw IllegalStateException("Map not initialized")
+            return
 
         otherUsersActivated = true
 
