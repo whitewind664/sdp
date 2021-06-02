@@ -151,7 +151,7 @@ class Database {
             database.child("users").get().addOnSuccessListener {
                 // unpack the values
                 var map: Map<LatLng, String> = emptyMap()
-                val myUserId = getCurrentUserId()
+                val myUserId = Authentication.getUid()
                 for(user: DataSnapshot in it.children) {
                     val userId: String = user.key as String
 
