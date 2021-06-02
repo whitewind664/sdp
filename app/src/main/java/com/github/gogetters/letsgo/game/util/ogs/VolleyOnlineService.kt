@@ -33,17 +33,17 @@ class VolleyOnlineService(context: Context) : OnlineService<JSONObject>  {
         val request = object: StringRequest(method, url,
                 { responseListener.onResponse(JSONObject(it)) },
                 {
-                    val response = it.networkResponse.data.decodeToString()
-                    Log.d("VOLLEY ERROR", response)
-                    responseListener.onResponse(JSONObject().put("error", "error")) //TODO make more expressive
+                    if (it.networkResponse != null && it.networkResponse.data != null) {
+                        val response = it.networkResponse.data.decodeToString()
+                        Log.d("VOLLEY ERROR", response)
+                        responseListener.onResponse(JSONObject().put("error", "error")) //TODO make more expressive
+
+                    } else {
+                        Log.d("VOLLEY ERROR", it.toString())
+                    }
                 })
         {
-            override fun getBodyContentType(): String {
-                return "application/x-www-form-urlencoded; charset=UTF-8"
-            }
-
             override fun getHeaders(): MutableMap<String, String> {
-                headers.put("Content-Type", "application/x-www-form-urlencoded")
                 val map = mutableMapOf<String, String>()
                 for (key in headers.keys()) {
                     map[key] = headers.getString(key)

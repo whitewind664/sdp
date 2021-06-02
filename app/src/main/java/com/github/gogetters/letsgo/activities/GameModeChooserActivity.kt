@@ -2,19 +2,12 @@ package com.github.gogetters.letsgo.activities
 
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import android.widget.*
-import com.android.volley.Request
-import com.android.volley.RequestQueue
-import com.android.volley.toolbox.JsonObjectRequest
-import com.android.volley.toolbox.StringRequest
-import com.android.volley.toolbox.Volley
 import com.github.gogetters.letsgo.R
 import com.github.gogetters.letsgo.game.Player
 import com.github.gogetters.letsgo.game.Stone
 import com.github.gogetters.letsgo.game.util.ogs.*
-import org.json.JSONObject
 import java.util.*
 
 class GameModeChooserActivity : BaseActivity() {
@@ -75,7 +68,7 @@ class GameModeChooserActivity : BaseActivity() {
 
         challengeButton.setOnClickListener {
             ogs.startChallenge(OGSChallenge("", OGSGame("", "mygame"), Stone.BLACK))
-            localButton = findViewById<Button>(R.id.gameModeChooser_button_local)
+            localButton = findViewById(R.id.gameModeChooser_button_local)
             localButton.setOnClickListener {
                 // start a local game
                 val intent = Intent(this, GameActivity::class.java).apply {
