@@ -10,10 +10,15 @@ import java.util.*
 import kotlin.collections.ArrayList
 
 
-// I know we could use a data class or something but LetsGoUser's functioning is complex and this
-// approach just works so I will stick to it!
-// Db is an optional argument to allow for testing!
-class LetsGoUser(val uid: String, val db: Database.Companion = Database, val cloud: CloudStorage.Companion = CloudStorage) {
+/**
+ * Class that represents a user of the app and coordinates the communication of user data with the
+ * database. The optional parameters are for testing purposes
+ */
+class LetsGoUser(
+    val uid: String,
+    val db: Database.Companion = Database,
+    val cloud: CloudStorage.Companion = CloudStorage
+) {
     var nick: String? = null
     var first: String? = null
     var last: String? = null
@@ -23,7 +28,12 @@ class LetsGoUser(val uid: String, val db: Database.Companion = Database, val clo
     // The reference (== address) of the profile picture on cloud storage
     var profileImageRef: String? = null
 
-    public var friends: EnumMap<FriendStatus, MutableList<LetsGoUser>>? = null
+    var friends: EnumMap<FriendStatus, MutableList<LetsGoUser>>? = null
+
+    // map related values
+    var isLookingForPlayers: Boolean? = false
+    var lastPositionLatitude: Double? = null
+    var lastPositionLongitude: Double? = null
 
     // Be very careful if changing path values!
     private val tag = "FirestoreTest"
@@ -58,7 +68,10 @@ class LetsGoUser(val uid: String, val db: Database.Companion = Database, val clo
             "last" to last,
             "city" to city,
             "country" to country,
-            "profilePictureRef" to profileImageRef
+            "profilePictureRef" to profileImageRef,
+            "isLookingForPlayers" to isLookingForPlayers,
+            "lastPositionLatitude" to lastPositionLatitude,
+            "lastPositionLongitude" to lastPositionLongitude
         )
 
         // Add a new document with user's uid
@@ -87,7 +100,7 @@ class LetsGoUser(val uid: String, val db: Database.Companion = Database, val clo
             }
     }
 
-    fun extractUserData(userData: DataSnapshot){
+    private fun extractUserData(userData: DataSnapshot) {
         for (attribute in userData.children) {
             when (attribute.key) {
                 "nick" -> nick = attribute.value as String
@@ -96,6 +109,9 @@ class LetsGoUser(val uid: String, val db: Database.Companion = Database, val clo
                 "city" -> city = attribute.value as String
                 "country" -> country = attribute.value as String
                 "profilePictureRef" -> profileImageRef = attribute.value as String
+                "isLookingForPlayers" -> isLookingForPlayers = attribute.value as Boolean
+                "lastPositionLatitude" -> lastPositionLatitude = attribute.value as Double
+                "lastPositionLongitude" -> lastPositionLongitude = attribute.value as Double
             }
         }
     }
@@ -105,12 +121,21 @@ class LetsGoUser(val uid: String, val db: Database.Companion = Database, val clo
      */
     fun deleteUserData(): Task<Void> {
         // delete the profile picture
-        if(profileImageRef != null) {
+        if (profileImageRef != null) {
             cloud.deleteFile(profileImageRef!!)
         }
         return db.deleteData(userPath)
             .addOnSuccessListener {
                 Log.d(tag, "LetsGoUser successfully deleted!")
+                nick = null
+                first = null
+                last = null
+                city = null
+                country = null
+                isLookingForPlayers = null
+                lastPositionLongitude = null
+                lastPositionLatitude = null
+                profileImageRef = null
             }
             .addOnFailureListener { e ->
                 Log.w(tag, "Error deleting LetsGoUser", e)
@@ -118,8 +143,8 @@ class LetsGoUser(val uid: String, val db: Database.Companion = Database, val clo
     }
 
     override fun toString(): String {
-        // TODO Maybe improve this?
-        return "LetsGoUser(uid=$uid, nick=$nick, first=$first, last=$last, city=$city, country=$country, profileImageRef=$profileImageRef)"
+        return "LetsGoUser(uid=$uid, nick=$nick, first=$first, last=$last, city=$city, country=$country, profileImageRef=$profileImageRef, isLookingForPlayers=$isLookingForPlayers," +
+                "lastPositionLatitude=$lastPositionLatitude, lastPositionLongitude=$lastPositionLongitude)"
     }
 
     //===========================================================================================
@@ -174,9 +199,9 @@ class LetsGoUser(val uid: String, val db: Database.Companion = Database, val clo
      * Updates friend status for both users!
      */
     private fun updateFriendStatus(
-            otherUser: LetsGoUser,
-            status1: FriendStatus,
-            status2: FriendStatus
+        otherUser: LetsGoUser,
+        status1: FriendStatus,
+        status2: FriendStatus
     ): Task<Void> {
         return requireUserExists().continueWithTask {
             otherUser.requireUserExists().continueWithTask {
@@ -209,8 +234,10 @@ class LetsGoUser(val uid: String, val db: Database.Companion = Database, val clo
      */
     fun listFriendsByStatus(status: FriendStatus): List<LetsGoUser> {
         if (friends == null) {
-            throw IllegalStateException("MUST call downloadFriends and wait for it to complete" +
-                    " before calling this function!")
+            throw IllegalStateException(
+                "MUST call downloadFriends and wait for it to complete" +
+                        " before calling this function!"
+            )
         }
         return friends!![status]!!
     }
@@ -270,7 +297,7 @@ class LetsGoUser(val uid: String, val db: Database.Companion = Database, val clo
     //-------------------------------------------------------------------------------------------
     // User Search
 
-    fun downloadUsersByNick(nick : String): Task<MutableList<LetsGoUser>> {
+    fun downloadUsersByNick(nick: String): Task<MutableList<LetsGoUser>> {
         return Database.readSearchByChild(usersPath, "nick", nick).continueWithTask {
             val uids = mutableListOf<String>()
             it.result.children.forEach { uids.add(it.key!!) }
