@@ -55,7 +55,7 @@ class ProfileActivityTest : EmulatedFirebaseTest() {
     }
 
     private fun lateInit() {
-        TestUtils.makeSureTestUserAuthentitcated()
+        TestUtils.makeSureTestUserAuthenticated()
         scenario = ActivityScenario.launch(intent)
         clickWaitButton()
     }

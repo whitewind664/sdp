@@ -28,7 +28,7 @@ class TestUtils {
             }
         }
 
-        fun makeSureTestUserAuthentitcated() {
+        fun makeSureTestUserAuthenticated() {
             if (Firebase.auth.currentUser == null) {
                 val testEmail = "testerAuth@test.com"
                 val testPass = "123456"

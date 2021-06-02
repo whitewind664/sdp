@@ -66,7 +66,7 @@ class ProfileEditActivityTest : EmulatedFirebaseTest() {
 
     @Before
     fun init() {
-        TestUtils.makeSureTestUserAuthentitcated()
+        TestUtils.makeSureTestUserAuthenticated()
         Intents.init()
         scenario = ActivityScenario.launch(intent)
     }
