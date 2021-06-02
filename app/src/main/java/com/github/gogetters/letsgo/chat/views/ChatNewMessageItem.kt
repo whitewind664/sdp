@@ -1,12 +1,12 @@
 package com.github.gogetters.letsgo.chat.views
 
 import com.github.gogetters.letsgo.R
-import com.github.gogetters.letsgo.chat.model.UserData
+import com.github.gogetters.letsgo.database.user.LetsGoUser
 import com.xwray.groupie.Item
 import com.xwray.groupie.ViewHolder
 import kotlinx.android.synthetic.main.item_chat_new_message.view.*
 
-class ChatNewMessageItem(val user: UserData): Item<ViewHolder>() {
+class ChatNewMessageItem(val user: LetsGoUser): Item<ViewHolder>() {
 
     override fun bind(viewHolder: ViewHolder, position: Int) {
         if (user.nick != "") {
@@ -19,5 +19,4 @@ class ChatNewMessageItem(val user: UserData): Item<ViewHolder>() {
     override fun getLayout(): Int {
         return R.layout.item_chat_new_message
     }
-
 }

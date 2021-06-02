@@ -1,14 +1,12 @@
 package com.github.gogetters.letsgo.activities
 
 import android.os.Bundle
-import android.provider.ContactsContract
 import androidx.appcompat.app.AppCompatActivity
 import com.github.gogetters.letsgo.R
 import com.github.gogetters.letsgo.chat.model.ChatMessageData
-import com.github.gogetters.letsgo.chat.model.UserData
 import com.github.gogetters.letsgo.chat.views.ChatMyMessageItem
 import com.github.gogetters.letsgo.chat.views.ChatTheirMessageItem
-import com.github.gogetters.letsgo.database.Database
+import com.github.gogetters.letsgo.database.user.LetsGoUser
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.ChildEventListener
 import com.google.firebase.database.DataSnapshot
@@ -22,7 +20,7 @@ class ChatActivity : AppCompatActivity() {
 
     val adapter = GroupAdapter<ViewHolder>()
     lateinit var userId: String
-    var toUser: UserData? = null
+    var toUser: LetsGoUser? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -30,7 +28,7 @@ class ChatActivity : AppCompatActivity() {
 
         chat_recyclerview_messages.adapter = adapter
         userId = FirebaseAuth.getInstance().currentUser!!.uid
-        toUser = intent.getParcelableExtra<UserData>(ChatNewMessageActivity.KEY)
+        toUser = intent.getSerializableExtra(ChatNewMessageActivity.KEY) as LetsGoUser
 
         listenForMessages()
 
@@ -41,7 +39,7 @@ class ChatActivity : AppCompatActivity() {
 
     private fun listenForMessages() {
         val fromId = userId
-        val toId = toUser?.id
+        val toId = toUser?.uid
         val ref = FirebaseDatabase.getInstance().getReference("/messages-node/$fromId/$toId")
         //ref.keepSynced(true)
 
@@ -71,12 +69,12 @@ class ChatActivity : AppCompatActivity() {
         val text = chat_editText_input.text.toString()
 
         if (text.isNotEmpty()) {
-            val fromId = userId!!
-            val toId = toUser!!.id!! // This might work?
+            val fromId = userId
+            val toId = toUser!!.uid // This might work?
 //            if (toUser?.id == null) {
 //                toId = UNKNOWN
 //            } else {
-//                toId = toUser?.id
+//                toId = toUser?.uid
 //            }
             val ref = FirebaseDatabase.getInstance().getReference("/messages-node/$fromId/$toId").push()
             //ref.keepSynced(true)

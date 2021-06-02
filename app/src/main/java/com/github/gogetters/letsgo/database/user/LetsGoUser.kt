@@ -6,6 +6,7 @@ import com.github.gogetters.letsgo.database.Database
 import com.google.android.gms.tasks.Task
 import com.google.android.gms.tasks.Tasks
 import com.google.firebase.database.DataSnapshot
+import java.io.Serializable
 import java.util.*
 import kotlin.collections.ArrayList
 
@@ -14,11 +15,11 @@ import kotlin.collections.ArrayList
  * Class that represents a user of the app and coordinates the communication of user data with the
  * database. The optional parameters are for testing purposes
  */
-class LetsGoUser(
+class LetsGoUser (
     val uid: String,
-    val db: Database.Companion = Database,
-    val cloud: CloudStorage.Companion = CloudStorage
-) {
+    private val db: Database.Companion = Database,
+    private val cloud: CloudStorage.Companion = CloudStorage
+) : Serializable {
     var nick: String? = null
     var first: String? = null
     var last: String? = null
