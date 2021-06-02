@@ -1,5 +1,6 @@
 package com.github.gogetters.letsgo.game.util.ogs
 
+import com.android.volley.Response
 import com.github.gogetters.letsgo.game.Point
 import com.github.gogetters.letsgo.game.Stone
 import com.github.gogetters.letsgo.game.util.InputDelegate
@@ -15,7 +16,8 @@ class OGSCommunicatorService(private val onlineService: OnlineService<JSONObject
     private val base = "https://online-go.com"
     private val auth = "/oauth2/token/"
     //private val challenges = "/v1/challenges" //TODO
-    private val challenges = "/api/v1/players/800307/challenge/"
+    private val challenges = "/api/v1/challenges"
+    private val botChallenges = "/api/v1/players/800307/challenge/"
     private val games = "/v1/games"
     private var gameID = 0
     lateinit var accessToken: String
@@ -56,13 +58,14 @@ class OGSCommunicatorService(private val onlineService: OnlineService<JSONObject
 
     fun startChallenge(challenge: OGSChallenge) {
         val body = challenge.toJSON()
-        onlineService.post("$base$challenges", body).setOnResponse { response ->
+        //TODO change to real challenges
+        onlineService.post("$base$botChallenges", body).setOnResponse { response ->
             val gameID = response.getString("game")
             val challengeID = response.getString("challenge")
 
             activeChallenge = OGSChallenge(challengeID, OGSGame("bot_challenge", gameID),
-            Stone.WHITE, -1000, 1000)
-            //TODO isolate socket
+                    Stone.BLACK, -1000, 1000)
+
             realtimeService.connectToGame("ourid...", gameID) { inputDelegate.saveLatestInput(it) }
         }
     }
@@ -73,10 +76,6 @@ class OGSCommunicatorService(private val onlineService: OnlineService<JSONObject
         onlineService.delete(url).setOnResponse {
             // TODO
         }
-    }
-
-    fun onChallengeAccepted(challengeData: OGSChallenge) {
-        TODO("Not yet implemented")
     }
 
     fun sendMove(move: Point, gameID: String) {

@@ -12,7 +12,6 @@ class SocketIOService : RealtimeService {
 
     private lateinit var accessToken: String
 
-    //TODO add player id??
     override fun connectToGame(playerID: String, gameID: String, onMove: (Point) -> Unit) {
         val gameDetails = JSONObject()
         gameDetails.put("player_id", "our_id...")
@@ -38,7 +37,7 @@ class SocketIOService : RealtimeService {
     override fun sendMove(move: Point, gameID: String) {
         val point = move.toSGF()
         val body = JSONObject()
-        //TODO finish
+
         body.put("auth", accessToken)
         body.put("game_id", gameID)
         body.put("player_id", "ourid...")

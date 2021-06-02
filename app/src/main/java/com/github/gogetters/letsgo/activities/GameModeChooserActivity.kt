@@ -70,6 +70,26 @@ class GameModeChooserActivity : BaseActivity() {
         }
     }
 
+    private fun initChallengeButton() {
+        val challengeButton = findViewById<Button>(R.id.gameModeChooser_button_challenge)
+
+        challengeButton.setOnClickListener {
+            ogs.startChallenge(OGSChallenge("", OGSGame("", "mygame"), Stone.BLACK))
+            localButton = findViewById<Button>(R.id.gameModeChooser_button_local)
+            localButton.setOnClickListener {
+                // start a local game
+                val intent = Intent(this, GameActivity::class.java).apply {
+                    putExtra(GameActivity.EXTRA_GAME_SIZE, 9)
+                    putExtra(GameActivity.EXTRA_KOMI, 5.5)
+                    val localType = Player.PlayerTypes.LOCAL.ordinal
+                    putExtra(GameActivity.EXTRA_PLAYER_BLACK, localType)
+                    putExtra(GameActivity.EXTRA_PLAYER_WHITE, localType)
+                }
+                startActivity(intent)
+            }
+        }
+    }
+
     private fun initOGS() {
         titleText.text = resources.getString(R.string.gameModeChooser_loginTitle)
         localButton.visibility = View.GONE
@@ -84,6 +104,7 @@ class GameModeChooserActivity : BaseActivity() {
                 SocketIOService(),
                 resources.getString(R.string.ogs_client_id),
                 resources.getString(R.string.ogs_client_secret))
+        val challengeButton = findViewById<Button>(R.id.gameModeChooser_button_challenge)
 
         submitButton.setOnClickListener {
             val username = usernameEditText.text.toString()
@@ -92,8 +113,13 @@ class GameModeChooserActivity : BaseActivity() {
                 val result = if (it) "Successful" else "Failed"
                 Toast.makeText(this@GameModeChooserActivity,
                         "Authentication $result", Toast.LENGTH_LONG).show()
+                if (it) {
+                    challengeButton.visibility = View.VISIBLE
+                }
             }
         }
+
+        initChallengeButton()
     }
 
     /**
