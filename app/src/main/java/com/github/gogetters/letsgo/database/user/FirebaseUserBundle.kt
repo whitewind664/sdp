@@ -1,5 +1,6 @@
 package com.github.gogetters.letsgo.database.user
 
+import com.google.android.gms.tasks.Tasks
 import com.google.firebase.auth.FirebaseUser
 
 /**
@@ -18,6 +19,7 @@ class FirebaseUserBundle(private val firebase: FirebaseUser): UserBundle() {
     }
 
     override fun deleteUser() {
-        letsGoUser.deleteUserData().continueWith { firebase.delete() }
+        Tasks.await(letsGoUser.deleteUserData())
+        Tasks.await(firebase.delete())
     }
 }
