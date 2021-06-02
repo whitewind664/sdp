@@ -33,32 +33,38 @@ class ChatLastMessageActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_chat_last_message)
 
-        // link the groupie adapter and decorate with horizontal line
-        chat_recyclerview_last_message.adapter = adapter
-        chat_recyclerview_last_message.addItemDecoration(DividerItemDecoration(this, DividerItemDecoration.VERTICAL))
-
-        // set a listener to the items of the adapter
-        adapter.setOnItemClickListener { item, view ->
-            // redirect to previous chat with partner
-            val intent = Intent(this, ChatActivity::class.java)
-            // take the partner info out from the binded item
-            val msgItem = item as ChatLastMessageItem
-            // launch the new activity with the corresponding partner
-            intent.putExtra(ChatNewMessageActivity.KEY, msgItem.chatUser)
+        // if not logged in -> go to login activity
+        if (FirebaseAuth.getInstance().currentUser == null) {
+            val intent = Intent(this, LoginActivity::class.java)
             startActivity(intent)
+        } else {
+            setContentView(R.layout.activity_chat_last_message)
+
+            // link the groupie adapter and decorate with horizontal line
+            chat_recyclerview_last_message.adapter = adapter
+            chat_recyclerview_last_message.addItemDecoration(DividerItemDecoration(this, DividerItemDecoration.VERTICAL))
+
+            // set a listener to the items of the adapter
+            adapter.setOnItemClickListener { item, view ->
+                // redirect to previous chat with partner
+                val intent = Intent(this, ChatActivity::class.java)
+                // take the partner info out from the binded item
+                val msgItem = item as ChatLastMessageItem
+                // launch the new activity with the corresponding partner
+                intent.putExtra(ChatNewMessageActivity.KEY, msgItem.chatUser)
+                startActivity(intent)
+            }
+
+            listenForLastMessages()
+
+            // floating button to launch a new chat
+            val fab: View = findViewById(R.id.chat_button_fab)
+            fab.setOnClickListener {
+                val intent = Intent(this, ChatNewMessageActivity::class.java)
+                startActivity(intent)
+            }
         }
-
-        listenForLastMessages()
-
-        // floating button to launch a new chat
-        val fab: View = findViewById(R.id.chat_button_fab)
-        fab.setOnClickListener {
-            val intent = Intent(this, ChatNewMessageActivity::class.java)
-            startActivity(intent)
-        }
-
     }
 
     /**
