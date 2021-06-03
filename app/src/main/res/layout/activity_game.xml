@@ -9,32 +9,6 @@
 
     <include layout="@layout/activity_base" />
 
-    <FrameLayout
-        android:id="@+id/game_frameLayout_boardFrame"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_marginTop="16dp"
-        android:layout_marginBottom="16dp"
-        app:layout_constraintBottom_toTopOf="@+id/game_button_pass"
-        app:layout_constraintDimensionRatio="1:1"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/game_textView_scoreTitle"
-        app:layout_constraintVertical_bias="0.48000002" />
-
-    <Button
-        android:id="@+id/game_button_pass"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginEnd="16dp"
-        android:layout_marginBottom="24dp"
-        android:text="@string/game_buttonTextPass"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
-        app:layout_constraintStart_toStartOf="parent" />
-
     <TextView
         android:id="@+id/game_textView_scoreTitle"
         android:layout_width="wrap_content"
@@ -45,7 +19,7 @@
         android:text="@string/scoreTitleText"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@+id/main_appBarLayout" />
 
     <TextView
         android:id="@+id/game_textView_blackScore"
@@ -66,5 +40,33 @@
         android:text="@string/scoreDefaultText"
         app:layout_constraintStart_toEndOf="@+id/game_textView_scoreTitle"
         app:layout_constraintTop_toBottomOf="@+id/game_textView_scoreTitle" />
+
+    <FrameLayout
+        android:id="@+id/game_frameLayout_boardFrame"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginBottom="16dp"
+        app:layout_constraintBottom_toTopOf="@+id/game_button_pass"
+        app:layout_constraintDimensionRatio="1:1"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/game_textView_scoreTitle"
+        app:layout_constraintVertical_bias="0.48000002" />
+
+    <Button
+        android:id="@+id/game_button_pass"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="24dp"
+        android:layout_marginTop="16dp"
+        android:text="@string/game_buttonTextPass"
+        app:layout_constraintBottom_toTopOf="@+id/bottomNavigation"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/game_frameLayout_boardFrame"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
