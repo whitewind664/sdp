@@ -23,6 +23,7 @@ import java.util.*
 class ChatActivity : AppCompatActivity() {
 
     // Stores last messages of the chat
+    var counter = 0
     private var lastMessages = LinkedList<ChatMessageData>()
     private val activity = this
     val adapter = GroupAdapter<ViewHolder>()
@@ -38,18 +39,12 @@ class ChatActivity : AppCompatActivity() {
         toUser = intent.getSerializableExtra(ChatNewMessageActivity.KEY) as LetsGoUser
 
         // Without checking database connection -> blinking
-        loadData()
-        listenForMessages()
+        // loadData()
+        // listenForMessages()
 
         // With checking database connection -> delay
-        /*
-        if (Database.isConnected) {
-            listenForMessages()
-        } else {
-            lastMessages = Cache.loadChatData(activity)
-            updateMessageList()
-        }
-        */
+        if (Database.isConnected) { listenForMessages() }
+        else { loadData() }
 
         chat_send_button.setOnClickListener {
             if (Database.isConnected) { sendMessage() }
@@ -60,6 +55,8 @@ class ChatActivity : AppCompatActivity() {
         val fromId = userId
         val toId = toUser?.uid
         val ref = FirebaseDatabase.getInstance().getReference("/messages-node/$fromId/$toId")
+
+        adapter.clear()
 
         ref.addChildEventListener(object: ChildEventListener {
             override fun onChildAdded(snapshot: DataSnapshot, previousChildName: String?) {
@@ -114,14 +111,19 @@ class ChatActivity : AppCompatActivity() {
     }
 
     private fun saveData(chatMessageData: ChatMessageData) {
-        if (lastMessages.size == 10) { lastMessages.removeAt(0) }
+        if (lastMessages.size == 10) {
+            Log.d("CACHE", "SAVE" + lastMessages.size.toString())
+            Log.d("CACHE", "SAVE" + lastMessages.toString())
+            lastMessages.removeAt(0) }
         lastMessages.add(chatMessageData)
         Cache.saveChatData(activity, lastMessages)
     }
 
     private fun loadData() {
         lastMessages = Cache.loadChatData(this)
-        Log.d("CACHE", lastMessages.toString())
+        Log.d("CACHE", "LOAD" + counter.toString())
+        Log.d("CACHE", "LOAD" + lastMessages.toString())
+        counter++
         lastMessages.forEach {
             if (it.fromId == userId) {
                 adapter.add(ChatMyMessageItem(it.text))

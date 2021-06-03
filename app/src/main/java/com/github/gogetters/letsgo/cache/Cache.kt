@@ -4,17 +4,12 @@ import android.content.Context
 import android.content.SharedPreferences
 import androidx.appcompat.app.AppCompatActivity
 import com.github.gogetters.letsgo.chat.model.ChatMessageData
-import com.github.gogetters.letsgo.chat.views.ChatNewMessageItem
 import com.github.gogetters.letsgo.database.user.LetsGoUser
 import com.google.firebase.auth.FirebaseAuth
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
-import com.xwray.groupie.Item
-import com.xwray.groupie.ViewHolder
 import java.lang.reflect.Type
 import java.util.*
-import kotlin.collections.ArrayList
-
 
 class Cache {
 
@@ -85,43 +80,6 @@ class Cache {
         }
 
         /**
-         * Enables saving users list in local cache for the ChatNewMessageActivity
-         */
-        fun saveUserData(act: AppCompatActivity, items: ArrayList<ChatNewMessageItem>) {
-
-            val sharedPreferences = act.applicationContext.getSharedPreferences(
-                PREF_ID,
-                Context.MODE_PRIVATE
-            )
-
-            val editor = sharedPreferences.edit()
-            val json = Gson().toJson(items)
-            editor.apply {
-
-                putString(USER_LIST_ID, json)
-
-            }.apply()
-        }
-
-        /**
-         * Enables loading users list in local cache for the ChatNewMessageActivity
-         */
-        fun loadUserData(act: AppCompatActivity): ArrayList<ChatNewMessageItem> {
-
-            val sharedPreferences = act.applicationContext.getSharedPreferences(
-                PREF_ID,
-                Context.MODE_PRIVATE
-            )
-
-            val json = sharedPreferences.getString(USER_LIST_ID, null)
-            val type: Type = object : TypeToken<ArrayList<ChatNewMessageItem?>?>() {}.type
-            var cachedUsers = Gson().fromJson<Any>(json, type) as ArrayList<ChatNewMessageItem>
-            if (cachedUsers == null) { cachedUsers = arrayListOf() }
-
-            return cachedUsers
-        }
-
-        /**
          * Enables saving chat messages list in local cache for the ChatActivity
          */
         fun saveChatData(act: AppCompatActivity, items: LinkedList<ChatMessageData>) {
@@ -151,6 +109,7 @@ class Cache {
             )
 
             val json = sharedPreferences.getString(CHAT_MESSAGE_LIST_ID, null)
+            if (json == null) return LinkedList()
             val type: Type = object : TypeToken<LinkedList<ChatMessageData>>() {}.type
             var cachedMessages = Gson().fromJson<Any>(json, type) as LinkedList<ChatMessageData>
             if (cachedMessages == null) { cachedMessages = LinkedList() }
@@ -188,7 +147,8 @@ class Cache {
             )
 
             val json = sharedPreferences.getString(LAST_MESSAGE_LIST_ID, null)
-            val type: Type = object : TypeToken<MutableCollection<ChatMessageData>>() {}.type
+            if (json == null) return mutableListOf()
+            val type: Type = object : TypeToken<MutableCollection<ChatMessageData>?>() {}.type
             var cachedMessages = Gson().fromJson<Any>(json, type) as MutableCollection<ChatMessageData>
             if (cachedMessages == null) { cachedMessages = mutableListOf() }
 

@@ -114,10 +114,12 @@ class ChatLastMessageActivity : AppCompatActivity() {
      * Link the content from the hashmap to the UI
      */
     private fun updateMessageList() {
-        val cachedLastMessages = Cache.loadLastChatData(this)
         adapter.clear()
-        cachedLastMessages.forEach {
-            adapter.add(ChatLastMessageItem(it))
+        val cachedLastMessages = Cache.loadLastChatData(this)
+        if (cachedLastMessages != null) {
+            cachedLastMessages.forEach {
+                adapter.add(ChatLastMessageItem(it))
+            }
         }
     }
 
