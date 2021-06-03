@@ -240,10 +240,7 @@ import java.util.*
     private fun onCameraResult(data: Intent?) {
         profileEditImage.setImageURI(profilePictureUri)
         // store the uri for the user
-        ImageStorageService.storeProfileImageOnCloud(
-            userBundleProvider.getUserBundle()!!.getUser(), profilePictureUri,
-            PROFILE_PICTURE_PREFIX_CLOUD
-        )
+        ImageStorageService.storeProfileImageOnCloud(userBundleProvider.getUserBundle()!!.getUser(), profilePictureUri, PROFILE_PICTURE_PREFIX_CLOUD)
     }
 
     private fun onGalleryResult(data: Intent?) {
@@ -252,22 +249,15 @@ import java.util.*
             try {
                 selectedPhotoUri?.let {
                     if (Build.VERSION.SDK_INT < 28) {
-                        val bitmap = MediaStore.Images.Media.getBitmap(
-                            this.contentResolver,
-                            selectedPhotoUri
-                        )
+                        val bitmap = MediaStore.Images.Media.getBitmap(this.contentResolver, selectedPhotoUri)
                         profileEditImage.setImageBitmap(bitmap)
                     } else {
-                        val source =
-                            ImageDecoder.createSource(this.contentResolver, selectedPhotoUri)
+                        val source = ImageDecoder.createSource(this.contentResolver, selectedPhotoUri)
                         val bitmap = ImageDecoder.decodeBitmap(source)
                         profileEditImage.setImageBitmap(bitmap)
                     }
                     // store the uri for the user
-                    ImageStorageService.storeProfileImageOnCloud(
-                        userBundleProvider.getUserBundle()!!.getUser(), it,
-                        PROFILE_PICTURE_PREFIX_CLOUD
-                    )
+                    ImageStorageService.storeProfileImageOnCloud(userBundleProvider.getUserBundle()!!.getUser(), it, PROFILE_PICTURE_PREFIX_CLOUD)
                 }
             } catch (e: Exception) {
                 e.printStackTrace()
