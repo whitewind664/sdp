@@ -55,9 +55,11 @@ class ChatLastMessageActivity : AppCompatActivity() {
                 startActivity(intent)
             }
 
-            // Without checking database connection
+            // Without checking database connection -> blinking
+            updateMessageList()
             listenForLastMessages()
-            // With checking database connection
+
+            // With checking database connection -> delay
             /*
             if (Database.isConnected) { listenForLastMessages() }
             else { updateMessageList() }
@@ -103,7 +105,7 @@ class ChatLastMessageActivity : AppCompatActivity() {
     private fun presentMessages(snapshot: DataSnapshot) {
         val chatMessage = snapshot.getValue(ChatMessageData::class.java) ?: return
         lastMessages[snapshot.key!!] = chatMessage
-        Cache.saveLastChatData(this, lastMessages)
+        Cache.saveLastChatData(this, lastMessages.values)
         Log.d("CACHE", getSharedPreferences("sharedPrefs", Context.MODE_PRIVATE).getString("lastMessageList", "")!!)
         updateMessageList()
     }
@@ -112,8 +114,9 @@ class ChatLastMessageActivity : AppCompatActivity() {
      * Link the content from the hashmap to the UI
      */
     private fun updateMessageList() {
+        val cachedLastMessages = Cache.loadLastChatData(this)
         adapter.clear()
-        lastMessages.values.forEach {
+        cachedLastMessages.forEach {
             adapter.add(ChatLastMessageItem(it))
         }
     }

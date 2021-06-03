@@ -1,6 +1,5 @@
 package com.github.gogetters.letsgo.activities
 
-import android.content.Context
 import android.os.Bundle
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
@@ -17,14 +16,14 @@ import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.xwray.groupie.GroupAdapter
-import com.xwray.groupie.Item
 import com.xwray.groupie.ViewHolder
 import kotlinx.android.synthetic.main.activity_chat.*
+import java.util.*
 
 class ChatActivity : AppCompatActivity() {
 
     // Stores last messages of the chat
-    private var lastMessages = ArrayList<Item<ViewHolder>>()
+    private var lastMessages = LinkedList<ChatMessageData>()
     private val activity = this
     val adapter = GroupAdapter<ViewHolder>()
     lateinit var userId: String
@@ -38,9 +37,11 @@ class ChatActivity : AppCompatActivity() {
         userId = Authentication.getCurrentUser()!!.uid
         toUser = intent.getSerializableExtra(ChatNewMessageActivity.KEY) as LetsGoUser
 
-        // Without checking database connection
+        // Without checking database connection -> blinking
+        loadData()
         listenForMessages()
-        // With checking database connection
+
+        // With checking database connection -> delay
         /*
         if (Database.isConnected) {
             listenForMessages()
@@ -66,17 +67,12 @@ class ChatActivity : AppCompatActivity() {
                 if (chatMessage != null) {
                     if (chatMessage.fromId == userId) {
                         adapter.add(ChatMyMessageItem(chatMessage.text))
-                        lastMessages.add(ChatMyMessageItem(chatMessage.text))
-                        Cache.saveChatData(activity, lastMessages)
-                        Log.d("CACHE", getSharedPreferences("sharedPrefs", Context.MODE_PRIVATE).getString("chatMessageList", "")!!)
                     } else {
                         adapter.add(ChatTheirMessageItem(chatMessage.text))
-                        lastMessages.add(ChatTheirMessageItem(chatMessage.text))
-                        Cache.saveChatData(activity, lastMessages)
-                        Log.d("CACHE", getSharedPreferences("sharedPrefs", Context.MODE_PRIVATE).getString("chatMessageList", "")!!)
                     }
+                    saveData(chatMessage)
+                    chat_recyclerview_messages.scrollToPosition(adapter.itemCount - 1)
                 }
-                chat_recyclerview_messages.scrollToPosition(adapter.itemCount - 1)
             }
             override fun onChildChanged(snapshot: DataSnapshot, previousChildName: String?) {}
             override fun onChildRemoved(snapshot: DataSnapshot) {}
@@ -117,18 +113,21 @@ class ChatActivity : AppCompatActivity() {
         }
     }
 
-    /**
-     * Link the content from the hashmap to the UI
-     */
-    private fun updateMessageList() {
-        adapter.clear()
+    private fun saveData(chatMessageData: ChatMessageData) {
+        if (lastMessages.size == 10) { lastMessages.removeAt(0) }
+        lastMessages.add(chatMessageData)
+        Cache.saveChatData(activity, lastMessages)
+    }
+
+    private fun loadData() {
+        lastMessages = Cache.loadChatData(this)
+        Log.d("CACHE", lastMessages.toString())
         lastMessages.forEach {
-            if (it is ChatMyMessageItem) {
-                adapter.add(it)
+            if (it.fromId == userId) {
+                adapter.add(ChatMyMessageItem(it.text))
             } else {
-                adapter.add(it as ChatTheirMessageItem)
+                adapter.add(ChatTheirMessageItem(it.text))
             }
         }
     }
-
 }

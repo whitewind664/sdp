@@ -1,21 +1,16 @@
 package com.github.gogetters.letsgo.activities
 
-import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import com.github.gogetters.letsgo.R
-import com.github.gogetters.letsgo.cache.Cache
-import com.github.gogetters.letsgo.database.Database
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
 import com.github.gogetters.letsgo.chat.views.ChatNewMessageItem
-import com.github.gogetters.letsgo.database.Authentication
+import com.github.gogetters.letsgo.database.user.FirebaseUserBundleProvider
 import com.github.gogetters.letsgo.database.user.LetsGoUser
-import com.google.firebase.auth.FirebaseAuth
 import com.xwray.groupie.GroupAdapter
 import com.xwray.groupie.ViewHolder
 import kotlinx.android.synthetic.main.activity_chat_new_message.*
@@ -26,9 +21,7 @@ import kotlinx.android.synthetic.main.activity_chat_new_message.*
  */
 class ChatNewMessageActivity : AppCompatActivity() {
 
-    private val activity = this
     private val adapter = GroupAdapter<ViewHolder>()
-    private var cachedUsers = arrayListOf<ChatNewMessageItem>()
 
     companion object {
         val KEY = "NEW_MESSAGE_CHANNEL_KEY"
@@ -46,41 +39,37 @@ class ChatNewMessageActivity : AppCompatActivity() {
      */
     private fun fetchUsers() {
 
-        if (Database.isConnected) {
-            val ref = FirebaseDatabase.getInstance().getReference("/users")
-            ref.addListenerForSingleValueEvent(object : ValueEventListener {
+        var uidList = ArrayList<String>()
 
-                override fun onDataChange(snapshot: DataSnapshot) {
-                    snapshot.children.forEach {
-                        val user = it.getValue(LetsGoUser::class.java)
-                        if (user != null) {
-                            //adapter.add(ChatNewMessageItem(user))
-                            cachedUsers.add(ChatNewMessageItem(user))
-                        }
+        val ref = FirebaseDatabase.getInstance().getReference("/users")
+        ref.addListenerForSingleValueEvent(object : ValueEventListener {
+
+            override fun onDataChange(snapshot: DataSnapshot) {
+                snapshot.children.forEach {
+                    if (it.key != null) {
+                        uidList.add(it.key as String)
                     }
-                    Cache.saveUserData(activity, cachedUsers)
-                    Log.d("CACHE", getSharedPreferences("sharedPrefs", Context.MODE_PRIVATE).getString("userList", "")!!)
-                    presentUsers()
                 }
+                val userBundle = FirebaseUserBundleProvider.getUserBundle()
+                if (userBundle != null) {
+                    val user = userBundle.getUser()
+                    user.downloadUserList(uidList).continueWith {
+                        it.getResult().forEach {
+                            adapter.add(ChatNewMessageItem(it))}
+                        presentUsers()
+                    }
+                }
+            }
 
-                override fun onCancelled(error: DatabaseError) {}
-            })
-        }
+            override fun onCancelled(error: DatabaseError) {}
+        })
 
-        else {
-            cachedUsers = Cache.loadUserData(activity)
-            presentUsers()
-        }
     }
 
     /**
      * Links users to the UI
      */
     private fun presentUsers() {
-
-        cachedUsers.forEach {
-            adapter.add(it)}
-
         // Start a new chat history given the user you clicked on
         adapter.setOnItemClickListener { item, view ->
             val newMessageItem = item as ChatNewMessageItem

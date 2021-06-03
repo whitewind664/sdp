@@ -12,6 +12,8 @@ import com.google.gson.reflect.TypeToken
 import com.xwray.groupie.Item
 import com.xwray.groupie.ViewHolder
 import java.lang.reflect.Type
+import java.util.*
+import kotlin.collections.ArrayList
 
 
 class Cache {
@@ -122,7 +124,7 @@ class Cache {
         /**
          * Enables saving chat messages list in local cache for the ChatActivity
          */
-        fun saveChatData(act: AppCompatActivity, items: ArrayList<Item<ViewHolder>>) {
+        fun saveChatData(act: AppCompatActivity, items: LinkedList<ChatMessageData>) {
 
             val sharedPreferences = act.applicationContext.getSharedPreferences(
                 PREF_ID,
@@ -141,7 +143,7 @@ class Cache {
         /**
          * Enables loading chat messages in local cache for the ChatActivity
          */
-        fun loadChatData(act: AppCompatActivity): ArrayList<Item<ViewHolder>> {
+        fun loadChatData(act: AppCompatActivity): LinkedList<ChatMessageData> {
 
             val sharedPreferences = act.applicationContext.getSharedPreferences(
                 PREF_ID,
@@ -149,9 +151,9 @@ class Cache {
             )
 
             val json = sharedPreferences.getString(CHAT_MESSAGE_LIST_ID, null)
-            val type: Type = object : TypeToken<ArrayList<Item<ViewHolder>?>?>() {}.type
-            var cachedMessages = Gson().fromJson<Any>(json, type) as ArrayList<Item<ViewHolder>>
-            if (cachedMessages == null) { cachedMessages = arrayListOf() }
+            val type: Type = object : TypeToken<LinkedList<ChatMessageData>>() {}.type
+            var cachedMessages = Gson().fromJson<Any>(json, type) as LinkedList<ChatMessageData>
+            if (cachedMessages == null) { cachedMessages = LinkedList() }
 
             return cachedMessages
         }
@@ -159,7 +161,7 @@ class Cache {
         /**
          * Enables saving last chat messages list in local cache for the ChatLastMessagesActivity
          */
-        fun saveLastChatData(act: AppCompatActivity, items: HashMap<String, ChatMessageData>) {
+        fun saveLastChatData(act: AppCompatActivity, items: MutableCollection<ChatMessageData>) {
 
             val sharedPreferences = act.applicationContext.getSharedPreferences(
                 PREF_ID,
@@ -178,9 +180,20 @@ class Cache {
         /**
          * Enables loading last chat messages in local cache for the ChatLastMessagesActivity
          */
-        fun loadLastChatData(act: AppCompatActivity): HashMap<String, ChatMessageData> {
-            // TODO: implement
-            return HashMap<String, ChatMessageData>()
+        fun loadLastChatData(act: AppCompatActivity): MutableCollection<ChatMessageData> {
+
+            val sharedPreferences = act.applicationContext.getSharedPreferences(
+                PREF_ID,
+                Context.MODE_PRIVATE
+            )
+
+            val json = sharedPreferences.getString(LAST_MESSAGE_LIST_ID, null)
+            val type: Type = object : TypeToken<MutableCollection<ChatMessageData>>() {}.type
+            var cachedMessages = Gson().fromJson<Any>(json, type) as MutableCollection<ChatMessageData>
+            if (cachedMessages == null) { cachedMessages = mutableListOf() }
+
+            return cachedMessages
+
         }
 
     }
