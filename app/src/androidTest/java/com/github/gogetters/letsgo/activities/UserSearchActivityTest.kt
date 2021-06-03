@@ -86,6 +86,7 @@ class UserSearchActivityTest : EmulatedFirebaseTest() {
         val otherUser = LetsGoUser("test3")
         otherUser.nick = nick
         Tasks.await(otherUser.uploadUserData())
+        Tasks.await(user.uploadUserData())
 
         val device: UiDevice = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation())
         onView(withId(R.id.user_search_search_view)).perform(TestUtils.typeSearchViewText("Nic"))
@@ -101,6 +102,7 @@ class UserSearchActivityTest : EmulatedFirebaseTest() {
         assertTrue(friendRequestOption.exists())
         friendRequestOption.click()
         TestUtils.sleep()
+        Tasks.await(otherUser.downloadFriends())
         assertEquals(LetsGoUser.FriendStatus.REQUESTED, otherUser.getFriendStatus(user))
     }
 
@@ -112,9 +114,11 @@ class UserSearchActivityTest : EmulatedFirebaseTest() {
         val otherUser = LetsGoUser("test4")
         otherUser.nick = otherNick
         Tasks.await(otherUser.uploadUserData())
+        Tasks.await(user.uploadUserData())
 
         // add as a friend
-        user.acceptFriend(otherUser)
+        Tasks.await(user.acceptFriend(otherUser))
+        Tasks.await(user.downloadFriends())
 
         val device: UiDevice = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation())
         onView(withId(R.id.user_search_search_view)).perform(TestUtils.typeSearchViewText("Nic"))
@@ -135,6 +139,7 @@ class UserSearchActivityTest : EmulatedFirebaseTest() {
         assertTrue(deleteFriendOption.exists())
         deleteFriendOption.click()
         TestUtils.sleep()
+        Tasks.await(user.downloadFriends())
         assertEquals(null, user.getFriendStatus(otherUser))
     }
 
@@ -146,9 +151,11 @@ class UserSearchActivityTest : EmulatedFirebaseTest() {
         val otherUser = LetsGoUser("test4")
         otherUser.nick = otherNick
         Tasks.await(otherUser.uploadUserData())
+        Tasks.await(user.uploadUserData())
 
         // add as a friend
-        otherUser.requestFriend(user)
+        Tasks.await(otherUser.requestFriend(user))
+        Tasks.await(user.downloadFriends())
 
         val device: UiDevice = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation())
         onView(withId(R.id.user_search_search_view)).perform(TestUtils.typeSearchViewText("Nic"))
@@ -165,7 +172,8 @@ class UserSearchActivityTest : EmulatedFirebaseTest() {
         assertTrue(acceptFriendOption.exists())
         acceptFriendOption.click()
         TestUtils.sleep()
-        assertEquals(null, user.getFriendStatus(otherUser))
+        Tasks.await(user.downloadFriends())
+        assertEquals(LetsGoUser.FriendStatus.ACCEPTED, user.getFriendStatus(otherUser))
     }
 
 }
