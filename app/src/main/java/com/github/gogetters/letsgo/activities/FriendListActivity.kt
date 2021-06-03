@@ -16,14 +16,14 @@ import java.util.*
 // TODO Make this pretty!
 class FriendListActivity : AppCompatActivity() {
 
-    lateinit var searchView: SearchView
+    // lateinit var searchView: SearchView // For searching friends (anticipated feature)
     lateinit var usersListView: ListView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_friend_list)
 
-        searchView = findViewById(R.id.friend_list_search)
+        // searchView = findViewById(R.id.friend_list_search)
         usersListView = findViewById(R.id.friend_list_users_list)
 
         val currentUser = Authentication.getCurrentUser()
