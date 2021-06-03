@@ -80,10 +80,7 @@ class LetsGoUser (val uid: String) : Serializable {
         return Database.updateData(userPath, userData)
             .addOnSuccessListener {
                 Log.d(TAG, "LetsGoUser document added for uid: $uid")
-            }
-            .addOnFailureListener { e ->
-                Log.w(TAG, "Error adding LetsGoUser document", e)
-            }
+            }.addOnFailureListener { e -> Log.w(TAG, "Error adding LetsGoUser document", e) }
     }
 
     /**
@@ -96,10 +93,7 @@ class LetsGoUser (val uid: String) : Serializable {
             }
             .addOnSuccessListener {
                 Log.d(TAG, "LetsGoUser successfully downloaded: ${toString()}")
-            }
-            .addOnFailureListener { e ->
-                Log.w(TAG, "Error downloading LetsGoUser for uid: $uid", e)
-            }
+            }.addOnFailureListener { e -> Log.w(TAG, "Error downloading LetsGoUser for uid: $uid", e) }
     }
 
     private fun extractUserData(userData: DataSnapshot) {
@@ -138,10 +132,7 @@ class LetsGoUser (val uid: String) : Serializable {
                 lastPositionLongitude = null
                 lastPositionLatitude = null
                 profileImageRef = null
-            }
-            .addOnFailureListener { e ->
-                Log.w(TAG, "Error deleting LetsGoUser", e)
-            }
+            }.addOnFailureListener { e -> Log.w(TAG, "Error deleting LetsGoUser", e) }
     }
 
     override fun equals(other: Any?): Boolean {
@@ -196,9 +187,7 @@ class LetsGoUser (val uid: String) : Serializable {
             Database.deleteData("${otherUser.userFriendsPath}/${this.uid}")
         }.addOnSuccessListener {
             Log.d(TAG, "'Friend' successfully deleted")
-        }.addOnFailureListener {
-            Log.d(TAG, "'Friend' FAILED to be deleted")
-        }
+        }.addOnFailureListener { Log.d(TAG, "'Friend' FAILED to be deleted") }
     }
 
     /**
@@ -224,9 +213,7 @@ class LetsGoUser (val uid: String) : Serializable {
             }
         }.addOnSuccessListener {
             Log.d(TAG, "Friend Status successfully updated")
-        }.addOnFailureListener {
-            Log.d(TAG, "Friend Status FAILED to be updated")
-        }
+        }.addOnFailureListener { Log.d(TAG, "Friend Status FAILED to be updated") }
     }
 
     /**

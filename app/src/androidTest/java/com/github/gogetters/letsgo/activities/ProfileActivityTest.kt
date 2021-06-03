@@ -78,6 +78,10 @@ class ProfileActivityTest : EmulatedFirebaseTest() {
 
     @Test
     fun testIt() {
+        val testUser = LetsGoUser(Authentication.getCurrentUser()!!.uid)
+        testUser.first = "Jim"
+        Tasks.await(testUser.uploadUserData())
+
         lateInit()
         sleep()
     }
