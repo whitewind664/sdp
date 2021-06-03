@@ -108,7 +108,7 @@ class OGSCommunicatorService(private val onlineService: OnlineService<JSONObject
                 "\"challenger_color\":\"white\",\"rules\":\"chinese\",\"ranked\":false,\"width\":9," +
                 "\"height\":9,\"komi_auto\":\"automatic\",\"komi\":null,\"disable_analysis\":false," +
                 "\"pause_on_weekends\":false,\"initial_state\":null,\"private\":false,\"name\":\"Friendly Match\"," +
-                "\"time_control_parameters\":{\"system\":\"simple\",\"speed\":\"blitz\",\"per_move\":5," +
+                "\"time_control_parameters\":{\"system\":\"simple\",\"speed\":\"blitz\",\"per_move\":9," +
                 "\"pause_on_weekends\":false,\"time_control\":\"simple\"}},\"aga_ranked\":false}"
 
 
@@ -139,9 +139,11 @@ class OGSCommunicatorService(private val onlineService: OnlineService<JSONObject
 
             }*/
             realtimeService.connect(accessToken)
-            realtimeService.connectToGame(playerID, gameID) {
-                Log.d("RECEIVED MOVE", "we received the move: $it")
-            }
+            realtimeService.awaitGame(gameID).setOnResponse {
+                realtimeService.connectToGame(playerID, gameID) {
+                    Log.d("RECEIVED MOVE", "we received the move: $it")
+                }
+                afterGameStart.onResponse(true) }
         }
 
         return afterGameStart

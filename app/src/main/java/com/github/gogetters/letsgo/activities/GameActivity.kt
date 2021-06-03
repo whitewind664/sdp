@@ -43,6 +43,7 @@ class GameActivity : BaseActivity() {
         boardFrame.addView(goView)
 
         val touchInputDelegate = InputDelegate()
+        goView.inputDelegate = touchInputDelegate
 
 
         val (local: Player, remote: Player) = when (gameType) {

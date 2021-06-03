@@ -83,7 +83,8 @@ class GameModeChooserActivity : BaseActivity() {
         submitButton.setOnClickListener {
             val username = usernameEditText.text.toString()
             val password = passwordEditText.text.toString()
-            ogs.authenticate(username, password).setOnResponse {
+            //TODO change back
+            ogs.authenticate("kimonroxd","online-go.com").setOnResponse {
                 val result = if (it) "Successful" else "Failed"
                 Toast.makeText(this@GameModeChooserActivity,
                         "Authentication $result", Toast.LENGTH_LONG).show()

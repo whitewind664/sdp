@@ -10,7 +10,7 @@ import org.json.JSONObject
 //TODO can easily add more tests by isolating the calls to "socket" under another interface
 class SocketIOService : RealtimeService {
 
-    private val socket: Socket = IO.socket("https://online-go.com/socket.io/?EIO=3")
+    private val socket: Socket = IO.socket("https://ggs.online-go.com")
 
     private lateinit var accessToken: String
 
@@ -24,15 +24,19 @@ class SocketIOService : RealtimeService {
             Log.d("SOCKET SOCKET", "we got handshake from game")
             responseListener.onResponse(true)
         }
+        //TODO remove
+        responseListener.onResponse(true)
         return responseListener
     }
 
-    override fun connectToGame(playerID: String, gameID: String, onMove: (Point) -> Unit) {
+    override fun connectToGame(playerID: String, gameID: String, onMove: (Point) -> Unit): ResponseListener<JSONObject> {
         val gameDetails = JSONObject()
         gameDetails.put("player_id", playerID)
         gameDetails.put("game_id", gameID)
         gameDetails.put("chat", false)
 
+
+        val response = ResponseListener<JSONObject>()
 
         val emitter = Emitter.Listener {
             val data = it[0] as JSONObject
@@ -40,8 +44,13 @@ class SocketIOService : RealtimeService {
             onMove(Point.fromSGF(move))
         }
 
-        socket.emit("game/connect", gameDetails)
         socket.on("game/$gameID/move", emitter)
+        socket.on("game/$gameID/gamedata") {
+            Log.d("CONNECTED", "${it[0] as JSONObject}")
+            response.onResponse(it[0] as JSONObject)
+        }
+        socket.emit("game/connect", gameDetails)
+        return response
     }
 
     override fun connect(accessToken: String) {
