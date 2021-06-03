@@ -110,8 +110,6 @@ class ProfileEditActivity : ActivityCompat.OnRequestPermissionsResultCallback, A
         countryEditText.setText(user.country)
         cityEditText.setText(user.city)
 
-//        profilePictureUri = user.profileImageRef
-
         ImageStorageService.getProfileImageFromCloud(
             PROFILE_PICTURE_PREFIX_CLOUD,
             user.profileImageRef,

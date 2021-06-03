@@ -16,12 +16,13 @@ import androidx.test.core.app.ApplicationProvider
 import androidx.test.espresso.Espresso
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.action.ViewActions
-import androidx.test.espresso.action.ViewActions.typeText
+import androidx.test.espresso.action.ViewActions.*
 import androidx.test.espresso.assertion.ViewAssertions
 import androidx.test.espresso.intent.Intents
 import androidx.test.espresso.intent.matcher.IntentMatchers
 import androidx.test.espresso.matcher.BoundedMatcher
 import androidx.test.espresso.matcher.ViewMatchers
+import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.internal.runner.junit4.statement.UiThreadStatement
 import androidx.test.platform.app.InstrumentationRegistry
@@ -32,8 +33,10 @@ import com.github.gogetters.letsgo.R
 import com.github.gogetters.letsgo.database.EmulatedFirebaseTest
 import com.github.gogetters.letsgo.database.user.FirebaseUserBundleProvider
 import com.github.gogetters.letsgo.testUtil.TestUtils
+import com.google.android.gms.tasks.Tasks
 import org.hamcrest.Description
 import org.junit.After
+import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -81,17 +84,23 @@ class ProfileEditActivityTest : EmulatedFirebaseTest() {
 
 
     @Test
-    fun profileIsActuallyEdited() {
+    fun profileIsActuallyEditsNewInputs() {
         scenario = ActivityScenario.launch(intent)
         val user = FirebaseUserBundleProvider.getUserBundle()!!.getUser()
         val newNick = "NewNick"
         val newCity = "Ouagadougou"
+        val oldFirst= user.first
 
-        onView(ViewMatchers.withId(R.id.profile_edit_nick)).perform(typeText(newNick))
-        onView(ViewMatchers.withId(R.id.profile_edit_city)).perform(typeText(newCity))
+        onView(withId(R.id.profile_edit_nick)).perform(scrollTo()).perform(typeText(newNick))
+        onView(withId(R.id.profile_edit_city)).perform(scrollTo()).perform(typeText(newCity))
 
         // the old one stay the same
-
+        onView(withId(R.id.profile_edit_button_save)).perform(click())
+        TestUtils.sleep()
+        Tasks.await(user.downloadUserData())
+        assertEquals(newNick, user.nick)
+        assertEquals(newCity, user.city)
+        assertEquals(oldFirst, user.first)
     }
 
     @Test
@@ -99,8 +108,8 @@ class ProfileEditActivityTest : EmulatedFirebaseTest() {
         scenario = ActivityScenario.launch(intent)
         clickWaitButton()
         sleep()
-        onView(ViewMatchers.withId(R.id.profile_edit_imageView_image))
-            .perform(ViewActions.click())
+        onView(withId(R.id.profile_edit_imageView_image))
+            .perform(click())
         onView(ViewMatchers.withText(R.string.profile_dialogTitle))
             .check(ViewAssertions.matches(ViewMatchers.isDisplayed()))
     }
@@ -110,8 +119,8 @@ class ProfileEditActivityTest : EmulatedFirebaseTest() {
         scenario = ActivityScenario.launch(intent)
         clickWaitButton()
         sleep()
-        onView(ViewMatchers.withId(R.id.profile_edit_imageView_image))
-            .perform(ViewActions.click())
+        onView(withId(R.id.profile_edit_imageView_image))
+            .perform(click())
         clickAtIndex(0, "Take Picture")
         acceptPermissions()
         sleep()
@@ -123,10 +132,9 @@ class ProfileEditActivityTest : EmulatedFirebaseTest() {
         scenario = ActivityScenario.launch(intent)
         clickWaitButton()
         sleep()
-        onView(ViewMatchers.withId(R.id.profile_edit_imageView_image))
-            .perform(ViewActions.click())
+        onView(withId(R.id.profile_edit_imageView_image))
+            .perform(click())
 
-        //onView(withText(R.string.profile_chooseFromGallery)).perform(click())
         clickAtIndex(1, "Choose from Gallery")
         acceptPermissions()
         sleep()
@@ -138,8 +146,8 @@ class ProfileEditActivityTest : EmulatedFirebaseTest() {
         scenario = ActivityScenario.launch(intent)
         clickWaitButton()
         sleep()
-        onView(ViewMatchers.withId(R.id.profile_edit_imageView_image))
-            .perform(ViewActions.click())
+        onView(withId(R.id.profile_edit_imageView_image))
+            .perform(click())
         clickAtIndex(2, "Cancel")
     }
 
