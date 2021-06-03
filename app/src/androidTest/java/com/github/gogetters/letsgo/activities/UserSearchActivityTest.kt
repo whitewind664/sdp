@@ -24,8 +24,7 @@ import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import kotlinx.android.synthetic.main.activity_user_search.view.*
 import org.junit.*
-import org.junit.Assert.assertFalse
-import org.junit.Assert.assertTrue
+import org.junit.Assert.*
 import org.junit.runner.RunWith
 import java.util.*
 
@@ -51,7 +50,7 @@ class UserSearchActivityTest : EmulatedFirebaseTest() {
     @Test
     fun existingMatchingUserIsDisplayed() {
         val nick = "Nicky"
-        val otherUser = LetsGoUser("test2")
+        val otherUser = LetsGoUser("test1")
         otherUser.nick = nick
         Tasks.await(otherUser.uploadUserData())
 
@@ -82,8 +81,9 @@ class UserSearchActivityTest : EmulatedFirebaseTest() {
 
     @Test
     fun canSendFriendRequestToFoundUser() {
+        val user = FirebaseUserBundleProvider.getUserBundle()!!.getUser()
         val nick = "Nicky"
-        val otherUser = LetsGoUser("test2")
+        val otherUser = LetsGoUser("test3")
         otherUser.nick = nick
         Tasks.await(otherUser.uploadUserData())
 
@@ -96,19 +96,20 @@ class UserSearchActivityTest : EmulatedFirebaseTest() {
         assertTrue(foundUser.exists())
         foundUser.click()
         val friendRequestOption = device.findObject(
-            UiSelector().clickable(true).textContains("Friend Request")
+            UiSelector().clickable(true).textContains("Send Friend Request")
         )
         assertTrue(friendRequestOption.exists())
-        // TODO maybe click on it and check with mockk that the correct function on user was called
+        friendRequestOption.click()
+        TestUtils.sleep()
+        assertEquals(LetsGoUser.FriendStatus.REQUESTED, otherUser.getFriendStatus(user))
     }
 
-    @Ignore
     @Test
-    fun friendIsNotDisplayed() {
+    fun friendCannotBeAskedAgainToBecomeFriendButCanBeDeleted() {
         val user = FirebaseUserBundleProvider.getUserBundle()!!.getUser()
 
         val otherNick = "Nicky"
-        val otherUser = LetsGoUser("test2")
+        val otherUser = LetsGoUser("test4")
         otherUser.nick = otherNick
         Tasks.await(otherUser.uploadUserData())
 
@@ -121,7 +122,50 @@ class UserSearchActivityTest : EmulatedFirebaseTest() {
         val foundUser: UiObject = device.findObject(
             UiSelector().textContains(otherNick)
         )
-        assertFalse(foundUser.exists())
+        assertTrue(foundUser.exists())
+        foundUser.click()
+        val friendRequestOption = device.findObject(
+            UiSelector().clickable(true).textContains("Send Friend Request")
+        )
+        assertFalse(friendRequestOption.exists())
+
+        val deleteFriendOption = device.findObject(
+            UiSelector().clickable(true).textContains("Unfriend")
+        )
+        assertTrue(deleteFriendOption.exists())
+        deleteFriendOption.click()
+        TestUtils.sleep()
+        assertEquals(null, user.getFriendStatus(otherUser))
+    }
+
+    @Test
+    fun canAcceptFriendRequest() {
+        val user = FirebaseUserBundleProvider.getUserBundle()!!.getUser()
+
+        val otherNick = "Nicky"
+        val otherUser = LetsGoUser("test4")
+        otherUser.nick = otherNick
+        Tasks.await(otherUser.uploadUserData())
+
+        // add as a friend
+        otherUser.requestFriend(user)
+
+        val device: UiDevice = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation())
+        onView(withId(R.id.user_search_search_view)).perform(TestUtils.typeSearchViewText("Nic"))
+        TestUtils.sleep()
+        val foundUser: UiObject = device.findObject(
+            UiSelector().textContains(otherNick)
+        )
+        assertTrue(foundUser.exists())
+        foundUser.click()
+
+        val acceptFriendOption = device.findObject(
+            UiSelector().clickable(true).textContains("Accept")
+        )
+        assertTrue(acceptFriendOption.exists())
+        acceptFriendOption.click()
+        TestUtils.sleep()
+        assertEquals(null, user.getFriendStatus(otherUser))
     }
 
 }
