@@ -69,17 +69,15 @@ class OGSCommunicatorService(private val onlineService: OnlineService<JSONObject
 
 
     fun authenticate(username: String, password: String): ResponseListener<Boolean> {
-        val usernameTest = "kimonroxd"
-        val passwordTest = "online-go.com"
         val after = ResponseListener<Boolean>()
-        login(usernameTest, passwordTest).setOnResponse { loginSuccess ->
+        login(username, password).setOnResponse { loginSuccess ->
             if (loginSuccess)  {
                 val body = JSONObject()
                 body.put("client_id", CLIENT_ID)
                 body.put("client_secret", CLIENT_SECRET)
                 body.put("grant_type", "password")
-                body.put("username", usernameTest)
-                body.put("password", passwordTest)
+                body.put("username", username)
+                body.put("password", password)
 
                 val response =  onlineService.post("$base$auth", onlineService.urlEncode(body))
                 response.setOnResponse {

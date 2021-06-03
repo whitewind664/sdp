@@ -46,7 +46,6 @@ class SocketIOService : RealtimeService {
 
     override fun connect(accessToken: String) {
         this.accessToken = accessToken
-        socket.auth
         socket.connect()
         Log.d("SOCKET CONNECTED", socket.connected().toString())
     }

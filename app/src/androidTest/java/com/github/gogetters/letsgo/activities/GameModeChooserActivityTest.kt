@@ -91,7 +91,7 @@ class GameModeChooserActivityTest: EmulatedFirebaseTest() {
 
             ogs.authenticate("john", "doe").setOnResponse {
                 if (it) {
-                    ogs.startChallenge(OGSChallenge("", OGSGame("", "mygame"), Stone.BLACK))
+                    ogs.startChallenge()
                 } else {
                     throw IllegalStateException("FAILED TO AUTHENTICATE")
                 }

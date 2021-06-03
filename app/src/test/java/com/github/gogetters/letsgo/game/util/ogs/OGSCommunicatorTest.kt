@@ -32,6 +32,7 @@ class OGSCommunicatorTest {
 
         val existingGames = service.currentGames.size
 
+        communicator.authenticate("john", "doe")
         communicator.startChallenge()
         assertEquals(1, service.challengeList.size)
         assertEquals(existingGames + 1, service.currentGames.size)
@@ -46,6 +47,7 @@ class OGSCommunicatorTest {
 
         val move = Point(4,5)
 
+        communicator.authenticate("john", "doe")
         communicator.startChallenge()
         assertEquals(1, service.challengeList.size)
         assertEquals(existingGames + 1, service.currentGames.size)
