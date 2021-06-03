@@ -1,13 +1,15 @@
 package com.github.gogetters.letsgo.game.util.ogs
 
 import android.util.Log
+import io.socket.client.IO
 import junit.framework.Assert.assertTrue
 import org.junit.Test
+import java.net.URI
 
 class SocketTest {
 
     @Test
-    fun connectWorks() {
+    fun connectToGameWorks() {
 
         val realtime = SocketIOService()
 
@@ -23,6 +25,16 @@ class SocketTest {
         }
         Thread.sleep(10000)
         assertTrue(worked)
+    }
+
+    @Test
+    fun connectWorks() {
+        val url = "https://online-go.com/socket.io/?EIO=3"
+        val socket = IO.socket(URI(url))
+        socket.connect()
+
+        Thread.sleep(10000)
+        assertTrue(socket.connected())
     }
 
 }

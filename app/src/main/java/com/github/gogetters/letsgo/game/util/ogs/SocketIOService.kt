@@ -10,7 +10,7 @@ import org.json.JSONObject
 //TODO can easily add more tests by isolating the calls to "socket" under another interface
 class SocketIOService : RealtimeService {
 
-    private val socket: Socket = IO.socket("https://ggs.online-go.com")
+    private val socket: Socket = IO.socket("https://online-go.com/socket.io/?EIO=3")
 
     private lateinit var accessToken: String
 
