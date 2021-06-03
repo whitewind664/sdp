@@ -43,7 +43,7 @@ class TestUtils {
                 try {
                     Tasks.await(Firebase.auth.createUserWithEmailAndPassword(testEmail, testPass))
                 } catch (e: ExecutionException) {
-                    Firebase.auth.signInWithEmailAndPassword(testEmail, testPass)
+                    Tasks.await(Firebase.auth.signInWithEmailAndPassword(testEmail, testPass))
                 }
             }
         }
