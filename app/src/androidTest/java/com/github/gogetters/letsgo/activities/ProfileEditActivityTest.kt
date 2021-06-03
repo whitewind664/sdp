@@ -91,7 +91,7 @@ class ProfileEditActivityTest : EmulatedFirebaseTest() {
         val newCity = "Ouagadougou"
         val oldFirst= user.first
 
-        onView(withId(R.id.profile_edit_nick)).perform(scrollTo()).perform(typeText(newNick))
+        onView(withId(R.id.profile_edit_nick)).perform(typeText(newNick))
         onView(withId(R.id.profile_edit_city)).perform(scrollTo()).perform(typeText(newCity))
 
         // the old one stay the same

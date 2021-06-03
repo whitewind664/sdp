@@ -22,12 +22,12 @@ class UserSearchActivity : AppCompatActivity() {
         const val TAG = "UserSearch"
     }
 
-    lateinit var searchView: SearchView
-    lateinit var recyclerView: RecyclerView
+    private lateinit var searchView: SearchView
+    private lateinit var recyclerView: RecyclerView
 
-    lateinit var adapter: GroupAdapter<ViewHolder>
+    private lateinit var adapter: GroupAdapter<ViewHolder>
 
-    lateinit var user: LetsGoUser
+    private lateinit var user: LetsGoUser
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
