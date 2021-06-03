@@ -1,20 +1,15 @@
 package com.github.gogetters.letsgo.database
 
 import androidx.test.ext.junit.runners.AndroidJUnit4
-import androidx.test.platform.app.InstrumentationRegistry
 import com.github.gogetters.letsgo.database.user.LetsGoUser
 import com.github.gogetters.letsgo.testUtil.TestUtils
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.tasks.Tasks
-import com.google.firebase.FirebaseApp
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.runBlocking
-import org.junit.After
 import org.junit.Assert.*
 import org.junit.Test
 import org.junit.runner.RunWith
-import org.junit.Before
-import org.junit.BeforeClass
 
 /**
  * Instrumented test, which will execute on an Android device.

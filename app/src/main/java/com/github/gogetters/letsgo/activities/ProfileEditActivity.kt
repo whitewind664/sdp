@@ -25,13 +25,13 @@ import com.github.gogetters.letsgo.R
 import com.github.gogetters.letsgo.cache.Cache
 import com.github.gogetters.letsgo.database.ImageStorageService
 import com.github.gogetters.letsgo.database.ImageStorageService.Companion.PROFILE_PICTURE_PREFIX_CLOUD
+import com.github.gogetters.letsgo.database.user.FirebaseUserBundleProvider
 import com.github.gogetters.letsgo.database.user.LetsGoUser
 import com.github.gogetters.letsgo.database.user.UserBundle
-import com.github.gogetters.letsgo.database.user.UserBundleProvider
 import com.github.gogetters.letsgo.util.PermissionUtils
 import java.util.*
 
-class ProfileEditActivity : ActivityCompat.OnRequestPermissionsResultCallback, AppCompatActivity() {
+ class ProfileEditActivity : ActivityCompat.OnRequestPermissionsResultCallback, AppCompatActivity() {
     companion object {
         // Codes used when creating a permission request. Used in the onRequestPermissionResult handler.
         private const val READ_EXTERNAL_STORAGE_PERMISSION_REQUEST_CODE: Int = 2
@@ -48,7 +48,7 @@ class ProfileEditActivity : ActivityCompat.OnRequestPermissionsResultCallback, A
 
     private val tag = "Profile"
 
-    private lateinit var userBundleProvider: UserBundleProvider
+    private val userBundleProvider = FirebaseUserBundleProvider
     private lateinit var userBundle: UserBundle
     private lateinit var user: LetsGoUser
 
@@ -76,7 +76,6 @@ class ProfileEditActivity : ActivityCompat.OnRequestPermissionsResultCallback, A
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_profile_edit)
 
-        userBundleProvider = intent.getSerializableExtra("UserBundleProvider") as UserBundleProvider
         userBundle = userBundleProvider.getUserBundle()!!
         user = userBundle.getUser()
 
@@ -120,7 +119,6 @@ class ProfileEditActivity : ActivityCompat.OnRequestPermissionsResultCallback, A
 
     private fun returnToProfile() {
         val intent = Intent(this, ProfileActivity::class.java)
-        intent.putExtra("UserBundleProvider", userBundleProvider)
         startActivity(intent)
     }
 
