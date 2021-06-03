@@ -94,17 +94,22 @@ class UserSearchActivity : AppCompatActivity() {
      */
     private fun searchUsersOutputToRecycler(query: String) {
         user.downloadUsersByNick(query)
-            .addOnSuccessListener { users ->
-                adapter.clear()
-                users.forEach {
-                    adapter.add(UserListItem(it))
-                }
-            }
+            .addOnSuccessListener { usersListToRecycler(it) }
             .addOnFailureListener {
                 Log.d(TAG, "Search failed: $it")
                 adapter.clear()
                 adapter.add(UserListItem(LetsGoUser("").apply { nick = "SEARCH FAILED" }))
             }
+    }
+
+    /**
+     * Displays a list of users to the recyclerView
+     */
+    private fun usersListToRecycler(users: List<LetsGoUser>) {
+        adapter.clear()
+        users.forEach {
+            adapter.add(UserListItem(it))
+        }
     }
 
     /**

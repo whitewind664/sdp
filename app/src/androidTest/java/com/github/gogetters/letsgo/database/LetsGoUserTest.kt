@@ -285,7 +285,6 @@ class LetsGoUserTest : EmulatedFirebaseTest() {
         assertEquals(1, sent!!.size)
     }
 
-    @Ignore("Test doesn't work as it is not possible to add rules in Firebase Emulator")
     @Test
     fun testDownloadUsersByNick() {
         addTester1()
@@ -296,6 +295,4 @@ class LetsGoUserTest : EmulatedFirebaseTest() {
 
         assertEquals(2, foundUsers.size)
     }
-
-
 }
