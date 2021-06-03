@@ -13,7 +13,7 @@ import kotlin.collections.ArrayList
 
 /**
  * Class that represents a user of the app and coordinates the communication of user data with the
- * database. The optional parameters are for testing purposes
+ * database.
  */
 class LetsGoUser (val uid: String) : Serializable {
 
@@ -35,7 +35,8 @@ class LetsGoUser (val uid: String) : Serializable {
     // The reference (== address) of the profile picture on cloud storage
     var profileImageRef: String? = null
 
-    var friends: EnumMap<FriendStatus, MutableList<LetsGoUser>>? = null
+    var friendsByStatus: EnumMap<FriendStatus, MutableList<LetsGoUser>>? = null
+    var friendStatusMap: Map<LetsGoUser, FriendStatus>? = null
 
     // map related values
     var isLookingForPlayers: Boolean? = false
@@ -143,6 +144,17 @@ class LetsGoUser (val uid: String) : Serializable {
             }
     }
 
+    override fun equals(other: Any?): Boolean {
+        if (other is LetsGoUser) {
+            return uid == other.uid
+        }
+        return false
+    }
+
+    override fun hashCode(): Int {
+        return uid.hashCode()
+    }
+
     override fun toString(): String {
         return "LetsGoUser(uid=$uid, nick=$nick, first=$first, last=$last, city=$city, country=$country, profileImageRef=$profileImageRef, isLookingForPlayers=$isLookingForPlayers," +
                 "lastPositionLatitude=$lastPositionLatitude, lastPositionLongitude=$lastPositionLongitude)"
@@ -150,13 +162,6 @@ class LetsGoUser (val uid: String) : Serializable {
 
     //===========================================================================================
     // Friend System
-
-
-    /* MAYBE
-    * - Do we need a function to check that status of a current friend request (probably)
-    * - Blocking users?
-    * - Whatever else we need?
-    */
 
     enum class FriendStatus {
         /**
@@ -197,6 +202,13 @@ class LetsGoUser (val uid: String) : Serializable {
     }
 
     /**
+     * Gets the friend status of another user. Returns null if the users have no friend info stored.
+     */
+    fun getFriendStatus(otherUser: LetsGoUser): FriendStatus? {
+        return friendStatusMap!![otherUser]
+    }
+
+    /**
      * Updates friend status for both users!
      */
     private fun updateFriendStatus(
@@ -234,29 +246,29 @@ class LetsGoUser (val uid: String) : Serializable {
      * List pending friends, sent friend requests or current friends of User!
      */
     fun listFriendsByStatus(status: FriendStatus): List<LetsGoUser> {
-        if (friends == null) {
+        if (friendsByStatus == null) {
             throw IllegalStateException(
                 "MUST call downloadFriends and wait for it to complete" +
                         " before calling this function!"
             )
         }
-        return friends!![status]!!
+        return friendsByStatus!![status]!!
     }
 
     /**
      * Downloads Friends of all statuses.
      */
     // Sometimes I use the word connections and friends interchangeably
-    fun downloadFriends(): Task<Void> {
+    fun downloadFriends(): Task<Unit> {
         return Database.readData(userFriendsPath).continueWithTask {
             val friendUids: EnumMap<FriendStatus, ArrayList<String>> =
                 EnumMap(FriendStatus::class.java)
-            friends = EnumMap(FriendStatus::class.java)
+            friendsByStatus = EnumMap(FriendStatus::class.java)
 
             // Initializing lists in connections
             for (friendStatus in FriendStatus.values()) {
                 friendUids[friendStatus] = ArrayList()
-                friends!![friendStatus] = ArrayList()
+                friendsByStatus!![friendStatus] = ArrayList()
             }
 
             // Putting connection uids into their respective list
@@ -272,12 +284,24 @@ class LetsGoUser (val uid: String) : Serializable {
             for (friendStatus in FriendStatus.values()) {
                 tasks.add(
                     downloadUserList(friendUids[friendStatus]!!).continueWith {
-                        friends!![friendStatus] = it.result
+                        friendsByStatus!![friendStatus] = it.result
                     }
                 )
             }
-            Tasks.whenAll(tasks)
+            Tasks.whenAll(tasks).continueWith {
+                fillFriendStatusPairs()
+            }
         }
+    }
+
+    private fun fillFriendStatusPairs() {
+        val temp : MutableMap<LetsGoUser, FriendStatus> = mutableMapOf()
+        for (friendStatus in FriendStatus.values()) {
+            for (friend in friendsByStatus!![friendStatus]!!) {
+                temp[friend] = friendStatus
+            }
+        }
+        friendStatusMap = temp
     }
 
     /**
@@ -300,7 +324,9 @@ class LetsGoUser (val uid: String) : Serializable {
 
     fun downloadUsersByNick(nick: String): Task<MutableList<LetsGoUser>> {
         return Database.readSearchByChild(USERS_PATH, "nick", nick).continueWithTask {
-            downloadUserList(it.result.children.map { it.key!! }.toList())
+            val uids = it.result.children.map { userData ->
+                userData.key!! }.toList()
+            downloadUserList(uids)
         }
     }
 }
