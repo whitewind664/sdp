@@ -33,6 +33,8 @@ import com.github.gogetters.letsgo.R
 import com.github.gogetters.letsgo.database.EmulatedFirebaseTest
 import com.github.gogetters.letsgo.database.user.FirebaseUserBundleProvider
 import com.github.gogetters.letsgo.testUtil.TestUtils
+import com.github.gogetters.letsgo.testUtil.TestUtils.Companion.clickWaitButton
+import com.github.gogetters.letsgo.testUtil.TestUtils.Companion.sleep
 import com.google.android.gms.tasks.Tasks
 import org.hamcrest.Description
 import org.junit.After
@@ -53,22 +55,6 @@ class ProfileEditActivityTest : EmulatedFirebaseTest() {
     val intent = Intent(ApplicationProvider.getApplicationContext(), ProfileEditActivity::class.java).putExtra("UserBundleProvider", FirebaseUserBundleProvider)
     lateinit var scenario: ActivityScenario<ProfileEditActivity>
 
-    private fun sleep() {
-        try {
-            Thread.sleep(DELAY)
-        } catch (e: InterruptedException) {
-            throw RuntimeException("Cannot execute Thread.sleep()")
-        }
-    }
-
-    private fun clickWaitButton() {
-        val device = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation())
-        var waitButton = device.findObject(UiSelector().textContains("wait"))
-        if (waitButton.exists()) {
-            waitButton.click()
-        }
-    }
-
     @Before
     fun init() {
         TestUtils.makeSureTestUserAuthenticated()
@@ -84,22 +70,21 @@ class ProfileEditActivityTest : EmulatedFirebaseTest() {
 
 
     @Test
-    fun profileIsActuallyEditsNewInputs() {
-        scenario = ActivityScenario.launch(intent)
+    fun profileActuallyEditsNewInputs() {
         val user = FirebaseUserBundleProvider.getUserBundle()!!.getUser()
+        val oldFirst = "OldFirst"
+        user.first = oldFirst
+        Tasks.await(user.uploadUserData())
+
+        scenario = ActivityScenario.launch(intent)
         val newNick = "NewNick"
-        val newCity = "Ouagadougou"
-        val oldFirst= user.first
 
         onView(withId(R.id.profile_edit_nick)).perform(typeText(newNick))
-        onView(withId(R.id.profile_edit_city)).perform(scrollTo()).perform(typeText(newCity))
 
-        // the old one stay the same
         onView(withId(R.id.profile_edit_button_save)).perform(click())
         TestUtils.sleep()
         Tasks.await(user.downloadUserData())
         assertEquals(newNick, user.nick)
-        assertEquals(newCity, user.city)
         assertEquals(oldFirst, user.first)
     }
 
@@ -107,7 +92,6 @@ class ProfileEditActivityTest : EmulatedFirebaseTest() {
     fun dialogOpensOnProfileClick() {
         scenario = ActivityScenario.launch(intent)
         clickWaitButton()
-        sleep()
         onView(withId(R.id.profile_edit_imageView_image))
             .perform(click())
         onView(ViewMatchers.withText(R.string.profile_dialogTitle))
@@ -118,7 +102,6 @@ class ProfileEditActivityTest : EmulatedFirebaseTest() {
     fun cameraIntentIsFired() {
         scenario = ActivityScenario.launch(intent)
         clickWaitButton()
-        sleep()
         onView(withId(R.id.profile_edit_imageView_image))
             .perform(click())
         clickAtIndex(0, "Take Picture")
@@ -131,7 +114,6 @@ class ProfileEditActivityTest : EmulatedFirebaseTest() {
     fun galleryIntentIsFired() {
         scenario = ActivityScenario.launch(intent)
         clickWaitButton()
-        sleep()
         onView(withId(R.id.profile_edit_imageView_image))
             .perform(click())
 
@@ -145,7 +127,6 @@ class ProfileEditActivityTest : EmulatedFirebaseTest() {
     fun profilePictureDialogDisappearsOnCancel() {
         scenario = ActivityScenario.launch(intent)
         clickWaitButton()
-        sleep()
         onView(withId(R.id.profile_edit_imageView_image))
             .perform(click())
         clickAtIndex(2, "Cancel")
