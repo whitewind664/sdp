@@ -138,7 +138,7 @@ class LetsGoUserTest : EmulatedFirebaseTest() {
     @Test
     fun aListFriendsByStatusThrowsOnNullFriends() {
         exceptionRule.expect(IllegalStateException::class.java)
-        user.friends = null
+        user.friendsByStatus = null
         user.listFriendsByStatus(LetsGoUser.FriendStatus.ACCEPTED)
     }
 
@@ -275,9 +275,9 @@ class LetsGoUserTest : EmulatedFirebaseTest() {
         Tasks.await(user.requestFriend(user3))
         Tasks.await(user.downloadFriends())
 
-        val accepted = user.friends!![LetsGoUser.FriendStatus.ACCEPTED]
-        val requested = user.friends!![LetsGoUser.FriendStatus.REQUESTED]
-        val sent = user.friends!![LetsGoUser.FriendStatus.SENT]
+        val accepted = user.friendsByStatus!![LetsGoUser.FriendStatus.ACCEPTED]
+        val requested = user.friendsByStatus!![LetsGoUser.FriendStatus.REQUESTED]
+        val sent = user.friendsByStatus!![LetsGoUser.FriendStatus.SENT]
 
         // Check that friend statuses have been stored and retrieved correctly
         assertEquals(1, accepted!!.size)
@@ -294,5 +294,21 @@ class LetsGoUserTest : EmulatedFirebaseTest() {
         val foundUsers = Tasks.await(user3.downloadUsersByNick("tester"))
 
         assertEquals(2, foundUsers.size)
+    }
+
+    @Test
+    fun testGetFriendStatus() {
+        addTester1()
+        addTester2()
+        addTester3()
+
+        Tasks.await(user.acceptFriend(user2))
+        Tasks.await(user.requestFriend(user3))
+        Tasks.await(user.downloadFriends())
+        Tasks.await(user3.downloadFriends())
+
+        assertEquals(LetsGoUser.FriendStatus.ACCEPTED, user.getFriendStatus(user2))
+        assertEquals(LetsGoUser.FriendStatus.SENT, user.getFriendStatus(user3))
+        assertEquals(LetsGoUser.FriendStatus.REQUESTED, user3.getFriendStatus(user))
     }
 }
