@@ -14,6 +14,7 @@ import androidx.test.uiautomator.UiDevice
 import androidx.test.uiautomator.UiSelector
 import com.github.gogetters.letsgo.R
 import com.github.gogetters.letsgo.database.EmulatedFirebaseTest
+import com.github.gogetters.letsgo.testUtil.TestUtils
 import org.hamcrest.Matchers
 import org.junit.*
 import org.junit.runner.RunWith
@@ -61,9 +62,9 @@ class MainActivityTest: EmulatedFirebaseTest() {
         Intents.intended(Matchers.allOf(IntentMatchers.hasComponent(MapsActivity::class.java.name)))
     }
 
-    @Ignore
     @Test
     fun chatButtonOpensChat() {
+        TestUtils.makeSureTestUserAuthenticated()
         onView(withId(R.id.item3)).perform(click())
         Intents.intended(Matchers.allOf(IntentMatchers.hasComponent(ChatLastMessageActivity::class.java.name)))
     }
@@ -72,5 +73,11 @@ class MainActivityTest: EmulatedFirebaseTest() {
     fun tutorialButtonOpensTutorial() {
         onView(withId(R.id.item2)).perform(click())
         Intents.intended(Matchers.allOf(IntentMatchers.hasComponent(TutorialActivity::class.java.name)))
+    }
+
+    @Test
+    fun playButtonOpensGameChooser() {
+        onView(withId(R.id.main_button_play)).perform(click())
+        Intents.intended(Matchers.allOf(IntentMatchers.hasComponent(GameModeChooserActivity::class.java.name)))
     }
 }
