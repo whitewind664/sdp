@@ -1,10 +1,15 @@
 package com.github.gogetters.letsgo.game
 
+import androidx.test.uiautomator.UiObjectNotFoundException
 import org.junit.Assert.assertEquals
+import org.junit.Rule
 import org.junit.Test
+import org.junit.rules.ExpectedException
 
 class GTPCommandTest {
 
+        @get:Rule
+        val exception: ExpectedException = ExpectedException.none()
 
         @Test
         fun boardSizeParsedCorrectly() {
@@ -90,6 +95,20 @@ class GTPCommandTest {
 
         }
 
+        @Test
+        fun parsesMoveCorrectly() {
+                val stone = Stone.BLACK
+                val point = Point(2, 2)
+                val moveArgs = listOf<String>(stone.toString(), point.toString())
+                val move = GTPCommand.parseMove(moveArgs)
+                assertEquals(stone, move.stone)
+                assertEquals(point, move.point)
+        }
 
+        @Test
+        fun parseMoveThrowsOnEmptyArgList() {
+                exception.expect(IllegalStateException::class.java)
+                GTPCommand.parseMove(emptyList())
+        }
 
 }
