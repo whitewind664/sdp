@@ -37,7 +37,7 @@ class ProfileActivityTest : EmulatedFirebaseTest() {
     val intent = Intent(
         ApplicationProvider.getApplicationContext(),
         ProfileActivity::class.java
-    ).putExtra("UserBundleProvider", FirebaseUserBundleProvider)
+    )
 
     lateinit var scenario: ActivityScenario<ProfileActivity>
 

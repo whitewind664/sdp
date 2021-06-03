@@ -203,7 +203,6 @@ class ProfileEditActivity : ActivityCompat.OnRequestPermissionsResultCallback, A
     }
 
     private fun getImageFromSelectedSource() {
-        Log.d(tag, "BAHHHH")
         when (choosePictureFromCamera) {
             true -> dispatchCameraIntent()
             false -> dispatchGalleryIntent()
@@ -250,12 +249,6 @@ class ProfileEditActivity : ActivityCompat.OnRequestPermissionsResultCallback, A
             PROFILE_PICTURE_PREFIX_CLOUD
         )
     }
-
-//    private fun getOutputImageFile(): File {
-//        val storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES)
-//        val timeStamp: String = SimpleDateFormat("yyyyMMdd_HHmmss").format(Date())
-//        return File.createTempFile("IMG_$timeStamp", ".jpg", storageDir)
-//    }
 
     private fun onGalleryResult(data: Intent?) {
         if (data != null && data.data != null) {

@@ -22,7 +22,6 @@ class MainActivity : BaseActivity() {
         val profileButton = findViewById<Button>(R.id.main_button_profile)
         profileButton.setOnClickListener {
             val intent = Intent(this, ProfileActivity::class.java)
-            intent.putExtra("UserBundleProvider", FirebaseUserBundleProvider)
             startActivity(intent)
         }
 

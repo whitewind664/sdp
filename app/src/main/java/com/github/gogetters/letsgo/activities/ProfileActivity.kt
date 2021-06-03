@@ -12,6 +12,7 @@ import com.github.gogetters.letsgo.R
 import com.github.gogetters.letsgo.cache.Cache
 import com.github.gogetters.letsgo.database.ImageStorageService
 import com.github.gogetters.letsgo.database.ImageStorageService.Companion.PROFILE_PICTURE_PREFIX_CLOUD
+import com.github.gogetters.letsgo.database.user.FirebaseUserBundleProvider
 import com.github.gogetters.letsgo.database.user.UserBundle
 import com.github.gogetters.letsgo.database.user.UserBundleProvider
 
@@ -39,7 +40,7 @@ class ProfileActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        userBundleProvider = intent.getSerializableExtra("UserBundleProvider") as UserBundleProvider
+        userBundleProvider = FirebaseUserBundleProvider
 
         editButton = findViewById(R.id.profile_button_edit)
         editButton.setOnClickListener {

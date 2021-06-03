@@ -14,7 +14,9 @@ import android.widget.ImageView
 import androidx.test.core.app.ActivityScenario
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.espresso.Espresso
+import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.action.ViewActions
+import androidx.test.espresso.action.ViewActions.typeText
 import androidx.test.espresso.assertion.ViewAssertions
 import androidx.test.espresso.intent.Intents
 import androidx.test.espresso.intent.matcher.IntentMatchers
@@ -77,10 +79,19 @@ class ProfileEditActivityTest : EmulatedFirebaseTest() {
         scenario.close()
     }
 
+
     @Test
-    fun testProfileEditForMockUser() {
+    fun profileIsActuallyEdited() {
         scenario = ActivityScenario.launch(intent)
-        Espresso.onView(ViewMatchers.withId(R.id.profile_edit_imageView_image)).perform(ViewActions.click())
+        val user = FirebaseUserBundleProvider.getUserBundle()!!.getUser()
+        val newNick = "NewNick"
+        val newCity = "Ouagadougou"
+
+        onView(ViewMatchers.withId(R.id.profile_edit_nick)).perform(typeText(newNick))
+        onView(ViewMatchers.withId(R.id.profile_edit_city)).perform(typeText(newCity))
+
+        // the old one stay the same
+
     }
 
     @Test
@@ -88,9 +99,9 @@ class ProfileEditActivityTest : EmulatedFirebaseTest() {
         scenario = ActivityScenario.launch(intent)
         clickWaitButton()
         sleep()
-        Espresso.onView(ViewMatchers.withId(R.id.profile_edit_imageView_image))
+        onView(ViewMatchers.withId(R.id.profile_edit_imageView_image))
             .perform(ViewActions.click())
-        Espresso.onView(ViewMatchers.withText(R.string.profile_dialogTitle))
+        onView(ViewMatchers.withText(R.string.profile_dialogTitle))
             .check(ViewAssertions.matches(ViewMatchers.isDisplayed()))
     }
 
@@ -99,7 +110,7 @@ class ProfileEditActivityTest : EmulatedFirebaseTest() {
         scenario = ActivityScenario.launch(intent)
         clickWaitButton()
         sleep()
-        Espresso.onView(ViewMatchers.withId(R.id.profile_edit_imageView_image))
+        onView(ViewMatchers.withId(R.id.profile_edit_imageView_image))
             .perform(ViewActions.click())
         clickAtIndex(0, "Take Picture")
         acceptPermissions()
@@ -112,7 +123,7 @@ class ProfileEditActivityTest : EmulatedFirebaseTest() {
         scenario = ActivityScenario.launch(intent)
         clickWaitButton()
         sleep()
-        Espresso.onView(ViewMatchers.withId(R.id.profile_edit_imageView_image))
+        onView(ViewMatchers.withId(R.id.profile_edit_imageView_image))
             .perform(ViewActions.click())
 
         //onView(withText(R.string.profile_chooseFromGallery)).perform(click())
@@ -127,7 +138,7 @@ class ProfileEditActivityTest : EmulatedFirebaseTest() {
         scenario = ActivityScenario.launch(intent)
         clickWaitButton()
         sleep()
-        Espresso.onView(ViewMatchers.withId(R.id.profile_edit_imageView_image))
+        onView(ViewMatchers.withId(R.id.profile_edit_imageView_image))
             .perform(ViewActions.click())
         clickAtIndex(2, "Cancel")
     }
@@ -144,11 +155,11 @@ class ProfileEditActivityTest : EmulatedFirebaseTest() {
                 Intents.intending(IntentMatchers.hasAction(Intent.ACTION_CHOOSER)).respondWith(imgGalleryResult)
             }
             //auctionPhotos_CreationInitialUI()
-            Espresso.onView(ViewMatchers.withId(R.id.profile_edit_imageView_image))
+            onView(ViewMatchers.withId(R.id.profile_edit_imageView_image))
                 .perform(ViewActions.click())
             clickAtIndex(1, "Choose from Gallery")
             acceptPermissions()
-            Espresso.onView(ViewMatchers.withId(R.id.profile_edit_imageView_image))
+            onView(ViewMatchers.withId(R.id.profile_edit_imageView_image))
                 .check(ViewAssertions.matches(hasImageSet()))
         }
     }
@@ -161,11 +172,11 @@ class ProfileEditActivityTest : EmulatedFirebaseTest() {
             val imgCaptureResult = createImageCaptureActivityResultStub(it)
             Intents.intending(IntentMatchers.hasAction(MediaStore.ACTION_IMAGE_CAPTURE)).respondWith(imgCaptureResult)
 
-            Espresso.onView(ViewMatchers.withId(R.id.profile_edit_imageView_image))
+            onView(ViewMatchers.withId(R.id.profile_edit_imageView_image))
                 .perform(ViewActions.click())
             clickAtIndex(0, "Take Picture")
             acceptPermissions()
-            Espresso.onView(ViewMatchers.withId(R.id.profile_edit_imageView_image))
+            onView(ViewMatchers.withId(R.id.profile_edit_imageView_image))
                 .check(ViewAssertions.matches(hasImageSet()))
         }
     }
