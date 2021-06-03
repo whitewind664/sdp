@@ -2,14 +2,17 @@ package com.github.gogetters.letsgo.database
 
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
+import com.github.gogetters.letsgo.database.user.LetsGoUser
+import com.github.gogetters.letsgo.testUtil.TestUtils
+import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.tasks.Tasks
 import com.google.firebase.FirebaseApp
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.runBlocking
 import org.junit.After
+import org.junit.Assert.*
 import org.junit.Test
 import org.junit.runner.RunWith
-import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.BeforeClass
 
@@ -22,13 +25,29 @@ import org.junit.BeforeClass
 class DatabaseTest: EmulatedFirebaseTest() {
 
     @Test
-    fun disableLocationSharingDoesntThrow() {
-        Database.disableLocationSharing()
+    fun sharedLocationDoesntAppearInGetAllLocations() {
+        TestUtils.makeSureTestUserAuthenticated()
+        val location1 = LatLng(1.1, 2.2)
+        val location2 = LatLng(3.3, 4.4)
+        val user1 = LetsGoUser("id1")
+        val user2 = LetsGoUser("id2")
+        Tasks.await(user1.shareLocation(location1))
+        Tasks.await(user2.shareLocation(location2))
+        Database.getAllLocations().thenAccept {
+            assertTrue(it.containsKey(location1))
+            assertTrue(it.containsKey(location2))
+            assertFalse(it.containsValue(Authentication.getUid()!!))
+        }
     }
 
     @Test
-    fun sharedLocationDoesntAppearInGetAllLocations() {
-        Database.getAllLocations()
+    fun basicWriteAndReadWorks() {
+        val path = "/test/the/function"
+        Tasks.await(Database.writeData(path, true))
+        Database.readData(path).continueWith {
+            assertTrue(it.result.value != null)
+            assertTrue(it.result.value as Boolean)
+        }
     }
 
     @Test
@@ -69,7 +88,6 @@ class DatabaseTest: EmulatedFirebaseTest() {
         }
 
         assertEquals(1, done)
-
     }
 
     @Test
