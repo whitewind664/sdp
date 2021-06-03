@@ -198,44 +198,6 @@ class LetsGoUserTest : EmulatedFirebaseTest() {
         verify(exactly = 1) { CloudStorage.deleteFile(ref) }
     }
 
-    @Ignore("We can remove this later")
-    @Test
-    fun zTestUploadMichaelUserData() {
-        val my_user = LetsGoUser("WOs2S7EDiHRrXZrmvEAr7zV8Awk2")
-
-        my_user.nick = "metaTinker"
-        my_user.first = "Michael"
-        my_user.last = "Roust"
-        my_user.city = "Lausanne"
-        my_user.country = "Switzerland"
-
-        Tasks.await(my_user.uploadUserData())
-    }
-
-    @Ignore("We can remove this later")
-    @Test
-    fun zTestMichaelAddFriends() {
-        val my_user = LetsGoUser("WOs2S7EDiHRrXZrmvEAr7zV8Awk2")
-
-        Tasks.await(
-            Tasks.whenAll(
-                my_user.requestFriend(user),
-                my_user.acceptFriend(user2),
-                my_user.acceptFriend(user3)
-            )
-        )
-    }
-
-//    @Ignore("Make this test work later")
-    @Test
-    fun zTestSearchUser() {
-//        val
-
-        // TODO Add some users with nicknames starting with tester and check that we indeed get them all (use users.length)
-        val users = Tasks.await(user.downloadUsersByNick("tester"))
-        Log.d(TAG, "Found Users : $users")
-    }
-
     //========================================================================
     // New Tests
 
@@ -301,6 +263,38 @@ class LetsGoUserTest : EmulatedFirebaseTest() {
         Firebase.database.goOffline()
         Tasks.await(user.deleteFriend(user2))
         Firebase.database.goOnline()
+    }
+
+    @Test
+    fun testDownloadFriends2() {
+        addTester1()
+        addTester2()
+        addTester3()
+
+        Tasks.await(user.acceptFriend(user2))
+        Tasks.await(user.requestFriend(user3))
+        Tasks.await(user.downloadFriends())
+
+        val accepted = user.friends!![LetsGoUser.FriendStatus.ACCEPTED]
+        val requested = user.friends!![LetsGoUser.FriendStatus.REQUESTED]
+        val sent = user.friends!![LetsGoUser.FriendStatus.SENT]
+
+        // Check that friend statuses have been stored and retrieved correctly
+        assertEquals(1, accepted!!.size)
+        assertEquals(0, requested!!.size)
+        assertEquals(1, sent!!.size)
+    }
+
+    @Ignore("Test doesn't work as it is not possible to add rules in Firebase Emulator")
+    @Test
+    fun testDownloadUsersByNick() {
+        addTester1()
+        addTester2()
+        addTester3()
+
+        val foundUsers = Tasks.await(user3.downloadUsersByNick("tester"))
+
+        assertEquals(2, foundUsers.size)
     }
 
 
