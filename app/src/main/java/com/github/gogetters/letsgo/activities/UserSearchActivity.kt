@@ -96,7 +96,6 @@ class UserSearchActivity : AppCompatActivity() {
         user.downloadUsersByNick(query)
             .addOnSuccessListener { usersListToRecycler(it) }
             .addOnFailureListener {
-                Log.d(TAG, "Search failed: $it")
                 adapter.clear()
                 adapter.add(UserListItem(LetsGoUser("").apply { nick = "SEARCH FAILED" }))
             }

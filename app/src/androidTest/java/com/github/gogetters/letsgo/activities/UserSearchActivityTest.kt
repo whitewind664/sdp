@@ -16,6 +16,7 @@ import androidx.test.uiautomator.UiObject
 import androidx.test.uiautomator.UiSelector
 import com.github.gogetters.letsgo.R
 import com.github.gogetters.letsgo.database.EmulatedFirebaseTest
+import com.github.gogetters.letsgo.database.user.FirebaseUserBundleProvider
 import com.github.gogetters.letsgo.database.user.LetsGoUser
 import com.github.gogetters.letsgo.testUtil.TestUtils
 import com.google.android.gms.tasks.Tasks
@@ -29,6 +30,7 @@ import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
+import java.util.*
 
 @RunWith(AndroidJUnit4::class)
 class UserSearchActivityTest : EmulatedFirebaseTest() {
@@ -55,11 +57,8 @@ class UserSearchActivityTest : EmulatedFirebaseTest() {
         val otherUser = LetsGoUser("test2")
         otherUser.nick = nick
         Tasks.await(otherUser.uploadUserData())
-        TestUtils.sleep()
 
         val device: UiDevice = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation())
-        val searchField = device.findObject(UiSelector().className("android.widget.SearchView"))
-        //searchField.text = "Nic"
         onView(withId(R.id.user_search_search_view)).perform(TestUtils.typeSearchViewText("Nic"))
         TestUtils.sleep()
         val foundUser: UiObject = device.findObject(
@@ -76,8 +75,8 @@ class UserSearchActivityTest : EmulatedFirebaseTest() {
         Tasks.await(otherUser.uploadUserData())
 
         val device: UiDevice = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation())
-        val searchField = device.findObject(UiSelector().className("android.widget.SearchView"))
-        searchField.text = "Random"
+        onView(withId(R.id.user_search_search_view)).perform(TestUtils.typeSearchViewText("Random"))
+        TestUtils.sleep()
         val foundUser: UiObject = device.findObject(
             UiSelector().textContains(nick)
         )
@@ -90,22 +89,41 @@ class UserSearchActivityTest : EmulatedFirebaseTest() {
         val otherUser = LetsGoUser("test2")
         otherUser.nick = nick
         Tasks.await(otherUser.uploadUserData())
-        val device: UiDevice = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation())
-        val searchField = device.findObject(UiSelector().className("android.widget.SearchView"))
-        searchField.click()
-        searchField.text = "Nic"
-        val foundUser: UiObject = device.findObject(
-            UiSelector().textContains(nick).clickable(true)
-        )
-        if (foundUser.exists()) {
-            foundUser.click()
 
-        }
+        val device: UiDevice = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation())
+        onView(withId(R.id.user_search_search_view)).perform(TestUtils.typeSearchViewText("Nic"))
+        TestUtils.sleep()
+        val foundUser: UiObject = device.findObject(
+            UiSelector().textContains(nick)
+        )
+        assertTrue(foundUser.exists())
+        foundUser.click()
+        val friendRequestOption = device.findObject(
+            UiSelector().clickable(true).textContains("Friend Request")
+        )
+        assertTrue(friendRequestOption.exists())
+        // TODO maybe click on it and check with mockk that the correct function on user was called
     }
 
     @Test
     fun friendIsNotDisplayed() {
+        val user = FirebaseUserBundleProvider.getUserBundle()!!.getUser()
 
+        val otherNick = "Nicky"
+        val otherUser = LetsGoUser("test2")
+        otherUser.nick = otherNick
+        Tasks.await(otherUser.uploadUserData())
+
+        // add as a friend
+        user.acceptFriend(otherUser)
+
+        val device: UiDevice = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation())
+        onView(withId(R.id.user_search_search_view)).perform(TestUtils.typeSearchViewText("Nic"))
+        TestUtils.sleep()
+        val foundUser: UiObject = device.findObject(
+            UiSelector().textContains(otherNick)
+        )
+        assertFalse(foundUser.exists())
     }
 
 }
