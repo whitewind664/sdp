@@ -20,7 +20,7 @@ import com.github.gogetters.letsgo.database.user.UserBundleProvider
 class ProfileActivity : BaseActivity() {
 
     companion object {
-        public fun combineTwoTextFields(one: String?, two: String?, separator: String): String {
+        fun combineTwoTextFields(one: String?, two: String?, separator: String): String {
             return if (one != null && two != null) {
                 "$one$separator$two"
             } else two ?: (one ?: "")
