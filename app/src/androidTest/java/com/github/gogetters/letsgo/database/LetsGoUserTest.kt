@@ -27,9 +27,9 @@ class LetsGoUserTest : EmulatedFirebaseTest() {
     private val TEST_UID2 = "tESTuID2"
     private val TEST_UID3 = "tESTuID3"
 
-    private var user = LetsGoUser("")
-    private var user2 = LetsGoUser("")
-    private var user3 = LetsGoUser("")
+    var user = LetsGoUser("")
+    var user2 = LetsGoUser("")
+    var user3 = LetsGoUser("")
 
     @get:Rule
     var exceptionRule: ExpectedException = ExpectedException.none()
