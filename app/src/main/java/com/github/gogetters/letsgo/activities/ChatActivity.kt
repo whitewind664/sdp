@@ -1,14 +1,14 @@
 package com.github.gogetters.letsgo.activities
 
 import android.os.Bundle
-import android.provider.ContactsContract
 import androidx.appcompat.app.AppCompatActivity
 import com.github.gogetters.letsgo.R
 import com.github.gogetters.letsgo.chat.model.ChatMessageData
-import com.github.gogetters.letsgo.chat.model.UserData
 import com.github.gogetters.letsgo.chat.views.ChatMyMessageItem
 import com.github.gogetters.letsgo.chat.views.ChatTheirMessageItem
-import com.github.gogetters.letsgo.database.Database
+import com.github.gogetters.letsgo.database.user.LetsGoUser
+import com.github.gogetters.letsgo.database.Authentication
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.ChildEventListener
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
@@ -20,20 +20,16 @@ import kotlinx.android.synthetic.main.activity_chat.*
 class ChatActivity : AppCompatActivity() {
 
     val adapter = GroupAdapter<ViewHolder>()
-    var userId: String? = null
-    var toUser: UserData? = null
-
-    companion object {
-        val UNKNOWN = "Unknown"
-    }
+    lateinit var userId: String
+    var toUser: LetsGoUser? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_chat)
 
         chat_recyclerview_messages.adapter = adapter
-        userId = Database.getCurrentUserId() ?: UNKNOWN
-        toUser = intent.getParcelableExtra<UserData>(ChatNewMessageActivity.KEY)
+        userId = Authentication.getCurrentUser()!!.uid
+        toUser = intent.getSerializableExtra(ChatNewMessageActivity.KEY) as LetsGoUser
 
         listenForMessages()
 
@@ -44,7 +40,7 @@ class ChatActivity : AppCompatActivity() {
 
     private fun listenForMessages() {
         val fromId = userId
-        val toId = toUser?.id
+        val toId = toUser?.uid
         val ref = FirebaseDatabase.getInstance().getReference("/messages-node/$fromId/$toId")
         //ref.keepSynced(true)
 
@@ -74,13 +70,13 @@ class ChatActivity : AppCompatActivity() {
         val text = chat_editText_input.text.toString()
 
         if (text.isNotEmpty()) {
-            val fromId = userId!!
-            var toId: String?
-            if (toUser?.id == null) {
-                toId = UNKNOWN
-            } else {
-                toId = toUser?.id
-            }
+            val fromId = userId
+            val toId = toUser!!.uid // This might work?
+//            if (toUser?.id == null) {
+//                toId = UNKNOWN
+//            } else {
+//                toId = toUser?.uid
+//            }
             val ref = FirebaseDatabase.getInstance().getReference("/messages-node/$fromId/$toId").push()
             //ref.keepSynced(true)
             val toRef = FirebaseDatabase.getInstance().getReference("/messages-node/$toId/$fromId").push()
@@ -91,7 +87,7 @@ class ChatActivity : AppCompatActivity() {
             //lastMessageToRef.keepSynced(true)
 
             val chatMessage =
-                ChatMessageData(ref.key!!, text, fromId, toId!!, System.currentTimeMillis() / 1000)
+                ChatMessageData(ref.key!!, text, fromId, toId, System.currentTimeMillis() / 1000)
 
             ref.setValue(chatMessage).addOnSuccessListener {
                 chat_editText_input.text.clear()

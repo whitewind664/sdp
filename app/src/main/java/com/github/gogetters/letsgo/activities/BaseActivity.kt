@@ -7,6 +7,7 @@ import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import com.github.gogetters.letsgo.R
+import com.github.gogetters.letsgo.database.Database
 import com.github.gogetters.letsgo.game.Player
 import com.github.gogetters.letsgo.game.Stone
 import com.google.android.material.bottomnavigation.LabelVisibilityMode
@@ -61,6 +62,7 @@ abstract class BaseActivity : AppCompatActivity() {
                 }
                 R.id.item3 -> {
                     val intent = Intent(this, ChatLastMessageActivity::class.java)
+                    val a = Database // Force Database to get initalized
                     startActivity(intent)
                     true
                 }

@@ -20,7 +20,7 @@ interface BluetoothService {
     }
 
     fun sendNick(){
-        val user = FirebaseAuth.getInstance().currentUser
+        val user = Authentication.getCurrentUser()
         if(user != null){
             val letsGoUser = FirebaseUserBundle(user).getUser()
             val task = letsGoUser.downloadUserData()

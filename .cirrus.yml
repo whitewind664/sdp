@@ -34,6 +34,8 @@ check_android_task:
       curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
       chmod +x ./cc-test-reporter
       ./cc-test-reporter before-build
+  logcat_background_script:
+      adb -e logcat *:W
   check_script: |
       chmod +x ./scripts/check.sh
       firebase emulators:exec "./scripts/check.sh"

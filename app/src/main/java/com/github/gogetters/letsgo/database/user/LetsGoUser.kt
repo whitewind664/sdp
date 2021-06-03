@@ -1,20 +1,31 @@
 package com.github.gogetters.letsgo.database.user
 
-import android.graphics.Bitmap
-import android.net.Uri
 import android.util.Log
 import com.github.gogetters.letsgo.database.CloudStorage
 import com.github.gogetters.letsgo.database.Database
 import com.google.android.gms.tasks.Task
 import com.google.android.gms.tasks.Tasks
+import com.google.firebase.database.DataSnapshot
+import java.io.Serializable
 import java.util.*
 import kotlin.collections.ArrayList
 
 
-// I know we could use a data class or something but LetsGoUser's functioning is complex and this
-// approach just works so I will stick to it!
-// Db is an optional argument to allow for testing!
-class LetsGoUser(val uid: String, val db: Database.Companion = Database, val cloud: CloudStorage.Companion = CloudStorage) {
+/**
+ * Class that represents a user of the app and coordinates the communication of user data with the
+ * database.
+ */
+class LetsGoUser (val uid: String) : Serializable {
+
+    companion object {
+        // Be very careful if changing path values!
+        private const val TAG = "FirestoreTest"
+        private const val USERS_PATH = "users"
+        private const val FRIEND_CHILD_PATH = "friends"
+    }
+    private val userPath = "$USERS_PATH/$uid"
+    private val userFriendsPath = "$userPath/$FRIEND_CHILD_PATH"
+
     var nick: String? = null
     var first: String? = null
     var last: String? = null
@@ -24,13 +35,13 @@ class LetsGoUser(val uid: String, val db: Database.Companion = Database, val clo
     // The reference (== address) of the profile picture on cloud storage
     var profileImageRef: String? = null
 
-    private var friends: EnumMap<FriendStatus, MutableList<LetsGoUser>>? = null
+    var friendsByStatus: EnumMap<FriendStatus, MutableList<LetsGoUser>>? = null
+    var friendStatusMap: Map<LetsGoUser, FriendStatus>? = null
 
-    // Be very careful if changing path values!
-    private val tag = "FirestoreTest"
-    private val usersPath = "users"
-    private val userPath = "$usersPath/$uid"
-    private val userFriendsPath = "$userPath/friends"
+    // map related values
+    var isLookingForPlayers: Boolean? = false
+    var lastPositionLatitude: Double? = null
+    var lastPositionLongitude: Double? = null
 
     /**
      * Verifies if the user exists in our database
@@ -40,9 +51,9 @@ class LetsGoUser(val uid: String, val db: Database.Companion = Database, val clo
             val userExists = it.result.value != null
 
             if (userExists) {
-                Log.d(tag, "User exists! uid: $uid")
+                Log.d(TAG, "User exists! uid: $uid")
             } else {
-                Log.e(tag, "User DOESN'T EXIST! uid: $uid")
+                Log.e(TAG, "User DOESN'T EXIST! uid: $uid")
                 throw IllegalStateException("User DOESN'T EXIST! uid: $uid")
             }
         }
@@ -53,47 +64,52 @@ class LetsGoUser(val uid: String, val db: Database.Companion = Database, val clo
      */
     fun uploadUserData(): Task<Void> {
         val userData = hashMapOf(
+            "id" to uid,
             "nick" to nick,
             "first" to first,
             "last" to last,
             "city" to city,
             "country" to country,
-            "profilePictureRef" to profileImageRef
+            "profilePictureRef" to profileImageRef,
+            "isLookingForPlayers" to isLookingForPlayers,
+            "lastPositionLatitude" to lastPositionLatitude,
+            "lastPositionLongitude" to lastPositionLongitude
         )
 
         // Add a new document with user's uid
         return Database.updateData(userPath, userData)
             .addOnSuccessListener {
-                Log.d(tag, "LetsGoUser document added for uid: $uid")
-            }
-            .addOnFailureListener { e ->
-                Log.w(tag, "Error adding LetsGoUser document", e)
-            }
+                Log.d(TAG, "LetsGoUser document added for uid: $uid")
+            }.addOnFailureListener { e -> Log.w(TAG, "Error adding LetsGoUser document", e) }
     }
 
     /**
      * Downloads this User's data to the DB. Returns a task to track progress and etc.
      */
     fun downloadUserData(): Task<Unit> {
-        return db.readData(userPath)
+        return Database.readData(userPath)
             .continueWith {
-                for (attribute in it.result.children) {
-                    when (attribute.key) {
-                        "nick" -> nick = attribute.value as String
-                        "first" -> first = attribute.value as String
-                        "last" -> last = attribute.value as String
-                        "city" -> city = attribute.value as String
-                        "country" -> country = attribute.value as String
-                        "profilePictureRef" -> profileImageRef = attribute.value as String
-                    }
-                }
+                extractUserData(it.result)
             }
             .addOnSuccessListener {
-                Log.d(tag, "LetsGoUser successfully downloaded: ${toString()}")
+                Log.d(TAG, "LetsGoUser successfully downloaded: ${toString()}")
+            }.addOnFailureListener { e -> Log.w(TAG, "Error downloading LetsGoUser for uid: $uid", e) }
+    }
+
+    private fun extractUserData(userData: DataSnapshot) {
+        for (attribute in userData.children) {
+            when (attribute.key) {
+                "nick" -> nick = attribute.value as String
+                "first" -> first = attribute.value as String
+                "last" -> last = attribute.value as String
+                "city" -> city = attribute.value as String
+                "country" -> country = attribute.value as String
+                "profilePictureRef" -> profileImageRef = attribute.value as String
+                "isLookingForPlayers" -> isLookingForPlayers = attribute.value as Boolean
+                "lastPositionLatitude" -> lastPositionLatitude = attribute.value as Double
+                "lastPositionLongitude" -> lastPositionLongitude = attribute.value as Double
             }
-            .addOnFailureListener { e ->
-                Log.w(tag, "Error downloading LetsGoUser for uid: $uid", e)
-            }
+        }
     }
 
     /**
@@ -101,32 +117,42 @@ class LetsGoUser(val uid: String, val db: Database.Companion = Database, val clo
      */
     fun deleteUserData(): Task<Void> {
         // delete the profile picture
-        if(profileImageRef != null) {
-            cloud.deleteFile(profileImageRef!!)
+        if (profileImageRef != null) {
+            CloudStorage.deleteFile(profileImageRef!!)
         }
-        return db.deleteData(userPath)
+        return Database.deleteData(userPath)
             .addOnSuccessListener {
-                Log.d(tag, "LetsGoUser successfully deleted!")
-            }
-            .addOnFailureListener { e ->
-                Log.w(tag, "Error deleting LetsGoUser", e)
-            }
+                Log.d(TAG, "LetsGoUser successfully deleted!")
+                nick = null
+                first = null
+                last = null
+                city = null
+                country = null
+                isLookingForPlayers = null
+                lastPositionLongitude = null
+                lastPositionLatitude = null
+                profileImageRef = null
+            }.addOnFailureListener { e -> Log.w(TAG, "Error deleting LetsGoUser", e) }
+    }
+
+    override fun equals(other: Any?): Boolean {
+        if (other is LetsGoUser) {
+            return uid == other.uid
+        }
+        return false
+    }
+
+    override fun hashCode(): Int {
+        return uid.hashCode()
     }
 
     override fun toString(): String {
-        // TODO Maybe improve this?
-        return "LetsGoUser(uid=$uid, nick=$nick, first=$first, last=$last, city=$city, country=$country, profileImageRef=$profileImageRef)"
+        return "LetsGoUser(uid=$uid, nick=$nick, first=$first, last=$last, city=$city, country=$country, profileImageRef=$profileImageRef, isLookingForPlayers=$isLookingForPlayers," +
+                "lastPositionLatitude=$lastPositionLatitude, lastPositionLongitude=$lastPositionLongitude)"
     }
 
     //===========================================================================================
     // Friend System
-
-
-    /* MAYBE
-    * - Do we need a function to check that status of a current friend request (probably)
-    * - Blocking users?
-    * - Whatever else we need?
-    */
 
     enum class FriendStatus {
         /**
@@ -160,19 +186,24 @@ class LetsGoUser(val uid: String, val db: Database.Companion = Database, val clo
         return Database.deleteData("$userFriendsPath/${otherUser.uid}").continueWithTask {
             Database.deleteData("${otherUser.userFriendsPath}/${this.uid}")
         }.addOnSuccessListener {
-            Log.d(tag, "'Friend' successfully deleted")
-        }.addOnFailureListener {
-            Log.d(tag, "'Friend' FAILED to be deleted")
-        }
+            Log.d(TAG, "'Friend' successfully deleted")
+        }.addOnFailureListener { Log.d(TAG, "'Friend' FAILED to be deleted") }
+    }
+
+    /**
+     * Gets the friend status of another user. Returns null if the users have no friend info stored.
+     */
+    fun getFriendStatus(otherUser: LetsGoUser): FriendStatus? {
+        return friendStatusMap!![otherUser]
     }
 
     /**
      * Updates friend status for both users!
      */
     private fun updateFriendStatus(
-            otherUser: LetsGoUser,
-            status1: FriendStatus,
-            status2: FriendStatus
+        otherUser: LetsGoUser,
+        status1: FriendStatus,
+        status2: FriendStatus
     ): Task<Void> {
         return requireUserExists().continueWithTask {
             otherUser.requireUserExists().continueWithTask {
@@ -181,10 +212,8 @@ class LetsGoUser(val uid: String, val db: Database.Companion = Database, val clo
                 }
             }
         }.addOnSuccessListener {
-            Log.d(tag, "Friend Status successfully updated")
-        }.addOnFailureListener {
-            Log.d(tag, "Friend Status FAILED to be updated")
-        }
+            Log.d(TAG, "Friend Status successfully updated")
+        }.addOnFailureListener { Log.d(TAG, "Friend Status FAILED to be updated") }
     }
 
     /**
@@ -192,7 +221,7 @@ class LetsGoUser(val uid: String, val db: Database.Companion = Database, val clo
      */
     private fun updateFriendStatusHelper(otherUser: LetsGoUser, status: FriendStatus): Task<Void> {
         val path = "$userFriendsPath/${otherUser.uid}"
-        Log.d(tag, "Adding friend data. path: $path\tstatus: $status")
+        Log.d(TAG, "Adding friend data. path: $path\tstatus: $status")
 
         return Database.writeData(path, status.name);
     }
@@ -204,27 +233,29 @@ class LetsGoUser(val uid: String, val db: Database.Companion = Database, val clo
      * List pending friends, sent friend requests or current friends of User!
      */
     fun listFriendsByStatus(status: FriendStatus): List<LetsGoUser> {
-        if (friends == null) {
-            throw IllegalStateException("MUST call downloadFriends and wait for it to complete" +
-                    " before calling this function!")
+        if (friendsByStatus == null) {
+            throw IllegalStateException(
+                "MUST call downloadFriends and wait for it to complete" +
+                        " before calling this function!"
+            )
         }
-        return friends!![status]!!
+        return friendsByStatus!![status]!!
     }
 
     /**
      * Downloads Friends of all statuses.
      */
     // Sometimes I use the word connections and friends interchangeably
-    fun downloadFriends(): Task<Void> {
+    fun downloadFriends(): Task<Unit> {
         return Database.readData(userFriendsPath).continueWithTask {
             val friendUids: EnumMap<FriendStatus, ArrayList<String>> =
                 EnumMap(FriendStatus::class.java)
-            friends = EnumMap(FriendStatus::class.java)
+            friendsByStatus = EnumMap(FriendStatus::class.java)
 
             // Initializing lists in connections
             for (friendStatus in FriendStatus.values()) {
                 friendUids[friendStatus] = ArrayList()
-                friends!![friendStatus] = ArrayList()
+                friendsByStatus!![friendStatus] = ArrayList()
             }
 
             // Putting connection uids into their respective list
@@ -240,18 +271,30 @@ class LetsGoUser(val uid: String, val db: Database.Companion = Database, val clo
             for (friendStatus in FriendStatus.values()) {
                 tasks.add(
                     downloadUserList(friendUids[friendStatus]!!).continueWith {
-                        friends!![friendStatus] = it.result
+                        friendsByStatus!![friendStatus] = it.result
                     }
                 )
             }
-            Tasks.whenAll(tasks)
+            Tasks.whenAll(tasks).continueWith {
+                fillFriendStatusPairs()
+            }
         }
+    }
+
+    private fun fillFriendStatusPairs() {
+        val temp : MutableMap<LetsGoUser, FriendStatus> = mutableMapOf()
+        for (friendStatus in FriendStatus.values()) {
+            for (friend in friendsByStatus!![friendStatus]!!) {
+                temp[friend] = friendStatus
+            }
+        }
+        friendStatusMap = temp
     }
 
     /**
      * Given a list of uids. Creates a list of LetsGoUsers and downloads their data
      */
-    private fun downloadUserList(uids: List<String>): Task<MutableList<LetsGoUser>> {
+    fun downloadUserList(uids: List<String>): Task<MutableList<LetsGoUser>> {
         val tasks = ArrayList<Task<LetsGoUser>>()
 
         for (uid in uids) {
@@ -260,5 +303,17 @@ class LetsGoUser(val uid: String, val db: Database.Companion = Database, val clo
         }
 
         return Tasks.whenAllSuccess(tasks)
+    }
+
+
+    //-------------------------------------------------------------------------------------------
+    // User Search
+
+    fun downloadUsersByNick(nick: String): Task<MutableList<LetsGoUser>> {
+        return Database.readSearchByChild(USERS_PATH, "nick", nick).continueWithTask {
+            val uids = it.result.children.map { userData ->
+                userData.key!! }.toList()
+            downloadUserList(uids)
+        }
     }
 }
