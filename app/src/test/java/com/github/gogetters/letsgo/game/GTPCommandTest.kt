@@ -1,6 +1,5 @@
 package com.github.gogetters.letsgo.game
 
-import androidx.test.uiautomator.UiObjectNotFoundException
 import org.junit.Assert.assertEquals
 import org.junit.Rule
 import org.junit.Test
