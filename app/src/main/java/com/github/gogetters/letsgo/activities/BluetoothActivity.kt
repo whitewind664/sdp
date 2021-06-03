@@ -282,7 +282,7 @@ class BluetoothActivity : AppCompatActivity() {
         const val REQUEST_PERMISSION_FINE_LOCATION = 1
         const val REQUEST_ENABLE_BLUETOOTH = 1
 
-        val service = BluetoothGTPService()
+        val service = BluetoothGTPService(RealBluetoothService())
 
 
 

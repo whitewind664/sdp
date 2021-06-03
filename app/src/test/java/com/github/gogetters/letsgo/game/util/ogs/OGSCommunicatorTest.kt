@@ -1,7 +1,6 @@
 package com.github.gogetters.letsgo.game.util.ogs
 
 import com.github.gogetters.letsgo.game.Point
-import com.github.gogetters.letsgo.game.Stone
 import com.github.gogetters.letsgo.game.util.ogs.mocking.MockOnlineService
 import com.github.gogetters.letsgo.game.util.ogs.mocking.MockRealtimeService
 import junit.framework.Assert.*
