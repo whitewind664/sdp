@@ -106,7 +106,7 @@ class GTPCommandTest {
 
         @Test
         fun parseMoveThrowsOnEmptyArgList() {
-                exception.expect(IllegalStateException::class.java)
+                exception.expect(IllegalArgumentException::class.java)
                 GTPCommand.parseMove(emptyList())
         }
 
