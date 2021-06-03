@@ -2,7 +2,6 @@ package com.github.gogetters.letsgo.game.util.ogs.mocking
 
 import com.github.gogetters.letsgo.game.Point
 import com.github.gogetters.letsgo.game.util.ogs.*
-import org.json.Cookie
 import org.json.JSONObject
 import java.lang.IllegalArgumentException
 import java.net.CookieManager
