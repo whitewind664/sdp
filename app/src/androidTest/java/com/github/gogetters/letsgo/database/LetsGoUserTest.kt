@@ -5,6 +5,8 @@ import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.github.gogetters.letsgo.database.user.LetsGoUser
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.tasks.Tasks
+import com.google.firebase.database.ktx.database
+import com.google.firebase.ktx.Firebase
 import io.mockk.every
 import io.mockk.mockkObject
 import io.mockk.verify
@@ -224,11 +226,82 @@ class LetsGoUserTest : EmulatedFirebaseTest() {
         )
     }
 
-    @Ignore("Make this test work later")
+//    @Ignore("Make this test work later")
     @Test
     fun zTestSearchUser() {
+//        val
+
         // TODO Add some users with nicknames starting with tester and check that we indeed get them all (use users.length)
         val users = Tasks.await(user.downloadUsersByNick("tester"))
         Log.d(TAG, "Found Users : $users")
     }
+
+    //========================================================================
+    // New Tests
+
+    fun addTester1() {
+        user.apply {
+            first = "John"
+            last = "Lane"
+            city = "a"
+            country = "b"
+            nick = "testerDudeX"
+        }
+
+        Tasks.await(user.uploadUserData())
+    }
+
+    fun addTester2() {
+        user2.apply {
+            first = "Alice"
+            last = "Surf"
+            city = "zh"
+            country = "ch"
+            nick = "testerGalX"
+        }
+
+        Tasks.await(user2.uploadUserData())
+    }
+
+    fun addTester3() {
+        user3.apply {
+            first = "Bob"
+            last = "The builder"
+            city = "blockcity"
+            country = "blockland"
+            nick = "weCanFixIt"
+        }
+
+        Tasks.await(user3.uploadUserData())
+    }
+
+    @Test
+    fun testUploadUserDataOffline() {
+        Firebase.database.goOffline()
+        Tasks.await(user.uploadUserData())
+        Firebase.database.goOnline()
+    }
+
+    @Test
+    fun testDownloadUserDataOffline() {
+        Firebase.database.goOffline()
+        Tasks.await(user.downloadUserData())
+        Firebase.database.goOnline()
+    }
+
+    @Test
+    fun testDeleteUserDataOffline() {
+        Firebase.database.goOffline()
+        Tasks.await(user.deleteUserData())
+        Firebase.database.goOnline()
+    }
+
+    @Test
+    fun testDeleteFriend() {
+        Firebase.database.goOffline()
+        Tasks.await(user.deleteFriend(user2))
+        Firebase.database.goOnline()
+    }
+
+
 }

@@ -16,6 +16,16 @@ import kotlin.collections.ArrayList
  * database. The optional parameters are for testing purposes
  */
 class LetsGoUser (val uid: String) : Serializable {
+
+    companion object {
+        // Be very careful if changing path values!
+        private const val TAG = "FirestoreTest"
+        private const val USERS_PATH = "users"
+        private const val FRIEND_CHILD_PATH = "friends"
+    }
+    private val userPath = "$USERS_PATH/$uid"
+    private val userFriendsPath = "$userPath/$FRIEND_CHILD_PATH"
+
     var nick: String? = null
     var first: String? = null
     var last: String? = null
@@ -32,12 +42,6 @@ class LetsGoUser (val uid: String) : Serializable {
     var lastPositionLatitude: Double? = null
     var lastPositionLongitude: Double? = null
 
-    // Be very careful if changing path values!
-    private val tag = "FirestoreTest"
-    private val usersPath = "users"
-    private val userPath = "$usersPath/$uid"
-    private val userFriendsPath = "$userPath/friends"
-
     /**
      * Verifies if the user exists in our database
      */
@@ -46,9 +50,9 @@ class LetsGoUser (val uid: String) : Serializable {
             val userExists = it.result.value != null
 
             if (userExists) {
-                Log.d(tag, "User exists! uid: $uid")
+                Log.d(TAG, "User exists! uid: $uid")
             } else {
-                Log.e(tag, "User DOESN'T EXIST! uid: $uid")
+                Log.e(TAG, "User DOESN'T EXIST! uid: $uid")
                 throw IllegalStateException("User DOESN'T EXIST! uid: $uid")
             }
         }
@@ -74,10 +78,10 @@ class LetsGoUser (val uid: String) : Serializable {
         // Add a new document with user's uid
         return Database.updateData(userPath, userData)
             .addOnSuccessListener {
-                Log.d(tag, "LetsGoUser document added for uid: $uid")
+                Log.d(TAG, "LetsGoUser document added for uid: $uid")
             }
             .addOnFailureListener { e ->
-                Log.w(tag, "Error adding LetsGoUser document", e)
+                Log.w(TAG, "Error adding LetsGoUser document", e)
             }
     }
 
@@ -90,10 +94,10 @@ class LetsGoUser (val uid: String) : Serializable {
                 extractUserData(it.result)
             }
             .addOnSuccessListener {
-                Log.d(tag, "LetsGoUser successfully downloaded: ${toString()}")
+                Log.d(TAG, "LetsGoUser successfully downloaded: ${toString()}")
             }
             .addOnFailureListener { e ->
-                Log.w(tag, "Error downloading LetsGoUser for uid: $uid", e)
+                Log.w(TAG, "Error downloading LetsGoUser for uid: $uid", e)
             }
     }
 
@@ -123,7 +127,7 @@ class LetsGoUser (val uid: String) : Serializable {
         }
         return Database.deleteData(userPath)
             .addOnSuccessListener {
-                Log.d(tag, "LetsGoUser successfully deleted!")
+                Log.d(TAG, "LetsGoUser successfully deleted!")
                 nick = null
                 first = null
                 last = null
@@ -135,7 +139,7 @@ class LetsGoUser (val uid: String) : Serializable {
                 profileImageRef = null
             }
             .addOnFailureListener { e ->
-                Log.w(tag, "Error deleting LetsGoUser", e)
+                Log.w(TAG, "Error deleting LetsGoUser", e)
             }
     }
 
@@ -186,9 +190,9 @@ class LetsGoUser (val uid: String) : Serializable {
         return Database.deleteData("$userFriendsPath/${otherUser.uid}").continueWithTask {
             Database.deleteData("${otherUser.userFriendsPath}/${this.uid}")
         }.addOnSuccessListener {
-            Log.d(tag, "'Friend' successfully deleted")
+            Log.d(TAG, "'Friend' successfully deleted")
         }.addOnFailureListener {
-            Log.d(tag, "'Friend' FAILED to be deleted")
+            Log.d(TAG, "'Friend' FAILED to be deleted")
         }
     }
 
@@ -207,9 +211,9 @@ class LetsGoUser (val uid: String) : Serializable {
                 }
             }
         }.addOnSuccessListener {
-            Log.d(tag, "Friend Status successfully updated")
+            Log.d(TAG, "Friend Status successfully updated")
         }.addOnFailureListener {
-            Log.d(tag, "Friend Status FAILED to be updated")
+            Log.d(TAG, "Friend Status FAILED to be updated")
         }
     }
 
@@ -218,7 +222,7 @@ class LetsGoUser (val uid: String) : Serializable {
      */
     private fun updateFriendStatusHelper(otherUser: LetsGoUser, status: FriendStatus): Task<Void> {
         val path = "$userFriendsPath/${otherUser.uid}"
-        Log.d(tag, "Adding friend data. path: $path\tstatus: $status")
+        Log.d(TAG, "Adding friend data. path: $path\tstatus: $status")
 
         return Database.writeData(path, status.name);
     }
@@ -295,7 +299,7 @@ class LetsGoUser (val uid: String) : Serializable {
     // User Search
 
     fun downloadUsersByNick(nick: String): Task<MutableList<LetsGoUser>> {
-        return Database.readSearchByChild(usersPath, "nick", nick).continueWithTask {
+        return Database.readSearchByChild(USERS_PATH, "nick", nick).continueWithTask {
             downloadUserList(it.result.children.map { it.key!! }.toList())
         }
     }
