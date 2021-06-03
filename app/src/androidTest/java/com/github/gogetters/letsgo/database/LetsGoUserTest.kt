@@ -11,8 +11,7 @@ import io.mockk.every
 import io.mockk.mockkObject
 import io.mockk.verify
 import org.junit.*
-import org.junit.Assert.assertEquals
-import org.junit.Assert.assertNull
+import org.junit.Assert.*
 import org.junit.rules.ExpectedException
 import org.junit.runner.RunWith
 import org.junit.runners.MethodSorters
@@ -143,6 +142,22 @@ class LetsGoUserTest : EmulatedFirebaseTest() {
     }
 
     @Test
+    fun aLocationSharingAndUnsharingWorks() {
+        val location = LatLng(2.3432, 5.2342)
+        user2.isLookingForPlayers = false
+        Tasks.await(user2.shareLocation(location))
+        Tasks.await(user2.downloadUserData())
+        assertTrue(user2.isLookingForPlayers!!)
+        assertEquals(location.longitude, user2.lastPositionLongitude!!, 0.001)
+        assertEquals(location.latitude, user2.lastPositionLatitude!!, 0.001)
+
+        // disable again
+        Tasks.await(user2.disableLocationSharing())
+        Tasks.await(user2.downloadUserData())
+        assertFalse(user2.isLookingForPlayers!!)
+    }
+
+    @Test
     fun cTestRequestFriend() {
         Tasks.await(user.requestFriend(user2))
     }
@@ -176,8 +191,6 @@ class LetsGoUserTest : EmulatedFirebaseTest() {
     fun aaDeleteUserNotCallingStorageOnNull() {
         mockkObject(Database)
         mockkObject(CloudStorage)
-
-        every { Database.disableLocationSharing() } returns true
 
         val uid = "0"
         val user = LetsGoUser(uid)

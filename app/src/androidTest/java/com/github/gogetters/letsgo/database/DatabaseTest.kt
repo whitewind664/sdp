@@ -27,7 +27,7 @@ class DatabaseTest: EmulatedFirebaseTest() {
     }
 
     @Test
-    fun getAllLocationsDoesntThrow() {
+    fun sharedLocationDoesntAppearInGetAllLocations() {
         Database.getAllLocations()
     }
 

@@ -114,7 +114,8 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback,
 
     private fun sendLocation() {
         try {
-            if (!permissionDenied && userBundleProvider.getUserBundle() != null) {
+            val userBundle = userBundleProvider.getUserBundle()
+            if (!permissionDenied && userBundle != null) {
                 Log.i("MapsActivity", "Create request")
                 fusedLocationClient.lastLocation
                     .addOnSuccessListener { location: Location? ->
@@ -128,7 +129,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback,
                             Log.v("MapsActivity", "Location could not be shared")
                         } else {
                             // share the location with other users
-                            Database.shareLocation(
+                            userBundle.getUser().shareLocation(
                                 LatLng(
                                     location.latitude,
                                     location.longitude
