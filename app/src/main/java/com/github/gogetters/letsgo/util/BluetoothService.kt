@@ -1,8 +1,8 @@
 package com.github.gogetters.letsgo.util
 
 import android.bluetooth.BluetoothSocket
+import com.github.gogetters.letsgo.database.Authentication
 import com.github.gogetters.letsgo.database.user.FirebaseUserBundle
-import com.google.firebase.auth.FirebaseAuth
 
 interface BluetoothService {
     var handleInput: (ByteArray) -> Boolean
