@@ -72,51 +72,7 @@ class LoginActivity : AppCompatActivity() {
         }
     }
 
-    private fun signOut(onComplete: () -> Unit) {
-        AuthUI.getInstance()
-                .signOut(this)
-                .addOnCompleteListener {
-                    // ...
-                    onComplete()
-                }
-    }
-
-    private fun delete() {
-        AuthUI.getInstance()
-                .delete(this)
-                .addOnCompleteListener {
-                    // ...
-                }
-    }
-
-    private fun themeAndLogo() {
-        val providers = emptyList<AuthUI.IdpConfig>()
-
-//        startActivityForResult(
-//                AuthUI.getInstance()
-//                        .createSignInIntentBuilder()
-//                        .setAvailableProviders(providers)
-//                        .setLogo(R.drawable.my_great_logo) // Set logo drawable
-//                        .setTheme(R.style.MySuperAppTheme) // Set theme
-//                        .build(),
-//                RC_SIGN_IN)
-    }
-
-    private fun privacyAndTerms() {
-        val providers = emptyList<AuthUI.IdpConfig>()
-        startActivityForResult(
-                AuthUI.getInstance()
-                        .createSignInIntentBuilder()
-                        .setAvailableProviders(providers)
-                        .setTosAndPrivacyPolicyUrls(
-                                "https://example.com/terms.html",
-                                "https://example.com/privacy.html")
-                        .build(),
-                RC_SIGN_IN)
-    }
-
     companion object {
-
         private const val RC_SIGN_IN = 123
     }
 }

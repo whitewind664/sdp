@@ -37,7 +37,7 @@ class ProfileActivityTest : EmulatedFirebaseTest() {
     val intent = Intent(
         ApplicationProvider.getApplicationContext(),
         ProfileActivity::class.java
-    ).putExtra("UserBundleProvider", FirebaseUserBundleProvider)
+    )
 
     lateinit var scenario: ActivityScenario<ProfileActivity>
 
@@ -55,7 +55,7 @@ class ProfileActivityTest : EmulatedFirebaseTest() {
     }
 
     private fun lateInit() {
-        TestUtils.makeSureTestUserAuthentitcated()
+        TestUtils.makeSureTestUserAuthenticated()
         scenario = ActivityScenario.launch(intent)
         clickWaitButton()
     }
@@ -78,6 +78,10 @@ class ProfileActivityTest : EmulatedFirebaseTest() {
 
     @Test
     fun testIt() {
+        val testUser = LetsGoUser(Authentication.getCurrentUser()!!.uid)
+        testUser.first = "Jim"
+        Tasks.await(testUser.uploadUserData())
+
         lateInit()
         sleep()
     }

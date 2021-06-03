@@ -67,14 +67,13 @@ class Database {
             return db.getReference(ref).orderByChild(childName).startAt(queryText).endAt(queryText+"\uf8ff").get()
         }
 
-        fun enableCache() {
-            Firebase.database.setPersistenceEnabled(true)
-        }
+//         fun enableCache() {
+//            Firebase.database.setPersistenceEnabled(true)
+//         }
 
-        fun keepSynced(ref: String) {
-            val ref = Firebase.database.getReference(ref)
-            ref.keepSynced(true)
-        }
+//        fun keepSynced(ref: String) {
+//            Firebase.database.getReference(ref).keepSynced(true)
+//        }
 
         // ---- [START} Matchmaking  ----
 
