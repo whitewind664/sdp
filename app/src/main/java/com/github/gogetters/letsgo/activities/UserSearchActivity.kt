@@ -101,6 +101,7 @@ class UserSearchActivity : AppCompatActivity() {
                 }
             }
             .addOnFailureListener {
+                Log.d(TAG, "Search failed: $it")
                 adapter.clear()
                 adapter.add(UserListItem(LetsGoUser("").apply { nick = "SEARCH FAILED" }))
             }
@@ -131,7 +132,7 @@ class UserSearchActivity : AppCompatActivity() {
         SearchView.OnQueryTextListener {
         override fun onQueryTextSubmit(query: String?): Boolean {
             if (query != null) {
-                Log.d(TAG, "Searching for '$query...'")
+                Log.d(TAG, "Searching for '$query'...")
                 userSearchActivity.searchUsersOutputToRecycler(query)
             }
             return true
