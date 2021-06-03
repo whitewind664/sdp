@@ -296,9 +296,7 @@ class LetsGoUser (val uid: String) : Serializable {
 
     fun downloadUsersByNick(nick: String): Task<MutableList<LetsGoUser>> {
         return Database.readSearchByChild(usersPath, "nick", nick).continueWithTask {
-            val uids = mutableListOf<String>()
-            it.result.children.forEach { uids.add(it.key!!) }
-            downloadUserList(uids)
+            downloadUserList(it.result.children.map { it.key!! }.toList())
         }
     }
 }
