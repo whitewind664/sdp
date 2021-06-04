@@ -1,16 +1,16 @@
 package com.github.gogetters.letsgo.activities
 
 import android.app.Activity
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import com.firebase.ui.auth.AuthUI
 import com.firebase.ui.auth.IdpResponse
+import com.github.gogetters.letsgo.cache.Cache
 import com.github.gogetters.letsgo.database.Authentication
 import com.github.gogetters.letsgo.database.user.FirebaseUserBundle
 import com.github.gogetters.letsgo.database.user.FirebaseUserBundleProvider
-import com.google.firebase.auth.FirebaseAuth
 
 class LoginActivity : AppCompatActivity() {
 
@@ -57,6 +57,13 @@ class LoginActivity : AppCompatActivity() {
                 letsGoUser.requireUserExists().addOnFailureListener {
                     // this means that the user does not yet exist
                     letsGoUser.uploadUserData()
+                }
+
+                val sharedPref = getSharedPreferences(Cache.PREF_ID, Context.MODE_PRIVATE)
+                val cachedUid = Cache.readStoredUid(getSharedPreferences(Cache.PREF_ID, Context.MODE_PRIVATE))
+
+                if (cachedUid != null && user.uid != cachedUid) {
+                    sharedPref.edit().clear().apply()
                 }
 
                 val intent = Intent(this, ProfileActivity::class.java)

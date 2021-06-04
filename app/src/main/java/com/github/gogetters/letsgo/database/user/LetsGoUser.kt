@@ -3,6 +3,7 @@ package com.github.gogetters.letsgo.database.user
 import android.util.Log
 import com.github.gogetters.letsgo.database.CloudStorage
 import com.github.gogetters.letsgo.database.Database
+import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.tasks.Task
 import com.google.android.gms.tasks.Tasks
 import com.google.firebase.database.DataSnapshot
@@ -315,5 +316,27 @@ class LetsGoUser (val uid: String) : Serializable {
                 userData.key!! }.toList()
             downloadUserList(uids)
         }
+    }
+
+    //-------------------------------------------------------------------------------------------
+    // User Search
+
+    /**
+     * Activates the location sharing and sends location to database.
+     * Returns true when the data has been sent to the database
+     */
+    fun shareLocation(location: LatLng): Task<Void> {
+        isLookingForPlayers = true
+        lastPositionLatitude = location.latitude
+        lastPositionLongitude = location.longitude
+        return uploadUserData()
+    }
+
+    /**
+     * Stops the displaying of the position with other users (not looking for a new game anymore)
+     */
+    fun disableLocationSharing(): Task<Void> {
+        isLookingForPlayers = false
+        return uploadUserData()
     }
 }

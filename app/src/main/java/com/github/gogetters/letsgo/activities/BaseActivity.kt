@@ -9,6 +9,7 @@ import androidx.appcompat.widget.Toolbar
 import com.github.gogetters.letsgo.R
 import com.github.gogetters.letsgo.database.Database
 import com.github.gogetters.letsgo.game.Player
+import com.github.gogetters.letsgo.game.Stone
 import com.google.android.material.bottomnavigation.LabelVisibilityMode
 import kotlinx.android.synthetic.main.activity_base.*
 
@@ -32,7 +33,7 @@ abstract class BaseActivity : AppCompatActivity() {
     }
 
     private fun configureToolbar() {
-        toolbar = findViewById<View>(R.id.main_toolbar) as Toolbar
+        toolbar = findViewById<View>(R.id.main_toolbar) as Toolbar?
         if (toolbar != null) {
             setSupportActionBar(toolbar)
             setupBottomNavigationMenu()
@@ -45,13 +46,7 @@ abstract class BaseActivity : AppCompatActivity() {
         bottomNavigation.setOnNavigationItemSelectedListener { item ->
             when(item.itemId) {
                 R.id.item1 -> {
-                    val intent = Intent(this, GameActivity::class.java).apply {
-                        putExtra(GameActivity.EXTRA_GAME_SIZE, 9)
-                        putExtra(GameActivity.EXTRA_KOMI, 5.5)
-                        val localType = Player.PlayerTypes.LOCAL.ordinal
-                        putExtra(GameActivity.EXTRA_PLAYER_BLACK, localType)
-                        putExtra(GameActivity.EXTRA_PLAYER_WHITE, localType)
-                    }
+                    val intent = Intent(this, GameModeChooserActivity::class.java)
                     startActivity(intent)
                     true
                 }

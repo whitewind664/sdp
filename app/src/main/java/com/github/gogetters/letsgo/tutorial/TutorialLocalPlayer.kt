@@ -2,13 +2,12 @@ package com.github.gogetters.letsgo.tutorial
 
 import android.util.Log
 import com.github.gogetters.letsgo.game.BoardState
-import com.github.gogetters.letsgo.game.LocalPlayer
+import com.github.gogetters.letsgo.game.DelegatedPlayer
 import com.github.gogetters.letsgo.game.Move
 import com.github.gogetters.letsgo.game.Stone
-import com.github.gogetters.letsgo.game.exceptions.IllegalMoveException
 import com.github.gogetters.letsgo.game.util.InputDelegate
 
-internal class TutorialLocalPlayer(inputDelegate: InputDelegate): LocalPlayer(Stone.BLACK, inputDelegate) {
+internal class TutorialLocalPlayer(inputDelegate: InputDelegate): DelegatedPlayer(Stone.BLACK, inputDelegate) {
 
     /**
      *  Contains the recommended moves per turn of the local player
