@@ -1,5 +1,6 @@
 package com.github.gogetters.letsgo.matchmaking;
 
+import androidx.test.core.app.ActivityScenario.launch
 import androidx.test.espresso.Espresso
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.action.ViewActions
@@ -43,6 +44,8 @@ class OnlinePlayTest: EmulatedFirebaseTest() {
 
     @Test
     fun queueRankedAndLeave() {
+        val activityScenario = launch(MainActivity::class.java)
+
         Authentication.signOut()
         Authentication.anonymousSignIn()
         onView(withId(R.id.main_button_play)).perform(click())
