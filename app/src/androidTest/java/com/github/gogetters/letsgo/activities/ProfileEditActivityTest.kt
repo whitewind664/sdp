@@ -71,6 +71,8 @@ class ProfileEditActivityTest : EmulatedFirebaseTest() {
     @Test
     fun profileActuallyEditsNewInputs() {
         val user = FirebaseUserBundleProvider.getUserBundle()!!.getUser()
+        user.first = "oldFirst"
+        Tasks.await(user.uploadUserData())
         Tasks.await(user.downloadUserData())
         val oldFirst = user.first
 
