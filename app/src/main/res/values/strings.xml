@@ -11,6 +11,7 @@
     <string name="game_scoreDefaultText">0</string>
     <string name="game_blackTurn">BLACK plays next</string>
     <string name="game_whiteTurn">WHITE plays next</string>
+    <string name="game_endOfGame">Game is over. Count territories!</string>
 
     <string name="go">Go</string>
     <string name="user_name">User Name</string>

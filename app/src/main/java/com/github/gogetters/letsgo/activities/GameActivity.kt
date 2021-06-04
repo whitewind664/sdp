@@ -1,6 +1,8 @@
 package com.github.gogetters.letsgo.activities
 
 import android.os.Bundle
+import android.view.View
+import android.widget.Button
 import android.widget.FrameLayout
 import android.widget.TextView
 import com.github.gogetters.letsgo.R
@@ -24,6 +26,7 @@ class GameActivity : BaseActivity() {
     private lateinit var turnText: TextView
     private lateinit var blackScore: TextView
     private lateinit var whiteScore: TextView
+    private lateinit var passButton: Button
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -50,9 +53,12 @@ class GameActivity : BaseActivity() {
         turnText = findViewById(R.id.game_textView_turnIndication)
         blackScore = findViewById(R.id.game_textView_blackScore)
         whiteScore = findViewById(R.id.game_textView_whiteScore)
+        passButton = findViewById(R.id.game_button_pass)
 
-        val blackPlayer = Player.playerOf(Stone.BLACK, blackType, touchInputDelegate, bluetoothService)
-        val whitePlayer = Player.playerOf(Stone.WHITE, whiteType, touchInputDelegate, bluetoothService)
+        val blackPlayer =
+            Player.playerOf(Stone.BLACK, blackType, touchInputDelegate, bluetoothService)
+        val whitePlayer =
+            Player.playerOf(Stone.WHITE, whiteType, touchInputDelegate, bluetoothService)
 
         game = Game(boardSize, komi, whitePlayer, blackPlayer)
 
@@ -68,7 +74,10 @@ class GameActivity : BaseActivity() {
 
                 boardState = game.playTurn()
             }
-            // TODO handle UI of end of game (points are not counted by computer)
+
+            runOnUiThread {
+                displayEndOfGame()
+            }
         }
     }
 
@@ -82,13 +91,18 @@ class GameActivity : BaseActivity() {
     }
 
     private fun updateTurnText(lastMove: Move?) {
-        if(lastMove?.stone == Stone.BLACK) {
+        if (lastMove?.stone == Stone.BLACK) {
             // White's turn
             turnText.text = resources.getString(R.string.game_whiteTurn)
         } else {
             // Black's turn
             turnText.text = resources.getString(R.string.game_blackTurn)
         }
+    }
+
+    private fun displayEndOfGame() {
+        turnText.text = resources.getString(R.string.game_endOfGame)
+        passButton.visibility = View.GONE
     }
 
 }
