@@ -107,6 +107,7 @@ class UserSearchActivityTest : EmulatedFirebaseTest() {
         assertEquals(LetsGoUser.FriendStatus.REQUESTED, otherUser.getFriendStatus(user))
     }
 
+    @Ignore
     @Test
     fun friendCannotBeAskedAgainToBecomeFriendButCanBeDeleted() {
         val user = FirebaseUserBundleProvider.getUserBundle()!!.getUser()
@@ -144,6 +145,7 @@ class UserSearchActivityTest : EmulatedFirebaseTest() {
         assertEquals(null, user.getFriendStatus(otherUser))
     }
 
+    @Ignore
     @Test
     fun canAcceptFriendRequest() {
         val user = FirebaseUserBundleProvider.getUserBundle()!!.getUser()
