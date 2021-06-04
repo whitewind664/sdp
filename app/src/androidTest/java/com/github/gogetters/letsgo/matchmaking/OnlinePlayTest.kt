@@ -33,8 +33,8 @@ class OnlinePlayTest: EmulatedFirebaseTest() {
         FirebaseApp.initializeApp(appContext)
     }
 
-//    @get:Rule
-//    var activityRule = ActivityScenarioRule(MainActivity::class.java)
+    @get:Rule
+    var activityRule = ActivityScenarioRule(MainActivity::class.java)
 
     @After
     fun cleanUp() {
@@ -44,8 +44,6 @@ class OnlinePlayTest: EmulatedFirebaseTest() {
 
     @Test
     fun queueRankedAndLeave() {
-        val activityScenario = launch(MainActivity::class.java)
-
         Authentication.signOut()
         Authentication.anonymousSignIn()
         onView(withId(R.id.main_button_play)).perform(click())
