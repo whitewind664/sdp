@@ -9,11 +9,9 @@ import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.ext.junit.rules.ActivityScenarioRule
 import androidx.test.ext.junit.runners.AndroidJUnit4
-import androidx.test.platform.app.InstrumentationRegistry
-import androidx.test.uiautomator.UiDevice
-import androidx.test.uiautomator.UiSelector
 import com.github.gogetters.letsgo.R
 import com.github.gogetters.letsgo.database.EmulatedFirebaseTest
+import com.github.gogetters.letsgo.testUtil.TestUtils
 import org.junit.After
 import org.junit.Before
 import org.junit.Rule
@@ -29,12 +27,7 @@ class GameModeChooserActivityTest: EmulatedFirebaseTest() {
     fun init() {
         Intents.init()
 
-        val device = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation())
-        var waitButton = device.findObject(UiSelector().textContains("wait"))
-        if (waitButton.exists()) {
-            waitButton.click()
-        }
-        //Thread.sleep(5000)
+        TestUtils.clickWaitButton()
     }
 
     @After

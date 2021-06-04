@@ -2,7 +2,7 @@ package com.github.gogetters.letsgo.game
 
 data class BoardState(val board: HashMap<Point, Stone>, val koMove: Move?,
                  val whiteScore: Int, val blackScore: Int,
-                 val gameOver: Boolean=false, val lastMove: Move? = null) {
+                 val gameOver: Boolean=false, val lastMove: Move?=null) {
 
     companion object {
         fun emptyBoard(size: Board.Size): HashMap<Point, Stone> {

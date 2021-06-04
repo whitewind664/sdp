@@ -56,8 +56,6 @@ open class GoView(context: Context, private val boardSize: Board.Size) : View(co
         val adjustedY = (y - marginY).coerceAtLeast(0F).coerceAtMost(maxY)
 
 
-
-
         val col = (adjustedX / squareWidth).roundToInt() + 1
         val row = (adjustedY / squareHeight).roundToInt() + 1
         return Point(col, row)
@@ -158,5 +156,4 @@ open class GoView(context: Context, private val boardSize: Board.Size) : View(co
 
         return true
     }
-
 }

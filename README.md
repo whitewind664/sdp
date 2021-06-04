@@ -6,6 +6,12 @@ Cirrus CI: [![Build Status](https://api.cirrus-ci.com/github/whitewind664/sdp.sv
 
 Code Climate: [![Test Coverage](https://api.codeclimate.com/v1/badges/eb499ed5d368f682cb26/test_coverage)](https://codeclimate.com/github/whitewind664/sdp/test_coverage) [![Maintainability](https://api.codeclimate.com/v1/badges/eb499ed5d368f682cb26/maintainability)](https://codeclimate.com/github/whitewind664/sdp/maintainability)
 
+## Configure
+To configure the app with the release code found in this repo, your device needs to be enabled for the Google Map API. Please get in touch with us for this purpose.
+
+## Usage Instructions
+- To use the full functionality of the app, you need to log in. To do so, you can go to "See Profile". Functionalities that to not work
+
 ## Description
 An Android app that is realized as part of the SDP course at EPFL.
 
@@ -16,7 +22,7 @@ Standalone client for playing Go online against real players and offline against
  - Custom matchmaking that takes into account GPS position of players
  - Support for “teaching games”: so that teachers can supervise students’ games and give them advice
 
-# Requirements
+## Requirements
 ## Split app model
 OGS website has an API that we can interface to play multiplayer games with players that have an OGS account, and has features like tournaments/forums. Most likely firebase for backend. We can store games with the history of moves with engine evaluations, forum posts and more.
 
