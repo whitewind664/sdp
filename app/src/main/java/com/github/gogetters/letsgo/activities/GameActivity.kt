@@ -59,6 +59,7 @@ class GameActivity : BaseActivity() {
         goView = GoView(this, boardSize)
         val boardFrame = findViewById<FrameLayout>(R.id.game_frameLayout_boardFrame)
         boardFrame.addView(goView)
+        turnText = findViewById(R.id.game_textView_turnIndication)
         blackScore = findViewById(R.id.game_textView_blackScore)
         whiteScore = findViewById(R.id.game_textView_whiteScore)
         passButton = findViewById(R.id.game_button_pass)
