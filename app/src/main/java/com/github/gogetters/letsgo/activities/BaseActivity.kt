@@ -33,7 +33,7 @@ abstract class BaseActivity : AppCompatActivity() {
     }
 
     private fun configureToolbar() {
-        toolbar = findViewById<View>(R.id.main_toolbar) as Toolbar
+        toolbar = findViewById<View>(R.id.main_toolbar) as Toolbar?
         if (toolbar != null) {
             setSupportActionBar(toolbar)
             setupBottomNavigationMenu()

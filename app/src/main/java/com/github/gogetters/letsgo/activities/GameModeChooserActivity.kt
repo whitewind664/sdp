@@ -8,6 +8,7 @@ import com.github.gogetters.letsgo.R
 import com.github.gogetters.letsgo.game.Player
 import com.github.gogetters.letsgo.game.Stone
 import com.github.gogetters.letsgo.game.util.ogs.*
+import com.github.gogetters.letsgo.matchmaking.Matchmaking
 import java.util.*
 
 class GameModeChooserActivity : BaseActivity() {
@@ -15,6 +16,8 @@ class GameModeChooserActivity : BaseActivity() {
     private lateinit var titleText: TextView
     private lateinit var localButton: Button
     private lateinit var ogsButton: Button
+    private lateinit var rankedButton: Button
+    private lateinit var unrankedButton: Button
     private lateinit var btButton: Button
     private lateinit var usernameEditText: EditText
     private lateinit var passwordEditText: EditText
@@ -50,9 +53,25 @@ class GameModeChooserActivity : BaseActivity() {
             startActivity(intent)
         }
 
-        ogsButton = findViewById(R.id.gameModeChooser_button_ogs)
-        ogsButton.setOnClickListener {
-            initOGS()
+//        ogsButton = findViewById(R.id.gameModeChooser_button_ogs)
+//        ogsButton.setOnClickListener {
+//            initOGS()
+//        }
+
+        rankedButton = findViewById(R.id.gameModeChooser_button_ranked)
+        rankedButton.setOnClickListener {
+            val intent = Intent(this, WaitMatchActivity::class.java).apply {
+                putExtra(WaitMatchActivity.EXTRA_IS_RANKED, true)
+            }
+            startActivity(intent)
+        }
+
+        unrankedButton = findViewById(R.id.gameModeChooser_button_unranked)
+        unrankedButton.setOnClickListener {
+            val intent = Intent(this, WaitMatchActivity::class.java).apply {
+                putExtra(WaitMatchActivity.EXTRA_IS_RANKED, false)
+            }
+            startActivity(intent)
         }
 
         btButton = findViewById(R.id.gameModeChooser_button_bluetooth)

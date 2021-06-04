@@ -56,8 +56,11 @@
         <activity
             android:name=".activities.LoginActivity"
             android:label="@string/title_activity_firebaseui" />
-        <activity android:name=".activities.FuckTests"
-            android:exported="true"/>
+        <activity
+            android:name=".activities.WaitMatchActivity"
+            android:label="@string/title_activity_waitMatch" />
+<!--        <activity android:name=".activities.FuckTests"-->
+<!--            android:exported="true"/>-->
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"

@@ -6,6 +6,7 @@ import com.github.gogetters.letsgo.R
 import com.github.gogetters.letsgo.game.*
 import com.github.gogetters.letsgo.game.util.InputDelegate
 import com.github.gogetters.letsgo.game.util.RemoteService
+import com.github.gogetters.letsgo.game.util.firebase.FirebaseService
 import com.github.gogetters.letsgo.game.util.ogs.OGSCommunicatorService
 import com.github.gogetters.letsgo.game.view.GoView
 import com.github.gogetters.letsgo.util.BluetoothGTPService
@@ -19,6 +20,7 @@ class GameActivity : BaseActivity() {
         const val EXTRA_KOMI = "com.github.gogetters.letsgo.game.KOMI"
         const val EXTRA_GAME_TYPE = "com.github.gogetters.letsgo.game.GAME_TYPE"
         const val EXTRA_LOCAL_COLOR = "com.github.gogetters.letsgo.game.LOCAL_COLOR"
+        const val EXTRA_GAME_ID = "com.github.gogetters.letsgo.game.GAME_ID"
     }
 
     private lateinit var game: Game
@@ -31,6 +33,7 @@ class GameActivity : BaseActivity() {
         val komi = intent.getDoubleExtra(EXTRA_KOMI, 5.5)
         val gameType = intent.getStringExtra(EXTRA_GAME_TYPE)
         val localColorString = intent.getStringExtra(EXTRA_LOCAL_COLOR)
+        val gameId = intent.getStringExtra(EXTRA_GAME_ID)
         val localColor = Stone.fromString(localColorString!!)
 
         if (localColor == Stone.EMPTY)
@@ -51,17 +54,23 @@ class GameActivity : BaseActivity() {
             "LOCAL" -> Pair(DelegatedPlayer(Stone.BLACK, touchInputDelegate),
                     DelegatedPlayer(Stone.WHITE, touchInputDelegate))
 
-            "BLUETOOTH", "OGS" -> {
+            "BLUETOOTH", "OGS", "FIREBASE" -> {
                 val service = when (gameType) {
                     "BLUETOOTH" -> BluetoothActivity.service
                     "OGS" -> OGSCommunicatorService.service
+                    "FIREBASE" -> FirebaseService(gameId!!, localColor)
                     else -> throw IllegalArgumentException("illegal game type $gameType")
                 }
 
-                service.inputDelegate = InputDelegate()
+                if (gameType == "FIREBASE") {
+                    (service as FirebaseService).setDelegate(InputDelegate())
+                } else {
+                    service.inputDelegate = InputDelegate()
+                }
                 Pair(RemotePlayerAdapter(DelegatedPlayer(Stone.BLACK, touchInputDelegate), service),
                         DelegatedPlayer(Stone.WHITE, service.inputDelegate))
             }
+
             else -> throw IllegalArgumentException("illegal game type $gameType")
         }
 
