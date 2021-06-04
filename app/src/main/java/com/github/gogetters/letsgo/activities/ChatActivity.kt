@@ -39,7 +39,11 @@ class ChatActivity : AppCompatActivity() {
         setContentView(R.layout.activity_chat)
 
         chat_recyclerview_messages.adapter = adapter
-        userId = Authentication.getCurrentUser()!!.uid
+        val currentUser = Authentication.getCurrentUser()
+        if (currentUser == null) {
+            finish()
+        }
+        userId = currentUser!!.uid
         toUser = intent.getSerializableExtra(ChatNewMessageActivity.KEY) as LetsGoUser
 
         sharedPreferences = applicationContext.getSharedPreferences(Cache.PREF_ID, Context.MODE_PRIVATE)
