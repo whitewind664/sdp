@@ -5,6 +5,7 @@ import android.view.View
 import android.widget.Button
 import android.widget.FrameLayout
 import android.widget.TextView
+import android.widget.Toast
 import com.github.gogetters.letsgo.R
 import com.github.gogetters.letsgo.game.*
 import com.github.gogetters.letsgo.game.util.InputDelegate
@@ -28,6 +29,9 @@ class GameActivity : BaseActivity() {
     private lateinit var whiteScore: TextView
     private lateinit var passButton: Button
 
+    private lateinit var blackTurnText: String
+    private lateinit var whiteTurnText: String
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -36,6 +40,7 @@ class GameActivity : BaseActivity() {
         val komi = intent.getDoubleExtra(EXTRA_KOMI, 5.5)
         val blackType = intent.getIntExtra(EXTRA_PLAYER_BLACK, 0)
         val whiteType = intent.getIntExtra(EXTRA_PLAYER_WHITE, 0)
+        setInfoAboutThisPlayers(blackType, whiteType)
 
         //TODO: unify "input providers???"
         val bluetoothService = BluetoothActivity.service
@@ -90,13 +95,40 @@ class GameActivity : BaseActivity() {
         goView.updateBoardState(boardState)
     }
 
+    /**
+     * Based on the types of the players, pops up your color and
+     * sets the turn text messages accordingly (so that you always know if you are black or white)
+     */
+    private fun setInfoAboutThisPlayers(blackType: Int, whiteType: Int) {
+        // popup
+        if (blackType == Player.PlayerTypes.BTLOCAL.ordinal) {
+            showLongToast(resources.getString(R.string.game_startAsBlack))
+        } else if (whiteType == Player.PlayerTypes.BTLOCAL.ordinal) {
+            showLongToast(resources.getString(R.string.game_startAsWhite))
+        }
+        // sets messages
+        // TODO update for online play
+        blackTurnText = when (blackType) {
+            Player.PlayerTypes.BTLOCAL.ordinal -> resources.getString(R.string.game_blackYouTurn)
+            else -> resources.getString(R.string.game_blackTurn)
+        }
+        whiteTurnText = when (whiteType) {
+            Player.PlayerTypes.BTLOCAL.ordinal -> resources.getString(R.string.game_whiteYouTurn)
+            else -> resources.getString(R.string.game_whiteTurn)
+        }
+    }
+
+    private fun showLongToast(text: String) {
+        Toast.makeText(this, text, Toast.LENGTH_LONG).show()
+    }
+
     private fun updateTurnText(lastMove: Move?) {
         if (lastMove?.stone == Stone.BLACK) {
             // White's turn
-            turnText.text = resources.getString(R.string.game_whiteTurn)
+            turnText.text = whiteTurnText
         } else {
             // Black's turn
-            turnText.text = resources.getString(R.string.game_blackTurn)
+            turnText.text = blackTurnText
         }
     }
 

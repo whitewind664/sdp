@@ -11,7 +11,12 @@
     <string name="game_scoreDefaultText">0</string>
     <string name="game_blackTurn">BLACK plays next</string>
     <string name="game_whiteTurn">WHITE plays next</string>
+    <string name="game_blackYouTurn">YOU (black) play next</string>
+    <string name="game_whiteYouTurn">YOU (white) play next</string>
     <string name="game_endOfGame">Game is over. Count territories!</string>
+    <string name="game_startAsBlack">The game starts! You play as BLACK.</string>
+    <string name="game_startAsWhite">The game starts! You play as WHITE.</string>
+
 
     <string name="go">Go</string>
     <string name="user_name">User Name</string>

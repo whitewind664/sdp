@@ -13,6 +13,8 @@ import androidx.test.uiautomator.*
 import com.github.gogetters.letsgo.R
 import com.github.gogetters.letsgo.database.Database
 import com.github.gogetters.letsgo.database.EmulatedFirebaseTest
+import com.github.gogetters.letsgo.testUtil.TestUtils
+import com.github.gogetters.letsgo.testUtil.TestUtils.Companion.sleep
 import com.google.android.gms.maps.model.LatLng
 import junit.framework.Assert.assertFalse
 import junit.framework.Assert.assertTrue
@@ -40,24 +42,13 @@ class MapsActivityTest : EmulatedFirebaseTest() {
     @get:Rule
     val exception: ExpectedException = ExpectedException.none()
 
-    private fun sleep() {
-        try {
-            Thread.sleep(PERMISSIONS_DELAY)
-        } catch (e: InterruptedException) {
-            throw RuntimeException("Cannot execute Thread.sleep()")
-        }
-    }
 
     @get:Rule
     var activityRule = ActivityScenarioRule(MapsActivity::class.java)
 
     @Before
     fun init() {
-        val device = UiDevice.getInstance(getInstrumentation())
-        var waitButton = device.findObject(UiSelector().textContains("wait"))
-        if (waitButton.exists()) {
-            waitButton.click()
-        }
+        TestUtils.clickWaitButton()
     }
 
     @After
