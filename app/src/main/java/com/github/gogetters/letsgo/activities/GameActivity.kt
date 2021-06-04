@@ -42,7 +42,7 @@ class GameActivity : BaseActivity() {
         goView.inputDelegate = touchInputDelegate
 
 
-        val (whitePlayer: Player, blackPlayer: Player) = when (gameType) {
+        val (blackPlayer: Player, whitePlayer: Player) = when (gameType) {
 
             "LOCAL" -> Pair(DelegatedPlayer(Stone.BLACK, touchInputDelegate),
                     DelegatedPlayer(Stone.WHITE, touchInputDelegate))
