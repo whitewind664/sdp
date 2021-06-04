@@ -8,7 +8,6 @@ import com.github.gogetters.letsgo.R
 import com.github.gogetters.letsgo.database.Authentication
 import com.github.gogetters.letsgo.game.Player
 import com.github.gogetters.letsgo.game.Stone
-import com.github.gogetters.letsgo.game.util.ogs.*
 import com.github.gogetters.letsgo.matchmaking.Matchmaking
 import java.util.*
 
@@ -16,15 +15,9 @@ class GameModeChooserActivity : BaseActivity() {
 
     private lateinit var titleText: TextView
     private lateinit var localButton: Button
-    private lateinit var ogsButton: Button
     private lateinit var rankedButton: Button
     private lateinit var unrankedButton: Button
     private lateinit var btButton: Button
-    private lateinit var usernameEditText: EditText
-    private lateinit var passwordEditText: EditText
-    private lateinit var submitButton: Button
-
-    private lateinit var ogs: OGSCommunicatorService
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -38,9 +31,6 @@ class GameModeChooserActivity : BaseActivity() {
 
     private fun initButtons() {
         titleText = findViewById(R.id.gameModeChooser_textView_title)
-        usernameEditText = findViewById(R.id.gameModeChooser_editText_loginUsername)
-        passwordEditText = findViewById(R.id.gameModeChooser_editText_loginPassword)
-        submitButton = findViewById(R.id.gameModeChooser_button_loginSubmit)
 
         localButton = findViewById<Button>(R.id.gameModeChooser_button_local)
         localButton.setOnClickListener {
@@ -53,11 +43,6 @@ class GameModeChooserActivity : BaseActivity() {
             }
             startActivity(intent)
         }
-
-//        ogsButton = findViewById(R.id.gameModeChooser_button_ogs)
-//        ogsButton.setOnClickListener {
-//            initOGS()
-//        }
 
         rankedButton = findViewById(R.id.gameModeChooser_button_ranked)
         rankedButton.setOnClickListener {
@@ -86,51 +71,6 @@ class GameModeChooserActivity : BaseActivity() {
         btButton.setOnClickListener {
             val intent = Intent(this, BluetoothActivity::class.java)
             startActivity(intent)
-        }
-    }
-
-
-
-    private fun initOGS() {
-        titleText.text = resources.getString(R.string.gameModeChooser_loginTitle)
-        localButton.visibility = View.GONE
-        ogsButton.visibility = View.GONE
-        btButton.visibility = View.GONE
-        usernameEditText.visibility = View.VISIBLE
-        passwordEditText.visibility = View.VISIBLE
-        submitButton.visibility = View.VISIBLE
-
-        ogs = OGSCommunicatorService(
-                VolleyOnlineService(this),
-                SocketIOService(),
-                resources.getString(R.string.ogs_client_id),
-                resources.getString(R.string.ogs_client_secret))
-        val challengeButton = findViewById<Button>(R.id.gameModeChooser_button_challenge)
-
-        submitButton.setOnClickListener {
-            val username = usernameEditText.text.toString()
-            val password = passwordEditText.text.toString()
-            //TODO change back
-            ogs.authenticate("kimonroxd","online-go.com").setOnResponse {
-                val result = if (it) "Successful" else "Failed"
-                Toast.makeText(this@GameModeChooserActivity,
-                        "Authentication $result", Toast.LENGTH_LONG).show()
-                if (it) {
-                    challengeButton.visibility = View.VISIBLE
-                }
-            }
-        }
-
-        challengeButton.setOnClickListener {
-            ogs.startChallenge().setOnResponse {
-                val intent = Intent(this, GameActivity::class.java).apply {
-                    putExtra(GameActivity.EXTRA_GAME_SIZE, 9)
-                    putExtra(GameActivity.EXTRA_KOMI, 5.5)
-                    putExtra(GameActivity.EXTRA_LOCAL_COLOR, Stone.BLACK.toString())
-                    putExtra(GameActivity.EXTRA_GAME_TYPE, "OGS")
-                }
-                startActivity(intent)
-            }
         }
     }
 }

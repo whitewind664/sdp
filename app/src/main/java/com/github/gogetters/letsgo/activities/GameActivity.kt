@@ -12,7 +12,6 @@ import com.github.gogetters.letsgo.R
 import com.github.gogetters.letsgo.game.*
 import com.github.gogetters.letsgo.game.util.InputDelegate
 import com.github.gogetters.letsgo.game.util.firebase.FirebaseService
-import com.github.gogetters.letsgo.game.util.ogs.OGSCommunicatorService
 import com.github.gogetters.letsgo.game.view.GoView
 import com.github.gogetters.letsgo.matchmaking.Matchmaking
 import kotlinx.coroutines.GlobalScope
@@ -77,11 +76,10 @@ class GameActivity : BaseActivity() {
             "LOCAL" -> Pair(DelegatedPlayer(Stone.BLACK, touchInputDelegate),
                     DelegatedPlayer(Stone.WHITE, touchInputDelegate))
 
-            "BLUETOOTH", "OGS", "FIREBASE" -> {
+            "BLUETOOTH", "FIREBASE" -> {
 
                 val service = when (gameType) {
                     "BLUETOOTH" -> BluetoothActivity.service
-                    "OGS" -> OGSCommunicatorService.service
                     "FIREBASE" -> FirebaseService(gameId!!, localColor)
                     else -> throw IllegalArgumentException("illegal game type $gameType")
                 }

@@ -109,7 +109,6 @@
     <string name="profile_gallerySelectionTitle">Select Profile Picture</string>
 
     <string name="gameModeChooser_buttonLocal">Local</string>
-    <string name="gameModeChooser_buttonOGS">Online via Online-Go</string>
     <string name="gameModeChooser_buttonBluetooth">Bluetooth</string>
     <string name="gameModeChooser_buttonRanked">Online Ranked</string>
     <string name="gameModeChooser_buttonUnranked">Online Unranked</string>
@@ -119,8 +118,6 @@
     <string name="gameModeChooser_loginPassword">Your password</string>
     <string name="gameModeChooser_buttonLoginSubmit">Submit</string>
     <string name="gameModeChooser_buttonChallenge">Create Challenge</string>
-    <string name="ogs_client_id">iwEQK38MjhLnudkiY6vJkrk6roGXks4iSA6fE6ln</string>
-    <string name="ogs_client_secret">8L9EX4cFGKyylq9a5rw4aBo4G0vzCtaWdszQdcAex8xr9dMJ46xSLuKqUfieKnQydYldq9PgwYeOSsET6XbPLbomniIWh4Bixa5OrIDpfQrpkL7veUiRWz9GFN4NQVRW</string>
 
     <!--
     This string is used for square devices and overridden by hello_world in
@@ -156,6 +153,5 @@
     <string name="search_users">Search Users</string>
     <string name="anon_name">Anonymous Go Player</string>
 
-    <string name="OGSChallenge">{"initialized":false,"min_ranking":-1000,"max_ranking":1000,"challenger_color":"black","game":{"handicap":0,"time_control":"simple","challenger_color":"white","rules":"chinese","ranked":false,"width":9,"height":9,"komi_auto":"automatic","komi":null,"disable_analysis":false,"pause_on_weekends":false,"initial_state":null,"private":false,"name":"Friendly Match","time_control_parameters":{"system":"simple","speed":"blitz","per_move":5,"pause_on_weekends":false,"time_control":"simple"}},"aga_ranked":false}</string>
 
 </resources>
