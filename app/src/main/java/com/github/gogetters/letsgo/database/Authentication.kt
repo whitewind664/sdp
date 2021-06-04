@@ -15,6 +15,10 @@ object Authentication {
         auth.signOut()
     }
 
+    fun anonymousSignIn() {
+        auth.signInAnonymously()
+    }
+
     fun getUid(): String? {
         return auth.uid
     }
