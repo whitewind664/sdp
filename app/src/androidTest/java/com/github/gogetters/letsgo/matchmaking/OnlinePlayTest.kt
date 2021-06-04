@@ -39,9 +39,10 @@ class OnlinePlayTest: EmulatedFirebaseTest() {
 
     @After
     fun cleanUp() {
-//        activityRule.scenario.close()
-        activityRule.scenario.moveToState(Lifecycle.State.DESTROYED)
+        activityRule.scenario.close()
+//        activityRule.scenario.moveToState(Lifecycle.State.DESTROYED)
         Authentication.signOut()
+        TestUtils.sleep()
     }
 
     @Test
@@ -65,9 +66,9 @@ class OnlinePlayTest: EmulatedFirebaseTest() {
         x = Tasks.await(Database.readData("/matchmaking/currentlyWaiting/ranked")).value
         assertEquals(null, x)
 
-//        Matchmaking.surrender()
-//        TestUtils.sleep()
-//        x = Tasks.await(Database.readData("/matchmaking/users/${Authentication.getUid()}/rating")).getValue(Int::class.java)
-//        assertNotEquals(1500, x)
+        Matchmaking.surrender()
+        TestUtils.sleep()
+        x = Tasks.await(Database.readData("/matchmaking/users/${Authentication.getUid()}/rating")).getValue(Int::class.java)
+        assertNotEquals(1500, x)
     }
 }
