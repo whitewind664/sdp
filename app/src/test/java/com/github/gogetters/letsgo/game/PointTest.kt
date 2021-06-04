@@ -71,4 +71,5 @@ class PointTest {
         val pointString = "a1"
         assertEquals(pointString, Point.fromString(pointString).toString())
     }
+
 }
