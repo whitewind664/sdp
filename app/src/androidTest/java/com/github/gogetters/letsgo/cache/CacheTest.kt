@@ -85,7 +85,7 @@ class SharedPreferencesTest {
 
         }.apply()
 
-        val user = loadUserProfile(sharedPreferences)
+        val user = loadUserProfile(sharedPreferences, null)
 
         assertEquals(UID, user?.uid)
         assertEquals(NICK, user?.nick)

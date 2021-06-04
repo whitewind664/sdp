@@ -1,8 +1,10 @@
 package com.github.gogetters.letsgo.cache
 
+import android.content.Context
 import android.content.SharedPreferences
 import com.github.gogetters.letsgo.chat.model.ChatMessageData
 import com.github.gogetters.letsgo.database.user.LetsGoUser
+import com.google.firebase.auth.FirebaseAuth
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import java.lang.reflect.Type
@@ -51,9 +53,16 @@ class Cache {
         /**
          * Enables loading user info from local cache for the profile activity UI
          */
-        fun loadUserProfile(sharedPreferences: SharedPreferences?): LetsGoUser? {
+        fun loadUserProfile(sharedPreferences: SharedPreferences?, loggedInUid: String?): LetsGoUser? {
 
             if (sharedPreferences == null) return null
+
+            if (loggedInUid != null) {
+                val cachedUid = sharedPreferences.getString("userUid", null)
+                if (cachedUid == null || loggedInUid != cachedUid) {
+                    return null
+                }
+            }
 
             val user = LetsGoUser(USER_UID)
             user.nick = sharedPreferences.getString(USER_NICK, null)

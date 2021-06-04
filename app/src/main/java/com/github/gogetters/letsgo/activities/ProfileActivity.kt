@@ -12,6 +12,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import com.github.gogetters.letsgo.R
 import com.github.gogetters.letsgo.cache.Cache
+import com.github.gogetters.letsgo.database.Authentication
 import com.github.gogetters.letsgo.database.ImageStorageService
 import com.github.gogetters.letsgo.database.user.FirebaseUserBundleProvider
 import com.github.gogetters.letsgo.database.user.LetsGoUser
@@ -148,6 +149,7 @@ class ProfileActivity : BaseActivity() {
 
     private fun loadData(): LetsGoUser? {
         val sP: SharedPreferences = getSharedPreferences(Cache.PREF_ID, Context.MODE_PRIVATE)
-        return Cache.loadUserProfile(sP)
+        val loggedInUid = Authentication.getUid()
+        return Cache.loadUserProfile(sP, loggedInUid)
     }
 }
