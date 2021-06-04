@@ -35,8 +35,8 @@ class LetsGoUser (val uid: String) : Serializable {
     // The reference (== address) of the profile picture on cloud storage
     var profileImageRef: String? = null
 
-    var friendsByStatus: EnumMap<FriendStatus, MutableList<LetsGoUser>>? = null
-    var friendStatusMap: Map<LetsGoUser, FriendStatus>? = null
+    private var friendsByStatus: EnumMap<FriendStatus, MutableList<LetsGoUser>>? = null
+    private var friendStatusMap: Map<LetsGoUser, FriendStatus>? = null
 
     // map related values
     var isLookingForPlayers: Boolean? = false

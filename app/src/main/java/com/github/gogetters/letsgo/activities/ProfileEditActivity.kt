@@ -24,7 +24,6 @@ import androidx.core.content.FileProvider
 import com.github.gogetters.letsgo.R
 import com.github.gogetters.letsgo.cache.Cache
 import com.github.gogetters.letsgo.database.ImageStorageService
-import com.github.gogetters.letsgo.database.ImageStorageService.Companion.PROFILE_PICTURE_PREFIX_CLOUD
 import com.github.gogetters.letsgo.database.user.LetsGoUser
 import com.github.gogetters.letsgo.database.user.UserBundle
 import com.github.gogetters.letsgo.database.user.UserBundleProvider
@@ -111,7 +110,7 @@ class ProfileEditActivity : ActivityCompat.OnRequestPermissionsResultCallback, A
         cityEditText.setText(user.city)
 
         ImageStorageService.getProfileImageFromCloud(
-            PROFILE_PICTURE_PREFIX_CLOUD,
+            ImageStorageService.PROFILE_PICTURE_PREFIX_CLOUD,
             user.profileImageRef,
             ImageStorageService.getOutputImageFile(getExternalFilesDir(Environment.DIRECTORY_PICTURES)),
             profileEditImage
@@ -244,7 +243,7 @@ class ProfileEditActivity : ActivityCompat.OnRequestPermissionsResultCallback, A
         // store the uri for the user
         ImageStorageService.storeProfileImageOnCloud(
             userBundleProvider.getUserBundle()!!.getUser(), profilePictureUri,
-            PROFILE_PICTURE_PREFIX_CLOUD
+            ImageStorageService.PROFILE_PICTURE_PREFIX_CLOUD
         )
     }
 
@@ -268,7 +267,7 @@ class ProfileEditActivity : ActivityCompat.OnRequestPermissionsResultCallback, A
                     // store the uri for the user
                     ImageStorageService.storeProfileImageOnCloud(
                         userBundleProvider.getUserBundle()!!.getUser(), it,
-                        PROFILE_PICTURE_PREFIX_CLOUD
+                        ImageStorageService.PROFILE_PICTURE_PREFIX_CLOUD
                     )
                 }
             } catch (e: Exception) {
