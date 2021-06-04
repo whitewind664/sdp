@@ -161,22 +161,22 @@ class GameActivity : BaseActivity() {
     private fun setInfoAboutThisPlayers(localColor: Stone) {
         // popup
         when (localColor) {
-            Stone.BLACK -> showLongToast(resources.getString(R.string.game_startAsBlack))
-            Stone.WHITE -> showLongToast(resources.getString(R.string.game_startAsWhite))
-            Stone.EMPTY -> showLongToast(resources.getString(R.string.game_startLocal))
+            Stone.BLACK -> {
+                showLongToast(resources.getString(R.string.game_startAsBlack))
+                blackTurnText = resources.getString(R.string.game_blackYouTurn)
+                whiteTurnText = resources.getString(R.string.game_whiteTurn)
+            }
+            Stone.WHITE -> {
+                showLongToast(resources.getString(R.string.game_startAsWhite))
+                blackTurnText = resources.getString(R.string.game_blackTurn)
+                whiteTurnText = resources.getString(R.string.game_whiteYouTurn)
+            }
+            Stone.EMPTY -> {
+                showLongToast(resources.getString(R.string.game_startLocal))
+                blackTurnText = resources.getString(R.string.game_blackYouTurn)
+                whiteTurnText = resources.getString(R.string.game_whiteYouTurn)
+            }
         }
-        // sets messages
-        /*
-        // TODO update for online play
-        blackTurnText = when (blackType) {
-            Player.PlayerTypes.BTLOCAL.ordinal -> resources.getString(R.string.game_blackYouTurn)
-            else -> resources.getString(R.string.game_blackTurn)
-        }
-        whiteTurnText = when (whiteType) {
-            Player.PlayerTypes.BTLOCAL.ordinal -> resources.getString(R.string.game_whiteYouTurn)
-            else -> resources.getString(R.string.game_whiteTurn)
-        }
-         */
     }
 
     private fun showLongToast(text: String) {
