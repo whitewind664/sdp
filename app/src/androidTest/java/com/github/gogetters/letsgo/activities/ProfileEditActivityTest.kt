@@ -39,6 +39,7 @@ import com.google.android.gms.tasks.Tasks
 import org.hamcrest.Description
 import org.junit.After
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Ignore
 import org.junit.Test
@@ -86,8 +87,8 @@ class ProfileEditActivityTest : EmulatedFirebaseTest() {
         Tasks.await(user.downloadUserData())
         val actualNick: String = user.nick!!
         val actualFirst: String = user.first!!
-        assertEquals(newNick, actualNick)
-        assertEquals(oldFirst, actualFirst)
+        assertTrue(newNick == actualNick)
+        assertTrue(oldFirst == actualFirst)
     }
 
     @Test
