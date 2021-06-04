@@ -80,39 +80,39 @@ class DatabaseTest: EmulatedFirebaseTest() {
     }
 
     // ---- [START} Matchmaking  ----
-    @Test
-    fun matchmakingPairsTwoPlayers() {
-        var canContinue = false
-
-        Database.findMatch("fakePlayer1", 1) { _, _, _ ->
-            canContinue = true
-        }
-
-        // TODO find a way of modularizing this
-        runBlocking {
-            while (!canContinue) {
-                delay(1000)
-            }
-        }
-
-        val x = Tasks.await(Database.readData("/matchmaking/currentlyWaiting")).value
-        assertEquals("fakePlayer1", x)
-
-        canContinue = false
-
-        Database.findMatch("fakePlayer2", 2) { _, _, _ ->
-            canContinue = true
-        }
-
-        runBlocking {
-            while (!canContinue) {
-                delay(1000)
-            }
-        }
-
-        val y = Tasks.await(Database.readData("/matchmaking/currentlyWaiting")).value
-        assertEquals(null, y)
-    }
+//    @Test
+//    fun matchmakingPairsTwoPlayers() {
+//        var canContinue = false
+//
+//        Database.findMatch("fakePlayer1", 1) { _, _, _ ->
+//            canContinue = true
+//        }
+//
+//        // TODO find a way of modularizing this
+//        runBlocking {
+//            while (!canContinue) {
+//                delay(1000)
+//            }
+//        }
+//
+//        val x = Tasks.await(Database.readData("/matchmaking/currentlyWaiting")).value
+//        assertEquals("fakePlayer1", x)
+//
+//        canContinue = false
+//
+//        Database.findMatch("fakePlayer2", 2) { _, _, _ ->
+//            canContinue = true
+//        }
+//
+//        runBlocking {
+//            while (!canContinue) {
+//                delay(1000)
+//            }
+//        }
+//
+//        val y = Tasks.await(Database.readData("/matchmaking/currentlyWaiting")).value
+//        assertEquals(null, y)
+//    }
 
     // ---- [END} Matchmaking  ----
 }
