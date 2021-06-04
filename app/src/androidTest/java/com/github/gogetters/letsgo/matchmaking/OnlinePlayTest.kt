@@ -32,8 +32,8 @@ class OnlinePlayTest: EmulatedFirebaseTest() {
         FirebaseApp.initializeApp(appContext)
     }
 
-    @get:Rule
-    var activityRule = ActivityScenarioRule(MainActivity::class.java)
+//    @get:Rule
+//    var activityRule = ActivityScenarioRule(MainActivity::class.java)
 
     @After
     fun cleanUp() {
