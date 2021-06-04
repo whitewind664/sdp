@@ -1,6 +1,8 @@
 package com.github.gogetters.letsgo.cache
 
+import android.content.Context
 import android.content.SharedPreferences
+import androidx.appcompat.app.AppCompatActivity
 import com.github.gogetters.letsgo.chat.model.ChatMessageData
 import com.github.gogetters.letsgo.database.user.LetsGoUser
 import com.google.gson.Gson
@@ -21,6 +23,8 @@ object Cache {
     const val USER_LAST = "userLast"
     const val USER_COUNTRY = "userCountry"
     const val USER_CITY = "userCity"
+
+    private const val LAST_MESSAGE_LIST_ID = "lastMessageListID"
 
     //////////////////////////////////////////////////////////
     // User info local storage
@@ -110,4 +114,45 @@ object Cache {
         }
         return null
     }
+
+
+    /**
+     * Enables saving last chat messages list in local cache for the ChatLastMessagesActivity
+     */
+    fun saveLastChatData(act: AppCompatActivity, items: MutableCollection<ChatMessageData>) {
+
+        val sharedPreferences = act.applicationContext.getSharedPreferences(
+            PREF_ID,
+            Context.MODE_PRIVATE
+        )
+
+        val editor = sharedPreferences.edit()
+        val json = Gson().toJson(items)
+        editor.apply {
+
+            putString(LAST_MESSAGE_LIST_ID, json)
+
+        }.apply()
+    }
+
+    /**
+     * Enables loading last chat messages in local cache for the ChatLastMessagesActivity
+     */
+    fun loadLastChatData(act: AppCompatActivity): MutableCollection<ChatMessageData> {
+
+        val sharedPreferences = act.applicationContext.getSharedPreferences(
+            PREF_ID,
+            Context.MODE_PRIVATE
+        )
+
+        val json = sharedPreferences.getString(LAST_MESSAGE_LIST_ID, null)
+        if (json == null) return mutableListOf()
+        val type: Type = object : TypeToken<MutableCollection<ChatMessageData>?>() {}.type
+        var cachedMessages = Gson().fromJson<Any>(json, type) as MutableCollection<ChatMessageData>?
+        if (cachedMessages == null) { cachedMessages = mutableListOf() }
+
+        return cachedMessages
+
+    }
+
 }
