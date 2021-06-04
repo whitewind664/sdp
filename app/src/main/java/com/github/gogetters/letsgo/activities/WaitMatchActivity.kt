@@ -25,7 +25,10 @@ class WaitMatchActivity: BaseActivity() {
             finish()
         })
 
-        Matchmaking.findMatch(isRanked, { gameId, color -> goToGame(gameId, color) })
+        Matchmaking.findMatch(isRanked, { gameId, color ->
+            finish()
+            goToGame(gameId, color)
+        })
 
 
     }
