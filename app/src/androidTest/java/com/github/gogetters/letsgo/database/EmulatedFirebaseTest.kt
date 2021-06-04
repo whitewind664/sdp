@@ -9,16 +9,15 @@ import org.junit.BeforeClass
 
 abstract class EmulatedFirebaseTest {
     companion object {
-        @BeforeClass @JvmStatic
+        @BeforeClass
+        @JvmStatic
         fun databaseSetup() {
             if (!Database.isEmulated) {
                 val appContext = InstrumentationRegistry.getInstrumentation().targetContext
                 FirebaseApp.initializeApp(appContext)
                 Database.emulatorSettings()
 
-                // Commenting this will use the real FirebaseAuth and not the emulated one
-                // We should try to make it work
-                Authentication.emulatorSettings()
+//                Firebase.auth.useEmulator("10.0.2.2", 9099)
 
                 Firebase.storage.useEmulator("10.0.2.2", 9199)
             }
