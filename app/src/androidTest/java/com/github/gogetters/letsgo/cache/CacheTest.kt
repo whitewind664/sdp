@@ -4,10 +4,6 @@ import android.content.Context
 import android.content.SharedPreferences
 import androidx.test.filters.SmallTest
 import androidx.test.platform.app.InstrumentationRegistry
-import com.github.gogetters.letsgo.cache.Cache.Companion.loadChatData
-import com.github.gogetters.letsgo.cache.Cache.Companion.loadUserProfile
-import com.github.gogetters.letsgo.cache.Cache.Companion.saveChatData
-import com.github.gogetters.letsgo.cache.Cache.Companion.saveUserProfile
 import com.github.gogetters.letsgo.chat.model.ChatMessageData
 import com.github.gogetters.letsgo.database.user.LetsGoUser
 import org.junit.After
@@ -59,7 +55,7 @@ class SharedPreferencesTest {
         user.country = COUNTRY
         user.city = CITY
 
-        saveUserProfile(sharedPreferences, user)
+        Cache.saveUserProfile(sharedPreferences, user)
 
         assertEquals(UID, sharedPreferences!!.getString(Cache.USER_UID, ""))
         assertEquals(NICK, sharedPreferences!!.getString(Cache.USER_NICK, ""))
@@ -85,7 +81,7 @@ class SharedPreferencesTest {
 
         }.apply()
 
-        val user = loadUserProfile(sharedPreferences, null)
+        val user = Cache.loadUserProfile(sharedPreferences)
 
         assertEquals(UID, user?.uid)
         assertEquals(NICK, user?.nick)
@@ -106,8 +102,8 @@ class SharedPreferencesTest {
             CHAT_TOID,
             CHAT_SENDTIME)
 
-        saveChatData(sharedPreferences, CHAT_MSG_ID, arrayListOf(chat))
-        val cachedChat = loadChatData(sharedPreferences, CHAT_MSG_ID)
+        Cache.saveChatData(sharedPreferences, CHAT_MSG_ID, arrayListOf(chat))
+        val cachedChat = Cache.loadChatData(sharedPreferences, CHAT_MSG_ID)
 
         assertEquals(cachedChat.get(0).id, CHAT_ID)
         assertEquals(cachedChat.get(0).text, CHAT_TEXT)

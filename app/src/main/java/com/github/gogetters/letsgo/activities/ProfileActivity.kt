@@ -109,6 +109,8 @@ class ProfileActivity : BaseActivity() {
                 }
                 .addOnSuccessListener {
                     displayUser(userBundle)
+                    val sP: SharedPreferences = getSharedPreferences(Cache.PREF_ID, Context.MODE_PRIVATE)
+                    Cache.saveUserProfile(sP, user)
                 }
         }
     }
@@ -149,7 +151,6 @@ class ProfileActivity : BaseActivity() {
 
     private fun loadData(): LetsGoUser? {
         val sP: SharedPreferences = getSharedPreferences(Cache.PREF_ID, Context.MODE_PRIVATE)
-        val loggedInUid = Authentication.getUid()
-        return Cache.loadUserProfile(sP, loggedInUid)
+        return Cache.loadUserProfile(sP)
     }
 }

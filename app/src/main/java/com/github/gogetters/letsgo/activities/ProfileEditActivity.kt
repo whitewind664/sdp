@@ -85,7 +85,9 @@ class ProfileEditActivity : ActivityCompat.OnRequestPermissionsResultCallback, A
             user.country = countryEditText.text.toString()
             user.city = cityEditText.text.toString()
 
-            saveData()
+            val sP: SharedPreferences = getSharedPreferences(Cache.PREF_ID, Context.MODE_PRIVATE)
+            Cache.saveUserProfile(sP, user)
+
             user.uploadUserData().continueWith { returnToProfile() }
         }
 
@@ -272,10 +274,5 @@ class ProfileEditActivity : ActivityCompat.OnRequestPermissionsResultCallback, A
                 e.printStackTrace()
             }
         }
-    }
-
-    private fun saveData() {
-        val sP: SharedPreferences = getSharedPreferences(Cache.PREF_ID, Context.MODE_PRIVATE)
-        Cache.saveUserProfile(sP, user)
     }
 }
