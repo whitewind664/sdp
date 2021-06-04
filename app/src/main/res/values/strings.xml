@@ -18,6 +18,7 @@
     <string name="game_endOfGame">Game is over. Count territories!</string>
     <string name="game_startAsBlack">The game starts! You play as BLACK.</string>
     <string name="game_startAsWhite">The game starts! You play as WHITE.</string>
+    <string name="game_startLocal">The game starts! BLACK plays first.</string>
     <string name="game_passTitle">Do you really want to pass? If the opponent passes as well, the game will be over.</string>
     <string name="game_passConfirm">Confirm PASS</string>
     <string name="game_passCancel">Cancel</string>
@@ -50,6 +51,7 @@
     <string name="title_activity_tutorial">Tutorial</string>
     <string name="title_activity_profile">Profile</string>
     <string name="title_activity_firebaseui">Login</string>
+    <string name="title_activity_waitMatch">Wait Match</string>
 
     <!-- Strings for tutorial -->
     <string name="tutorial_intro">Congrats for wanting to learn Go, a great strategic game! We have good news for you: Even though Go is hard to master, learning the basic rules is really easy and you will be able to play your first game very soon!</string>
@@ -93,6 +95,10 @@
     <string name="map_dialogCancel">Cancel</string>
 
 
+    <string name="matchmaking_waiting">Waiting for match…</string>
+    <string name="matchmaking_cancel">Cancel</string>
+
+
     <string name="tutorial_buttonTextGoBack">Back to main menu</string>
 
     <!-- Strings for the profile activity -->
@@ -103,13 +109,15 @@
     <string name="profile_gallerySelectionTitle">Select Profile Picture</string>
 
     <string name="gameModeChooser_buttonLocal">Local</string>
-    <string name="gameModeChooser_buttonOGS">Online via Online-Go</string>
     <string name="gameModeChooser_buttonBluetooth">Bluetooth</string>
+    <string name="gameModeChooser_buttonRanked">Online Ranked</string>
+    <string name="gameModeChooser_buttonUnranked">Online Unranked</string>
     <string name="gameModeChooser_title">Choose the Game Mode</string>
     <string name="gameModeChooser_loginTitle">Please log in with existing credentials for online-go.com</string>
     <string name="gameModeChooser_loginUsername">Your Username</string>
     <string name="gameModeChooser_loginPassword">Your password</string>
     <string name="gameModeChooser_buttonLoginSubmit">Submit</string>
+    <string name="gameModeChooser_buttonChallenge">Create Challenge</string>
 
     <!--
     This string is used for square devices and overridden by hello_world in
@@ -144,5 +152,6 @@
     <string name="second_fragment_label">Second Fragment</string>
     <string name="search_users">Search Users</string>
     <string name="anon_name">Anonymous Go Player</string>
+
 
 </resources>

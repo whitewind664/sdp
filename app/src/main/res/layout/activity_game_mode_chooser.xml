@@ -67,6 +67,13 @@
             app:layout_constraintTop_toBottomOf="@+id/gameModeChooser_editText_loginPassword" />
 
         <Button
+            android:id="@+id/gameModeChooser_button_challenge"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/gameModeChooser_buttonChallenge"
+            android:visibility="gone" />
+
+        <Button
             android:id="@+id/gameModeChooser_button_local"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -86,11 +93,16 @@
             app:layout_constraintTop_toTopOf="parent"/>
 
         <Button
-            android:id="@+id/gameModeChooser_button_ogs"
+            android:id="@+id/gameModeChooser_button_ranked"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/gameModeChooser_buttonOGS"
-            app:layout_constraintTop_toBottomOf="@+id/gameModeChooser_button_bluetooth"/>
+            android:text="@string/gameModeChooser_buttonRanked" />
+
+        <Button
+            android:id="@+id/gameModeChooser_button_unranked"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/gameModeChooser_buttonUnranked" />
 
     </LinearLayout>
 
