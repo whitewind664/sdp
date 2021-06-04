@@ -24,6 +24,7 @@ import junit.framework.Assert.assertTrue
 import org.hamcrest.Matcher
 import org.junit.After
 import org.junit.Before
+import org.junit.Ignore
 import org.junit.Test
 import org.junit.runner.RunWith
 
@@ -48,6 +49,54 @@ class GameActivityTest: EmulatedFirebaseTest() {
     @After
     fun cleanUp() {
         scenario.close()
+    }
+
+    //@Test
+    fun tappingScreenPlacesStone() {
+        scenario = ActivityScenario.launch(intent)
+        val goView = onView(withParent(withId(R.id.game_frameLayout_boardFrame)))
+        goView.perform(touchDownAndUp(1f, 1f))
+        goView.perform(touchDownAndUp(2f, 2f))
+    }
+
+    @Ignore // works locally but not on Cirrus
+    @Test
+    fun btLocalPlayerBlackTriggersToast() {
+        val btIntent = Intent(ApplicationProvider.getApplicationContext(), GameActivity::class.java).apply {
+            putExtra(GameActivity.EXTRA_GAME_SIZE, 9)
+            putExtra(GameActivity.EXTRA_KOMI, 5.5)
+            putExtra(GameActivity.EXTRA_PLAYER_BLACK, Player.PlayerTypes.BTLOCAL.ordinal)
+            putExtra(GameActivity.EXTRA_PLAYER_WHITE, Player.PlayerTypes.BTREMOTE.ordinal)
+        }
+
+        scenario = ActivityScenario.launch(btIntent)
+        onView(withText(R.string.game_startAsBlack)).inRoot(ToastMatcher()).check(matches((isDisplayed())))
+    }
+
+    @Ignore // works locally but not on Cirrus
+    @Test
+    fun btLocalPlayerWhiteTriggersToast() {
+        val btIntent = Intent(ApplicationProvider.getApplicationContext(), GameActivity::class.java).apply {
+            putExtra(GameActivity.EXTRA_GAME_SIZE, 9)
+            putExtra(GameActivity.EXTRA_KOMI, 5.5)
+            putExtra(GameActivity.EXTRA_PLAYER_WHITE, Player.PlayerTypes.BTLOCAL.ordinal)
+            putExtra(GameActivity.EXTRA_PLAYER_BLACK, Player.PlayerTypes.BTREMOTE.ordinal)
+        }
+
+        scenario = ActivityScenario.launch(btIntent)
+        onView(withText(R.string.game_startAsWhite)).inRoot(ToastMatcher()).check(matches((isDisplayed())))
+    }
+
+    @Test
+    fun passCanBeCanceled() {
+        scenario = ActivityScenario.launch(intent)
+        onView(withId(R.id.game_button_pass)).perform(click())
+        onView(withText(R.string.game_passTitle))
+            .check(matches(isDisplayed()))
+        clickAtIndex(1, "Cancel")
+        val device: UiDevice = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation())
+        val blackNextText = device.findObject(UiSelector().textContains("BLACK plays"))
+        assertTrue(blackNextText.exists()) // still black's turn
     }
 
     @Test
