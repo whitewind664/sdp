@@ -5,9 +5,10 @@ import com.github.gogetters.letsgo.game.exceptions.IllegalMoveException
 
 internal open class Game(val size: Board.Size, val komi: Double,
                          private val whitePlayer: Player, private val blackPlayer: Player) {
-
+    companion object {
+        val PASS_MOVE = Move(Stone.EMPTY, Point(0, 0))
+    }
     private var board = Board(size)
-    private val passMove = Move(Stone.EMPTY, Point(0, 0))
     protected var nextPlayer = blackPlayer
 
     private var passes = 0
@@ -30,7 +31,7 @@ internal open class Game(val size: Board.Size, val komi: Double,
                 Log.d("GAME", "PLAYED A ${nextMove.stone} STONE AT ${nextMove.point}")
                 addPoints(nextPlayer, points)
 
-                if (nextMove == passMove) ++passes
+                if (nextMove == PASS_MOVE) ++passes
                 else passes = 0
 
                 validMove = true

@@ -1,6 +1,10 @@
 package com.github.gogetters.letsgo.activities
 
+import android.Manifest
+import android.app.AlertDialog
+import android.content.DialogInterface
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.Button
 import android.widget.FrameLayout
@@ -10,6 +14,7 @@ import com.github.gogetters.letsgo.R
 import com.github.gogetters.letsgo.game.*
 import com.github.gogetters.letsgo.game.util.InputDelegate
 import com.github.gogetters.letsgo.game.view.GoView
+import com.github.gogetters.letsgo.util.PermissionUtils
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 
@@ -19,6 +24,9 @@ class GameActivity : BaseActivity() {
         const val EXTRA_KOMI = "com.github.gogetters.letsgo.game.KOMI"
         const val EXTRA_PLAYER_WHITE = "com.github.gogetters.letsgo.game.PLAYER_ONE"
         const val EXTRA_PLAYER_BLACK = "com.github.gogetters.letsgo.game.PLAYER_TWO"
+        
+        const val CONFIRM_PASS_IDX = 0
+        const val CANCEL_PASS_IDX = 1
     }
 
     private lateinit var game: Game
@@ -52,13 +60,15 @@ class GameActivity : BaseActivity() {
         val touchInputDelegate = InputDelegate()
         goView.inputDelegate = touchInputDelegate
 
-
         val boardFrame = findViewById<FrameLayout>(R.id.game_frameLayout_boardFrame)
         boardFrame.addView(goView)
         turnText = findViewById(R.id.game_textView_turnIndication)
         blackScore = findViewById(R.id.game_textView_blackScore)
         whiteScore = findViewById(R.id.game_textView_whiteScore)
         passButton = findViewById(R.id.game_button_pass)
+        passButton.setOnClickListener {
+            passPopUp(touchInputDelegate, goView)
+        }
 
         val blackPlayer =
             Player.playerOf(Stone.BLACK, blackType, touchInputDelegate, bluetoothService)
@@ -66,7 +76,14 @@ class GameActivity : BaseActivity() {
             Player.playerOf(Stone.WHITE, whiteType, touchInputDelegate, bluetoothService)
 
         game = Game(boardSize, komi, whitePlayer, blackPlayer)
+        runGame()
+    }
 
+    override fun getLayoutResource(): Int {
+        return R.layout.activity_game
+    }
+
+    private fun runGame() {
         GlobalScope.launch {
             var boardState = game.playTurn()
             while (!boardState.gameOver) {
@@ -86,11 +103,27 @@ class GameActivity : BaseActivity() {
         }
     }
 
-    override fun getLayoutResource(): Int {
-        return R.layout.activity_game
+    /**
+     * Is called when the pass button is clicked. Asks whether the player really wants to pass and then does the passing
+     */
+    private fun passPopUp(inputDelegate: InputDelegate, goView: GoView) {
+        val dialogTexts = arrayOf<CharSequence>(
+            resources.getString(R.string.game_passConfirm),
+            resources.getString(R.string.game_passCancel)
+        )
+        val builder: AlertDialog.Builder = AlertDialog.Builder(this)
+        builder.setTitle(resources.getString(R.string.game_passTitle))
+        builder.setItems(dialogTexts, DialogInterface.OnClickListener { dialog, clickedIndex ->
+            if (clickedIndex == CONFIRM_PASS_IDX) {
+                goView.onPass()
+            } else {
+                dialog.dismiss()
+                return@OnClickListener
+            }
+        })
+        builder.show()
     }
-
-
+    
     private fun drawBoard(boardState: BoardState) {
         goView.updateBoardState(boardState)
     }

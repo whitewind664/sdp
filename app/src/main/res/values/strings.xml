@@ -16,6 +16,9 @@
     <string name="game_endOfGame">Game is over. Count territories!</string>
     <string name="game_startAsBlack">The game starts! You play as BLACK.</string>
     <string name="game_startAsWhite">The game starts! You play as WHITE.</string>
+    <string name="game_passTitle">Do you really want to pass? If the opponent passes as well, the game will be over.</string>
+    <string name="game_passConfirm">Confirm PASS</string>
+    <string name="game_passCancel">Cancel</string>
 
 
     <string name="go">Go</string>
