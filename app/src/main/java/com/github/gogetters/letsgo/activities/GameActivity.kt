@@ -61,6 +61,11 @@ class GameActivity : BaseActivity() {
         val touchInputDelegate = InputDelegate()
         goView.inputDelegate = touchInputDelegate
 
+        val passButton = findViewById<Button>(R.id.game_button_pass)
+        passButton.setOnClickListener {
+            passPopUp(touchInputDelegate)
+        }
+
         val (blackPlayer: Player, whitePlayer: Player) = when (gameType) {
 
             "LOCAL" -> Pair(DelegatedPlayer(Stone.BLACK, touchInputDelegate),
@@ -179,13 +184,6 @@ class GameActivity : BaseActivity() {
     }
 
     private fun updateTurnText(lastMove: Move?) {
-        if (lastMove?.stone == Stone.BLACK) {
-            // White's turn
-            turnText.text = whiteTurnText
-        } else {
-            // Black's turn
-            turnText.text = blackTurnText
-        }
         turnText.text = when(lastMove?.stone) {
             Stone.BLACK -> whiteTurnText
             Stone.WHITE -> blackTurnText
