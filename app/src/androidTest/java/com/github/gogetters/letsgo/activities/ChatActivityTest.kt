@@ -13,6 +13,7 @@ import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.github.gogetters.letsgo.R
 import com.github.gogetters.letsgo.database.EmulatedFirebaseTest
 import com.github.gogetters.letsgo.database.user.LetsGoUser
+import com.github.gogetters.letsgo.testUtil.TestUtils
 import org.junit.After
 import org.junit.Before
 import org.junit.Test
@@ -34,6 +35,7 @@ class ChatActivityTest : EmulatedFirebaseTest() {
     @Before
     fun init() {
         Intents.init()
+        TestUtils.makeSureTestUserAuthenticated()
         scenario = ActivityScenario.launch(intent)
         USER_IN_TEST.nick = "nick"
         USER_IN_TEST.first = "first"

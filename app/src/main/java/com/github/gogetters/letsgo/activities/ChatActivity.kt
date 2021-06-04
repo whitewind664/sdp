@@ -42,8 +42,9 @@ class ChatActivity : AppCompatActivity() {
         val currentUser = Authentication.getCurrentUser()
         if (currentUser == null) {
             finish()
+        } else {
+            userId = currentUser.uid
         }
-        userId = currentUser!!.uid
         toUser = intent.getSerializableExtra(ChatNewMessageActivity.KEY) as LetsGoUser
 
         sharedPreferences = applicationContext.getSharedPreferences(Cache.PREF_ID, Context.MODE_PRIVATE)
