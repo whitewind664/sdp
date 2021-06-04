@@ -54,7 +54,7 @@ open class GoView(context: Context, private val boardSize: Board.Size) : View(co
 
         val adjustedX = (x - marginX).coerceAtLeast(0F).coerceAtMost(maxX)
         val adjustedY = (y - marginY).coerceAtLeast(0F).coerceAtMost(maxY)
-        
+
 
         val col = (adjustedX / squareWidth).roundToInt() + 1
         val row = (adjustedY / squareHeight).roundToInt() + 1

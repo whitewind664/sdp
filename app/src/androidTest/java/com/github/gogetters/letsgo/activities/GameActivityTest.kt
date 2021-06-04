@@ -49,7 +49,7 @@ class GameActivityTest: EmulatedFirebaseTest() {
         scenario.close()
     }
 
-    @Test
+    //@Test
     fun tappingScreenPlacesStone() {
         scenario = ActivityScenario.launch(intent)
         val goView = onView(withParent(withId(R.id.game_frameLayout_boardFrame)))
