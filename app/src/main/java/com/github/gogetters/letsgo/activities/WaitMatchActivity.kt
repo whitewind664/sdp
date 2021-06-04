@@ -10,7 +10,7 @@ import com.github.gogetters.letsgo.matchmaking.Matchmaking
 class WaitMatchActivity: BaseActivity() {
 
     companion object {
-        const val EXTRA_IS_RANKED = "com.github.gogetters.letsgo.game.GAME_SIZE"
+        const val EXTRA_IS_RANKED = "com.github.gogetters.letsgo.game.IS_RANKED"
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
