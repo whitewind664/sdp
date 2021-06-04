@@ -79,19 +79,20 @@ class LoginActivityTest : EmulatedFirebaseTest() {
             saveButton.click()
         }
 
-        val savePasswordButton = device.findObject(UiSelector().clickable(true).textContains("Save"))
+        /*val savePasswordButton = device.findObject(UiSelector().clickable(true).textContains("Save"))
         if (savePasswordButton.exists()) {
             savePasswordButton.click()
-        }
+        }*/
 
         sleep()
-        val user = Authentication.getCurrentUser()
+        Authentication.getCurrentUser()!!.delete()
+        /*val user = Authentication.getCurrentUser()
         if (user != null) {
             val userBundle = FirebaseUserBundle(user)
             userBundle.deleteUser()
         } else {
             throw IllegalStateException()
-        }
+        } */
 
         Intents.intended(IntentMatchers.hasComponent(ProfileActivity::class.java.name))
     }

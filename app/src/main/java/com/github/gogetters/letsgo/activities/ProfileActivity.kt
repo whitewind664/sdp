@@ -26,7 +26,7 @@ class ProfileActivity : BaseActivity() {
         }
     }
 
-    private lateinit var userBundleProvider: UserBundleProvider
+    private var userBundleProvider: UserBundleProvider = FirebaseUserBundleProvider
 
     private lateinit var editButton: Button
 
@@ -44,7 +44,6 @@ class ProfileActivity : BaseActivity() {
         editButton = findViewById(R.id.profile_button_edit)
         editButton.setOnClickListener {
             val intent = Intent(this, ProfileEditActivity::class.java)
-            intent.putExtra("UserBundleProvider", userBundleProvider)
             startActivity(intent)
         }
 

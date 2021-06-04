@@ -136,28 +136,6 @@ class Database {
         // ---- [END] Matchmaking ----
 
         // ---- Map related ----
-        /**
-         * Activates the location sharing and sends location to database.
-         * Returns true when the data has been sent to the database
-         */
-        fun shareLocation(location: LatLng): Boolean {
-            val uid = Authentication.getUid() ?: return false
-            val userRef = database.child("users").child(uid)
-            userRef.child("isLookingForPlayers").setValue(true)
-            userRef.child("lastPositionLatitude").setValue(location.latitude)
-            userRef.child("lastPositionLongitude").setValue(location.longitude)
-            Log.i("DB","Shared")
-            return true
-        }
-
-        /**
-         * Stops the displaying of the position with other users (not looking for a new game anymore)
-         */
-        fun disableLocationSharing(): Boolean {
-            val uid = Authentication.getUid() ?: return false
-            database.child("users").child(uid).child("isLookingForPlayers").setValue(false)
-            return true
-        }
 
         /**
          * Retrieves all locations except the own one

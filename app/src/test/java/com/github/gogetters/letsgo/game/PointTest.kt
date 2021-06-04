@@ -1,10 +1,15 @@
 package com.github.gogetters.letsgo.game
 
-import org.junit.Assert.assertEquals
-import org.junit.Assert.assertTrue
+import com.github.gogetters.letsgo.game.util.InputDelegate
+import com.github.gogetters.letsgo.util.BluetoothGTPService
+import org.junit.Assert.*
+import org.junit.Rule
 import org.junit.Test
+import org.junit.rules.ExpectedException
 
 class PointTest {
+    @get:Rule
+    val exception: ExpectedException = ExpectedException.none()
 
     @Test
     fun equalsComparesDeep() {
@@ -14,6 +19,13 @@ class PointTest {
         assertTrue(a == b)
         assertTrue(a != c)
         assertTrue(b != c)
+    }
+
+    @Test
+    fun equalsFailsWithOtherObject() {
+        val a = Point(1, 2)
+        val move = Move(Stone.BLACK, a)
+        assertFalse(a.equals(move))
     }
 
     @Test
@@ -70,4 +82,17 @@ class PointTest {
             }
         }
     }
+    
+    @Test
+    fun fromStringFailsOnWrongArgLeng() {
+        exception.expect(IllegalArgumentException::class.java)
+        Point.fromString("SomeRandomString")
+    }
+
+    @Test
+    fun fromStringToStringGivesSameElement() {
+        val pointString = "a1"
+        assertEquals(pointString, Point.fromString(pointString).toString())
+    }
+
 }
