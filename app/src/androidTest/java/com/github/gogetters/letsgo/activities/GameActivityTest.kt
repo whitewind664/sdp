@@ -61,7 +61,7 @@ class GameActivityTest: EmulatedFirebaseTest() {
         goView.perform(touchDownAndUp(2f, 2f))
     }
 
-    @Ignore
+    @Ignore // works locally but not on Cirrus
     @Test
     fun btLocalPlayerBlackTriggersToast() {
         val btIntent = Intent(ApplicationProvider.getApplicationContext(), GameActivity::class.java).apply {
@@ -75,7 +75,7 @@ class GameActivityTest: EmulatedFirebaseTest() {
         onView(withText(R.string.game_startAsBlack)).inRoot(ToastMatcher()).check(matches((isDisplayed())))
     }
 
-    @Ignore
+    @Ignore // works locally but not on Cirrus
     @Test
     fun btLocalPlayerWhiteTriggersToast() {
         val btIntent = Intent(ApplicationProvider.getApplicationContext(), GameActivity::class.java).apply {
