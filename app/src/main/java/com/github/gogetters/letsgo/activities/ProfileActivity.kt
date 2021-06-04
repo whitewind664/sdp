@@ -1,6 +1,8 @@
 package com.github.gogetters.letsgo.activities
 
+import android.content.Context
 import android.content.Intent
+import android.content.SharedPreferences
 import android.os.Bundle
 import android.os.Environment
 import android.util.Log
@@ -10,8 +12,10 @@ import android.widget.ImageView
 import android.widget.TextView
 import com.github.gogetters.letsgo.R
 import com.github.gogetters.letsgo.cache.Cache
+import com.github.gogetters.letsgo.database.Authentication
 import com.github.gogetters.letsgo.database.ImageStorageService
 import com.github.gogetters.letsgo.database.user.FirebaseUserBundleProvider
+import com.github.gogetters.letsgo.database.user.LetsGoUser
 import com.github.gogetters.letsgo.database.user.UserBundle
 import com.github.gogetters.letsgo.database.user.UserBundleProvider
 
@@ -26,7 +30,7 @@ class ProfileActivity : BaseActivity() {
         }
     }
 
-    private lateinit var userBundleProvider: UserBundleProvider
+    private var userBundleProvider: UserBundleProvider = FirebaseUserBundleProvider
 
     private lateinit var editButton: Button
 
@@ -44,7 +48,6 @@ class ProfileActivity : BaseActivity() {
         editButton = findViewById(R.id.profile_button_edit)
         editButton.setOnClickListener {
             val intent = Intent(this, ProfileEditActivity::class.java)
-            intent.putExtra("UserBundleProvider", userBundleProvider)
             startActivity(intent)
         }
 
@@ -91,7 +94,7 @@ class ProfileActivity : BaseActivity() {
             user.downloadUserData()
                 .addOnFailureListener {
                     // If user is offline then get user from cache
-                    val cachedUser = Cache.loadUserProfile(this)
+                    val cachedUser = loadData()
 
                     if (cachedUser != null) {
                         user.nick = cachedUser.nick
@@ -105,6 +108,8 @@ class ProfileActivity : BaseActivity() {
                 }
                 .addOnSuccessListener {
                     displayUser(userBundle)
+                    val sP: SharedPreferences = getSharedPreferences(Cache.PREF_ID, Context.MODE_PRIVATE)
+                    Cache.saveUserProfile(sP, user)
                 }
         }
     }
@@ -141,5 +146,10 @@ class ProfileActivity : BaseActivity() {
     private fun dispatchLoginIntent() {
         val intent = Intent(this, LoginActivity::class.java)
         startActivity(intent)
+    }
+
+    private fun loadData(): LetsGoUser? {
+        val sP: SharedPreferences = getSharedPreferences(Cache.PREF_ID, Context.MODE_PRIVATE)
+        return Cache.loadUserProfile(sP)
     }
 }

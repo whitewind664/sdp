@@ -1,5 +1,6 @@
 package com.github.gogetters.letsgo.activities
 
+import android.content.Context
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -7,10 +8,12 @@ import android.util.Log
 import android.view.View
 import androidx.recyclerview.widget.DividerItemDecoration
 import com.github.gogetters.letsgo.R
+import com.github.gogetters.letsgo.cache.Cache
 import com.github.gogetters.letsgo.chat.model.ChatMessageData
 import com.github.gogetters.letsgo.chat.views.ChatLastMessageItem
 import com.github.gogetters.letsgo.database.Authentication
 import com.github.gogetters.letsgo.database.Database
+import com.github.gogetters.letsgo.database.user.LetsGoUser
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.ChildEventListener
 import com.google.firebase.database.DataSnapshot
@@ -26,11 +29,9 @@ import kotlinx.android.synthetic.main.activity_chat_last_message.*
  */
 class ChatLastMessageActivity : AppCompatActivity() {
 
-    private val TAG = "Chat"
-
-    private val adapter = GroupAdapter<ViewHolder>()
-    // hashmap to store last messages of the users
+    // Stores last messages of the users
     private val lastMessages = HashMap<String, ChatMessageData>()
+    private val adapter = GroupAdapter<ViewHolder>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -42,24 +43,29 @@ class ChatLastMessageActivity : AppCompatActivity() {
         } else {
             setContentView(R.layout.activity_chat_last_message)
 
-            // link the groupie adapter and decorate with horizontal line
+            // Link the groupie adapter and decorate with horizontal line
             chat_recyclerview_last_message.adapter = adapter
             chat_recyclerview_last_message.addItemDecoration(DividerItemDecoration(this, DividerItemDecoration.VERTICAL))
 
-            // set a listener to the items of the adapter
+            // Start a new chat history given the user you clicked on
             adapter.setOnItemClickListener { item, view ->
-                // redirect to previous chat with partner
                 val intent = Intent(this, ChatActivity::class.java)
-                // take the partner info out from the binded item
                 val msgItem = item as ChatLastMessageItem
-                // launch the new activity with the corresponding partner
                 intent.putExtra(ChatNewMessageActivity.KEY, msgItem.chatUser)
                 startActivity(intent)
             }
 
+            // Without checking database connection -> blinking
+            updateMessageList()
             listenForLastMessages()
 
-            // floating button to launch a new chat
+            // With checking database connection -> delay
+            /*
+            if (Database.isConnected) { listenForLastMessages() }
+            else { updateMessageList() }
+            */
+
+            // Floating button to launch the ChatNewMessageActivity
             val fab: View = findViewById(R.id.chat_button_fab)
             fab.setOnClickListener {
                 val intent = Intent(this, ChatNewMessageActivity::class.java)
@@ -75,27 +81,18 @@ class ChatLastMessageActivity : AppCompatActivity() {
     private fun listenForLastMessages() {
         val fromId = Authentication.getCurrentUser()!!.uid
         val ref = FirebaseDatabase.getInstance().getReference("/last-messages-node/$fromId")
-        //ref.keepSynced(true)
 
-        // whenever a new message is sent and saved as last message in database,
+        // Whenever a new message is sent and saved as last message in database,
         // store it in the hashmap and refresh the adapter with the new content
         ref.addChildEventListener(object: ChildEventListener {
-            // When new chat starts
+            // If new chat starts
             override fun onChildAdded(snapshot: DataSnapshot, previousChildName: String?) {
-                Log.d(TAG, "WOW - onChildAdded\t$snapshot")
-
-                val chatMessage = snapshot.getValue(ChatMessageData::class.java) ?: return
-                lastMessages[snapshot.key!!] = chatMessage
-                updateMessageList()
+                presentMessages(snapshot)
             }
-
-            // If chat exist already
+            // If chat exists already
             override fun onChildChanged(snapshot: DataSnapshot, previousChildName: String?) {
-                val chatMessage = snapshot.getValue(ChatMessageData::class.java) ?: return
-                lastMessages[snapshot.key!!] = chatMessage
-                updateMessageList()
+                presentMessages(snapshot)
             }
-
             override fun onChildRemoved(snapshot: DataSnapshot) {}
             override fun onChildMoved(snapshot: DataSnapshot, previousChildName: String?) {}
             override fun onCancelled(error: DatabaseError) {}
@@ -103,12 +100,26 @@ class ChatLastMessageActivity : AppCompatActivity() {
     }
 
     /**
-     * Refresh the adapter with the new content from the hashmap
+     * Get the new message and append it to the list of messages for UI
+     */
+    private fun presentMessages(snapshot: DataSnapshot) {
+        val chatMessage = snapshot.getValue(ChatMessageData::class.java) ?: return
+        lastMessages[snapshot.key!!] = chatMessage
+        Cache.saveLastChatData(this, lastMessages.values)
+        Log.d("CACHE", getSharedPreferences("sharedPrefs", Context.MODE_PRIVATE).getString("lastMessageList", "")!!)
+        updateMessageList()
+    }
+
+    /**
+     * Link the content from the hashmap to the UI
      */
     private fun updateMessageList() {
         adapter.clear()
-        lastMessages.values.forEach {
-            adapter.add(ChatLastMessageItem(it))
+        val cachedLastMessages = Cache.loadLastChatData(this)
+        if (cachedLastMessages != null) {
+            cachedLastMessages.forEach {
+                adapter.add(ChatLastMessageItem(it))
+            }
         }
     }
 

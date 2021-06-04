@@ -4,6 +4,7 @@ import com.github.gogetters.letsgo.database.types.MessageData
 import com.google.firebase.database.*
 import android.util.Log
 import com.github.gogetters.letsgo.database.types.GameData
+import com.github.gogetters.letsgo.matchmaking.Matchmaking
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.tasks.Task
 import com.google.android.gms.tasks.Tasks
@@ -21,6 +22,28 @@ class Database {
         init {
             //Firebase.database.setPersistenceEnabled(true)
         }
+
+        /**
+         * Set up listener for the .info/connected path
+         * The function adjust the Database.isConnected field based on the connection
+         */
+        internal fun setUpIsConnected() {
+            val connectedRef = Firebase.database.getReference(".info/connected")
+            connectedRef.addValueEventListener(object: ValueEventListener {
+                override fun onDataChange(snapshot: DataSnapshot) {
+                    isConnected = snapshot.getValue(Boolean::class.java) ?: false
+                    if (isConnected) { Log.d("TAG", " connected") }
+                    else { Log.d("TAG", " not connected") }
+                }
+
+                override fun onCancelled(error: DatabaseError) {}
+            })
+        }
+
+        // Stores info about connection status
+        var isConnected: Boolean = false
+            get() = field
+
 
         private val db = Firebase.database
         private val database by lazy {
@@ -80,25 +103,40 @@ class Database {
 
         fun findMatch(
                 playerId: String,
-                playerRating: Int,
+                bucket: Int,
+                ranked: Boolean,
                 onComplete: (DatabaseError?,
                              Boolean,
                              DataSnapshot?) -> Unit
         ) {
-            // TODO improve to match players according to rating
             database.child("matchmaking")
                 .runTransaction(object : Transaction.Handler {
                     override fun doTransaction(currentData: MutableData): Transaction.Result {
-                        val p = currentData.child("currentlyWaiting").getValue(String::class.java)
+                        val gameType = if (ranked) "ranked" else "unranked"
+                        val p = currentData.child("currentlyWaiting")
+                                .child(gameType).child(bucket.toString())
+                                .getValue(String::class.java)
+                        if (p == Authentication.getUid()) {
+                            return Transaction.success(currentData);
+                        }
                         if (p == null) {
-                            currentData.child("currentlyWaiting").value = playerId
+                            currentData.child("currentlyWaiting")
+                                    .child(gameType).child(bucket.toString())
+                                    .value = playerId
+                            Matchmaking.queuePath = "/matchmaking/currentlyWaiting/$gameType/$bucket"
+                            Matchmaking.isSearching = true
                         } else {
-                            val gameData = GameData(p, playerId)
-                            currentData.child("currentlyWaiting").value = null
+                            val gameData = GameData(p, playerId, ranked)
+                            currentData.child("currentlyWaiting")
+                                    .child(gameType).child(bucket.toString())
+                                    .value = null
                             val gameId = database.child("matchmaking").child("games").push().key
                             currentData.child("games").child("$gameId").value = gameData
                             currentData.child("currentGamesPerUser").child(gameData.player1).value = gameId
                             currentData.child("currentGamesPerUser").child(gameData.player2).value = gameId
+
+                            Matchmaking.queuePath = null
+                            Matchmaking.isSearching = false
                         }
                         return Transaction.success(currentData)
                     }
@@ -120,28 +158,6 @@ class Database {
         // ---- [END] Matchmaking ----
 
         // ---- Map related ----
-        /**
-         * Activates the location sharing and sends location to database.
-         * Returns true when the data has been sent to the database
-         */
-        fun shareLocation(location: LatLng): Boolean {
-            val uid = Authentication.getUid() ?: return false
-            val userRef = database.child("users").child(uid)
-            userRef.child("isLookingForPlayers").setValue(true)
-            userRef.child("lastPositionLatitude").setValue(location.latitude)
-            userRef.child("lastPositionLongitude").setValue(location.longitude)
-            Log.i("DB","Shared")
-            return true
-        }
-
-        /**
-         * Stops the displaying of the position with other users (not looking for a new game anymore)
-         */
-        fun disableLocationSharing(): Boolean {
-            val uid = Authentication.getUid() ?: return false
-            database.child("users").child(uid).child("isLookingForPlayers").setValue(false)
-            return true
-        }
 
         /**
          * Retrieves all locations except the own one
@@ -202,6 +218,10 @@ class Database {
                 }
             }
             return databaseReference.addValueEventListener(listener)
+        }
+
+        fun removeEventListener(path: String, listener: ValueEventListener) {
+            db.getReference(path).removeEventListener(listener)
         }
 
         fun sendMessage(senderId: String, chatId: String, messageText: String, onSuccess: () -> Unit, onFailure: (Exception) -> Unit) {

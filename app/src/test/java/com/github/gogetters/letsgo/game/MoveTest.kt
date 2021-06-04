@@ -50,4 +50,34 @@ class MoveTest {
             }
         }
     }
+
+    @Test
+    fun toSGFSerializesCorrectly() {
+        val columns = "abcdefghijklmnopqrst".toList()
+        for (stone in setOf(Stone.BLACK, Stone.WHITE)) {
+            for (col in 1..19) {
+                for (row in 1..19) {
+                    val move = Move(stone, Point(col, row))
+                    val sgf = move.toSGF()
+                    val realSGF = "${stone.toString()[0].toUpperCase()}" +
+                            "[${columns[col - 1]}${columns[row - 1]}]"
+
+                    assertEquals(realSGF, sgf)
+                }
+            }
+        }
+    }
+
+    @Test
+    fun fromSGFIsInverseOfToSGF() {
+        for (stone in setOf(Stone.BLACK, Stone.WHITE)) {
+            for (col in 1..19) {
+                for (row in 1..19) {
+                    val move = Move(stone, Point(col, row))
+                    val sgf = move.toSGF()
+                    assertEquals(move, Move.fromSGF(sgf))
+                }
+            }
+        }
+    }
 }

@@ -5,9 +5,7 @@ import android.Manifest.permission.READ_EXTERNAL_STORAGE
 import android.Manifest.permission.WRITE_EXTERNAL_STORAGE
 import android.app.Activity
 import android.app.AlertDialog
-import android.content.ActivityNotFoundException
-import android.content.DialogInterface
-import android.content.Intent
+import android.content.*
 import android.graphics.ImageDecoder
 import android.net.Uri
 import android.os.Build
@@ -24,13 +22,13 @@ import androidx.core.content.FileProvider
 import com.github.gogetters.letsgo.R
 import com.github.gogetters.letsgo.cache.Cache
 import com.github.gogetters.letsgo.database.ImageStorageService
+import com.github.gogetters.letsgo.database.user.FirebaseUserBundleProvider
 import com.github.gogetters.letsgo.database.user.LetsGoUser
 import com.github.gogetters.letsgo.database.user.UserBundle
-import com.github.gogetters.letsgo.database.user.UserBundleProvider
 import com.github.gogetters.letsgo.util.PermissionUtils
 import java.util.*
 
-class ProfileEditActivity : ActivityCompat.OnRequestPermissionsResultCallback, AppCompatActivity() {
+ class ProfileEditActivity : ActivityCompat.OnRequestPermissionsResultCallback, AppCompatActivity() {
     companion object {
         // Codes used when creating a permission request. Used in the onRequestPermissionResult handler.
         private const val READ_EXTERNAL_STORAGE_PERMISSION_REQUEST_CODE: Int = 2
@@ -47,7 +45,7 @@ class ProfileEditActivity : ActivityCompat.OnRequestPermissionsResultCallback, A
 
     private val tag = "Profile"
 
-    private lateinit var userBundleProvider: UserBundleProvider
+    private val userBundleProvider = FirebaseUserBundleProvider
     private lateinit var userBundle: UserBundle
     private lateinit var user: LetsGoUser
 
@@ -75,7 +73,6 @@ class ProfileEditActivity : ActivityCompat.OnRequestPermissionsResultCallback, A
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_profile_edit)
 
-        userBundleProvider = intent.getSerializableExtra("UserBundleProvider") as UserBundleProvider
         userBundle = userBundleProvider.getUserBundle()!!
         user = userBundle.getUser()
 
@@ -87,7 +84,9 @@ class ProfileEditActivity : ActivityCompat.OnRequestPermissionsResultCallback, A
             user.country = countryEditText.text.toString()
             user.city = cityEditText.text.toString()
 
-            Cache.saveUserProfile(this, user)
+            val sP: SharedPreferences = getSharedPreferences(Cache.PREF_ID, Context.MODE_PRIVATE)
+            Cache.saveUserProfile(sP, user)
+
             user.uploadUserData().continueWith { returnToProfile() }
         }
 
@@ -119,7 +118,6 @@ class ProfileEditActivity : ActivityCompat.OnRequestPermissionsResultCallback, A
 
     private fun returnToProfile() {
         val intent = Intent(this, ProfileActivity::class.java)
-        intent.putExtra("UserBundleProvider", userBundleProvider)
         startActivity(intent)
     }
 
@@ -241,10 +239,7 @@ class ProfileEditActivity : ActivityCompat.OnRequestPermissionsResultCallback, A
     private fun onCameraResult(data: Intent?) {
         profileEditImage.setImageURI(profilePictureUri)
         // store the uri for the user
-        ImageStorageService.storeProfileImageOnCloud(
-            userBundleProvider.getUserBundle()!!.getUser(), profilePictureUri,
-            ImageStorageService.PROFILE_PICTURE_PREFIX_CLOUD
-        )
+        ImageStorageService.storeProfileImageOnCloud(userBundleProvider.getUserBundle()!!.getUser(), profilePictureUri, ImageStorageService.PROFILE_PICTURE_PREFIX_CLOUD)
     }
 
     private fun onGalleryResult(data: Intent?) {
@@ -253,22 +248,14 @@ class ProfileEditActivity : ActivityCompat.OnRequestPermissionsResultCallback, A
             try {
                 selectedPhotoUri?.let {
                     if (Build.VERSION.SDK_INT < 28) {
-                        val bitmap = MediaStore.Images.Media.getBitmap(
-                            this.contentResolver,
-                            selectedPhotoUri
-                        )
+                        val bitmap = MediaStore.Images.Media.getBitmap(this.contentResolver, selectedPhotoUri)
                         profileEditImage.setImageBitmap(bitmap)
                     } else {
-                        val source =
-                            ImageDecoder.createSource(this.contentResolver, selectedPhotoUri)
-                        val bitmap = ImageDecoder.decodeBitmap(source)
-                        profileEditImage.setImageBitmap(bitmap)
+                        val source = ImageDecoder.createSource(this.contentResolver, selectedPhotoUri)
+                        profileEditImage.setImageBitmap(ImageDecoder.decodeBitmap(source))
                     }
                     // store the uri for the user
-                    ImageStorageService.storeProfileImageOnCloud(
-                        userBundleProvider.getUserBundle()!!.getUser(), it,
-                        ImageStorageService.PROFILE_PICTURE_PREFIX_CLOUD
-                    )
+                    ImageStorageService.storeProfileImageOnCloud(userBundleProvider.getUserBundle()!!.getUser(), it, ImageStorageService.PROFILE_PICTURE_PREFIX_CLOUD)
                 }
             } catch (e: Exception) {
                 e.printStackTrace()

@@ -3,11 +3,7 @@ package com.github.gogetters.letsgo.util
 
 import android.bluetooth.BluetoothDevice
 import android.bluetooth.BluetoothSocket
-import android.provider.Settings.Global.getString
 import android.util.Log
-import com.github.gogetters.letsgo.R
-import com.github.gogetters.letsgo.database.user.FirebaseUserBundle
-import com.google.firebase.auth.FirebaseAuth
 import java.io.IOException
 import java.util.*
 

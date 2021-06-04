@@ -23,7 +23,7 @@ Standalone client for playing Go online against real players and offline against
  - Custom matchmaking that takes into account GPS position of players
  - Support for “teaching games”: so that teachers can supervise students’ games and give them advice
 
-# Requirements
+## Requirements
 ## Split app model
 OGS website has an API that we can interface to play multiplayer games with players that have an OGS account, and has features like tournaments/forums. Most likely firebase for backend. We can store games with the history of moves with engine evaluations, forum posts and more.
 

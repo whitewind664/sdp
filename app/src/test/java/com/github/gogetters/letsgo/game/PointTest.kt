@@ -1,10 +1,15 @@
 package com.github.gogetters.letsgo.game
 
-import org.junit.Assert.assertEquals
-import org.junit.Assert.assertTrue
+import com.github.gogetters.letsgo.game.util.InputDelegate
+import com.github.gogetters.letsgo.util.BluetoothGTPService
+import org.junit.Assert.*
+import org.junit.Rule
 import org.junit.Test
+import org.junit.rules.ExpectedException
 
 class PointTest {
+    @get:Rule
+    val exception: ExpectedException = ExpectedException.none()
 
     @Test
     fun equalsComparesDeep() {
@@ -14,6 +19,13 @@ class PointTest {
         assertTrue(a == b)
         assertTrue(a != c)
         assertTrue(b != c)
+    }
+
+    @Test
+    fun equalsFailsWithOtherObject() {
+        val a = Point(1, 2)
+        val move = Move(Stone.BLACK, a)
+        assertFalse(a.equals(move))
     }
 
     @Test
@@ -47,4 +59,40 @@ class PointTest {
             }
         }
     }
+
+    @Test
+    fun toSGFSerializesCorrectly() {
+        val columns = "abcdefghijklmnopqrstuvwxyz".toList()
+        for (i in 1..columns.size) {
+            for (j in 1..columns.size) {
+                val point = Point(i, j)
+                val col = columns[i - 1]
+                val row = columns[j - 1]
+                assertEquals("$col$row", point.toSGF())
+            }
+        }
+    }
+
+    @Test
+    fun fromSGFIsInverseOfToSGF() {
+        for (i in 1..19) {
+            for (j in 1..19) {
+                val point = Point(i, j)
+                assertEquals(point, Point.fromSGF(point.toSGF()))
+            }
+        }
+    }
+    
+    @Test
+    fun fromStringFailsOnWrongArgLeng() {
+        exception.expect(IllegalArgumentException::class.java)
+        Point.fromString("SomeRandomString")
+    }
+
+    @Test
+    fun fromStringToStringGivesSameElement() {
+        val pointString = "a1"
+        assertEquals(pointString, Point.fromString(pointString).toString())
+    }
+
 }
