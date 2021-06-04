@@ -49,7 +49,6 @@ import java.io.IOException
 
 @RunWith(AndroidJUnit4::class)
 class ProfileEditActivityTest : EmulatedFirebaseTest() {
-    val DELAY = 5000L
     val GRANT_PERMISSION_BUTTON_INDEX = 0
 
     val intent = Intent(ApplicationProvider.getApplicationContext(), ProfileEditActivity::class.java).putExtra("UserBundleProvider", FirebaseUserBundleProvider)
@@ -82,7 +81,7 @@ class ProfileEditActivityTest : EmulatedFirebaseTest() {
         onView(withId(R.id.profile_edit_nick)).perform(typeText(newNick))
 
         onView(withId(R.id.profile_edit_button_save)).perform(click())
-        TestUtils.sleep()
+        sleep()
         Tasks.await(user.downloadUserData())
         assertEquals(newNick, user.nick)
         assertEquals(oldFirst, user.first)
