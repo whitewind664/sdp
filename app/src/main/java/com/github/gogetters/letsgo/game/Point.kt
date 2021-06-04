@@ -27,6 +27,16 @@ data class Point(val first: Int, val second: Int) {
         return col + row
     }
 
+    /**
+     * Respects the SGF naming conventions
+     */
+    fun toSGF(): String {
+        val col = (first + offsetASCII).toChar().toString()
+        val row = (second + offsetASCII).toChar().toString()
+        return col + row
+    }
+
+
     companion object {
         fun fromString(string: String): Point {
             if (string.length != 2) {
@@ -41,5 +51,14 @@ data class Point(val first: Int, val second: Int) {
 
             return Point(colNum, rowNum)
         }
+
+
+        fun fromSGF(sgf: String): Point {
+            if (sgf.length != 2) throw IllegalArgumentException("input needs to be two characters long")
+            val col = sgf[0].toInt() - offsetASCII
+            val row = sgf[1].toInt() - offsetASCII
+            return Point(col, row)
+        }
+
     }
 }

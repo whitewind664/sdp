@@ -18,9 +18,8 @@ import androidx.test.uiautomator.UiObject
 import androidx.test.uiautomator.UiSelector
 import com.github.gogetters.letsgo.R
 import com.github.gogetters.letsgo.database.EmulatedFirebaseTest
-import com.github.gogetters.letsgo.game.Player
+import com.github.gogetters.letsgo.game.Stone
 import com.github.gogetters.letsgo.testUtil.TestUtils
-import com.github.gogetters.letsgo.testUtil.ToastMatcher
 import junit.framework.Assert.assertTrue
 import org.hamcrest.Matcher
 import org.junit.After
@@ -36,9 +35,8 @@ class GameActivityTest: EmulatedFirebaseTest() {
     val intent = Intent(ApplicationProvider.getApplicationContext(), GameActivity::class.java).apply {
         putExtra(GameActivity.EXTRA_GAME_SIZE, 9)
         putExtra(GameActivity.EXTRA_KOMI, 5.5)
-        val localType = Player.PlayerTypes.LOCAL.ordinal
-        putExtra(GameActivity.EXTRA_PLAYER_BLACK, localType)
-        putExtra(GameActivity.EXTRA_PLAYER_WHITE, localType)
+        putExtra(GameActivity.EXTRA_GAME_TYPE, "LOCAL")
+        putExtra(GameActivity.EXTRA_LOCAL_COLOR, Stone.EMPTY.toString())
     }
     lateinit var scenario: ActivityScenario<GameActivity>
 
@@ -61,33 +59,33 @@ class GameActivityTest: EmulatedFirebaseTest() {
         goView.perform(touchDownAndUp(2f, 2f))
     }
 
-    @Ignore // works locally but not on Cirrus
-    @Test
-    fun btLocalPlayerBlackTriggersToast() {
-        val btIntent = Intent(ApplicationProvider.getApplicationContext(), GameActivity::class.java).apply {
-            putExtra(GameActivity.EXTRA_GAME_SIZE, 9)
-            putExtra(GameActivity.EXTRA_KOMI, 5.5)
-            putExtra(GameActivity.EXTRA_PLAYER_BLACK, Player.PlayerTypes.BTLOCAL.ordinal)
-            putExtra(GameActivity.EXTRA_PLAYER_WHITE, Player.PlayerTypes.BTREMOTE.ordinal)
-        }
+//    @Ignore // works locally but not on Cirrus
+//    @Test
+//    fun btLocalPlayerBlackTriggersToast() {
+//        val btIntent = Intent(ApplicationProvider.getApplicationContext(), GameActivity::class.java).apply {
+//            putExtra(GameActivity.EXTRA_GAME_SIZE, 9)
+//            putExtra(GameActivity.EXTRA_KOMI, 5.5)
+//            putExtra(GameActivity.EXTRA_PLAYER_BLACK, Player.PlayerTypes.BTLOCAL.ordinal)
+//            putExtra(GameActivity.EXTRA_PLAYER_WHITE, Player.PlayerTypes.BTREMOTE.ordinal)
+//        }
+//
+//        scenario = ActivityScenario.launch(btIntent)
+//        onView(withText(R.string.game_startAsBlack)).inRoot(ToastMatcher()).check(matches((isDisplayed())))
+//    }
 
-        scenario = ActivityScenario.launch(btIntent)
-        onView(withText(R.string.game_startAsBlack)).inRoot(ToastMatcher()).check(matches((isDisplayed())))
-    }
-
-    @Ignore // works locally but not on Cirrus
-    @Test
-    fun btLocalPlayerWhiteTriggersToast() {
-        val btIntent = Intent(ApplicationProvider.getApplicationContext(), GameActivity::class.java).apply {
-            putExtra(GameActivity.EXTRA_GAME_SIZE, 9)
-            putExtra(GameActivity.EXTRA_KOMI, 5.5)
-            putExtra(GameActivity.EXTRA_PLAYER_WHITE, Player.PlayerTypes.BTLOCAL.ordinal)
-            putExtra(GameActivity.EXTRA_PLAYER_BLACK, Player.PlayerTypes.BTREMOTE.ordinal)
-        }
-
-        scenario = ActivityScenario.launch(btIntent)
-        onView(withText(R.string.game_startAsWhite)).inRoot(ToastMatcher()).check(matches((isDisplayed())))
-    }
+//    @Ignore // works locally but not on Cirrus
+//    @Test
+//    fun btLocalPlayerWhiteTriggersToast() {
+//        val btIntent = Intent(ApplicationProvider.getApplicationContext(), GameActivity::class.java).apply {
+//            putExtra(GameActivity.EXTRA_GAME_SIZE, 9)
+//            putExtra(GameActivity.EXTRA_KOMI, 5.5)
+//            putExtra(GameActivity.EXTRA_PLAYER_WHITE, Player.PlayerTypes.BTLOCAL.ordinal)
+//            putExtra(GameActivity.EXTRA_PLAYER_BLACK, Player.PlayerTypes.BTREMOTE.ordinal)
+//        }
+//
+//        scenario = ActivityScenario.launch(btIntent)
+//        onView(withText(R.string.game_startAsWhite)).inRoot(ToastMatcher()).check(matches((isDisplayed())))
+//    }
 
     @Test
     fun passCanBeCanceled() {
@@ -108,12 +106,12 @@ class GameActivityTest: EmulatedFirebaseTest() {
         TestUtils.sleep()
         onView(withId(R.id.game_button_pass)).perform(click())
         onView(withText(R.string.game_passTitle))
-            .check(matches(isDisplayed()))
+                .check(matches(isDisplayed()))
         clickAtIndex(0, "Confirm PASS")
 
         onView(withId(R.id.game_button_pass)).perform(click())
         onView(withText(R.string.game_passTitle))
-            .check(matches(isDisplayed()))
+                .check(matches(isDisplayed()))
         clickAtIndex(0, "Confirm PASS")
 
         // verify that end of game is displayed

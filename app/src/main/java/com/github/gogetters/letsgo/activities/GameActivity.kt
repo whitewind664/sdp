@@ -1,10 +1,8 @@
 package com.github.gogetters.letsgo.activities
 
-import android.Manifest
 import android.app.AlertDialog
 import android.content.DialogInterface
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import android.widget.Button
 import android.widget.FrameLayout
@@ -13,19 +11,20 @@ import android.widget.Toast
 import com.github.gogetters.letsgo.R
 import com.github.gogetters.letsgo.game.*
 import com.github.gogetters.letsgo.game.util.InputDelegate
+import com.github.gogetters.letsgo.game.util.firebase.FirebaseService
 import com.github.gogetters.letsgo.game.view.GoView
-import com.github.gogetters.letsgo.util.PermissionUtils
-import kotlinx.coroutines.Dispatchers
+import com.github.gogetters.letsgo.matchmaking.Matchmaking
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
+import java.lang.IllegalArgumentException
 
 class GameActivity : BaseActivity() {
     companion object {
         const val EXTRA_GAME_SIZE = "com.github.gogetters.letsgo.game.GAME_SIZE"
         const val EXTRA_KOMI = "com.github.gogetters.letsgo.game.KOMI"
-        const val EXTRA_PLAYER_WHITE = "com.github.gogetters.letsgo.game.PLAYER_ONE"
-        const val EXTRA_PLAYER_BLACK = "com.github.gogetters.letsgo.game.PLAYER_TWO"
-        
+        const val EXTRA_GAME_TYPE = "com.github.gogetters.letsgo.game.GAME_TYPE"
+        const val EXTRA_LOCAL_COLOR = "com.github.gogetters.letsgo.game.LOCAL_COLOR"
+        const val EXTRA_GAME_ID = "com.github.gogetters.letsgo.game.GAME_ID"
         const val CONFIRM_PASS_IDX = 0
         const val CANCEL_PASS_IDX = 1
     }
@@ -40,6 +39,7 @@ class GameActivity : BaseActivity() {
 
     private lateinit var blackTurnText: String
     private lateinit var whiteTurnText: String
+    private var onEnd: () -> Unit = {}
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -47,37 +47,73 @@ class GameActivity : BaseActivity() {
 
         val gameSizeInput = intent.getIntExtra(EXTRA_GAME_SIZE, 9)
         val komi = intent.getDoubleExtra(EXTRA_KOMI, 5.5)
-        val blackType = intent.getIntExtra(EXTRA_PLAYER_BLACK, 0)
-        val whiteType = intent.getIntExtra(EXTRA_PLAYER_WHITE, 0)
-        setInfoAboutThisPlayers(blackType, whiteType)
+        val gameId = intent.getStringExtra(EXTRA_GAME_ID)
+        val gameType = intent.getStringExtra(EXTRA_GAME_TYPE) ?: "LOCAL"
+        val localColorString = intent.getStringExtra(EXTRA_LOCAL_COLOR)
+        val localColor = Stone.fromString(localColorString!!)
+        setInfoAboutThisPlayers(localColor)
 
-        //TODO: unify "input providers???"
-        val bluetoothService = BluetoothActivity.service
-        bluetoothService.inputDelegate = InputDelegate()
 
         val boardSize = Board.Size.withSize(gameSizeInput)
         goView = GoView(this, boardSize)
-
-        val touchInputDelegate = InputDelegate()
-        goView.inputDelegate = touchInputDelegate
-
         val boardFrame = findViewById<FrameLayout>(R.id.game_frameLayout_boardFrame)
         boardFrame.addView(goView)
         turnText = findViewById(R.id.game_textView_turnIndication)
         blackScore = findViewById(R.id.game_textView_blackScore)
         whiteScore = findViewById(R.id.game_textView_whiteScore)
         passButton = findViewById(R.id.game_button_pass)
+
+
+        val touchInputDelegate = InputDelegate()
+        goView.inputDelegate = touchInputDelegate
         passButton.setOnClickListener {
             passPopUp(touchInputDelegate)
         }
 
-        val blackPlayer =
-            Player.playerOf(Stone.BLACK, blackType, touchInputDelegate, bluetoothService)
-        val whitePlayer =
-            Player.playerOf(Stone.WHITE, whiteType, touchInputDelegate, bluetoothService)
+
+        val (blackPlayer: Player, whitePlayer: Player) = when (gameType) {
+
+            "LOCAL" -> Pair(DelegatedPlayer(Stone.BLACK, touchInputDelegate),
+                    DelegatedPlayer(Stone.WHITE, touchInputDelegate))
+
+            "BLUETOOTH", "FIREBASE" -> {
+
+                val service = when (gameType) {
+                    "BLUETOOTH" -> BluetoothActivity.service
+                    "FIREBASE" -> FirebaseService(gameId!!, localColor)
+                    else -> throw IllegalArgumentException("illegal game type $gameType")
+                }
+
+                if (gameType == "FIREBASE") {
+                    (service as FirebaseService).setDelegate(InputDelegate())
+                    onEnd = {
+                        Matchmaking.endMatch()
+                    }
+                } else {
+                    service.inputDelegate = InputDelegate()
+                }
+
+
+                when (localColor) {
+                    Stone.WHITE -> Pair(DelegatedPlayer(Stone.BLACK, service.inputDelegate),
+                            RemotePlayerAdapter(DelegatedPlayer(Stone.WHITE, touchInputDelegate), service))
+                    Stone.BLACK -> Pair(RemotePlayerAdapter(DelegatedPlayer(Stone.BLACK, touchInputDelegate), service),
+                            DelegatedPlayer(Stone.WHITE, service.inputDelegate))
+                    else -> throw IllegalArgumentException("this cannot happen")
+                }
+
+            }
+
+            else -> throw IllegalArgumentException("illegal game type $gameType")
+        }
 
         game = Game(boardSize, komi, whitePlayer, blackPlayer)
         runGame()
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        Matchmaking.surrender()
     }
 
     override fun getLayoutResource(): Int {
@@ -85,7 +121,7 @@ class GameActivity : BaseActivity() {
     }
 
     private fun runGame() {
-        GlobalScope.launch() {
+        GlobalScope.launch {
             var boardState = game.playTurn()
             while (!boardState.gameOver) {
                 drawBoard(boardState)
@@ -98,10 +134,13 @@ class GameActivity : BaseActivity() {
                 boardState = game.playTurn()
             }
 
+            onEnd();
+
             runOnUiThread {
                 displayEndOfGame()
             }
         }
+
     }
 
     /**
@@ -133,22 +172,24 @@ class GameActivity : BaseActivity() {
      * Based on the types of the players, pops up your color and
      * sets the turn text messages accordingly (so that you always know if you are black or white)
      */
-    private fun setInfoAboutThisPlayers(blackType: Int, whiteType: Int) {
+    private fun setInfoAboutThisPlayers(localColor: Stone) {
         // popup
-        if (blackType == Player.PlayerTypes.BTLOCAL.ordinal) {
-            showLongToast(resources.getString(R.string.game_startAsBlack))
-        } else if (whiteType == Player.PlayerTypes.BTLOCAL.ordinal) {
-            showLongToast(resources.getString(R.string.game_startAsWhite))
-        }
-        // sets messages
-        // TODO update for online play
-        blackTurnText = when (blackType) {
-            Player.PlayerTypes.BTLOCAL.ordinal -> resources.getString(R.string.game_blackYouTurn)
-            else -> resources.getString(R.string.game_blackTurn)
-        }
-        whiteTurnText = when (whiteType) {
-            Player.PlayerTypes.BTLOCAL.ordinal -> resources.getString(R.string.game_whiteYouTurn)
-            else -> resources.getString(R.string.game_whiteTurn)
+        when (localColor) {
+            Stone.BLACK -> {
+                showLongToast(resources.getString(R.string.game_startAsBlack))
+                blackTurnText = resources.getString(R.string.game_blackYouTurn)
+                whiteTurnText = resources.getString(R.string.game_whiteTurn)
+            }
+            Stone.WHITE -> {
+                showLongToast(resources.getString(R.string.game_startAsWhite))
+                blackTurnText = resources.getString(R.string.game_blackTurn)
+                whiteTurnText = resources.getString(R.string.game_whiteYouTurn)
+            }
+            Stone.EMPTY -> {
+                showLongToast(resources.getString(R.string.game_startLocal))
+                blackTurnText = resources.getString(R.string.game_blackYouTurn)
+                whiteTurnText = resources.getString(R.string.game_whiteYouTurn)
+            }
         }
     }
 

@@ -49,19 +49,4 @@ class GameModeChooserActivityTest: EmulatedFirebaseTest() {
         Intents.intended(IntentMatchers.hasComponent(BluetoothActivity::class.java.name))
     }
 
-    @Test
-    fun ogsButtonOpensLogin() {
-        onView(withId(R.id.gameModeChooser_button_ogs)).perform(ViewActions.click())
-        onView(withId(R.id.gameModeChooser_editText_loginUsername)).check(
-            ViewAssertions.matches(
-                ViewMatchers.isDisplayed()
-            )
-        )
-        onView(withId(R.id.gameModeChooser_editText_loginPassword)).check(
-            ViewAssertions.matches(
-                ViewMatchers.isDisplayed()
-            )
-        )
-    }
-
 }
