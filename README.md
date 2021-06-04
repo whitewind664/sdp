@@ -6,6 +6,13 @@ Cirrus CI: [![Build Status](https://api.cirrus-ci.com/github/whitewind664/sdp.sv
 
 Code Climate: [![Test Coverage](https://api.codeclimate.com/v1/badges/eb499ed5d368f682cb26/test_coverage)](https://codeclimate.com/github/whitewind664/sdp/test_coverage) [![Maintainability](https://api.codeclimate.com/v1/badges/eb499ed5d368f682cb26/maintainability)](https://codeclimate.com/github/whitewind664/sdp/maintainability)
 
+## Configure
+To configure the app with the release code found in this repo, your device needs to be enabled for the Google Map API. Please get in touch with us for this purpose.
+
+## Usage Instructions
+- To use the full functionality of the app, you need to log in. To do so, you can go to "See Profile". Features that to not work offline are: Playing online, sharing location via map, sending and receiving messages.
+- If you don't know Go, you can click on the middle element of the bottom bar: it opens a tutorial.
+
 ## Description
 An Android app that is realized as part of the SDP course at EPFL.
 
@@ -30,7 +37,7 @@ Registration is required to play online against other players. Users will have a
 
 
 ## Local cache
-We use the local cache to store the standing of a current (offline) game. It may also be used to store messages from other users sent earlier or to look at game statistics of previous games. Can cache a certain number of puzzles to use when offline.
+We use the local cache to store user information and chat messages.
 
 ## Offline mode
 
