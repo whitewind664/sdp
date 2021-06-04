@@ -7,6 +7,7 @@ import com.github.gogetters.letsgo.R
 import com.github.gogetters.letsgo.chat.views.ChatNewMessageItem
 import com.github.gogetters.letsgo.database.Authentication
 import com.github.gogetters.letsgo.database.user.LetsGoUser
+import com.github.gogetters.letsgo.database.user.LetsGoUser.*
 import com.xwray.groupie.GroupAdapter
 import com.xwray.groupie.ViewHolder
 import kotlinx.android.synthetic.main.activity_chat_new_message.*
@@ -32,17 +33,16 @@ class ChatNewMessageActivity : AppCompatActivity() {
     private fun listUsers() {
         val user = LetsGoUser(Authentication.getUid()!!)
 
+//        user.downloadFriends().addOnSuccessListener {
+//            val friends = user.listFriendsByStatus(FriendStatus.ACCEPTED)
+//
+//            friends.forEach{
+//                it.uid
+//            }
+//        }
+
         user.downloadFriends().addOnSuccessListener {
-            val friends = user.friendsByStatus!![LetsGoUser.FriendStatus.ACCEPTED]!!
-
-            friends.forEach{
-                it.uid
-            }
-        }
-
-
-        user.downloadFriends().addOnSuccessListener {
-            val friends = user.friendsByStatus!![LetsGoUser.FriendStatus.ACCEPTED]!!
+            val friends = user.listFriendsByStatus(FriendStatus.ACCEPTED)
 
             val adapter = GroupAdapter<ViewHolder>()
 

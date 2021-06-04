@@ -11,7 +11,6 @@ import android.widget.TextView
 import com.github.gogetters.letsgo.R
 import com.github.gogetters.letsgo.cache.Cache
 import com.github.gogetters.letsgo.database.ImageStorageService
-import com.github.gogetters.letsgo.database.ImageStorageService.Companion.PROFILE_PICTURE_PREFIX_CLOUD
 import com.github.gogetters.letsgo.database.user.FirebaseUserBundleProvider
 import com.github.gogetters.letsgo.database.user.UserBundle
 import com.github.gogetters.letsgo.database.user.UserBundleProvider
@@ -80,12 +79,6 @@ class ProfileActivity : BaseActivity() {
         return R.layout.activity_profile
     }
 
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-        Log.d("Profile", "PROFILE - onActivityResult $requestCode \t $resultCode")
-        updateUI()
-    }
-
     private fun updateUI() {
         val userBundle: UserBundle? = userBundleProvider.getUserBundle()
 
@@ -136,7 +129,7 @@ class ProfileActivity : BaseActivity() {
         // not cached yet
         user.downloadUserData().addOnCompleteListener {
             ImageStorageService.getProfileImageFromCloud(
-                PROFILE_PICTURE_PREFIX_CLOUD,
+                ImageStorageService.PROFILE_PICTURE_PREFIX_CLOUD,
                 user.profileImageRef,
                 ImageStorageService.getOutputImageFile(
                     getExternalFilesDir(Environment.DIRECTORY_PICTURES)
