@@ -25,6 +25,7 @@ import junit.framework.Assert.assertTrue
 import org.hamcrest.Matcher
 import org.junit.After
 import org.junit.Before
+import org.junit.Ignore
 import org.junit.Test
 import org.junit.runner.RunWith
 
@@ -60,6 +61,7 @@ class GameActivityTest: EmulatedFirebaseTest() {
         goView.perform(touchDownAndUp(2f, 2f))
     }
 
+    @Ignore
     @Test
     fun btLocalPlayerBlackTriggersToast() {
         val btIntent = Intent(ApplicationProvider.getApplicationContext(), GameActivity::class.java).apply {
@@ -73,6 +75,7 @@ class GameActivityTest: EmulatedFirebaseTest() {
         onView(withText(R.string.game_startAsBlack)).inRoot(ToastMatcher()).check(matches((isDisplayed())))
     }
 
+    @Ignore
     @Test
     fun btLocalPlayerWhiteTriggersToast() {
         val btIntent = Intent(ApplicationProvider.getApplicationContext(), GameActivity::class.java).apply {
