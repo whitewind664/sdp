@@ -15,6 +15,7 @@ import com.github.gogetters.letsgo.game.*
 import com.github.gogetters.letsgo.game.util.InputDelegate
 import com.github.gogetters.letsgo.game.view.GoView
 import com.github.gogetters.letsgo.util.PermissionUtils
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 
@@ -84,7 +85,7 @@ class GameActivity : BaseActivity() {
     }
 
     private fun runGame() {
-        GlobalScope.launch {
+        GlobalScope.launch() {
             var boardState = game.playTurn()
             while (!boardState.gameOver) {
                 drawBoard(boardState)
