@@ -19,9 +19,7 @@ import androidx.test.uiautomator.UiSelector
 import com.github.gogetters.letsgo.R
 import com.github.gogetters.letsgo.database.EmulatedFirebaseTest
 import com.github.gogetters.letsgo.game.Stone
-import com.github.gogetters.letsgo.game.Player
 import com.github.gogetters.letsgo.testUtil.TestUtils
-import com.github.gogetters.letsgo.testUtil.ToastMatcher
 import junit.framework.Assert.assertTrue
 import org.hamcrest.Matcher
 import org.junit.After
@@ -55,13 +53,13 @@ class GameActivityTest: EmulatedFirebaseTest() {
     @Test
     fun twoSubsequentPassesEndGame() {
         scenario = ActivityScenario.launch(intent)
-        Espresso.onView(withId(R.id.game_button_pass)).perform(click())
-        Espresso.onView(withText(R.string.game_passTitle))
+        onView(withId(R.id.game_button_pass)).perform(click())
+        onView(withText(R.string.game_passTitle))
                 .check(matches(isDisplayed()))
         clickAtIndex(0, "Confirm PASS")
 
-        Espresso.onView(withId(R.id.game_button_pass)).perform(click())
-        Espresso.onView(withText(R.string.game_passTitle))
+        onView(withId(R.id.game_button_pass)).perform(click())
+        onView(withText(R.string.game_passTitle))
                 .check(matches(isDisplayed()))
         clickAtIndex(0, "Confirm PASS")
 
