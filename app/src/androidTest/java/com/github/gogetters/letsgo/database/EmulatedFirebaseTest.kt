@@ -13,7 +13,10 @@ abstract class EmulatedFirebaseTest {
                 val appContext = InstrumentationRegistry.getInstrumentation().targetContext
                 FirebaseApp.initializeApp(appContext)
                 Database.emulatorSettings()
-                //Authentication.emulatorSettings()
+
+                // Commenting this will use the real FirebaseAuth and not the emulated one
+                // We should try to make it work
+                Authentication.emulatorSettings()
             }
         }
     }
