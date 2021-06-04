@@ -3,16 +3,9 @@ package com.github.gogetters.letsgo.util
 import android.bluetooth.BluetoothAdapter
 import android.bluetooth.BluetoothServerSocket
 import android.bluetooth.BluetoothSocket
-import android.os.Handler
-import android.os.Looper
 import android.util.Log
 import java.io.IOException
-import java.io.Serializable
-import java.text.SimpleDateFormat
-import java.time.LocalDateTime
 import java.util.*
-import com.github.gogetters.letsgo.R
-import androidx.core.content.ContextCompat
 
 class BluetoothServer {
 

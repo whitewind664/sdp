@@ -10,10 +10,11 @@ import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import org.junit.*
 import org.junit.runner.RunWith
+import kotlin.math.abs
 
 
 @RunWith(AndroidJUnit4::class)
-public class MatchmakingAndroidTest: EmulatedFirebaseTest() {
+public class MatchmakingTest: EmulatedFirebaseTest() {
 
     init {
         val appContext = InstrumentationRegistry.getInstrumentation().targetContext
@@ -23,5 +24,17 @@ public class MatchmakingAndroidTest: EmulatedFirebaseTest() {
     @Test
     fun findMatchWorks() {
 
+    }
+
+    @Test
+    fun eloChangeReturnsExpectedNumbers() {
+        val rating1 = 1500.0
+        val rating2 = 1500.0
+
+        val (newRating1, newRating2) = Matchmaking.eloChange(rating1, rating2, 1)
+        print(newRating1)
+        print(newRating2)
+        Assert.assertTrue(abs(newRating1 - 1508) < 0.1)
+        Assert.assertTrue(abs(newRating2 - 1492) < 0.1)
     }
 }

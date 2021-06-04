@@ -21,6 +21,7 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.github.gogetters.letsgo.R
 import com.github.gogetters.letsgo.game.Player
+import com.github.gogetters.letsgo.game.Stone
 import com.github.gogetters.letsgo.util.*
 import java.util.*
 import java.util.concurrent.CompletableFuture
@@ -139,15 +140,9 @@ class BluetoothActivity : AppCompatActivity() {
         val intent = Intent(this, GameActivity::class.java).apply {
             putExtra(GameActivity.EXTRA_GAME_SIZE, 9)
             putExtra(GameActivity.EXTRA_KOMI, 5.5)
-            val local = Player.PlayerTypes.BTLOCAL.ordinal
-            val remote = Player.PlayerTypes.BTREMOTE.ordinal
-            if (isServer) {
-                putExtra(GameActivity.EXTRA_PLAYER_BLACK, local)
-                putExtra(GameActivity.EXTRA_PLAYER_WHITE, remote)
-            } else {
-                putExtra(GameActivity.EXTRA_PLAYER_BLACK, remote)
-                putExtra(GameActivity.EXTRA_PLAYER_WHITE, local)
-            }
+            putExtra(GameActivity.EXTRA_GAME_TYPE, "BLUETOOTH")
+            val localColor = if (isServer) Stone.BLACK else Stone.WHITE
+            putExtra(GameActivity.EXTRA_LOCAL_COLOR, localColor.toString())
         }
         startActivity(intent)
     }
@@ -287,7 +282,7 @@ class BluetoothActivity : AppCompatActivity() {
         const val REQUEST_PERMISSION_FINE_LOCATION = 1
         const val REQUEST_ENABLE_BLUETOOTH = 1
 
-        val service = BluetoothGTPService()
+        val service = BluetoothGTPService(RealBluetoothService())
 
 
 

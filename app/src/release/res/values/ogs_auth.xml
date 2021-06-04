@@ -1,5 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-    <string name="ogs_client_id" templateMergeStrategy="preserve" translatable="false">OGS_CLIENT_ID</string>
-    <string name="ogs_client_secret" templateMergeStrategy="preserve" translatable="false">OGS_CLIENT_SECRET</string>
-</resources>
