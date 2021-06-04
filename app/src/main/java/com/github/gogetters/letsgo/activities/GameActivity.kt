@@ -67,7 +67,7 @@ class GameActivity : BaseActivity() {
         whiteScore = findViewById(R.id.game_textView_whiteScore)
         passButton = findViewById(R.id.game_button_pass)
         passButton.setOnClickListener {
-            passPopUp(touchInputDelegate, goView)
+            passPopUp(touchInputDelegate)
         }
 
         val blackPlayer =
@@ -106,7 +106,7 @@ class GameActivity : BaseActivity() {
     /**
      * Is called when the pass button is clicked. Asks whether the player really wants to pass and then does the passing
      */
-    private fun passPopUp(inputDelegate: InputDelegate, goView: GoView) {
+    private fun passPopUp(inputDelegate: InputDelegate) {
         val dialogTexts = arrayOf<CharSequence>(
             resources.getString(R.string.game_passConfirm),
             resources.getString(R.string.game_passCancel)
@@ -115,7 +115,7 @@ class GameActivity : BaseActivity() {
         builder.setTitle(resources.getString(R.string.game_passTitle))
         builder.setItems(dialogTexts, DialogInterface.OnClickListener { dialog, clickedIndex ->
             if (clickedIndex == CONFIRM_PASS_IDX) {
-                goView.onPass()
+                inputDelegate.saveLatestInput(Game.PASS_MOVE.point)
             } else {
                 dialog.dismiss()
                 return@OnClickListener

@@ -8,8 +8,9 @@ import android.view.MotionEvent
 import android.view.View
 import androidx.core.content.ContextCompat
 import com.github.gogetters.letsgo.R
-import com.github.gogetters.letsgo.game.*
-import com.github.gogetters.letsgo.game.Game
+import com.github.gogetters.letsgo.game.Board
+import com.github.gogetters.letsgo.game.BoardState
+import com.github.gogetters.letsgo.game.Stone
 import com.github.gogetters.letsgo.game.Point
 import com.github.gogetters.letsgo.game.util.InputDelegate
 import kotlin.math.roundToInt
@@ -53,7 +54,7 @@ open class GoView(context: Context, private val boardSize: Board.Size) : View(co
 
         val adjustedX = (x - marginX).coerceAtLeast(0F).coerceAtMost(maxX)
         val adjustedY = (y - marginY).coerceAtLeast(0F).coerceAtMost(maxY)
-
+        
 
         val col = (adjustedX / squareWidth).roundToInt() + 1
         val row = (adjustedY / squareHeight).roundToInt() + 1
@@ -154,9 +155,5 @@ open class GoView(context: Context, private val boardSize: Board.Size) : View(co
         }
 
         return true
-    }
-
-    fun onPass() {
-        inputDelegate.saveLatestInput(Game.PASS_MOVE.point)
     }
 }
