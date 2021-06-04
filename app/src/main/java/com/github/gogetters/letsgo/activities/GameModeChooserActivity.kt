@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.View
 import android.widget.*
 import com.github.gogetters.letsgo.R
+import com.github.gogetters.letsgo.database.Authentication
 import com.github.gogetters.letsgo.game.Player
 import com.github.gogetters.letsgo.game.Stone
 import com.github.gogetters.letsgo.game.util.ogs.*
@@ -72,6 +73,13 @@ class GameModeChooserActivity : BaseActivity() {
                 putExtra(WaitMatchActivity.EXTRA_IS_RANKED, false)
             }
             startActivity(intent)
+        }
+
+        val uid = Authentication.getUid()
+
+        if (uid == null) {
+            rankedButton.isEnabled = false
+            unrankedButton.isEnabled = false
         }
 
         btButton = findViewById(R.id.gameModeChooser_button_bluetooth)
