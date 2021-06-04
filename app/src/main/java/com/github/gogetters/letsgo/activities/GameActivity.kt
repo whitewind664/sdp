@@ -63,7 +63,6 @@ class GameActivity : BaseActivity() {
         blackScore = findViewById(R.id.game_textView_blackScore)
         whiteScore = findViewById(R.id.game_textView_whiteScore)
         passButton = findViewById(R.id.game_button_pass)
-        passButton = findViewById(R.id.game_button_pass)
 
 
         val touchInputDelegate = InputDelegate()
