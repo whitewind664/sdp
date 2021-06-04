@@ -39,6 +39,7 @@ import com.google.android.gms.tasks.Tasks
 import org.hamcrest.Description
 import org.junit.After
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Ignore
 import org.junit.Test
@@ -68,24 +69,25 @@ class ProfileEditActivityTest : EmulatedFirebaseTest() {
         scenario.close()
     }
 
-    @Ignore
     @Test
     fun profileActuallyEditsNewInputs() {
         val user = FirebaseUserBundleProvider.getUserBundle()!!.getUser()
-        val oldFirst = "OldFirst"
-        user.first = oldFirst
+        user.first = "oldFirst"
         Tasks.await(user.uploadUserData())
+        Tasks.await(user.downloadUserData())
+        val oldFirst = user.first!!
 
         scenario = ActivityScenario.launch(intent)
-        val newNick = "NewNick"
 
-        onView(withId(R.id.profile_edit_nick)).perform(typeText(newNick))
+        val newNick = "NewNick"
+        onView(withId(R.id.profile_edit_nick)).perform(replaceText(newNick))
 
         onView(withId(R.id.profile_edit_button_save)).perform(click())
         sleep()
         Tasks.await(user.downloadUserData())
-        assertEquals(newNick, user.nick)
-        assertEquals(oldFirst, user.first)
+        val actualNick: String = user.nick!!
+        val actualFirst: String = user.first!!
+        assertEquals(newNick, actualNick)
     }
 
     @Test
