@@ -45,9 +45,9 @@ class MainActivityTest: EmulatedFirebaseTest() {
 
 
     @Test
-    fun gameButtonOpensGame() {
+    fun gameButtonOpensModeChooser() {
         onView(withId(R.id.item1)).perform(click())
-        Intents.intended(IntentMatchers.hasComponent(GameActivity::class.java.name))
+        Intents.intended(IntentMatchers.hasComponent(GameModeChooserActivity::class.java.name))
     }
 
     @Test
