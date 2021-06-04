@@ -28,6 +28,8 @@ class WaitMatchActivity: BaseActivity() {
         Matchmaking.findMatch(isRanked, { gameId, color ->
             finish()
             goToGame(gameId, color)
+        }, {
+            finish()
         })
 
 

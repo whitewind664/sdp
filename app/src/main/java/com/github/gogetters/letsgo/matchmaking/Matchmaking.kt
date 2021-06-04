@@ -85,7 +85,7 @@ class Matchmaking {
 
         }
 
-        fun findMatch(ranked: Boolean, onFind: (String, Stone) -> Unit) {
+        fun findMatch(ranked: Boolean, onFind: (String, Stone) -> Unit, onFail: () -> Unit) {
             val user = Authentication.getCurrentUser()
             this.onFind = onFind
             if (user != null) {
@@ -103,7 +103,14 @@ class Matchmaking {
                             val bucket = (rating / bucketSize).toInt() * bucketSize
 
 
-                            Database.findMatch(user.uid, bucket, ranked) { _, _, _ -> }
+                            Database.findMatch(user.uid, bucket, ranked) { _, committed, _ ->
+                                if (!committed) {
+                                    onFail()
+                                }
+                            }
+                        }
+                        .addOnFailureListener {
+                            onFail()
                         }
             }
         }
