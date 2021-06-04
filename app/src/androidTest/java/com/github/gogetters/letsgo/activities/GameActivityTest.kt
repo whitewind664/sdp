@@ -76,7 +76,7 @@ class GameActivityTest: EmulatedFirebaseTest() {
             putExtra(GameActivity.EXTRA_GAME_SIZE, 9)
             putExtra(GameActivity.EXTRA_KOMI, 5.5)
             putExtra(GameActivity.EXTRA_PLAYER_WHITE, Player.PlayerTypes.BTLOCAL.ordinal)
-            putExtra(GameActivity.EXTRA_PLAYER_WHITE, Player.PlayerTypes.BTREMOTE.ordinal)
+            putExtra(GameActivity.EXTRA_PLAYER_BLACK, Player.PlayerTypes.BTREMOTE.ordinal)
         }
 
         scenario = ActivityScenario.launch(btIntent)
@@ -108,7 +108,10 @@ class GameActivityTest: EmulatedFirebaseTest() {
             .check(matches(isDisplayed()))
         clickAtIndex(0, "Confirm PASS")
 
-        // TODO verify that end of game is displayed
+        // verify that end of game is displayed
+        val device: UiDevice = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation())
+        val endOfGameText = device.findObject(UiSelector().textContains("Game is over"))
+        assertTrue(endOfGameText.exists())
     }
 
     private fun touchDownAndUp(x: Float, y: Float): ViewAction {

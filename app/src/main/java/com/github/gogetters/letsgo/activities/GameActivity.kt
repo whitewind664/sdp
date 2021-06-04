@@ -163,6 +163,22 @@ class GameActivity : BaseActivity() {
             // Black's turn
             turnText.text = blackTurnText
         }
+        turnText.text = when(lastMove?.stone) {
+            Stone.BLACK -> whiteTurnText
+            Stone.WHITE -> blackTurnText
+            Stone.EMPTY -> getTextAfterPass(lastMove)
+            else -> ""
+        }
+    }
+
+    /**
+     * Returns the correct text for the turn text after a pass
+     */
+    private fun getTextAfterPass(lastMove: Move): String {
+        return if (lastMove.point == Game.PASS_MOVE.point) {
+            if (turnText.text == whiteTurnText) resources.getString(R.string.game_blackPassTurn)
+            else resources.getString(R.string.game_whitePassTurn)
+        } else { "" }
     }
 
     private fun displayEndOfGame() {
