@@ -14,6 +14,7 @@ import com.github.gogetters.letsgo.game.util.InputDelegate
 import com.github.gogetters.letsgo.game.util.firebase.FirebaseService
 import com.github.gogetters.letsgo.game.util.ogs.OGSCommunicatorService
 import com.github.gogetters.letsgo.game.view.GoView
+import com.github.gogetters.letsgo.matchmaking.Matchmaking
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import java.lang.IllegalArgumentException
@@ -39,6 +40,7 @@ class GameActivity : BaseActivity() {
 
     private lateinit var blackTurnText: String
     private lateinit var whiteTurnText: String
+    private var onEnd: () -> Unit = {}
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -82,6 +84,9 @@ class GameActivity : BaseActivity() {
 
                 if (gameType == "FIREBASE") {
                     (service as FirebaseService).setDelegate(InputDelegate())
+                    onEnd = {
+                        Matchmaking.endMatch(gameId!!)
+                    }
                 } else {
                     service.inputDelegate = InputDelegate()
                 }
@@ -121,6 +126,8 @@ class GameActivity : BaseActivity() {
 
                 boardState = game.playTurn()
             }
+
+            onEnd();
 
             runOnUiThread {
                 displayEndOfGame()

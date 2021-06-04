@@ -122,6 +122,10 @@ class Matchmaking {
                 isSearching = false
             }
         }
+
+        fun endMatch(gameId: String) {
+
+        }
     }
 
 }
