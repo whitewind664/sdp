@@ -23,6 +23,28 @@ class Database {
             //Firebase.database.setPersistenceEnabled(true)
         }
 
+        /**
+         * Set up listener for the .info/connected path
+         * The function adjust the Database.isConnected field based on the connection
+         */
+        internal fun setUpIsConnected() {
+            val connectedRef = Firebase.database.getReference(".info/connected")
+            connectedRef.addValueEventListener(object: ValueEventListener {
+                override fun onDataChange(snapshot: DataSnapshot) {
+                    isConnected = snapshot.getValue(Boolean::class.java) ?: false
+                    if (isConnected) { Log.d("TAG", " connected") }
+                    else { Log.d("TAG", " not connected") }
+                }
+
+                override fun onCancelled(error: DatabaseError) {}
+            })
+        }
+
+        // Stores info about connection status
+        var isConnected: Boolean = false
+            get() = field
+
+
         private val db = Firebase.database
         private val database by lazy {
             db.reference
