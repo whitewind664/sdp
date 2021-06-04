@@ -1,61 +1,102 @@
 package com.github.gogetters.letsgo.cache
 
-import android.content.Context
 import android.content.SharedPreferences
-import android.util.Log
-import androidx.appcompat.app.AppCompatActivity
+import com.github.gogetters.letsgo.chat.model.ChatMessageData
 import com.github.gogetters.letsgo.database.user.LetsGoUser
-import com.google.firebase.auth.FirebaseAuth
+import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
+import java.lang.reflect.Type
+import java.util.*
+import kotlin.collections.ArrayList
 
 class Cache {
 
     companion object {
 
-        private const val PREF_ID = "sharedPrefs"
+        //////////////////////////////////////////////////////////
+        // SharedPreferences keys to store data
+        //////////////////////////////////////////////////////////
+        const val PREF_ID = "sharedPrefs"
+        // Keys to store user related info
+        const val USER_UID = "userUid"
+        const val USER_NICK = "userNick"
+        const val USER_FIRST = "userFirst"
+        const val USER_LAST = "userLast"
+        const val USER_COUNTRY = "userCountry"
+        const val USER_CITY = "userCity"
 
+        //////////////////////////////////////////////////////////
+        // User info local storage
+        //////////////////////////////////////////////////////////
         /**
          * Enables saving user info in local cache for the profile activity UI
          */
-        fun saveUserProfile(act: AppCompatActivity, user: LetsGoUser) {
+        fun saveUserProfile(sharedPreferences: SharedPreferences?, user: LetsGoUser?) {
 
-            val sharedPreferences: SharedPreferences = act.getSharedPreferences(PREF_ID, Context.MODE_PRIVATE)
+            if (sharedPreferences == null || user == null) return
 
             val editor: SharedPreferences.Editor = sharedPreferences.edit()
             editor.apply {
 
-                putString("userUid", user.uid)
-                putString("userNick", user.nick)
-                putString("userFirst", user.first)
-                putString("userLast", user.last)
-                putString("userCountry", user.country)
-                putString("userCity", user.city)
+                putString(USER_UID, user.uid)
+                putString(USER_NICK, user.nick)
+                putString(USER_FIRST, user.first)
+                putString(USER_LAST, user.last)
+                putString(USER_COUNTRY, user.country)
+                putString(USER_CITY, user.city)
 
             }.apply()
-
         }
 
         /**
          * Enables loading user info from local cache for the profile activity UI
          */
-        fun loadUserProfile(act: AppCompatActivity): LetsGoUser? {
+        fun loadUserProfile(sharedPreferences: SharedPreferences?): LetsGoUser? {
 
-            val sharedPreferences: SharedPreferences = act.applicationContext.getSharedPreferences(PREF_ID, Context.MODE_PRIVATE)
+            if (sharedPreferences == null) return null
 
-            val loggedInUid = FirebaseAuth.getInstance().uid!!
-
-            val cachedUid = sharedPreferences.getString("userUid", null)
-            if (cachedUid == null || loggedInUid != cachedUid) {
-                return null
-            }
-
-            val user = LetsGoUser(cachedUid)
-            user.nick = sharedPreferences.getString("userNick", null)
-            user.first = sharedPreferences.getString("userFirst", null)
-            user.last = sharedPreferences.getString("userLast", null)
-            user.country = sharedPreferences.getString("userCountry", null)
-            user.city = sharedPreferences.getString("userCity", null)
+            val user = LetsGoUser(USER_UID)
+            user.nick = sharedPreferences.getString(USER_NICK, null)
+            user.first = sharedPreferences.getString(USER_FIRST, null)
+            user.last = sharedPreferences.getString(USER_LAST, null)
+            user.country = sharedPreferences.getString(USER_COUNTRY, null)
+            user.city = sharedPreferences.getString(USER_CITY, null)
 
             return user
+        }
+
+        //////////////////////////////////////////////////////////
+        // Chat data local storage
+        //////////////////////////////////////////////////////////
+        /**
+         * Enables saving chat messages list in local cache for the ChatActivity
+         */
+        fun saveChatData(sharedPreferences: SharedPreferences?, key: String?, items: ArrayList<ChatMessageData>?) {
+
+            if (sharedPreferences == null || key == null || items == null) return
+
+            val editor = sharedPreferences.edit()
+            val json = Gson().toJson(items)
+            editor.apply {
+
+                putString(key, json)
+
+            }.apply()
+        }
+
+        /**
+         * Enables loading chat messages in local cache for the ChatActivity
+         */
+        fun loadChatData(sharedPreferences: SharedPreferences?, key: String?): ArrayList<ChatMessageData> {
+
+            if (sharedPreferences == null) return ArrayList()
+
+            val json = sharedPreferences.getString(key, null) ?: return ArrayList()
+            val type: Type = object : TypeToken<ArrayList<ChatMessageData>>() {}.type
+            var cachedMessages = Gson().fromJson<Any>(json, type) as ArrayList<ChatMessageData>
+            if (cachedMessages == null) { cachedMessages = ArrayList() }
+
+            return cachedMessages
         }
 
     }

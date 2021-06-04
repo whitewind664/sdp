@@ -5,9 +5,7 @@ import android.Manifest.permission.READ_EXTERNAL_STORAGE
 import android.Manifest.permission.WRITE_EXTERNAL_STORAGE
 import android.app.Activity
 import android.app.AlertDialog
-import android.content.ActivityNotFoundException
-import android.content.DialogInterface
-import android.content.Intent
+import android.content.*
 import android.graphics.ImageDecoder
 import android.net.Uri
 import android.os.Build
@@ -87,7 +85,7 @@ class ProfileEditActivity : ActivityCompat.OnRequestPermissionsResultCallback, A
             user.country = countryEditText.text.toString()
             user.city = cityEditText.text.toString()
 
-            Cache.saveUserProfile(this, user)
+            saveData()
             user.uploadUserData().continueWith { returnToProfile() }
         }
 
@@ -274,5 +272,10 @@ class ProfileEditActivity : ActivityCompat.OnRequestPermissionsResultCallback, A
                 e.printStackTrace()
             }
         }
+    }
+
+    private fun saveData() {
+        val sP: SharedPreferences = getSharedPreferences(Cache.PREF_ID, Context.MODE_PRIVATE)
+        Cache.saveUserProfile(sP, user)
     }
 }
