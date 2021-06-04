@@ -56,7 +56,6 @@ class ProfileActivityTest : EmulatedFirebaseTest() {
         clickWaitButton()
     }
 
-
     @After
     fun cleanUp() {
         Intents.release()
