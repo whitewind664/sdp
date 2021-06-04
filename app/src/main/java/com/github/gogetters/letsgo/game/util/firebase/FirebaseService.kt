@@ -29,6 +29,6 @@ class FirebaseService(val gameId: String, val color: Stone): RemoteService {
 
     override fun notify(move: Move) {
         val myMovePath =  "/matchmaking/newMoves/$gameId/${color}"
-        Database.writeData(myMovePath, move.point)
+        Database.writeData(myMovePath, move.point.toString())
     }
 }
