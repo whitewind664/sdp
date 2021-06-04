@@ -11,6 +11,7 @@ import com.google.firebase.database.ValueEventListener
 import com.github.gogetters.letsgo.chat.views.ChatNewMessageItem
 import com.github.gogetters.letsgo.database.user.FirebaseUserBundleProvider
 import com.github.gogetters.letsgo.database.user.LetsGoUser
+import com.github.gogetters.letsgo.database.user.LetsGoUser.*
 import com.xwray.groupie.GroupAdapter
 import com.xwray.groupie.ViewHolder
 import kotlinx.android.synthetic.main.activity_chat_new_message.*
@@ -26,6 +27,7 @@ class ChatNewMessageActivity : AppCompatActivity() {
     companion object {
         val KEY = "NEW_MESSAGE_CHANNEL_KEY"
     }
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

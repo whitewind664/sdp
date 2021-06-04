@@ -10,8 +10,7 @@ object FirebaseUserBundleProvider: UserBundleProvider() {
     override fun getUserBundle(): UserBundle? {
         if (cachedUserBundle != null) return cachedUserBundle
         val firebaseUser: FirebaseUser? = Authentication.getCurrentUser()
-        return if (firebaseUser == null) {
-            null
+        return if (firebaseUser == null) { null
         } else {
             cachedUserBundle = FirebaseUserBundle(firebaseUser)
             return cachedUserBundle

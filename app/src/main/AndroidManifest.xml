@@ -29,9 +29,10 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.LetsGo"
         android:usesCleartextTraffic="true">
-        <activity android:name=".activities.UserSearchActivity"></activity>
+        <activity android:name=".activities.UserSearchActivity"/>
         <activity
-            android:name=".activities.ProfileEditActivity" />
+            android:name=".activities.ProfileEditActivity"
+            android:windowSoftInputMode="adjustResize"/>
         <activity
             android:name=".activities.GameModeChooserActivity"
             android:label="@string/title_activity_game_mode_chooser"
