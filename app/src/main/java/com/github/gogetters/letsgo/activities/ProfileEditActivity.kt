@@ -24,7 +24,6 @@ import androidx.core.content.FileProvider
 import com.github.gogetters.letsgo.R
 import com.github.gogetters.letsgo.cache.Cache
 import com.github.gogetters.letsgo.database.ImageStorageService
-import com.github.gogetters.letsgo.database.ImageStorageService.Companion.PROFILE_PICTURE_PREFIX_CLOUD
 import com.github.gogetters.letsgo.database.user.FirebaseUserBundleProvider
 import com.github.gogetters.letsgo.database.user.LetsGoUser
 import com.github.gogetters.letsgo.database.user.UserBundle
@@ -240,7 +239,7 @@ import java.util.*
     private fun onCameraResult(data: Intent?) {
         profileEditImage.setImageURI(profilePictureUri)
         // store the uri for the user
-        ImageStorageService.storeProfileImageOnCloud(userBundleProvider.getUserBundle()!!.getUser(), profilePictureUri, PROFILE_PICTURE_PREFIX_CLOUD)
+        ImageStorageService.storeProfileImageOnCloud(userBundleProvider.getUserBundle()!!.getUser(), profilePictureUri, ImageStorageService.PROFILE_PICTURE_PREFIX_CLOUD)
     }
 
     private fun onGalleryResult(data: Intent?) {
@@ -256,7 +255,7 @@ import java.util.*
                         profileEditImage.setImageBitmap(ImageDecoder.decodeBitmap(source))
                     }
                     // store the uri for the user
-                    ImageStorageService.storeProfileImageOnCloud(userBundleProvider.getUserBundle()!!.getUser(), it, PROFILE_PICTURE_PREFIX_CLOUD)
+                    ImageStorageService.storeProfileImageOnCloud(userBundleProvider.getUserBundle()!!.getUser(), it, ImageStorageService.PROFILE_PICTURE_PREFIX_CLOUD)
                 }
             } catch (e: Exception) {
                 e.printStackTrace()
