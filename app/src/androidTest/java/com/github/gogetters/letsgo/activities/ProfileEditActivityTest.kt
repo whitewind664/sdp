@@ -75,7 +75,7 @@ class ProfileEditActivityTest : EmulatedFirebaseTest() {
         user.first = "oldFirst"
         Tasks.await(user.uploadUserData())
         Tasks.await(user.downloadUserData())
-        val oldFirst = user.first
+        val oldFirst = user.first!!
 
         scenario = ActivityScenario.launch(intent)
 
@@ -87,8 +87,8 @@ class ProfileEditActivityTest : EmulatedFirebaseTest() {
         Tasks.await(user.downloadUserData())
         val actualNick: String = user.nick!!
         val actualFirst: String = user.first!!
-        assertTrue(newNick == actualNick)
-        assertTrue(oldFirst == actualFirst)
+        assertTrue(actualNick.contains(newNick))
+        assertTrue(actualFirst.contains(oldFirst))
     }
 
     @Test
