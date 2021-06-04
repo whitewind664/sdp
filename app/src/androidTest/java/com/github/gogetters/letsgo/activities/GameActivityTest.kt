@@ -35,6 +35,9 @@ class GameActivityTest: EmulatedFirebaseTest() {
     val intent = Intent(ApplicationProvider.getApplicationContext(), GameActivity::class.java).apply {
         putExtra(GameActivity.EXTRA_GAME_SIZE, 9)
         putExtra(GameActivity.EXTRA_KOMI, 5.5)
+        val localType = Player.PlayerTypes.LOCAL.ordinal
+        putExtra(GameActivity.EXTRA_PLAYER_BLACK, localType)
+        putExtra(GameActivity.EXTRA_PLAYER_WHITE, localType)
     }
     lateinit var scenario: ActivityScenario<GameActivity>
 
@@ -98,6 +101,8 @@ class GameActivityTest: EmulatedFirebaseTest() {
     @Test
     fun twoSubsequentPassesEndGame() {
         scenario = ActivityScenario.launch(intent)
+        TestUtils.sleep()
+        TestUtils.sleep()
         onView(withId(R.id.game_button_pass)).perform(click())
         onView(withText(R.string.game_passTitle))
             .check(matches(isDisplayed()))
@@ -149,8 +154,7 @@ class GameActivityTest: EmulatedFirebaseTest() {
                 .checkable(false)
                 .index(i)
                 .text(text))
-        if (button.exists()) {
-            button.click();
-        }
+        assertTrue(button.exists())
+        button.click()
     }
 }
