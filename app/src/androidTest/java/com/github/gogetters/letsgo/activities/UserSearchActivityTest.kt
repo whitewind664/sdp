@@ -87,6 +87,7 @@ class UserSearchActivityTest : EmulatedFirebaseTest() {
         otherUser.nick = nick
         Tasks.await(otherUser.uploadUserData())
         Tasks.await(user.uploadUserData())
+        Tasks.await(otherUser.downloadFriends())
 
         val device: UiDevice = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation())
         onView(withId(R.id.user_search_search_view)).perform(TestUtils.typeSearchViewText("Nic"))
