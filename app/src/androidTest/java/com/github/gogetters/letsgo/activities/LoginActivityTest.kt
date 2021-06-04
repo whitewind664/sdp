@@ -17,6 +17,7 @@ import com.github.gogetters.letsgo.testUtil.TestUtils.Companion.clickWaitButton
 import com.github.gogetters.letsgo.testUtil.TestUtils.Companion.sleep
 import org.junit.After
 import org.junit.Before
+import org.junit.Ignore
 import org.junit.Test
 import org.junit.runner.RunWith
 
@@ -40,6 +41,7 @@ class LoginActivityTest : EmulatedFirebaseTest() {
         scenario.close()
     }
 
+    @Ignore
     @Test
     fun returnsToProfileActivityAfterRegister() {
         val testEmail = "TODELETE@letsgo.com"
