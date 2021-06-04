@@ -116,7 +116,7 @@ class Database {
                         val p = currentData.child("currentlyWaiting")
                                 .child(gameType).child(bucket.toString())
                                 .getValue(String::class.java)
-                        if (p == Authentication.getUid()) {
+                        if (p == playerId) {
                             return Transaction.success(currentData);
                         }
                         if (p == null) {
@@ -249,21 +249,13 @@ class Database {
                     onChildAdded(snapshot)
                 }
 
-                override fun onChildChanged(snapshot: DataSnapshot, previousChildName: String?) {
-                    TODO("Not yet implemented")
-                }
+                override fun onChildChanged(snapshot: DataSnapshot, previousChildName: String?) {}
 
-                override fun onChildMoved(snapshot: DataSnapshot, previousChildName: String?) {
-                    TODO("Not yet implemented")
-                }
+                override fun onChildMoved(snapshot: DataSnapshot, previousChildName: String?) {}
 
-                override fun onChildRemoved(snapshot: DataSnapshot) {
-                    TODO("Not yet implemented")
-                }
+                override fun onChildRemoved(snapshot: DataSnapshot) {}
 
-                override fun onCancelled(error: DatabaseError) {
-                    TODO("Not yet implemented")
-                }
+                override fun onCancelled(error: DatabaseError) {}
             }
             return databaseReference.addChildEventListener(listener)
         }

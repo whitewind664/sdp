@@ -144,7 +144,10 @@ class Matchmaking {
         }
 
         fun surrender() {
-            val uid = Authentication.getUid()!!;
+            val uid = Authentication.getUid();
+            if (uid == null) {
+                return
+            }
             Database.readData(listenerPath)
                     .addOnSuccessListener {
                         val gameId = it.getValue(String::class.java)
