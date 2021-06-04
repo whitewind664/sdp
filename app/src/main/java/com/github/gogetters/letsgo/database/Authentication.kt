@@ -7,12 +7,6 @@ import com.google.firebase.ktx.Firebase
 object Authentication {
     private val auth = Firebase.auth
 
-    fun emulatorSettings() {
-        // 10.0.2.2 is the special IP address to connect to the 'localhost' of
-        // the host computer from an Android emulator.
-        auth.useEmulator("10.0.2.2", 9099)
-    }
-
     fun getCurrentUser(): FirebaseUser? {
         return auth.currentUser
     }

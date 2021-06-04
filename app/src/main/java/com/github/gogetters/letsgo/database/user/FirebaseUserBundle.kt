@@ -15,7 +15,7 @@ class FirebaseUserBundle(private val firebase: FirebaseUser): UserBundle() {
     }
 
     override fun getEmail(): String {
-        return firebase.email
+        return firebase.email!!
     }
 
     override fun deleteUser() {

@@ -2,19 +2,30 @@ package com.github.gogetters.letsgo.activities
 
 import android.content.Intent
 import android.view.View
+import androidx.test.core.app.ActivityScenario
 import androidx.test.core.app.ApplicationProvider
-import androidx.test.espresso.Espresso
+import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.UiController
 import androidx.test.espresso.ViewAction
 import androidx.test.espresso.action.MotionEvents
+import androidx.test.espresso.action.ViewActions.click
+import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.matcher.ViewMatchers.*
-import androidx.test.ext.junit.rules.ActivityScenarioRule
 import androidx.test.ext.junit.runners.AndroidJUnit4
+import androidx.test.platform.app.InstrumentationRegistry
+import androidx.test.uiautomator.UiDevice
+import androidx.test.uiautomator.UiObject
+import androidx.test.uiautomator.UiSelector
 import com.github.gogetters.letsgo.R
 import com.github.gogetters.letsgo.database.EmulatedFirebaseTest
 import com.github.gogetters.letsgo.game.Stone
+import com.github.gogetters.letsgo.game.Player
+import com.github.gogetters.letsgo.testUtil.TestUtils
+import com.github.gogetters.letsgo.testUtil.ToastMatcher
+import junit.framework.Assert.assertTrue
 import org.hamcrest.Matcher
-import org.junit.Rule
+import org.junit.After
+import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 
@@ -22,26 +33,50 @@ import org.junit.runner.RunWith
 @RunWith(AndroidJUnit4::class)
 class GameActivityTest: EmulatedFirebaseTest() {
 
-    private val intent = Intent(ApplicationProvider.getApplicationContext(), GameActivity::class.java)
+    val intent = Intent(ApplicationProvider.getApplicationContext(), GameActivity::class.java).apply {
+        putExtra(GameActivity.EXTRA_GAME_SIZE, 9)
+        putExtra(GameActivity.EXTRA_KOMI, 5.5)
+        putExtra(GameActivity.EXTRA_GAME_TYPE, "LOCAL")
+        putExtra(GameActivity.EXTRA_LOCAL_COLOR, Stone.EMPTY.toString())
+    }
+    lateinit var scenario: ActivityScenario<GameActivity>
 
-    init {
-        intent.putExtra(GameActivity.EXTRA_GAME_TYPE, "LOCAL")
-        intent.putExtra(GameActivity.EXTRA_KOMI, 7.5)
-        intent.putExtra(GameActivity.EXTRA_GAME_SIZE, 9)
+    @Before
+    fun init() {
+        scenario = ActivityScenario.launch(intent)
+        TestUtils.clickWaitButton()
     }
 
-
-    @get:Rule
-    var activityScenarioRule: ActivityScenarioRule<GameActivity> = ActivityScenarioRule(intent)
-
+    @After
+    fun cleanUp() {
+        scenario.close()
+    }
 
     @Test
+    fun twoSubsequentPassesEndGame() {
+        scenario = ActivityScenario.launch(intent)
+        Espresso.onView(withId(R.id.game_button_pass)).perform(click())
+        Espresso.onView(withText(R.string.game_passTitle))
+                .check(matches(isDisplayed()))
+        clickAtIndex(0, "Confirm PASS")
+
+        Espresso.onView(withId(R.id.game_button_pass)).perform(click())
+        Espresso.onView(withText(R.string.game_passTitle))
+                .check(matches(isDisplayed()))
+        clickAtIndex(0, "Confirm PASS")
+
+        // verify that end of game is displayed
+        val device: UiDevice = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation())
+        val endOfGameText = device.findObject(UiSelector().textContains("Game is over"))
+        assertTrue(endOfGameText.exists())
+    }
+
+    //@Test
     fun tappingScreenPlacesStone() {
-        val goView = Espresso.onView(withParent(withId(R.id.game_frameLayout_boardFrame)))
-        activityScenarioRule.scenario.onActivity {
-            goView.perform(touchDownAndUp(1f, 1f))
-            goView.perform(touchDownAndUp(2f, 2f))
-        }
+        scenario = ActivityScenario.launch(intent)
+        val goView = onView(withParent(withId(R.id.game_frameLayout_boardFrame)))
+        goView.perform(touchDownAndUp(1f, 1f))
+        goView.perform(touchDownAndUp(2f, 2f))
     }
 
     private fun touchDownAndUp(x: Float, y: Float): ViewAction {
@@ -68,6 +103,19 @@ class GameActivityTest: EmulatedFirebaseTest() {
                 uiController.loopMainThreadForAtLeast(200)
                 MotionEvents.sendUp(uiController, down, coordinates)
             }
+        }
+    }
+
+    private fun clickAtIndex(i: Int, text: String) {
+        val device: UiDevice = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation())
+        val button: UiObject = device.findObject(
+            UiSelector()
+                .clickable(true)
+                .checkable(false)
+                .index(i)
+                .text(text))
+        if (button.exists()) {
+            button.click();
         }
     }
 }

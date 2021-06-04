@@ -7,8 +7,22 @@
     <string name="main_openGameChooserText">Play</string>
     <string name="main_profileButtonText">My Profile</string>
 
-    <string name="scoreTitleText">Score</string>
-    <string name="scoreDefaultText">0</string>
+    <string name="game_scoreTitleText">BLACK | Score | WHITE</string>
+    <string name="game_scoreDefaultText">0</string>
+    <string name="game_blackTurn">BLACK plays next</string>
+    <string name="game_whiteTurn">WHITE plays next</string>
+    <string name="game_blackYouTurn">YOU (black) play next</string>
+    <string name="game_whiteYouTurn">YOU (white) play next</string>
+    <string name="game_whitePassTurn">BLACK passed - WHITE plays next</string>
+    <string name="game_blackPassTurn">WHITE passed - BLACK plays next</string>
+    <string name="game_endOfGame">Game is over. Count territories!</string>
+    <string name="game_startAsBlack">The game starts! You play as BLACK.</string>
+    <string name="game_startAsWhite">The game starts! You play as WHITE.</string>
+    <string name="game_startLocal">The game starts! BLACK plays first.</string>
+    <string name="game_passTitle">Do you really want to pass? If the opponent passes as well, the game will be over.</string>
+    <string name="game_passConfirm">Confirm PASS</string>
+    <string name="game_passCancel">Cancel</string>
+
 
     <string name="go">Go</string>
     <string name="user_name">User Name</string>
