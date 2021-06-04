@@ -41,6 +41,7 @@ class LoginActivityTest : EmulatedFirebaseTest() {
         scenario.close()
     }
 
+    @Ignore
     @Test
     fun returnsToProfileActivityAfterRegister() {
         val testEmail = "TODELETE@letsgo.com"
