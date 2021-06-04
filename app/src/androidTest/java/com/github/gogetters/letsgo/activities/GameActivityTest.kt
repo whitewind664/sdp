@@ -26,7 +26,6 @@ class GameActivityTest: EmulatedFirebaseTest() {
 
     init {
         intent.putExtra(GameActivity.EXTRA_GAME_TYPE, "LOCAL")
-        intent.putExtra(GameActivity.EXTRA_LOCAL_COLOR, Stone.WHITE.toString())
         intent.putExtra(GameActivity.EXTRA_KOMI, 7.5)
         intent.putExtra(GameActivity.EXTRA_GAME_SIZE, 9)
     }
