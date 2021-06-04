@@ -37,8 +37,8 @@ class UserSearchActivityTest : EmulatedFirebaseTest() {
     @Before
     fun init() {
         Intents.init()
-        scenario = ActivityScenario.launch(intent)
         TestUtils.makeSureTestUserAuthenticated()
+        scenario = ActivityScenario.launch(intent)
     }
 
     @After

@@ -2,6 +2,7 @@ package com.github.gogetters.letsgo.database
 
 import androidx.test.platform.app.InstrumentationRegistry
 import com.google.firebase.FirebaseApp
+import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.ktx.storage
 import org.junit.Before
@@ -17,7 +18,7 @@ abstract class EmulatedFirebaseTest {
                 FirebaseApp.initializeApp(appContext)
                 Database.emulatorSettings()
 
-//                Firebase.auth.useEmulator("10.0.2.2", 9099)
+                Firebase.auth.useEmulator("10.0.2.2", 9099)
 
                 Firebase.storage.useEmulator("10.0.2.2", 9199)
             }
