@@ -12,6 +12,9 @@ checks:
     method-lines:
       config:
         threshold: 50
+    method-count:
+      config:
+        threshold: 35
 plugins:
   duplication:
     enabled: true

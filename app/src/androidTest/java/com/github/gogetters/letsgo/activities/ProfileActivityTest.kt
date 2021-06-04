@@ -13,6 +13,7 @@ import androidx.test.espresso.matcher.ViewMatchers.*
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.uiautomator.UiDevice
+import androidx.test.uiautomator.UiObject
 import androidx.test.uiautomator.UiSelector
 import com.github.gogetters.letsgo.R
 import com.github.gogetters.letsgo.database.Authentication
@@ -21,9 +22,12 @@ import com.github.gogetters.letsgo.database.user.LetsGoUser
 import com.github.gogetters.letsgo.testUtil.TestUtils
 import com.github.gogetters.letsgo.testUtil.TestUtils.Companion.clickWaitButton
 import com.google.android.gms.tasks.Tasks
+
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
+import junit.framework.Assert.assertTrue
 import org.junit.After
 import org.junit.Before
 import org.junit.Test
@@ -33,9 +37,6 @@ import org.junit.runner.RunWith
 @RunWith(AndroidJUnit4::class)
 class ProfileActivityTest : EmulatedFirebaseTest() {
 
-    val GRANT_PERMISSION_BUTTON_INDEX = 0
-    val DELAY = 5000L
-
     val intent = Intent(
         ApplicationProvider.getApplicationContext(),
         ProfileActivity::class.java
@@ -43,13 +44,6 @@ class ProfileActivityTest : EmulatedFirebaseTest() {
 
     lateinit var scenario: ActivityScenario<ProfileActivity>
 
-    private fun sleep() {
-        try {
-            Thread.sleep(DELAY)
-        } catch (e: InterruptedException) {
-            throw RuntimeException("Cannot execute Thread.sleep()")
-        }
-    }
 
     @Before
     fun init() {
@@ -65,29 +59,7 @@ class ProfileActivityTest : EmulatedFirebaseTest() {
     @After
     fun cleanUp() {
         Intents.release()
-        try {
-            scenario.close()
-        } catch (e:UninitializedPropertyAccessException) {}
-    }
-
-    @Test
-    fun testIt() {
-        lateInit()
-
-        val testUser = LetsGoUser(Authentication.getCurrentUser()!!.uid)
-        testUser.first = "Jim"
-        Tasks.await(testUser.uploadUserData())
-    }
-
-    @Test
-    fun testItOffline() {
-        Firebase.database.goOffline()
-        try {
-            lateInit()
-            sleep()
-        } finally {
-            Firebase.database.goOnline()
-        }
+        scenario.close()
     }
 
     @Test
@@ -115,25 +87,44 @@ class ProfileActivityTest : EmulatedFirebaseTest() {
     }
 
     @Test
+    fun pressingBackGoesToMainActivity() {
+        lateInit()
+
+        onView(isRoot()).perform(ViewActions.pressBack())
+        Intents.intended(IntentMatchers.hasComponent(MainActivity::class.java.name))
+    }
+
+    @Test
     fun testDisplayUser() {
+        TestUtils.makeSureTestUserAuthenticated()
         val user = LetsGoUser(Authentication.getUid()!!)
-        user.nick = "a_nick"
-        user.first = "b_first"
-        user.last = "c_last"
-        user.country = "d_country"
-        user.city = "e_city"
+        val nick = "a_nick"
+        val first = "b_first"
+        val last = "c_last"
+        val country = "d_country"
+        val city = "e_city"
+        user.nick = nick
+        user.first = first
+        user.last = last
+        user.country = country
+        user.city = city
         Tasks.await(user.uploadUserData())
 
         lateInit()
 
-        // TODO Check that the actual fields are written to UI
-    }
-
-    @Test
-    fun testBackBringsToMainActivity() {
-        lateInit()
-        pressBack()
-        Intents.intended(IntentMatchers.hasComponent(MainActivity::class.java.name))
+        val device: UiDevice = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation())
+        val foundNick: UiObject = device.findObject(
+            UiSelector().textContains(nick)
+        )
+        assertTrue(foundNick.exists())
+        val foundCity: UiObject = device.findObject(
+            UiSelector().textContains(city)
+        )
+        assertTrue(foundCity.exists())
+        val foundCountry: UiObject = device.findObject(
+            UiSelector().textContains(country)
+        )
+        assertTrue(foundCountry.exists())
     }
 
     @Test
@@ -147,23 +138,4 @@ class ProfileActivityTest : EmulatedFirebaseTest() {
         // Intents.intended(IntentMatchers.hasComponent(LoginActivity::class.java.name))
     }
 
-    // TODO Remove later
-    fun testEmailLogin() {
-
-        val testEmail = ""
-        val testPassword = ""
-
-        onView(withText("Sign in with email"))!!.perform(click())
-
-        val emailField = onView(withHint("Email"))
-        emailField!!.perform(ViewActions.typeText(testEmail), ViewActions.closeSoftKeyboard())
-
-        onView(withText("Next"))!!.perform(click())
-
-
-        val passwordField = onView(withHint("Password"))
-        passwordField!!.perform(ViewActions.typeText(testPassword), ViewActions.closeSoftKeyboard())
-
-        onView(withText("Sign in"))!!.perform(click())
-    }
 }

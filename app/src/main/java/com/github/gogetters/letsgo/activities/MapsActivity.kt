@@ -108,16 +108,14 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback,
             mMap.isMyLocationEnabled = true
         } else {
             // Permission to access the location is missing. Show rationale and request permission
-            requestPermission(
-                this, LOCATION_PERMISSION_REQUEST_CODE,
-                Manifest.permission.ACCESS_FINE_LOCATION
-            )
+            requestPermission(this, LOCATION_PERMISSION_REQUEST_CODE, Manifest.permission.ACCESS_FINE_LOCATION)
         }
     }
 
     private fun sendLocation() {
         try {
-            if (!permissionDenied && userBundleProvider.getUserBundle() != null) {
+            val userBundle = userBundleProvider.getUserBundle()
+            if (!permissionDenied && userBundle != null) {
                 Log.i("MapsActivity", "Create request")
                 fusedLocationClient.lastLocation
                     .addOnSuccessListener { location: Location? ->
@@ -131,7 +129,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback,
                             Log.v("MapsActivity", "Location could not be shared")
                         } else {
                             // share the location with other users
-                            Database.shareLocation(
+                            userBundle.getUser().shareLocation(
                                 LatLng(
                                     location.latitude,
                                     location.longitude
@@ -172,29 +170,15 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback,
         if (otherUsersActivated) {
             removeAllOtherPlayers()
             var allPositions: LatLngBounds.Builder = LatLngBounds.Builder()
-            var maxLat: Double = Double.MIN_VALUE
-            var minLat: Double = Double.MAX_VALUE
-            var maxLng: Double = Double.MIN_VALUE
-            var minLng: Double = Double.MAX_VALUE
             for ((playerPosition, id) in updatedUsers.entries) {
                 Log.d("TEST MAP", "fetched id $id")
-                val marker =
-                    mMap.addMarker(
-                        MarkerOptions().position(playerPosition)
-                            .title("$id")
-                            .icon(BitmapDescriptorFactory.fromResource(R.drawable.person_pin))
-                    )
+                val marker = mMap.addMarker(MarkerOptions().position(playerPosition).title("$id").icon(BitmapDescriptorFactory.fromResource(R.drawable.person_pin)))
                 marker.tag = id  // the userId needs to be stored
                 userMarkers = userMarkers + Pair(marker, id)
                 allPositions.include(marker.position)
-                maxLat = max(maxLat, playerPosition.latitude)
-                maxLng = max(maxLng, playerPosition.longitude)
-                minLat = min(minLat, playerPosition.latitude)
-                minLng = min(minLng, playerPosition.longitude)
             }
             // update the camera zoom
-            val cu =
-                CameraUpdateFactory.newLatLngBounds(allPositions.build(), MARKER_DISPLAY_PADDING)
+            val cu = CameraUpdateFactory.newLatLngBounds(allPositions.build(), MARKER_DISPLAY_PADDING)
             mMap.animateCamera(cu)
         }
     }
@@ -225,12 +209,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback,
         grantResults: IntArray
     ) {
         if (requestCode != LOCATION_PERMISSION_REQUEST_CODE) return
-        if (isPermissionGranted(
-                permissions,
-                grantResults,
-                Manifest.permission.ACCESS_FINE_LOCATION
-            )
-        ) {
+        if (isPermissionGranted(permissions, grantResults, Manifest.permission.ACCESS_FINE_LOCATION)) {
             // Enable the my location layer if the permission has been granted.
             enableLocation()
         } else {
@@ -246,11 +225,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback,
         super.onResumeFragments()
         if (permissionDenied) {
             // Permission was not granted, display error dialog.
-            Toast.makeText(
-                this,
-                resources.getString(R.string.map_permissionDeniedError),
-                TOAST_DURATION
-            ).show()
+            Toast.makeText(this, resources.getString(R.string.map_permissionDeniedError), TOAST_DURATION).show()
             permissionDenied = false
         }
     }
