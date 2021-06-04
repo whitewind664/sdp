@@ -37,7 +37,7 @@ class OnlinePlayTest: EmulatedFirebaseTest() {
 
     @After
     fun cleanUp() {
-        activityRule.scenario.close()
+//        activityRule.scenario.close()
         Authentication.signOut()
     }
 
