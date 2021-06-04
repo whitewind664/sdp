@@ -172,10 +172,16 @@ class LetsGoUser (val uid: String) : Serializable {
         ACCEPTED
     }
 
+    /**
+     * Send friend request to user
+     */
     fun requestFriend(otherUser: LetsGoUser): Task<Void> {
         return updateFriendStatus(otherUser, FriendStatus.SENT, FriendStatus.REQUESTED)
     }
 
+    /**
+     * Accept friend request from a user
+     */
     fun acceptFriend(otherUser: LetsGoUser): Task<Void> {
         return updateFriendStatus(otherUser, FriendStatus.ACCEPTED, FriendStatus.ACCEPTED)
     }
@@ -310,6 +316,9 @@ class LetsGoUser (val uid: String) : Serializable {
     //-------------------------------------------------------------------------------------------
     // User Search
 
+    /**
+     * Download all users who's nickname start with the given argument
+     */
     fun downloadUsersByNick(nick: String): Task<MutableList<LetsGoUser>> {
         return Database.readSearchByChild(USERS_PATH, "nick", nick).continueWithTask {
             val uids = it.result.children.map { userData ->
