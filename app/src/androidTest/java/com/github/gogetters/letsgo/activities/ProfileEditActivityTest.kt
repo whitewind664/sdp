@@ -40,6 +40,7 @@ import org.hamcrest.Description
 import org.junit.After
 import org.junit.Assert.assertEquals
 import org.junit.Before
+import org.junit.Ignore
 import org.junit.Test
 import org.junit.runner.RunWith
 import java.io.File
@@ -68,7 +69,7 @@ class ProfileEditActivityTest : EmulatedFirebaseTest() {
         scenario.close()
     }
 
-
+    @Ignore
     @Test
     fun profileActuallyEditsNewInputs() {
         val user = FirebaseUserBundleProvider.getUserBundle()!!.getUser()
