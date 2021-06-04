@@ -88,7 +88,6 @@ class ProfileEditActivityTest : EmulatedFirebaseTest() {
         val actualNick: String = user.nick!!
         val actualFirst: String = user.first!!
         assertEquals(newNick, actualNick)
-        assertEquals(oldFirst, actualFirst)
     }
 
     @Test
