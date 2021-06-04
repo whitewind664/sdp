@@ -2,6 +2,8 @@ package com.github.gogetters.letsgo.database
 
 import androidx.test.platform.app.InstrumentationRegistry
 import com.google.firebase.FirebaseApp
+import com.google.firebase.ktx.Firebase
+import com.google.firebase.storage.ktx.storage
 import org.junit.Before
 import org.junit.BeforeClass
 
@@ -17,6 +19,8 @@ abstract class EmulatedFirebaseTest {
                 // Commenting this will use the real FirebaseAuth and not the emulated one
                 // We should try to make it work
                 Authentication.emulatorSettings()
+
+                Firebase.storage.useEmulator("10.0.2.2", 9199)
             }
         }
     }
