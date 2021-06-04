@@ -80,15 +80,15 @@ class ProfileEditActivityTest : EmulatedFirebaseTest() {
         scenario = ActivityScenario.launch(intent)
 
         val newNick = "NewNick"
-        onView(withId(R.id.profile_edit_nick)).perform(typeText(newNick))
+        onView(withId(R.id.profile_edit_nick)).perform(replaceText(newNick))
 
         onView(withId(R.id.profile_edit_button_save)).perform(click())
         sleep()
         Tasks.await(user.downloadUserData())
         val actualNick: String = user.nick!!
         val actualFirst: String = user.first!!
-        assertTrue(actualNick.contains(newNick))
-        assertTrue(actualFirst.contains(oldFirst))
+        assertEquals(newNick, actualNick)
+        assertEquals(oldFirst, actualFirst)
     }
 
     @Test
