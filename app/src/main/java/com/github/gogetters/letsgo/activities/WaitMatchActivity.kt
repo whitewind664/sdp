@@ -30,6 +30,11 @@ class WaitMatchActivity: BaseActivity() {
 
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        Matchmaking.cancelFindMatch()
+    }
+
     override fun getLayoutResource(): Int {
         return R.layout.activity_wait_match
     }

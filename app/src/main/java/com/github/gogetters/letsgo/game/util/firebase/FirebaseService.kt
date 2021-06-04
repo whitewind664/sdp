@@ -17,9 +17,9 @@ class FirebaseService(val gameId: String, val color: Stone): RemoteService {
         inputDelegate = delegate
         val otherMovePath = "/matchmaking/newMoves/$gameId/${color.otherColor()}"
         Database.addEventListener(otherMovePath, { dataSnapshot ->
-            val point = dataSnapshot.getValue(Point::class.java)
+            val point = dataSnapshot.getValue(String::class.java)
             if (point != null) {
-                inputDelegate.saveLatestInput(point)
+                inputDelegate.saveLatestInput(Point.fromString(point))
                 Database.writeData(otherMovePath, null)
             }
         }, { databaseError ->
