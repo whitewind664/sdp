@@ -8,4 +8,12 @@ data class GameData(val player1: String = "", val player2: String = "", val rank
             "ranked" to ranked
         )
     }
+
+    fun otherPlayer(myUid: String): String {
+        if (player1 == myUid) {
+            return player2
+        } else {
+            return player1
+        }
+    }
 }

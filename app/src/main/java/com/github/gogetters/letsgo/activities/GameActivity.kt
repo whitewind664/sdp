@@ -90,7 +90,7 @@ class GameActivity : BaseActivity() {
                 if (gameType == "FIREBASE") {
                     (service as FirebaseService).setDelegate(InputDelegate())
                     onEnd = {
-                        Matchmaking.endMatch(gameId!!)
+                        Matchmaking.endMatch()
                     }
                 } else {
                     service.inputDelegate = InputDelegate()
@@ -112,6 +112,11 @@ class GameActivity : BaseActivity() {
 
         game = Game(boardSize, komi, whitePlayer, blackPlayer)
         runGame()
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        Matchmaking.surrender()
     }
 
     override fun getLayoutResource(): Int {

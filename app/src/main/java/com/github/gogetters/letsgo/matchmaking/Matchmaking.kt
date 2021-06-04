@@ -5,6 +5,7 @@ import com.github.gogetters.letsgo.database.Authentication
 import com.github.gogetters.letsgo.database.Database
 import com.github.gogetters.letsgo.database.types.GameData
 import com.github.gogetters.letsgo.game.Stone
+import com.google.android.gms.tasks.Task
 import com.google.android.gms.tasks.Tasks
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot
@@ -82,7 +83,6 @@ class Matchmaking {
 
                         onFind(gameId, color)
                     }
-
         }
 
         fun findMatch(ranked: Boolean, onFind: (String, Stone) -> Unit, onFail: () -> Unit) {
@@ -123,8 +123,42 @@ class Matchmaking {
             }
         }
 
-        fun endMatch(gameId: String) {
+        fun endMatch(): Task<Void> {
+            return Database.writeData(listenerPath, null)
+        }
 
+        fun updateLossRatings(uid: String, otherUid: String) {
+            val myRatingPath = "/matchmaking/users/$uid/rating"
+            val otherRatingPath = "/matchmaking/users/$otherUid/rating"
+            Database.readData(myRatingPath)
+                    .addOnSuccessListener {
+                        val rating1 = it.getValue(Double::class.java)
+                        Database.readData(otherRatingPath)
+                                .addOnSuccessListener {
+                                    val rating2 = it.getValue(Double::class.java)
+                                    val (newRating1, newRating2) = eloChange(rating1!!, rating2!!, 0)
+                                    Database.writeData(myRatingPath, newRating1)
+                                    Database.writeData(otherRatingPath, newRating2)
+                                }
+                    }
+        }
+
+        fun surrender() {
+            val uid = Authentication.getUid()!!;
+            Database.readData(listenerPath)
+                    .addOnSuccessListener {
+                        val gameId = it.getValue(String::class.java)
+                        if (gameId != null) {
+                            Database.readData("/matchmaking/games/$gameId")
+                                    .addOnSuccessListener {
+                                        val game = it.getValue(GameData::class.java)!!
+                                        if (game.ranked) {
+                                            val otherUid = game.otherPlayer(uid)
+                                            updateLossRatings(uid, otherUid)
+                                        }
+                                    }
+                        }
+                    }
         }
     }
 
