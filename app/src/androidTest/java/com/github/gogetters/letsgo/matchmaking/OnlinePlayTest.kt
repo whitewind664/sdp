@@ -1,5 +1,6 @@
 package com.github.gogetters.letsgo.matchmaking;
 
+import androidx.lifecycle.Lifecycle
 import androidx.test.core.app.ActivityScenario.launch
 import androidx.test.espresso.Espresso
 import androidx.test.espresso.Espresso.onView
@@ -39,6 +40,7 @@ class OnlinePlayTest: EmulatedFirebaseTest() {
     @After
     fun cleanUp() {
 //        activityRule.scenario.close()
+        activityRule.scenario.moveToState(Lifecycle.State.DESTROYED)
         Authentication.signOut()
     }
 
