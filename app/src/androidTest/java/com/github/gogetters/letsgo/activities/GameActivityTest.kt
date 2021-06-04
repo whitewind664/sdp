@@ -59,33 +59,33 @@ class GameActivityTest: EmulatedFirebaseTest() {
         goView.perform(touchDownAndUp(2f, 2f))
     }
 
-    @Ignore // works locally but not on Cirrus
-    @Test
-    fun btLocalPlayerBlackTriggersToast() {
-        val btIntent = Intent(ApplicationProvider.getApplicationContext(), GameActivity::class.java).apply {
-            putExtra(GameActivity.EXTRA_GAME_SIZE, 9)
-            putExtra(GameActivity.EXTRA_KOMI, 5.5)
-            putExtra(GameActivity.EXTRA_PLAYER_BLACK, Player.PlayerTypes.BTLOCAL.ordinal)
-            putExtra(GameActivity.EXTRA_PLAYER_WHITE, Player.PlayerTypes.BTREMOTE.ordinal)
-        }
+//    @Ignore // works locally but not on Cirrus
+//    @Test
+//    fun btLocalPlayerBlackTriggersToast() {
+//        val btIntent = Intent(ApplicationProvider.getApplicationContext(), GameActivity::class.java).apply {
+//            putExtra(GameActivity.EXTRA_GAME_SIZE, 9)
+//            putExtra(GameActivity.EXTRA_KOMI, 5.5)
+//            putExtra(GameActivity.EXTRA_PLAYER_BLACK, Player.PlayerTypes.BTLOCAL.ordinal)
+//            putExtra(GameActivity.EXTRA_PLAYER_WHITE, Player.PlayerTypes.BTREMOTE.ordinal)
+//        }
+//
+//        scenario = ActivityScenario.launch(btIntent)
+//        onView(withText(R.string.game_startAsBlack)).inRoot(ToastMatcher()).check(matches((isDisplayed())))
+//    }
 
-        scenario = ActivityScenario.launch(btIntent)
-        onView(withText(R.string.game_startAsBlack)).inRoot(ToastMatcher()).check(matches((isDisplayed())))
-    }
-
-    @Ignore // works locally but not on Cirrus
-    @Test
-    fun btLocalPlayerWhiteTriggersToast() {
-        val btIntent = Intent(ApplicationProvider.getApplicationContext(), GameActivity::class.java).apply {
-            putExtra(GameActivity.EXTRA_GAME_SIZE, 9)
-            putExtra(GameActivity.EXTRA_KOMI, 5.5)
-            putExtra(GameActivity.EXTRA_PLAYER_WHITE, Player.PlayerTypes.BTLOCAL.ordinal)
-            putExtra(GameActivity.EXTRA_PLAYER_BLACK, Player.PlayerTypes.BTREMOTE.ordinal)
-        }
-
-        scenario = ActivityScenario.launch(btIntent)
-        onView(withText(R.string.game_startAsWhite)).inRoot(ToastMatcher()).check(matches((isDisplayed())))
-    }
+//    @Ignore // works locally but not on Cirrus
+//    @Test
+//    fun btLocalPlayerWhiteTriggersToast() {
+//        val btIntent = Intent(ApplicationProvider.getApplicationContext(), GameActivity::class.java).apply {
+//            putExtra(GameActivity.EXTRA_GAME_SIZE, 9)
+//            putExtra(GameActivity.EXTRA_KOMI, 5.5)
+//            putExtra(GameActivity.EXTRA_PLAYER_WHITE, Player.PlayerTypes.BTLOCAL.ordinal)
+//            putExtra(GameActivity.EXTRA_PLAYER_BLACK, Player.PlayerTypes.BTREMOTE.ordinal)
+//        }
+//
+//        scenario = ActivityScenario.launch(btIntent)
+//        onView(withText(R.string.game_startAsWhite)).inRoot(ToastMatcher()).check(matches((isDisplayed())))
+//    }
 
     @Test
     fun passCanBeCanceled() {
@@ -118,14 +118,6 @@ class GameActivityTest: EmulatedFirebaseTest() {
         val device: UiDevice = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation())
         val endOfGameText = device.findObject(UiSelector().textContains("Game is over"))
         // assertTrue(endOfGameText.exists()) // Somehow does not work
-    }
-
-    //@Test
-    fun tappingScreenPlacesStone() {
-        scenario = ActivityScenario.launch(intent)
-        val goView = onView(withParent(withId(R.id.game_frameLayout_boardFrame)))
-        goView.perform(touchDownAndUp(1f, 1f))
-        goView.perform(touchDownAndUp(2f, 2f))
     }
 
     private fun touchDownAndUp(x: Float, y: Float): ViewAction {
