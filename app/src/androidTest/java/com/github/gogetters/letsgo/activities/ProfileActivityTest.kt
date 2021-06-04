@@ -19,6 +19,7 @@ import com.github.gogetters.letsgo.database.Authentication
 import com.github.gogetters.letsgo.database.EmulatedFirebaseTest
 import com.github.gogetters.letsgo.database.user.LetsGoUser
 import com.github.gogetters.letsgo.testUtil.TestUtils
+import com.github.gogetters.letsgo.testUtil.TestUtils.Companion.clickWaitButton
 import com.google.android.gms.tasks.Tasks
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.database.ktx.database
@@ -59,14 +60,6 @@ class ProfileActivityTest : EmulatedFirebaseTest() {
         TestUtils.makeSureTestUserAuthenticated()
         scenario = ActivityScenario.launch(intent)
         clickWaitButton()
-    }
-
-    private fun clickWaitButton() {
-        val device = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation())
-        var waitButton = device.findObject(UiSelector().textContains("wait"))
-        if (waitButton.exists()) {
-            waitButton.click()
-        }
     }
 
     @After

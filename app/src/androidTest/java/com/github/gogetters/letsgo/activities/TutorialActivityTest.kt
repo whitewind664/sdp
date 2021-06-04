@@ -19,6 +19,7 @@ import androidx.test.uiautomator.UiDevice
 import androidx.test.uiautomator.UiSelector
 import com.github.gogetters.letsgo.R
 import com.github.gogetters.letsgo.database.EmulatedFirebaseTest
+import com.github.gogetters.letsgo.testUtil.TestUtils
 import org.hamcrest.Matcher
 import org.hamcrest.Matchers
 import org.hamcrest.Matchers.containsString
@@ -41,11 +42,7 @@ class TutorialActivityTest: EmulatedFirebaseTest() {
     @Before
     fun init() {
         Intents.init()
-        val device = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation())
-        var waitButton = device.findObject(UiSelector().textContains("wait"))
-        if (waitButton.exists()) {
-            waitButton.click()
-        }
+        TestUtils.clickWaitButton()
     }
 
     @After
