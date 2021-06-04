@@ -20,14 +20,13 @@ class Database {
 
         init {
             //Firebase.database.setPersistenceEnabled(true)
-            setUpIsConnected()
         }
 
         /**
          * Set up listener for the .info/connected path
          * The function adjust the Database.isConnected field based on the connection
          */
-        private fun setUpIsConnected() {
+        internal fun setUpIsConnected() {
             val connectedRef = Firebase.database.getReference(".info/connected")
             connectedRef.addValueEventListener(object: ValueEventListener {
                 override fun onDataChange(snapshot: DataSnapshot) {

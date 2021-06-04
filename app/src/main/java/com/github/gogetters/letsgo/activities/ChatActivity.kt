@@ -44,6 +44,8 @@ class ChatActivity : AppCompatActivity() {
 
         sharedPreferences = applicationContext.getSharedPreferences(Cache.PREF_ID, Context.MODE_PRIVATE)
 
+        Database.setUpIsConnected()
+
         // Without checking database connection -> blinking
         // loadData()
         // listenForMessages()
