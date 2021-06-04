@@ -22,6 +22,9 @@ class GameActivity : BaseActivity() {
     private lateinit var goView: GoView
 
     private lateinit var turnText: TextView
+    private val blackScore = findViewById<TextView>(R.id.game_textView_blackScore)
+    private val whiteScore = findViewById<TextView>(R.id.game_textView_whiteScore)
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -55,6 +58,11 @@ class GameActivity : BaseActivity() {
             var boardState = game.playTurn()
             while (!boardState.gameOver) {
                 drawBoard(boardState)
+                runOnUiThread {
+                    whiteScore.text = boardState.whiteScore.toString()
+                    blackScore.text = boardState.blackScore.toString()
+                }
+
                 boardState = game.playTurn()
             }
             // TODO handle UI of end of game (points are not counted by computer)

@@ -42,7 +42,7 @@ internal open class Game(val size: Board.Size, val komi: Double,
 
         updateNextPlayer(nextPlayer.color)
 
-        return board.getBoardState(0, 0, gameOver = passes >= 2, lastMove = nextMove)
+        return board.getBoardState(whiteScore, blackScore, gameOver = passes >= 2, lastMove = nextMove)
     }
 
     protected fun reinitBoard(playedStones: List<Move>): BoardState {
