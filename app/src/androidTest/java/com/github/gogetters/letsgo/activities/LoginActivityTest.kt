@@ -77,9 +77,9 @@ class LoginActivityTest : EmulatedFirebaseTest() {
             saveButton.click()
         }
 
-        val dontSavePasswordButton = device.findObject(UiSelector().clickable(true).textContains("Not now"))
-        if (dontSavePasswordButton.exists()) {
-            dontSavePasswordButton.click()
+        val savePasswordButton = device.findObject(UiSelector().clickable(true).textContains("Save"))
+        if (savePasswordButton.exists()) {
+            savePasswordButton.click()
         }
 
         sleep()

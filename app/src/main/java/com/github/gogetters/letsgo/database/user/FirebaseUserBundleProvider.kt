@@ -7,8 +7,7 @@ object FirebaseUserBundleProvider: UserBundleProvider() {
 
     override fun getUserBundle(): UserBundle? {
         val firebaseUser: FirebaseUser? = Authentication.getCurrentUser()
-        return if (firebaseUser == null) {
-            null
+        return if (firebaseUser == null) { null
         } else {
             FirebaseUserBundle(firebaseUser)
         }

@@ -110,7 +110,7 @@ import java.util.*
         cityEditText.setText(user.city)
 
         ImageStorageService.getProfileImageFromCloud(
-            PROFILE_PICTURE_PREFIX_CLOUD,
+            ImageStorageService.PROFILE_PICTURE_PREFIX_CLOUD,
             user.profileImageRef,
             ImageStorageService.getOutputImageFile(getExternalFilesDir(Environment.DIRECTORY_PICTURES)),
             profileEditImage
@@ -253,8 +253,7 @@ import java.util.*
                         profileEditImage.setImageBitmap(bitmap)
                     } else {
                         val source = ImageDecoder.createSource(this.contentResolver, selectedPhotoUri)
-                        val bitmap = ImageDecoder.decodeBitmap(source)
-                        profileEditImage.setImageBitmap(bitmap)
+                        profileEditImage.setImageBitmap(ImageDecoder.decodeBitmap(source))
                     }
                     // store the uri for the user
                     ImageStorageService.storeProfileImageOnCloud(userBundleProvider.getUserBundle()!!.getUser(), it, PROFILE_PICTURE_PREFIX_CLOUD)

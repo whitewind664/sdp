@@ -3,6 +3,7 @@ package com.github.gogetters.letsgo.database
 import android.util.Log
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.github.gogetters.letsgo.database.user.LetsGoUser
+import com.github.gogetters.letsgo.database.user.LetsGoUser.*
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.tasks.Tasks
 import com.google.firebase.database.ktx.database
@@ -137,8 +138,7 @@ class LetsGoUserTest : EmulatedFirebaseTest() {
     @Test
     fun aListFriendsByStatusThrowsOnNullFriends() {
         exceptionRule.expect(IllegalStateException::class.java)
-        user.friendsByStatus = null
-        user.listFriendsByStatus(LetsGoUser.FriendStatus.ACCEPTED)
+        user.listFriendsByStatus(FriendStatus.ACCEPTED)
     }
 
     @Test
@@ -181,7 +181,7 @@ class LetsGoUserTest : EmulatedFirebaseTest() {
 
         Log.d(TAG, "------------------------------------------------------------")
         Log.d(TAG, "--- Friends by FriendStatus --------------------------------")
-        for (status in LetsGoUser.FriendStatus.values()) {
+        for (status in FriendStatus.values()) {
             Log.d(TAG, "status=$status \t${user2.listFriendsByStatus(status)}")
         }
         Log.d(TAG, "------------------------------------------------------------")
@@ -288,9 +288,9 @@ class LetsGoUserTest : EmulatedFirebaseTest() {
         Tasks.await(user.requestFriend(user3))
         Tasks.await(user.downloadFriends())
 
-        val accepted = user.friendsByStatus!![LetsGoUser.FriendStatus.ACCEPTED]
-        val requested = user.friendsByStatus!![LetsGoUser.FriendStatus.REQUESTED]
-        val sent = user.friendsByStatus!![LetsGoUser.FriendStatus.SENT]
+        val accepted = user.listFriendsByStatus(FriendStatus.ACCEPTED)
+        val requested = user.listFriendsByStatus(FriendStatus.REQUESTED)
+        val sent = user.listFriendsByStatus(FriendStatus.SENT)
 
         // Check that friend statuses have been stored and retrieved correctly
         assertEquals(1, accepted!!.size)
@@ -320,8 +320,14 @@ class LetsGoUserTest : EmulatedFirebaseTest() {
         Tasks.await(user.downloadFriends())
         Tasks.await(user3.downloadFriends())
 
-        assertEquals(LetsGoUser.FriendStatus.ACCEPTED, user.getFriendStatus(user2))
-        assertEquals(LetsGoUser.FriendStatus.SENT, user.getFriendStatus(user3))
-        assertEquals(LetsGoUser.FriendStatus.REQUESTED, user3.getFriendStatus(user))
+        assertEquals(FriendStatus.ACCEPTED, user.getFriendStatus(user2))
+        assertEquals(FriendStatus.SENT, user.getFriendStatus(user3))
+        assertEquals(FriendStatus.REQUESTED, user3.getFriendStatus(user))
+    }
+
+    @Test
+    fun testEquals() {
+        assertEquals(false, user == user2)
+        assertEquals(true, user == user)
     }
 }
