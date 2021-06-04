@@ -33,7 +33,7 @@ class ChatNewMessageActivity : AppCompatActivity() {
         val user = LetsGoUser(Authentication.getUid()!!)
 
         user.downloadFriends().addOnSuccessListener {
-            val friends = user.friendsByStatus!![LetsGoUser.FriendStatus.ACCEPTED]!!
+            val friends = user.listFriendsByStatus(LetsGoUser.FriendStatus.ACCEPTED)
 
             friends.forEach{
                 it.uid
@@ -42,7 +42,7 @@ class ChatNewMessageActivity : AppCompatActivity() {
 
 
         user.downloadFriends().addOnSuccessListener {
-            val friends = user.friendsByStatus!![LetsGoUser.FriendStatus.ACCEPTED]!!
+            val friends = user.listFriendsByStatus(LetsGoUser.FriendStatus.ACCEPTED)
 
             val adapter = GroupAdapter<ViewHolder>()
 
