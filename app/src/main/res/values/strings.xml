@@ -7,7 +7,7 @@
     <string name="main_openGameChooserText">Play</string>
     <string name="main_profileButtonText">My Profile</string>
 
-    <string name="game_scoreTitleText">Score</string>
+    <string name="game_scoreTitleText">BLACK | Score | WHITE</string>
     <string name="game_scoreDefaultText">0</string>
     <string name="game_blackTurn">BLACK plays next</string>
     <string name="game_whiteTurn">WHITE plays next</string>

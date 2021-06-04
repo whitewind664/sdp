@@ -22,8 +22,8 @@ class GameActivity : BaseActivity() {
     private lateinit var goView: GoView
 
     private lateinit var turnText: TextView
-    private val blackScore = findViewById<TextView>(R.id.game_textView_blackScore)
-    private val whiteScore = findViewById<TextView>(R.id.game_textView_whiteScore)
+    private lateinit var blackScore: TextView
+    private lateinit var whiteScore: TextView
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -48,6 +48,8 @@ class GameActivity : BaseActivity() {
         val boardFrame = findViewById<FrameLayout>(R.id.game_frameLayout_boardFrame)
         boardFrame.addView(goView)
         turnText = findViewById(R.id.game_textView_turnIndication)
+        blackScore = findViewById(R.id.game_textView_blackScore)
+        whiteScore = findViewById(R.id.game_textView_whiteScore)
 
         val blackPlayer = Player.playerOf(Stone.BLACK, blackType, touchInputDelegate, bluetoothService)
         val whitePlayer = Player.playerOf(Stone.WHITE, whiteType, touchInputDelegate, bluetoothService)
@@ -59,6 +61,7 @@ class GameActivity : BaseActivity() {
             while (!boardState.gameOver) {
                 drawBoard(boardState)
                 runOnUiThread {
+                    updateTurnText(boardState.lastMove)
                     whiteScore.text = boardState.whiteScore.toString()
                     blackScore.text = boardState.blackScore.toString()
                 }
@@ -76,7 +79,10 @@ class GameActivity : BaseActivity() {
 
     private fun drawBoard(boardState: BoardState) {
         goView.updateBoardState(boardState)
-        if(boardState.lastMove?.stone == Stone.BLACK) {
+    }
+
+    private fun updateTurnText(lastMove: Move?) {
+        if(lastMove?.stone == Stone.BLACK) {
             // White's turn
             turnText.text = resources.getString(R.string.game_whiteTurn)
         } else {
