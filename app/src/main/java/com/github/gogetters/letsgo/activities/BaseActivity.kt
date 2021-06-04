@@ -46,12 +46,7 @@ abstract class BaseActivity : AppCompatActivity() {
         bottomNavigation.setOnNavigationItemSelectedListener { item ->
             when(item.itemId) {
                 R.id.item1 -> {
-                    val intent = Intent(this, GameActivity::class.java).apply {
-                        putExtra(GameActivity.EXTRA_GAME_SIZE, 9)
-                        putExtra(GameActivity.EXTRA_KOMI, 5.5)
-                        putExtra(GameActivity.EXTRA_LOCAL_COLOR, Stone.BLACK)
-                        putExtra(GameActivity.EXTRA_GAME_TYPE, "LOCAL")
-                    }
+                    val intent = Intent(this, GameModeChooserActivity::class.java)
                     startActivity(intent)
                     true
                 }

@@ -57,6 +57,7 @@ class GameActivity : BaseActivity() {
         goView = GoView(this, boardSize)
         val boardFrame = findViewById<FrameLayout>(R.id.game_frameLayout_boardFrame)
         boardFrame.addView(goView)
+        turnText = findViewById(R.id.game_textView_turnIndication)
 
         val touchInputDelegate = InputDelegate()
         goView.inputDelegate = touchInputDelegate
